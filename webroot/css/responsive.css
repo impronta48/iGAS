@@ -1,0 +1,85 @@
+@media (max-width: 900px) {
+  /* left-sidebar toggler
+      ---------------------------------------------------------------------------------------------- */
+  /* line 5, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\000035}}
+  .left-sidebar {
+    height: 100%;
+    min-height: 100%;
+    position: absolute;
+    left: -280px;
+  }
+  /* line 13, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\0000313}}
+  .content {
+    margin-left: 0 !important;
+    padding: 10px;
+  }
+  /* line 18, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\0000318}}
+  .left-sidebar,
+  .content {
+    -webkit-transition: 500ms ease;
+    -moz-transition: 500ms ease;
+    -o-transition: 500ms ease;
+    -ms-transition: 500ms ease;
+    transition: 500ms ease;
+  }
+  /* line 29, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\0000329}}
+  h3.panel-title {
+    font-size: 12px;
+    font-weight: 200;
+  }
+  /* line 34, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\0000334}}
+  .left-sidebar.show-fullsidebar {
+    height: 100%;
+    width: 100% !important;
+    z-index: 10000;
+    min-height: 100%;
+    position: absolute;
+    left: 0px;
+  }
+  /* line 43, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\0000343}}
+  .nav-input-search {
+    width: 120px;
+  }
+  /* line 47, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\0000347}}
+  .btn-nav-toggle {
+    display: none;
+  }
+  /* line 52, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\0000352}}
+  .navbar .btn-nav-toggle-responsive {
+    color: #FFFFFF;
+    display: inline-block;
+    margin-right: 20px;
+  }
+}
+@media (min-width: 1280px) {
+  /* line 63, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\0000363}}
+  .navbar .btn-nav-toggle-responsive {
+    display: none;
+  }
+}
+@media (max-width: 767px) {
+  /* line 69, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\0000369}}
+  .mail-pagination {
+    margin-top: 30px;
+  }
+  /* line 73, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\0000373}}
+  .mails {
+    margin-top: 60px;
+  }
+  /* line 77, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\0000377}}
+  .right-sidebar {
+    display: none;
+  }
+}

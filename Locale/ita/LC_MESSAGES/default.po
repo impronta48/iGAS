@@ -1,0 +1,51 @@
+msgid  "January"
+msgstr "Gennaio"
+
+msgid  "February"
+ msgstr "Febbraio"
+
+ msgid  "March"
+ msgstr "Marzo"
+
+ msgid  "April"
+ msgstr "Aprile"
+
+ msgid  "May"
+ msgstr "Maggio"
+
+ msgid  "June"
+ msgstr "Giugno"
+
+ msgid  "July"
+ msgstr "Luglio"
+
+ msgid  "August"
+ msgstr "Agosto"
+
+ msgid  "September"
+ msgstr "Settembre"
+
+ msgid  "October"
+ msgstr "Ottobre"
+
+ msgid  "November"
+ msgstr "Novembre"
+
+ msgid  "December"
+ msgstr "Dicembre"
+
+ msgid  "You are not authorized to access that location."
+ msgstr "Non sei autorizzato ad accedere a questa pagina."
+
+ msgid  "Login failed. Invalid username or password."
+ msgstr "Impossibile accedere, controlla utente e password."
+
+msgid "Submit"
+msgstr "Invia"
+
+msgid "Search"
+msgstr "Cerca"
+
+msgid "Edit Attivita"
+msgstr "Modifica\/Crea Attività"
+

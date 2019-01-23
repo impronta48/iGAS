@@ -1,0 +1,2 @@
+// jQuery $('document').ready(); function 
+$("document").ready(function(){$("#pulser").pulsate({color:"#54728c"});$("#pulsateSuccess").pulsate({color:"#468845"});$("#pulsateDanger").pulsate({color:"#B94A48"});$("#pulsateWarning").pulsate({color:"#C09853"});$(".chosen-select").chosen();var e="#datepicker";$(e).datepicker({showOtherMonths:!0,selectOtherMonths:!0,dateFormat:"d MM, yy",yearRange:"-1:+1"}).prev(".btn").on("click",function(t){t&&t.preventDefault();$(e).focus()})});

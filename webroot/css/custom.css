@@ -1,0 +1,82 @@
+/*
+*	 Author: Vijay Kumar
+*	 Template: Archon - Flat & Responsive Bootstrap Admin Template
+*	 Version: 1.0
+*	 Bootstrap version: 3.0.0
+*	 Copyright 2013 bootstrapguru
+*	 www: http://bootstrapguru.com
+*	 mail: support@bootstrapguru.com
+*	 You can find our other themes on: https://bootstrapguru.com/themes/
+---------------------------------------------------------------------------------------------- */
+div.actions {
+    margin: 0.5em 0;
+}
+
+.index {
+    margin-bottom: 1em;
+}
+
+.invisible {
+	display: none;
+}
+
+
+tr.evidenza {
+    padding-bottom : 1em;
+}
+.evidenza {
+    background-color: #FCAA04 !important;
+}
+
+.bold {
+    font-weight: bold;
+}    
+
+table.ora-persona tr td {
+    padding: 0 2em 0 0 !important;
+}
+
+table.ora-persona {
+    page-break-after: always;
+}
+
+.totale {
+    font-weight: bold;
+}
+
+.ordine-field {
+    width: 3em;
+}
+.importo-field {
+    width: 7em;
+}
+.codiceiva-field {
+    width: 8em;
+}
+.descr-field {
+    width: 40em;
+}
+
+#message {
+    padding-top: 2em;
+}
+
+
+#map_canvas {
+    height: 180px;
+}
+#aggiungi-primanota {
+    overflow:visible;            
+}
+.chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+    height: 25px;
+    padding: 5px;
+}
+
+.ui-accordion .ui-accordion-content {
+    padding:0;
+}
+
+.ui-autocomplete { z-index:2147483647; }
+
+.input-red {color:red};

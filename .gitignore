@@ -1,0 +1,57 @@
+# User specific & automatically generated files #
+#################################################
+Config/database.php
+Config/google_calendar
+Config/igas.php
+node_modules/
+e2e/
+tmp
+/Vendor/*
+vendor
+/build
+/tags
+*.mo
+webroot/img
+*.jpg
+
+# Plugins installed via composer
+################################
+Plugin/DebugKit
+Plugin/Shim
+Plugin/I18n
+Plugin/BoostCake
+Plugin/Migrations
+Plugin/Shim
+Plugin/Bs3Helpers
+Plugin/Config
+Plugin/acl_extras
+
+
+# IDE and editor specific files #
+#################################
+/nbproject
+.idea
+.vscode/*
+build.sublime-project
+build.sublime-workspace
+igas.sublime-workspace
+igas.sublime-project
+igas.sublime-workspace
+
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+!empty
+*.bat
+_*
+igas_*
+*~
+composer.lock

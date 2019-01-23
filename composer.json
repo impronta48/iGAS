@@ -1,0 +1,37 @@
+{
+    "name": "impronta/igas",
+    "description": "iGAS - Gestione Aziendale Semplice",
+    "authors": [
+        {
+            "name": "massimoi",
+            "email": "massimoi@impronta48.it"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "https://pear.cakephp.org"
+        },
+        {
+            "type": "vcs",
+            "url": "https://bitbucket.org/mailchimp/mailchimp-api-php"
+        }
+    ],
+    "require": {
+        "cakephp/cakephp": "2.*",
+        "ceeram/clear_cache": "^1.1",
+        "slywalker/boost_cake": "*",        
+        "cakephp/debug_kit": "2.*",
+        "cakedc/tags": "~1",
+        "cakedc/migrations": "2.4",
+        "mailchimp/mailchimp": ">=2.0.0",
+        "codaxis/cakephp-bootstrap3-helpers": "1.1",        
+        "phpoffice/phpexcel": "^1.8",
+        "mikehaertl/phpwkhtmltopdf": "^2.2",        
+        "dereuromark/cakephp-tools": "2.x-dev",
+        "robmorgan/phinx": "^0.10.6"
+    },
+    "config": {
+        "vendor-dir": "vendor/"
+    }
+}

@@ -1,0 +1,32 @@
+div.actions,
+#header, #menu {
+    display: none;
+}
+
+div.form, div.index, div.view {
+    width: 100%;
+    float: none !important;
+    border: none;    
+}
+
+table.ora-persona {
+    page-break-after: always;
+}
+.evidenza {
+    font-weight: bolder;
+    border: 1px solid black;
+}
+ 
+table.ora-persona tr td {
+    padding: 0 2em 0 0 !important;
+    }
+
+table.ora-persona td {
+        border-bottom: 1px solid gray;
+    }
+    
+table.ora-persona tr td,
+table.ora-persona tr th
+    {
+        padding: 0 2em 0 0 !important;
+    }

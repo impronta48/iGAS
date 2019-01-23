@@ -1,0 +1,68 @@
+/*
+*  Author: Vijay Kumar
+*  Template: Cascade - Flat & Responsive Bootstrap Admin Template
+*  Version: 1.0
+*  Bootstrap version: 3.0.0
+*  Copyright 2013 bootstrapguru
+*  www: http://bootstrapguru.com
+*  mail: support@bootstrapguru.com
+*  You can find our other themes on: https://bootstrapguru.com/themes/
+---------------------------------------------------------------------------------------------- */
+/*   Import External Css Files
+---------------------------------------------------------------------------------------------- */
+/******************* Color variables *********************/
+/*	 Global Color variables @requested not to change these values if you are not sure of what you are doing
+----------------------------------------------------------------------------------------------------------- */
+/*	 Navbar variables @you change these variables , make sure to get a good color combination ;)
+-------------------------------------------------------------------------------------------------- */
+/* Desired height is 90px , below 80px is not recommended */
+/*	 LeftSidebar variables @you change these variables , make sure to get a good color combination ;)
+-------------------------------------------------------------------------------------------------- */
+/*	 LeftSidebar variables @you change these variables , make sure to get a good color combination ;)
+-------------------------------------------------------------------------------------------------- */
+/*	 Panels variables
+-------------------------------------------------------------------------------------------------- */
+/* line 15, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\404.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/404\.less}line{font-family:\0000315}}
+html,
+body {
+  height: 100%;
+}
+/* line 19, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\404.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/404\.less}line{font-family:\0000319}}
+body {
+  color: #ffffff;
+  font-family: 'Open Sans';
+  background: #54728c;
+}
+/* line 24, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\404.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/404\.less}line{font-family:\0000324}}
+.widget-holder {
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  margin-top: -255px;
+  margin-left: -205px;
+  width: 420px;
+  height: 400px;
+  text-align: center;
+  color: #691010;
+}
+/* line 42, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\404.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/404\.less}line{font-family:\0000342}}
+i.fa {
+  font-size: 150px;
+}
+/* line 47, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\404.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/404\.less}line{font-family:\0000347}}
+.nav-input-search {
+  margin-right: 0px;
+  margin-top: 10px;
+  float: none;
+}

@@ -1,0 +1,127 @@
+/*
+*  Author: Vijay Kumar
+*  Template: Cascade - Flat & Responsive Bootstrap Admin Template
+*  Version: 1.0
+*  Bootstrap version: 3.0.0
+*  Copyright 2013 bootstrapguru
+*  www: http://bootstrapguru.com
+*  mail: support@bootstrapguru.com
+*  You can find our other themes on: https://bootstrapguru.com/themes/
+---------------------------------------------------------------------------------------------- */
+/*   Import External Css Files
+---------------------------------------------------------------------------------------------- */
+/******************* Color variables *********************/
+/*	 Global Color variables @requested not to change these values if you are not sure of what you are doing
+----------------------------------------------------------------------------------------------------------- */
+/*	 Navbar variables @you change these variables , make sure to get a good color combination ;)
+-------------------------------------------------------------------------------------------------- */
+/* Desired height is 90px , below 80px is not recommended */
+/*	 LeftSidebar variables @you change these variables , make sure to get a good color combination ;)
+-------------------------------------------------------------------------------------------------- */
+/*	 LeftSidebar variables @you change these variables , make sure to get a good color combination ;)
+-------------------------------------------------------------------------------------------------- */
+/*	 Panels variables
+-------------------------------------------------------------------------------------------------- */
+/* line 21, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\0000321}}
+html,
+body {
+  height: 100%;
+}
+/* line 26, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\0000326}}
+.side-menu {
+  top: 10% !important;
+  border-radius: 0px;
+  margin-left: -5px;
+  position: fixed;
+  z-index: 5000;
+}
+/* line 35, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\0000335}}
+.side-menu a.active,
+.side-menu a.active:hover {
+  background: #2f4051;
+  border-width: 0px;
+}
+/* line 43, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\0000343}}
+section {
+  position: relative;
+  overflow: hidden;
+  padding: 50px;
+  width: 100%;
+  height: 100%;
+  background: #54b5df;
+}
+/* line 52, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\0000352}}
+section:nth-child(2n) {
+  background: #2f4051;
+}
+/* line 58, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\0000358}}
+.login-holder {
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  border-radius: 6px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  margin-top: -185px;
+  margin-left: -205px;
+  width: 420px;
+  height: auto;
+  background: white;
+  padding: 10px;
+}
+/* line 74, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\0000374}}
+.login-holder .user-avatar {
+  border-radius: 50%;
+  border: 5px solid #2f4051;
+  width: 150px;
+  margin-bottom: 20px;
+}
+/* line 82, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\0000382}}
+.login-holder .form-group {
+  border: 1px solid #425971;
+  border-left: 10px solid #425971;
+}
+/* line 87, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\0000387}}
+.login-holder .form-group .form-control {
+  border-radius: 0px;
+  padding: 20px;
+}
+/* line 93, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\0000393}}
+.login-holder .form-footer {
+  padding: 20px;
+}
+/* line 96, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\0000396}}
+.login-holder .form-footer .btn-submit {
+  margin-top: -10px;
+}
+/* line 104, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\00003104}}
+.social-login {
+  padding: 25px;
+}
+/* line 108, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\login.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/login\.less}line{font-family:\00003108}}
+.not-found {
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  width: auto;
+  padding: 100px;
+  font-size: 100px;
+}

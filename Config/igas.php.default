@@ -1,0 +1,28 @@
+<?php
+//Project wide constants
+Configure::write('Attivita.ferie', '2');
+Configure::write('Attivita.malattia', '3');
+Configure::write('Attivita.permesso', '2');
+Configure::write('Attivita.festivita', '21');
+Configure::write('Fattureemesse.anni',3 );
+//Codice di Legenda_cat_spesa che viene usata quanto si incassa una fattura
+Configure::write('Fattureemesse.catIncasso',45 ); 
+Configure::write('iGas.bancaDefault',8 );
+Configure::write('iGas.NomeAzienda', 'iGAS Demo');
+Configure::write('iGas.idAzienda', 01);
+Configure::write('iGas.Logo', 'http://igas.impronta48.it/demo/img/logo-igas.png');
+Configure::write('iGas.IvaDefault', '6');  //Valore dell'IVA di default nelle righe fatture e nelle attività
+Configure::write('iGas.Footer', "  ");
+Configure::write('iGas.theme', 'Yepp');
+Configure::write('iGas.progettiSpeciali', array('Ferie', 'Malattia', 'Permesso', 'Permesso 104', 'Festività'));
+Configure::write('google_key',  'YOUR KEY' );
+
+/**
+ * A random string used in security hashing methods.
+ */
+	Configure::write('Security.salt', 'yoursalt');
+
+/**
+ * A random numeric string (digits only) used to encrypt/decrypt strings.
+ */
+	Configure::write('Security.cipherSeed', 'yourseed');

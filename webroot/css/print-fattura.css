@@ -1,0 +1,5 @@
+#hiderow,
+.no-print,
+.delete {
+  display: none;
+}

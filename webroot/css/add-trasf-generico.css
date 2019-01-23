@@ -1,0 +1,33 @@
+.map{
+height: 200px;
+width: 40%;
+margin:1em;
+float:left;
+border:1px solid black
+} 
+
+#maps {
+clear:both
+}
+
+.riga-emissioni{
+background-color: #E4E4E4
+}
+
+.riga-costi{
+background-color: #BFFFBF
+}
+
+.riga-distanza{
+background-color: #FFFFAA
+}
+
+#area-conferma {
+background-color: #FFBFDF;  clear:both;
+}
+
+#area-mezzo, #area-punti {
+display:inline
+}
+
+img{ border:0}
