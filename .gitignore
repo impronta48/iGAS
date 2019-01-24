@@ -1,8 +1,8 @@
 # User specific & automatically generated files #
 #################################################
 Config/database.php
-Config/google_calendar
-Config/igas.php
+Config/igas*.php
+update-git-srv.sh
 node_modules/
 e2e/
 tmp
@@ -11,8 +11,10 @@ vendor
 /build
 /tags
 *.mo
-webroot/img
 *.jpg
+*.bat
+igas_*
+_*
 
 # Plugins installed via composer
 ################################
@@ -50,8 +52,5 @@ Icon?
 ehthumbs.db
 Thumbs.db
 !empty
-*.bat
-_*
-igas_*
 *~
 composer.lock
