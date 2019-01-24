@@ -144,14 +144,14 @@ Inflector::rules('singular', array(
  * CakePlugin::load('DebugKit'); //Loads a single plugin named DebugKit
  *
  */
+//CakePlugin::load('AclExtras');
+//CakePlugin::load('Migrations');
+//CakePlugin::load('Config', array('bootstrap' => true));
+//CakePlugin::load('Shim');
+CakePlugin::load('PhpExcel');
 CakePlugin::load('DebugKit');
 CakePlugin::load('BoostCake');
 CakePlugin::load('Tags');
-//CakePlugin::load('AclExtras');
-CakePlugin::load('Migrations');
-CakePlugin::load('Config', array('bootstrap' => true));
-CakePlugin::load('PhpExcel');
-CakePlugin::load('Shim');
 CakePlugin::load('ClearCache');
 CakePlugin::load('Tools', array('bootstrap' => true));
 

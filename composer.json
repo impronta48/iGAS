@@ -30,7 +30,6 @@
         "mikehaertl/phpwkhtmltopdf": "^2.2",        
         "dereuromark/cakephp-tools": "2.x-dev",
         "robmorgan/phinx": "^0.10.6",
-        "markstory/acl_extras": "*"
     },
     "config": {
         "vendor-dir": "vendor/"
