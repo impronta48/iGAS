@@ -1,8 +1,8 @@
-<?php echo $this->Html->css('login'); ?>
+<?php //echo $this->Html->css('login'); ?>
 
 <section id="login">
     <div class="row animated fadeILeftBig">
-     <div class="login-holder col-md-6 col-md-offset-3">
+     <div class="login-holder col-md-4 col-md-offset-4 col-sm-11 col-sm-offset-1">
        <h2 class="page-header text-center text-primary"> 
         <?php echo $this->Html->image('logo-igas.png',['class'=>'img-responsive']) ?>
         Benvenuti su iGAS<br>
