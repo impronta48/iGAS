@@ -1,3 +1,7 @@
+<?php $id = $this->request->params['pass'][0];
+      echo $this->element('secondary_attivita', array('aid'=>$id)); 
+?>
+
 <h2>Avanzamento Attivit&agrave;: <a href="<?php echo $this->Html->url('edit/'. $attivita['Attivita']['id']); ?>">
 	<?php echo $attivita['Attivita']['name']; ?>
 </a> <?php echo date('d-m-Y') ?></h2>

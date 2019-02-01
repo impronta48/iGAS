@@ -239,9 +239,11 @@
     </table>
     </div>
    
-</div>
+
 
 <h2>Utile Commessa: <?php echo $tot_righe - $tot_uscite ?>&euro;</h2>
+
+</div>
 
 <?php $this->Html->scriptStart(array('inline' => false)); ?>
 $(function() { 

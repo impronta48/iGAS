@@ -5,9 +5,9 @@
 #</IfModule>
 
 <IfModule mod_rewrite.c>
+	RewriteBase /
 	RewriteEngine On
-	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteRule ^ index.php [L]
+	RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
 </IfModule>

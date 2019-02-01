@@ -1,21 +1,23 @@
+<?php $id = $this->request->query('attivita');    
+    if (!empty($id) && is_array($id) && count($id)==1)
+    {        
+        $id = $id[0];
+        echo $this->element('secondary_attivita', array('aid'=>$id)); 
+    }
+?>
+
 <?php $this->Html->addCrumb('Attività', ''); ?>
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
 <?php $baseformclass = ' form-control input-xs '; ?>
 
 <div class="fatturericevute index">
-    <div class="panel">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-            <i class="fa fa-file-text"></i> Documenti Ricevuti
-            <?php echo $this->Html->link('<i class="fa fa-plus"></i> Nuovo Documento Ricevuto', array('action' => 'add'), array('class'=>'btn btn-default','escape'=>false)); ?>
+    <h1>
+     Documenti Ricevuti
+    <?php echo $this->Html->link('<i class="fa fa-plus"></i> Nuovo Documento Ricevuto', array('action' => 'add'), array('class'=>'btn btn-primary','escape'=>false)); ?>
+    </h1>
 
-            <span class="pull-right">
-            Ricerca Avanzata <a href="#" class="panel-minimize col-md-4"><i class="fa fa-chevron-down"></i></a>
-            </span>
-        </h3>
-        </div>
-        <div class="panel-body">
-                <!-- Form di Ricerca -->
+    <div class="well">
+            <!-- Form di Ricerca -->
                 <?php
                 echo $this->Form->create("FatturaRicevuta",array(
                         'url' => array('action' => 'index'),
@@ -82,9 +84,10 @@
                                                                 'options'=>$legendacatspesa
                                             )); ?>
 
-                <?php echo $this->Form->end('Filtra'); ?>
-            </div>
-    </div> <!-- /panel with heading -->
+                <?php echo $this->Form->submit('Filtra',['class'=>'btn btn-success']); ?>
+                <?php echo $this->Form->end(); ?>
+            
+    </div> <!-- /well -->
 
 
   <div class="table-responsive">

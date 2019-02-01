@@ -5,6 +5,14 @@
 <?php echo $this->Html->script('faseattivita',array('inline' => false)); ?>
 <?php $baseformclass = ' form-control input-sm '; ?>
 
+<?php $id = $this->request->query('attivita');    
+    if (!empty($id) && is_array($id) && count($id)==1)
+    {        
+        $id = $id[0];
+        echo $this->element('secondary_attivita', array('aid'=>$id)); 
+    }
+?>
+
 <?php if (isset($this->request->params['pass'][0]))
     {
       $id = $this->request->params['pass'][0];

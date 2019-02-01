@@ -163,7 +163,7 @@
      
         
 <!-- Latest compiled and minified JavaScript -->
-<?php echo $this->Html->script("jquery-1.10.2.min.js"); ?>
+<?php echo $this->Html->script("jquery-1.10.2.min"); ?>
 <?php echo $this->Html->script("bootstrap.min.js"); ?>
 <?php echo $this->Html->script("jquery-ui-1.10.3.custom.min.js"); ?>
 <?php echo $this->Html->script("/DataTables/DataTables-1.10.16/js/jquery.dataTables.min"); ?>
@@ -183,8 +183,7 @@
 <?php echo $this->Html->script("chosen.jquery.min"); ?>
 <?php echo $this->Html->script("igas"); ?>
 
-<?php echo $this->Js->writeBuffer(); ?>
-<?php echo $scripts_for_layout; ?>
+<?php echo $this->fetch('script'); ?>
 <!-- Load JS here for Faster site load =============================-->
 
 
