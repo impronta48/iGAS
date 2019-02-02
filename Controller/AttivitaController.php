@@ -562,29 +562,33 @@ class AttivitaController extends AppController {
         $conditionsFr = array();
         $conditionsFa = array();
         $conditionsNs = array();
+        $nomeattivita = '';
+        $progetto = '';
+        $area = '';
+        $anno = '';
         $tit = '';
 		
-        if (!empty($this->request->named['nomeattivita']))
-        {
-            $conditions['Attivita.name LIKE'] = '%'. $this->request->named['nomeattivita'] .'%';
-			$tit = "attività che contengono: " . $this->request->named['nomeattivita'];
+        if (!empty( $nomeattivita = $this->request->query('nomeattivita')))
+        {           
+            $conditions['Attivita.name LIKE'] = '%'. $nomeattivita .'%';
+			$tit = "attività che contengono: " . $nomeattivita;
         }   
         
-        if (!empty($this->request->named['progetto']))
+        if (!empty($progetto = $this->request->query('progetto')))
         {
-            $conditions['Attivita.progetto_id'] = $this->request->named['progetto'];			
-			$p = $this->Attivita->Progetto->findById($this->request->named['progetto']);
+            $conditions['Attivita.progetto_id'] = $progetto;			
+			$p = $this->Attivita->Progetto->findById($progetto);
 			$tit = $p['Progetto']['name'];
         }   
         
-		if (!empty($this->request->named['area']))
+		if (!empty($area= $this->request->query('area')))
         {
-            $conditions['Attivita.area_id'] = $this->request->named['area'];			
+            $conditions['Attivita.area_id'] = $area;			
         }  
 
-        if (!empty($this->request->named['anno']))
+        if (!empty($anno = $this->request->query('anno')))
         {
-            $conditions['YEAR(Attivita.DataInizio)'] = $this->request->named['anno'];
+            $conditions['YEAR(Attivita.DataInizio)'] = $anno;
         }  
 		
 		$this->set('title_for_layout', 'Avanzamento Generale');
@@ -690,14 +694,109 @@ class AttivitaController extends AppController {
 				$aree[$t['Area']['id']] = $t['Area']['name']; 
 		}
 		//Se c'è l'area, l'aggiungo al titolo
-		if (!empty($this->request->named['area']))
+		if (!empty($this->request->query('area')))
 		{
-			$tit .= 'Area: ' .  $aree[$this->request->named['area']];
+			$tit .= 'Area: ' .  $aree[$this->request->query('area')];
 		}
-		
-		$this->set(compact('a','pnu','pne','fentrate','fuscite','ns','ore','aree','tit','docric'));		
+        $this->set('progetti', $this->Attivita->Progetto->find('list'));		
+        $anni_meno = Configure::read('Fattureemesse.anni');
+        $anni = array();
+        for ($i=date('Y'); $i>=date('Y')-$anni_meno; $i--)
+        {
+            $anni[$i] = $i;			
+        }        
+		$this->set('anni', $anni);		
+		$this->set(compact('a','pnu','pne','fentrate','fuscite','ns','ore','aree','tit','docric','nomeattivita','progetto','anno','area'));		
 	}
-	
+    
+    //Mostra la differenza tra il valore offerto e l'acquisito e il fatturato
+	function offerto_acquisito()
+	{
+        $conditions = [];    
+        $nomeattivita = '';
+        $progetto = '';
+        $area = '';
+        $anno = '';
+        $tit = '';
+		
+        if (!empty( $nomeattivita = $this->request->query('nomeattivita')))
+        {           
+            $conditions['Attivita.name LIKE'] = '%'. $nomeattivita .'%';
+			$tit = "attività che contengono: " . $nomeattivita;
+        }   
+        
+        if (!empty($progetto = $this->request->query('progetto')))
+        {
+            $conditions['Attivita.progetto_id'] = $progetto;			
+			$p = $this->Attivita->Progetto->findById($progetto);
+			$tit = $p['Progetto']['name'];
+        }   
+        
+		if (!empty($area= $this->request->query('area')))
+        {
+            $conditions['Attivita.area_id'] = $area;			
+        }  
+
+        $conditions_offerte = $conditions;
+        if (empty($anno = $this->request->query('anno')))
+        {
+            $anno = date('Y');  //Se non passi l'anno intendo l'anno corrente                    
+        }  
+                
+        $this->set('title_for_layout', 'Confronto Offerto/Acquisito');
+        //Devo usare una query base perchè è troppo incasinato da fare con l'orm
+        $this->Attivita->virtualFields['fatturato'] = 0;
+        $this->Attivita->virtualFields['incassato'] = 0;
+        $db = $this->Attivita->getDataSource();
+        $offerte= $db->fetchAll(
+            "
+            ##confronto fatturato con pagato per un anno specifico
+            SELECT Attivita.id
+            , Attivita.name
+            , Attivita.OffertaAlCliente
+            , Attivita.ImportoAcquisito
+            , Attivita.area_id
+            , (SELECT round(SUM(r.importo)) FROM fattureemesse f 
+                        left JOIN righefatture r ON (r.fattura_id = f.id )
+                        WHERE Attivita.id = f.attivita_id
+                        AND (YEAR(f.DATA)=2018)
+            ) AS Attivita__fatturato
+            , (SELECT round(SUM(p.importo)/1.22) FROM primanota p 
+                        JOIN fattureemesse f ON (p.fatturaemessa_id = f.id)
+                        where Attivita.id = f.attivita_id
+                        AND (YEAR(f.DATA)=2018)
+            ) AS Attivita__incassato 
+            #, ROUND(ImportoAcquisito-(select Attivita__fatturato)) AS Attivita__daFatturare
+            #, ROUND((SELECT Attivita__fatturato)-(select Attivita__incassato)) AS Attivita__daIncassare
+            from attivita Attivita			
+            WHERE year(Attivita.dataPresentazione) = :anno
+            OR (YEAR(Attivita.dataPresentazione) < :anno AND  YEAR(dataFinePrevista) >= :anno)
+            #GROUP BY Attivita.id
+            ORDER BY Attivita.area_id, Attivita.id;
+            ",
+            array('anno'=>$anno)
+        );
+        //debug($offerte);
+
+        $temp = $this->Attivita->Area->find('all', array(
+					'recursive' => -1,
+					));
+		foreach ($temp as $t)
+		{
+				$aree[$t['Area']['id']] = $t['Area']['name']; 
+		}
+        
+        $this->set('progetti', $this->Attivita->Progetto->find('list'));		
+        $anni_meno = Configure::read('Fattureemesse.anni');
+        $anni = array();
+        for ($i=date('Y'); $i>=date('Y')-$anni_meno; $i--)
+        {
+            $anni[$i] = $i;			
+        }        
+		$this->set('anni', $anni);		
+		$this->set(compact('aree','tit','nomeattivita','progetto','anno','area','offerte','fatturato'));		
+    }
+    
 	function attivita_fasi()
 	{
 		$this->set('title_for_layout', 'Avanzamento Generale');

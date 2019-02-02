@@ -23,7 +23,7 @@ $('document').ready(function(){
           //console.log($('form#multiriga').serialize());
           $.ajax({
                  type: 'POST',
-                 url:  app.url + '/persone/' + action + '/' + ed.id ,
+                 url:  baseurl + '/persone/' + action + '/' + ed.id ,
                  data: $('form#multiriga').serialize(), // serializes the form's elements.
                  success: function(response,textStatus,xhr){                                                                           
                             window.location.reload(true);

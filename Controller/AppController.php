@@ -51,7 +51,7 @@ class AppController extends Controller {
             'Cookie',
         );  
 
-    public $uses = array('User');
+    //public $uses = array('User');
 
     /**
      * AppController::constructClasses()
@@ -70,15 +70,15 @@ class AppController extends Controller {
               
         //Configure AuthComponent
         //$this->theme = Configure::read('iGas.theme'); 
-        //$this->Auth->allow(); //Permetto tutto
+        $this->Auth->allow(); //Permetto tutto
         //permetto il verbno display sulle pagine statiche
         //$this->Auth->allow('display');
     
          // set cookie options
-        $this->Cookie->key = 'qSI232qs*&sXOw!adre@34SAv!@*(XSL#$%)asGb$@11~_+!@#HKis~#^';
-        $this->Cookie->httpOnly = true;
+        //$this->Cookie->key = 'qSI232qs*&sXOw!adre@34SAv!@*(XSL#$%)asGb$@11~_+!@#HKis~#^';
+        //$this->Cookie->httpOnly = true;
 
-        if (!$this->Auth->loggedIn() && $this->Cookie->read('remember_me_cookie')) {
+/*         if (!$this->Auth->loggedIn() && $this->Cookie->read('remember_me_cookie')) {
             $cookie = $this->Cookie->read('remember_me_cookie');
 
             $user = $this->User->find('first', array(
@@ -91,17 +91,17 @@ class AppController extends Controller {
             if ($user && !$this->Auth->login($user['User'])) {
                 $this->redirect('/users/logout'); // destroy session & cookie
             }
-        }   
+        }    */
 
         //Configuro Auth
-        $this->Auth->loginAction = array('controller' => 'users', 'action' => 'login');
+/*         $this->Auth->loginAction = array('controller' => 'users', 'action' => 'login');
         $this->Auth->logoutRedirect = array('controller' => 'users', 'action' => 'login');
         $this->Auth->loginRedirect = array('controller' => 'attivita', 'action' => 'index');
         $this->Auth->flash = array('element' => 'alert', 'key' => 'auth', 'params' => array('class' => 'alert-error'));
         $this->Auth->authenticate = array('Form' => array('passwordHasher' => 'Simple'),);
         $this->Auth->authError = "Non sei autorizzato ad accedere a questa sezione del sito"; 
         $this->Auth->authorize = array('Tools.Tiny'=>array('aclKey'=>'group_id'));
-
+ */
         parent::beforeFilter();  
     }
 }

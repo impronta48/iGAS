@@ -1,7 +1,6 @@
 <?php echo $this->Html->script("jquery.tagsinput.min",array('inline' => false)); ?>
 <?php echo $this->Html->script("tags",array('inline' => false)); ?>
 <?php echo $this->Html->css('jquery.tagsinput.min'); ?>
-<?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
 <?php echo $this->Html->script('faseattivita',array('inline' => false)); ?>
 <?php $baseformclass = ' form-control input-sm '; ?>
 
@@ -152,7 +151,7 @@
             $class = ' class="altrow"';
         }
     ?>
-    <tr<?php echo $class;?>>
+    <tr <?php echo $class;?>>
         <td class="actions">
             <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $p['Primanota']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga" )); ?>
             <?php if (isset($id))

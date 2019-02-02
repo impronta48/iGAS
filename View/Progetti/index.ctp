@@ -39,7 +39,7 @@
                  </button>
                  <ul class="dropdown-menu list-group" role="menu">
                   <li class="list-group-item">
-					<?php echo $this->Html->link(__('Avanzamento'), '/attivita/avanzamento_gen/progetto:' . $progetto['Progetto']['id']); ?>                   
+					<?php echo $this->Html->link(__('Avanzamento'),'/attivita/avanzamento_gen?progetto=' . $progetto['Progetto']['id']); ?>                   
                   </li>
                   <li class="list-group-item">
                     <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $progetto['Progetto']['id'])); ?>

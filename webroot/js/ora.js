@@ -4,7 +4,7 @@ $('document').ready(function(){
           //console.log($('form#multiriga').serialize());
           $.ajax({
                  type: 'POST',
-                 url:  app.url + '/ore/' + action + '/' + ed.id ,   //ed.id è l'id del <a id="XXX"> e diventa il  parametro del controller
+                 url:  baseurl + '/ore/' + action + '/' + ed.id ,   //ed.id è l'id del <a id="XXX"> e diventa il  parametro del controller
                  data: $('form#multiriga').serialize(), // serializes the form's elements.
                  success: function(response,textStatus,xhr){                                                                           
                             window.location.reload(true);
@@ -35,7 +35,7 @@ $('document').ready(function(){
       return;
     } 
 
-    $('form#multiriga').attr('action', app.url + '/ore/stampa');
+    $('form#multiriga').attr('action', baseurl + '/ore/stampa');
     $('form#multiriga').submit();
     });
     

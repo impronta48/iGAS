@@ -32,6 +32,6 @@
         "robmorgan/phinx": "^0.10.6"
     },
     "config": {
-        "vendor-dir": "vendor/"
+        "vendor-dir": "Vendor/"
     }
 }

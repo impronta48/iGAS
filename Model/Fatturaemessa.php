@@ -37,7 +37,10 @@ class Fatturaemessa extends AppModel {
             'TotaleNetto' => 'SELECT SUM(Rigafattura.Importo) from righefatture Rigafattura WHERE Rigafattura.fattura_id = Fatturaemessa.id', 
             'TotaleLordo' => 'SELECT SUM(Rigafattura.Importo*(1+Percentuale/100)) FROM righefatture Rigafattura LEFT JOIN legenda_codici_iva LegendaCodiciIva ON codiceiva_id = LegendaCodiciIva.id WHERE Rigafattura.fattura_id = Fatturaemessa.id',
             'Descrizione' => 'CONCAT(Fatturaemessa.AnnoFatturazione, "/", Fatturaemessa.Progressivo , " - ", LEFT(Fatturaemessa.Motivazione,50))',
-            //'Pagato' => 'SELECT SUM(Primanota.Importo) from primanota Primanota WHERE Primanota.fattura_id = Fatturaemessa.id'
+            'Incassato' => 'SELECT SUM(Primanota.Importo) FROM 
+                                primanota Primanota inner join attivita Attivita ON Attivita.id = Primanota.attivita_id 
+                                inner join fattureemesse Fatturaemessa ON Fatturaemessa.attivita_id = Attivita.id
+                                WHERE Primanota.Importo > 0 ',
             ); 
             
     //restituisce il prossimo progessivo libero di una fattura

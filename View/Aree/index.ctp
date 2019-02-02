@@ -17,11 +17,11 @@
 			$class = ' class="altrow"';
 		}
 	?>
-	<tr<?php echo $class;?>>
+	<tr <?php echo $class;?>>
 		<td><?php echo $area['Area']['id']; ?>&nbsp;</td>
 		<td><?php echo $area['Area']['name']; ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('Avanzamento'), '/attivita/avanzamento_gen/area:' . $area['Area']['id']); ?>
+			<?php echo $this->Html->link(__('Avanzamento'), '/attivita/avanzamento_gen?area=' . $area['Area']['id']); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $area['Area']['id'])); ?>
 			<?php echo $this->Html->link(__('Delete'), array('action' => 'delete', $area['Area']['id']), null, sprintf(__('Are you sure you want to delete # %s?'), $area['Area']['id'])); ?>			
 		</td>

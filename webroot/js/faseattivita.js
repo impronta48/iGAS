@@ -18,7 +18,7 @@ function aggiornafase()
 	var id = $(".attivita option:selected").attr('value');
 	
 		
-	$.get(app.url + "/faseattivita/getlist/" + id,  function(data){
+	$.get(baseurl + "/faseattivita/getlist/" + id,  function(data){
 			$(".fase").removeAttr("disabled");
 			$(".fase").html(data);
 			$(".fase").attr('size', 5);

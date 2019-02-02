@@ -20,7 +20,10 @@
   <?php echo $this->Html->css('/DataTables/Responsive-2.2.0/css/responsive.bootstrap.min.css'); ?>    
   <?php echo $this->Html->css('bootstrap-chosen'); ?>  
   <?php echo $this->Html->css('style'); ?>  
-     
+  
+  <script>
+    var baseurl = '<?php echo $this->request->base ?>';
+  </script>     
   
   <!-- Loading Custom Stylesheets -->    
   <?php echo $this->Html->css('custom'); ?>
@@ -184,6 +187,7 @@
 <?php echo $this->Html->script("igas"); ?>
 
 <?php echo $this->fetch('script'); ?>
+<?php echo $this->Js->writeBuffer();  // Write cached scripts ?>
 <!-- Load JS here for Faster site load =============================-->
 
 

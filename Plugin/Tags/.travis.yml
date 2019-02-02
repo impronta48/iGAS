@@ -40,7 +40,7 @@ before_script:
   - ../travis/before_script.sh
   - if [ "$PHPCS" != 1 ]; then
             echo "
-                require_once APP . DS . 'vendor' . DS . 'phpunit' . DS . 'phpunit' . DS . 'PHPUnit' . DS . 'Autoload.php';
+                require_once APP . DS . 'Vendor' . DS . 'phpunit' . DS . 'phpunit' . DS . 'PHPUnit' . DS . 'Autoload.php';
             " >> ../cakephp/app/Config/bootstrap.php;
     fi
 
