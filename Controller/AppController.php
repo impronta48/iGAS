@@ -51,7 +51,7 @@ class AppController extends Controller {
             'Cookie',
         );  
 
-    //public $uses = array('User');
+    public $uses = array('User');
 
     /**
      * AppController::constructClasses()
@@ -78,7 +78,7 @@ class AppController extends Controller {
         $this->Cookie->key = 'qSI232qs*&sXOw!adre@34SAv!@*(XSL#$%)asGb$@11~_+!@#HKis~#^';
         $this->Cookie->httpOnly = true;
 
-/*         if (!$this->Auth->loggedIn() && $this->Cookie->read('remember_me_cookie')) {
+        if (!$this->Auth->loggedIn() && $this->Cookie->read('remember_me_cookie')) {
             $cookie = $this->Cookie->read('remember_me_cookie');
 
             $user = $this->User->find('first', array(
@@ -91,7 +91,7 @@ class AppController extends Controller {
             if ($user && !$this->Auth->login($user['User'])) {
                 $this->redirect('/users/logout'); // destroy session & cookie
             }
-        }    */
+        }   
 
         //Configuro Auth
         $this->Auth->loginAction = array('controller' => 'users', 'action' => 'login');

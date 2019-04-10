@@ -1,6 +1,7 @@
 <?php
 //require_once (APP . 'Plugin' . DS . 'Tools'. DS . 'vendor' . DS . 'SpreadsheetExcelReader'. DS. 'SpreadsheetExcelReader.php');
-App::uses('AppController', 'Controller');
+App::uses('AppController', 'Controller', 'CakeEmail', 'Network/Email');
+App::uses('CakeEmail', 'Network/Email');// Perchè CakePHP mi obbliga a spezzare App::uses in 2 righe per far funzionare CakeEmail ???
 
 class OreController extends AppController {
 
@@ -761,7 +762,19 @@ class OreController extends AppController {
             $this->Ora->create();            
             if ($this->Ora->save($this->request->data)) {
                 $this->Session->setFlash('Ora Aggiunta correttamente.');
-
+				
+				//Visto che a questo punto l'ora è inserita posso inviare una mail di conferma
+				$emailObj = new CakeEmail('smtp');
+				$emailObj->template('confermacaricamentoore');
+				$emailObj->sender(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
+				$emailObj->from(array('bill@microsoft.com' =>'Bill Gates'));
+				$emailObj->to('test@localhost');
+				$emailObj->emailFormat('text');
+				$emailObj->returnPath('postmaster@localhost');
+				$emailObj->replyTo(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
+				$emailObj->subject('Foglio ore caricato');
+				$emailObj->send();
+				
                 //A Seconda del submit gestisco un'operazione diversa
                 if (isset($this->request->data['submit-ns']))
                 {
@@ -783,6 +796,8 @@ class OreController extends AppController {
                                                     'giorno' => $this->request->data['Ora']['data']['day'],
                                              ));
                 }
+				
+				
 
             }
             $this->Session->setFlash('Impossibile salvare questa ora.');

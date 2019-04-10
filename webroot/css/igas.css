@@ -102,6 +102,7 @@ table.ora-persona {
 .progressivo input,
 .progressivo label
 {
+    width: 30%;
     display: inline;
     padding-left: 2em;        
 }
@@ -119,4 +120,14 @@ table.ora-persona {
 }
 .text-success{
     background-color: green;
+}
+.table-responsive
+{
+    overflow-x: auto;
+}
+table.display {
+    margin; auto;
+    width; 0;
+    clear: both;
+    border-collapse: collapse;
 }

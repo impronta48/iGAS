@@ -158,6 +158,11 @@
 				  <li class="">
                     <?php echo $this->Html->link(__('Avanzamento'), array('controller'=>'attivita', 'action' => 'avanzamento', $attivita['Attivita']['id'])); ?>
                   </li>
+				  <?php if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$attivita['Attivita']['id'].'_preventivo.pdf')): ?>
+				  <li class="">
+                    <?php echo $this->Html->link('Download PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$attivita['Attivita']['id'].'_preventivo.pdf'); ?>
+                  </li>
+				  <?php endif; ?>
                   <li class="">
                     <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $attivita['Attivita']['id'])); ?>
                   </li>

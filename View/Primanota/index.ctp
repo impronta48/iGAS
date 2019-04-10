@@ -1,16 +1,9 @@
 <?php echo $this->Html->script("jquery.tagsinput.min",array('inline' => false)); ?>
 <?php echo $this->Html->script("tags",array('inline' => false)); ?>
 <?php echo $this->Html->css('jquery.tagsinput.min'); ?>
+<?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
 <?php echo $this->Html->script('faseattivita',array('inline' => false)); ?>
 <?php $baseformclass = ' form-control input-sm '; ?>
-
-<?php $id = $this->request->query('attivita');    
-    if (!empty($id) && is_array($id) && count($id)==1)
-    {        
-        $id = $id[0];
-        echo $this->element('secondary_attivita', array('aid'=>$id)); 
-    }
-?>
 
 <?php if (isset($this->request->params['pass'][0]))
     {
@@ -151,17 +144,18 @@
             $class = ' class="altrow"';
         }
     ?>
-    <tr <?php echo $class;?>>
+    <tr<?php echo $class;?>>
         <td class="actions">
-            <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $p['Primanota']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga" )); ?>
-            <?php if (isset($id))
-            {
-                echo $this->Html->link(__('Del'), array('action' => 'delete', $p['Primanota']['id'], $id), array('class'=>"btn btn-primary btn-xs glow btn-del-riga"), sprintf(__('Are you sure you want to delete # %s?'), $p['Primanota']['id']) );
-            }
-            else
-            {
-                echo $this->Html->link(__('Del'), array('action' => 'delete', $p['Primanota']['id']), array('class'=>"btn btn-primary btn-xs glow btn-del-riga"), sprintf(__('Are you sure you want to delete # %s?'), $p['Primanota']['id']));
-            }
+			<?php if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$p['Primanota']['id'].'.pdf')): ?>
+            <?php echo $this->Html->link('Download PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$p['Primanota']['id'].'.pdf',array('class'=>"btn btn-primary btn-xs glow btn-edit-riga" )); ?>
+			<?php endif; ?>
+			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $p['Primanota']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga" )); ?>
+            <?php 
+			if (isset($id)){
+				echo $this->Html->link(__('Del'), array('action' => 'delete', $id), array('class'=>'btn btn-primary btn-xs glow btn-del-riga'), __('Are you sure you want to delete # %s?', $id));
+			} else {
+				echo $this->Html->link(__('Del'), array('action' => 'delete', $p['Primanota']['id']), array('class'=>'btn btn-primary btn-xs glow btn-del-riga'), __('Are you sure you want to delete # %s?', $p['Primanota']['id']));
+			}
             ?>
         </td>
         <td><?php echo $p['Primanota']['data']; ?></td>
@@ -241,6 +235,7 @@
             </div>
             <div class="modal-body">
                     <?php echo $this->Form->create('Primanota',array(
+								'enctype' => 'multipart/form-data',
                                 'inputDefaults' => array(
                                     'div' => 'form-group',
                                     'label' => array(
@@ -272,6 +267,7 @@
                     <?php echo  $this->Form->hidden('persona_id',array('type'=>'text')); ?>
                     <?php echo  $this->Form->input('persona_descr',array('placeholder'=>'Inizia a scrivere per cercare la persona')); ?>
                     <?php echo  $this->Form->input('descr'); ?>
+					<?php echo $this->Form->input('uploadFile', array('label'=>'Upload File PDF', 'class'=>false, 'type'=>'file')); ?>
 
                     <div class="clearfix"></div>
                     <div class="well well-sm col col-md-offset-3">

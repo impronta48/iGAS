@@ -177,6 +177,9 @@
                   <li>
                     <?php echo $this->Html->link(__('Edit'), array('action' => 'edit',  $fatturaemessa['Fatturaemessa']['id'])); ?>
                   </li>
+				  <li>
+                    <?php echo $this->Html->link(__('Invia a Cloud'), array('action' => 'fattureincloud',  $fatturaemessa['Fatturaemessa']['id'])); ?>
+                  </li>
                   <li>
                     <?php echo $this->Html->link(__('Duplica'), array('action' => 'dup',  $fatturaemessa['Fatturaemessa']['id'])); ?>
                   </li>

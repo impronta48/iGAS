@@ -29,8 +29,8 @@
     .break {page-break-after: always;}
 </style>
 
-<h1>Rendiconto Economico Finanziario <?php echo $this->request['named']['anno']; ?></h1>
-<a href="<?php echo $this->Html->url('/primanota/stampa/anno:' . $this->request['named']['anno']); ?>" class="btn btn-primary pull-right hidden-print">PDF</a>
+<h1>Rendiconto Economico Finanziario <?php echo $anno; ?></h1>
+<a href="<?php echo $this->Html->url("/primanota/stampa?anno=$anno"); ?>" class="btn btn-primary pull-right hidden-print">PDF</a>
 
    <div class="hidden-print">
     <?php
@@ -39,7 +39,7 @@
         {
             $condition['anno'] = $i;            
     ?>
-        <a class="btn btn-default btn-animate-demo btn-xs" href="<?php echo $this->Html->url($condition ) ?>">
+        <a class="btn btn-default btn-animate-demo btn-xs" href="<?php echo $this->Html->url(['?' => $condition]) ?>">
             <?php echo $i ?>
         </a>        
     <?php

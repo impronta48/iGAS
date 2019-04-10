@@ -226,7 +226,7 @@ $("#non-euro").click(function (e) {
           //console.log($('form#multiriga').serialize());
           $.ajax({
                  type: 'POST',
-                 url:  baseurl + '/notaspese/' + action + '/' + ed.id ,   //ed.id è l'id del <a id="XXX"> e diventa il  parametro del controller
+                 url:  app.url + '/notaspese/' + action + '/' + ed.id ,   //ed.id è l'id del <a id="XXX"> e diventa il  parametro del controller
                  data: $('form#multiriga').serialize(), // serializes the form's elements.
                  success: function(response,textStatus,xhr){   
                             window.location.reload(true);
@@ -267,7 +267,7 @@ $("#non-euro").click(function (e) {
       return;
     } 
 
-		$('form#multiriga').attr('action', baseurl + '/notaspese/stampa');
+		$('form#multiriga').attr('action', app.url + '/notaspese/stampa');
 		$('form#multiriga').submit();
     });
 
@@ -279,7 +279,7 @@ $("#non-euro").click(function (e) {
       return;
     } 
 
-    $('form#multiriga').attr('action', baseurl + '/notaspese/stampa_collaboratore');
+    $('form#multiriga').attr('action', app.url + '/notaspese/stampa_collaboratore');
     $('form#multiriga').submit();
     });
     

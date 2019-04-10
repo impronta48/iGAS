@@ -23,6 +23,7 @@
 <?php if (isset($id)) {$this->Html->addCrumb("Attività $an" , "/attivita/edit/$id");} ?>
 
 <?php echo $this->Form->create('Attivita', array(
+		'enctype' => 'multipart/form-data',
         'inputDefaults' => array(
 		'div' => 'form-group',
 		'label' => array(
@@ -134,6 +135,14 @@
             <?php     
                 echo $this->Form->input('OffertaAlCliente');
                 echo $this->Form->input('ImportoAcquisito');
+				if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'_preventivo.pdf')):
+					echo 'E\' già stato caricato un documento. ';
+					echo $this->Html->link('Download this PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$id.'_preventivo.pdf', array('class'=>'btn btn-xs btn-primary'));
+					echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
+					echo $this->Html->link(__('Delete this PDF'), array('action' => 'deleteDoc', $id), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s_preventivo.pdf?', $id));
+					echo '<br />Un nuovo upload sovrascriverà il vecchio documento.';
+				endif;
+				echo $this->Form->input('uploadFile', array('label'=>'Upload File PDF', 'class'=>false, 'type'=>'file'));
             ?>
             <?php echo $this->Form->submit('Salva', array('class'=>'col-md-offset-2  btn btn-primary')); ?>
          </div>

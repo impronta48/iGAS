@@ -164,7 +164,7 @@ class Attivita extends AppModel {
            return $listaspese;
       }
 	  
-	  //Calcola il totale di note spese per una attività
+	  //Calcola il totale di ore usate da un'attività
       function primanota($id) {
             $r = $this->Primanota->find('all', array(
                 'conditions' => array('Primanota.attivita_id' => $id),
@@ -180,7 +180,7 @@ class Attivita extends AppModel {
                 return 0;
             }
       }
-	   //Calcola il preventivo di un'attività
+	   //Calcola il totale di ore usate da un'attività
       function preventivo($id) {
             $r = $this->Faseattivita->find('all', array(
                 'conditions' => array('Faseattivita.attivita_id' => $id),

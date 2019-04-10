@@ -1,23 +1,21 @@
-<?php $id = $this->request->query('attivita');    
-    if (!empty($id) && is_array($id) && count($id)==1)
-    {        
-        $id = $id[0];
-        echo $this->element('secondary_attivita', array('aid'=>$id)); 
-    }
-?>
-
 <?php $this->Html->addCrumb('Attività', ''); ?>
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
 <?php $baseformclass = ' form-control input-xs '; ?>
 
 <div class="fatturericevute index">
-    <h1>
-     Documenti Ricevuti
-    <?php echo $this->Html->link('<i class="fa fa-plus"></i> Nuovo Documento Ricevuto', array('action' => 'add'), array('class'=>'btn btn-primary','escape'=>false)); ?>
-    </h1>
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+            <i class="fa fa-file-text"></i> Documenti Ricevuti
+            <?php echo $this->Html->link('<i class="fa fa-plus"></i> Nuovo Documento Ricevuto', array('action' => 'add'), array('class'=>'btn btn-default','escape'=>false)); ?>
 
-    <div class="well">
-            <!-- Form di Ricerca -->
+            <span class="pull-right">
+            Ricerca Avanzata <a href="#" class="panel-minimize col-md-4"><i class="fa fa-chevron-down"></i></a>
+            </span>
+        </h3>
+        </div>
+        <div class="panel-body">
+                <!-- Form di Ricerca -->
                 <?php
                 echo $this->Form->create("FatturaRicevuta",array(
                         'url' => array('action' => 'index'),
@@ -84,10 +82,9 @@
                                                                 'options'=>$legendacatspesa
                                             )); ?>
 
-                <?php echo $this->Form->submit('Filtra',['class'=>'btn btn-success']); ?>
-                <?php echo $this->Form->end(); ?>
-            
-    </div> <!-- /well -->
+                <?php echo $this->Form->end('Filtra'); ?>
+            </div>
+    </div> <!-- /panel with heading -->
 
 
   <div class="table-responsive">
@@ -113,8 +110,13 @@
 	<?php foreach ($fatturericevute as $f): ?>
 	<tr>
         <td class="actions">
+			<?php 
+			if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$f['Fatturaricevuta']['id'].'.pdf')){
+				echo $this->Html->link('View PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$f['Fatturaricevuta']['id'].'.pdf', array('class'=>'btn btn-xs btn-primary','title'=>'View or Download PDF')); 
+			} 
+			?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $f['Fatturaricevuta']['id']), array('class'=>'btn btn-xs btn-primary')); ?>
-			<?php echo $this->Html->link(__('Del'), array('action' => 'delete', $f['Fatturaricevuta']['id']), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete # %s?', $f['Fatturaricevuta']['id'] ) ); ?>
+			<?php echo $this->Html->link(__('Del'), array('action' => 'delete', $f['Fatturaricevuta']['id']), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete # %s?', $f['Fatturaricevuta']['id'])); ?>
 		    <?php if ($f['Fatturaricevuta']['pagato'] || $f['Fatturaricevuta']['soddisfatta'] == $f['Fatturaricevuta']['importo'])
             {   //Se pagato vado alla riga di prima nota corrispondente
             ?>

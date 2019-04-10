@@ -2,7 +2,7 @@
 class PrimanotaController extends AppController {
     public $helpers = array('Cache', 'PhpExcel.PhpExcel');
 	public $cacheAction = "1 day";
-    public $components = array('DataTable', 'Paginator');
+    public $components = array('DataTable', 'Paginator', 'UploadFiles');
 	public $paginate = array(
         'limit' => 50,
     );
@@ -30,8 +30,25 @@ class PrimanotaController extends AppController {
             $this->_gestioneImporto();
 
             //Salvo il risultato
-            if ($this->Primanota->save($this->request->data))
-            {
+            if ($this->Primanota->save($this->request->data)) {
+				$id = $this->Primanota->getLastInsertID();
+				// Qua gestisco l'upload del documento
+				$uploaded_file=$this->request->data['Primanota']['uploadFile'];
+				$uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller);
+				if(strlen($uploadError)>0){
+					$this->Flash->error(__($uploadError));
+				}
+				/*
+				if(!empty($uploaded_file['tmp_name'])) {
+					if ($uploaded_file['type'] != 'application/pdf') {
+						$this->Flash->error(__('Formato file non valido, sono amessi solo PDF'));
+					} else { // Salvo il file 
+						if(!move_uploaded_file($uploaded_file['tmp_name'], WWW_ROOT.'files/primanota/'.$id.'.pdf')) {
+							$this->Flash->set(__('Errore salvataggio file. Riprovare'));
+						}
+					}
+				}
+				*/
                 $this->Session->setFlash('PrimaNota Salvata con Successo');
             }
             else {
@@ -133,8 +150,24 @@ class PrimanotaController extends AppController {
 		if (!empty($this->request->data)) {
             $this->_gestioneImporto();
 			if ($this->Primanota->save($this->request->data)) {
+				// Qua gestisco l'upload del documento
+				$uploaded_file=$this->request->data['Primanota']['uploadFile'];
+				$uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller);
+				if(strlen($uploadError)>0){
+					$this->Flash->error(__($uploadError));
+				}
+				/*
+				if(!empty($uploaded_file['tmp_name'])) {
+					if ($uploaded_file['type'] != 'application/pdf') {
+						$this->Flash->error(__('Formato file non valido, sono amessi solo PDF'));
+					} else { // Salvo il file 
+						if(!move_uploaded_file($uploaded_file['tmp_name'], WWW_ROOT.'files/primanota/'.$id.'.pdf')) {
+							$this->Flash->set(__('Errore salvataggio file. Riprovare'));
+						}
+					}
+				}
+				*/
 				$this->Session->setFlash('Riga di Prima Nota salvata con successo');
-
 				$attivita_id = $this->request->data['Primanota']['attivita_id'];
                 $this->redirect(array('controller'=>'primanota','action'=>'index'));
 
@@ -175,15 +208,20 @@ class PrimanotaController extends AppController {
         //e segnalare all'utente che quella riga non è più pagata
 
         if ($this->Primanota->delete()) {
+			unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf');
             $this->Session->setFlash(__('Primanota deleted'));
-                return $this->redirect(array('action' => 'index', $aid));
-
+            return $this->redirect(array('action' => 'index', $aid));
         }
         $this->Session->setFlash(__('Primanota was not deleted'));
         return $this->redirect(array('action' => 'index', $aid));
 
  }
 
+	public function deleteDoc($id = null) {
+		unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf');
+		$this->Session->setFlash(__('Documento cancellato'));
+		$this->redirect($this->referer());
+	}
 
      //Converte i campi importoentrata e uscita in un unico campo importo con il segno positivo o negativo
 private   function _gestioneImporto()
@@ -347,6 +385,7 @@ private function _preparaDropDown()
             ));
         //Uscite
         $this->set('pnu', $pn);
+        $this->set('anno',$anno);
 
     }
 

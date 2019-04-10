@@ -7,6 +7,7 @@ node_modules/
 e2e/
 tmp
 /Vendor/*
+vendor
 /build
 /tags
 *.mo
@@ -27,7 +28,7 @@ Plugin/Shim
 Plugin/Bs3Helpers
 Plugin/Config
 Plugin/acl_extras
-
+Plugin/Tools
 
 # IDE and editor specific files #
 #################################

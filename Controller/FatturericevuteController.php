@@ -7,15 +7,47 @@ App::uses('AppController', 'Controller');
  * @property PaginatorComponent $Paginator
  */
 class FatturericevuteController extends AppController {
-
-/**
- * Components
- *
- * @var array
- */
-	public $components = array('Paginator');
+	
+	public $components = array('Paginator', 'UploadFiles', 'GoogleDrive', 'GoogleMail');
     public $uses = array('Fatturaricevuta', 'Primanota');
-
+	
+	function test_google(){
+		//$this->Session->setFlash(__($this->GoogleDrive->echoCurrentUrl()));
+		//$this->GoogleDrive->getController($this);//Cercavo di passare l'oggetto Controller al Component per poer poi fare $this->Controller->redirect nel Component
+		$googleApiObj=new Google_Client;
+		$googleApiObj->setApplicationName(Configure::read('iGas.NomeAzienda'));
+		//$googleApiObj->setDeveloperKey(Configure::read('google_key'));
+		//$oauth_creds=APP.'vendor'.DS.'google'.DS.'client_secret_688204231769-vf1vgfin2vmibr40pr2io9eejq94hkgh.apps.googleusercontent.com.json';
+		$oauth_creds=Configure::read('google.oauth');
+		$googleApiObj->setAuthConfig($oauth_creds);
+		//$googleApiObj->setAccessType('offline');
+		//Uncomment this following 2 lines to upload to Drive
+		//$googleApiObj->addScope(Google_Service_Drive::DRIVE);
+		//$googleService = new Google_Service_Drive($googleApiObj);
+		//Uncomment this following 2 lines to send mails through gmail
+		$googleApiObj->setScopes(Google_Service_Gmail::GMAIL_COMPOSE);
+		$googleService = new Google_Service_Gmail($googleApiObj);
+		$redirect_uri = Router::url(null, true);
+		$googleApiObj->setRedirectUri($redirect_uri);
+		//debug($this->request->query);
+		//debug($redirect_uri);
+		if (isset($this->request->query['code'])) {
+			$token = $googleApiObj->fetchAccessTokenWithAuthCode($this->request->query['code']);
+			//debug($token);
+			$googleApiObj->setAccessToken($token);
+			$this->Session->write('upload_token', $token);
+			//$this->redirect(filter_var($redirect_uri, FILTER_SANITIZE_URL));
+		} else {
+			$auth_url = $googleApiObj->createAuthUrl();
+			debug($auth_url);
+			//$this->redirect(filter_var($auth_url, FILTER_SANITIZE_URL));
+			$this->redirect(filter_var($auth_url, FILTER_SANITIZE_URL));
+		}
+		//$result=$this->GoogleDrive->upload($googleService);
+		$result=$this->GoogleMail->sendMessage($googleService,'me');
+		$this->Session->setFlash(__($result));		
+	}
+	
 /**
  * index method
  *
@@ -96,9 +128,7 @@ class FatturericevuteController extends AppController {
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->Fatturaricevuta->create();
-            
-            
-            //Se non c'è il DisplayName tolgo tutti i campi del fornitore
+			//Se non c'è il DisplayName tolgo tutti i campi del fornitore
             if (empty($this->request->data['Fornitore']['DisplayName']))
             {
                 unset($this->request->data['Fornitore']);
@@ -110,12 +140,17 @@ class FatturericevuteController extends AppController {
             //debug($this->request->data);
 			if ($this->Fatturaricevuta->SaveAll($this->request->data)) {
 				$this->Session->setFlash('La Fattura Ricevuta è stata salvata con successo');
-                
+                //Prendo l'id legato al salvataggio
+                $id = $this->Fatturaricevuta->getLastInsertID();
+				// Qua gestisco l'upload del documento
+				$uploaded_file=$this->request->data['Fatturaricevuta']['uploadFile'];
+				$uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller);
+				if(strlen($uploadError)>0){
+					$this->Flash->error(__($uploadError));
+				}
                 //Se la chiamata prevedeva anche il salvataggio della prima nota, invoco anche quella
                 if (isset($this->request->data['submit-pn']))
                 {
-                    //Prendo l'id legato al salvataggio
-                    $id = $this->Fatturaricevuta->getLastInsertID();
                     $this->add2primanota($id);
                 }
 				return $this->redirect(array('action' => 'index'));
@@ -160,8 +195,13 @@ class FatturericevuteController extends AppController {
             
             //Salvo la fattura e i campi collegati
 			if ($this->Fatturaricevuta->Save($this->request->data)) {
+				// Qua gestisco l'upload del documento
+				$uploaded_file=$this->request->data['Fatturaricevuta']['uploadFile'];
+				$uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller);
+				if(strlen($uploadError)>0){
+					$this->Flash->error(__($uploadError));
+				}
 				$this->Session->setFlash('La fattura ricevuta è stata salvata');
-                
                 //Se la chiamata prevedeva anche il salvataggio della prima nota, invoco anche quella
                 if (isset($this->request->data['submit-pn']))
                 {
@@ -193,7 +233,7 @@ class FatturericevuteController extends AppController {
         
 		$provenienza = $this->Fatturaricevuta->Provenienzasoldi->find('list');
 		$legenda_cat_spesa = $this->Fatturaricevuta->LegendaCatSpesa->find('list');
-		$this->set(compact('attivita', 'fornitori', 'faseattivita','provenienza','legenda_cat_spesa','legenda_tipo_documento'));
+		$this->set(compact('id','attivita', 'fornitori', 'faseattivita','provenienza','legenda_cat_spesa','legenda_tipo_documento'));
 	}
 
 /**
@@ -208,17 +248,22 @@ class FatturericevuteController extends AppController {
 		if (!$this->Fatturaricevuta->exists()) {
 			throw new NotFoundException(__('Fattura Ricevuta non valida'));
 		}
-		
 		if ($this->Fatturaricevuta->delete()) {
+			unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf');
 			$this->Session->setFlash(__('Cancellata la fattura ricevuta'));
 			return $this->redirect(array('action' => 'index'));
 		}
 		$this->Session->setFlash(__('Fatturericevute was not deleted'));
 		return $this->redirect(array('action' => 'index'));
 	}
+	
+	public function deleteDoc($id = null) {
+		unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf');
+		$this->Session->setFlash(__('Documento cancellato'));
+		$this->redirect($this->referer());
+	}
     
-    public function add2primanota($id)
-    {
+    public function add2primanota($id) {
         $importo = 0;
 
         if (!isset($id))

@@ -1,27 +1,5 @@
 <h2>Avanzamento Generale <?php echo $tit ?></h2>
 
-<div class="well">
-<?php echo $this->Form->create('Attivita', array(
-		'type' => 'get',
-    'inputDefaults' => array(
-		'div' => 'form-group',
-		'label' => array(
-			'class' => 'col col-md-4 control-label'
-		),
-		'wrapInput' => 'col col-md-8',
-		'class' => 'form-control'
-	),	
-	'class' => 'well form-horizontal'       
-    )); ?>  
-
-	<?= $this->Form->input('nomeattivita',['value'=>$nomeattivita]); ?>
-	<?= $this->Form->input('progetto',['value'=>$progetto, 'options'=>$progetti,'empty'=>'---']); ?>
-	<?= $this->Form->input('area',['value'=>$area, 'options'=>$aree,'empty'=>'---']); ?>
-	<?= $this->Form->input('anno',['value'=>$anno, 'options'=>$anni,'empty'=>'---','label'=>'anno inizio attivita']); ?>
-	<?= $this->Form->submit('Filtra'); ?>
-	<?= $this->Form->end(); ?>
-</div>
-
 <table class="table table-striped">
 <tr>
 	<th width="15%">Attivita</th>

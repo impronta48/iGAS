@@ -1,7 +1,8 @@
 <?php
 App::uses('AppController', 'Controller');
-class NotaspeseController extends AppController {	
-    public $components = array('RequestHandler');
+class NotaspeseController extends AppController {
+	
+    public $components = array('RequestHandler', 'UploadFiles', 'GoogleDrive');
     public $helpers = array('Tristate', 'Table');
     
     private function getConditionFromQueryString()
@@ -162,8 +163,9 @@ class NotaspeseController extends AppController {
 		return $attivitaGrouped;
 	}
 	
-	function add()
-    {
+	function add($id = null){
+		//debug($this->Session->read('notaspeseUploadReferer'));
+		//debug($this->Session->read('scontrinoIdToUpload'));
         $persona=1;
         $anno=date('Y');
         $mese=date('M');
@@ -246,7 +248,6 @@ class NotaspeseController extends AppController {
             $destinazione= $this->request->query['dest'];            
         }    
 
-
 		//Mi hanno chiamato per salvare
 		if (!empty($this->data)) {		
 			if ($this->Notaspesa->save($this->data)) {
@@ -258,6 +259,17 @@ class NotaspeseController extends AppController {
                 $attivita = $this->data['Notaspesa']['eAttivita'];
                 $persona = $this->data['Notaspesa']['eRisorsa'];
                 $destinazione = $this->data['Notaspesa']['destinazione'];
+				
+				if(!$id){
+					//Prendo l'id legato al salvataggio
+					$id = $this->Notaspesa->getLastInsertID();
+				}
+				// Qua gestisco l'upload del documento su filesystem
+				$uploaded_file=$this->request->data['Notaspesa']['uploadFile'];
+				$uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller);
+				if(strlen($uploadError)>0){
+					$this->Flash->error(__($uploadError));
+				}
 
                 //A seconda del submit premuto vado nella direzione opportuna
                 if (isset($this->request->data['submit-ore'] ))
@@ -325,18 +337,25 @@ class NotaspeseController extends AppController {
             //debug($this->request->data); die
 
                 if ($this->Notaspesa->save($this->request->data, false)) {
-
-                   $this->Session->setFlash('Notaspese Modificata correttamente.');
+                    $this->Session->setFlash('Notaspese Modificata correttamente.');
+					/*
+					//Non ha senso mettere l'upload scontrino anche qua, in realtà quando fai edit dalla view edit
+					//il form ti rimanda al metodo add di questo controller....
+					$uploaded_file=$this->request->data['Notaspesa']['uploadFile'];
+					$uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller);
+					if(strlen($uploadError)>0){
+						$this->Flash->error(__($uploadError));
+					}
+					*/
                 } 
-
                 else {
-
                     $this->Session->setFlash('Impossibile salvare questa notaspese.');
                     debug($this->Notaspesa->validationErrors);  
                 }
              
         }
 		$this->data = $this->Notaspesa->findById($id);
+		$this->set('id', $id);
 		$this->set('eAttivita', $this->Notaspesa->Attivita->getlist());
 		$this->set('eRisorse', $this->Notaspesa->Persona->find('list',array('cache' => 'persona', 'cacheConfig' => 'short')));
 		$this->set('legenda_mezzi', $this->Notaspesa->LegendaMezzi->find('all',array('cache' => 'legendamezzi', 'cacheConfig' => 'short')));
@@ -479,7 +498,54 @@ class NotaspeseController extends AppController {
             $this->render('edit_riga');  
 			//Todo: non viene gestita la fase, se la perde ad ogni edit!
         }                
-   }
+    }
+	
+	public function setUploadToDrive($id = null) {
+		$this->Session->write('scontrinoIdToUpload', $id);
+		$refPage=explode($this->request->params['controller'],$this->referer());
+		$this->Session->write('notaspeseUploadReferer', '/'.$this->request->params['controller'].$refPage[1]);
+		$this->redirect(array('controller' => 'notaspese', 'action' => 'uploadToDrive'));
+	}
+	
+	public function uploadToDrive() {
+		//$this->Session->setFlash(__($this->GoogleDrive->echoCurrentUrl()));
+		//$this->GoogleDrive->getController($this);//Cercavo di passare l'oggetto Controller al Component per poter poi fare $this->Controller->redirect nel Component
+		$id=$this->Session->read('scontrinoIdToUpload');//Se qua faccio $this->Session->consume $id non viene valorizzato. Questo è assurdo.
+		$fileToUpload=WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.pdf';
+		//$this->Session->delete('scontrinoIdToUpload');//Se deleto questa $id della riga sopra diventa null. Questo è assurdo.
+		$googleApiObj=new Google_Client;
+		$googleApiObj->setApplicationName(Configure::read('iGas.NomeAzienda'));
+		//$googleApiObj->setDeveloperKey(Configure::read('google_key'));
+		$oauth_creds=Configure::read('google.oauth');
+		$googleApiObj->setAuthConfig($oauth_creds);
+		//$googleApiObj->setAccessType('offline');
+		//Uncomment this following 2 lines to upload to Drive
+		$googleApiObj->addScope(Google_Service_Drive::DRIVE);
+		$googleService = new Google_Service_Drive($googleApiObj);
+		//Uncomment this following 2 lines to send mails through gmail
+		//$googleApiObj->setScopes(Google_Service_Gmail::GMAIL_COMPOSE);
+		//$googleService = new Google_Service_Gmail($googleApiObj);
+		$redirect_uri = Router::url(null, true);
+		$googleApiObj->setRedirectUri($redirect_uri);
+		//debug($this->request->query);
+		//debug($redirect_uri);
+		if (isset($this->request->query['code'])) {
+			$token = $googleApiObj->fetchAccessTokenWithAuthCode($this->request->query['code']);
+			//debug($token);
+			$googleApiObj->setAccessToken($token);
+			$this->Session->write('upload_token', $token);
+			//$this->redirect(filter_var($redirect_uri, FILTER_SANITIZE_URL));
+		} else {
+			$auth_url = $googleApiObj->createAuthUrl();
+			debug($auth_url);
+			//$this->redirect(filter_var($auth_url, FILTER_SANITIZE_URL));
+			$this->redirect(filter_var($auth_url, FILTER_SANITIZE_URL));
+		}
+		$result=$this->GoogleDrive->upload($googleService,$fileToUpload,Configure::read('google.drive.notaspese'));
+		//$result=$this->GoogleMail->sendMessage($googleService,'me');
+		$this->Session->setFlash(__($result));
+		$this->redirect($this->Session->consume('notaspeseUploadReferer'));
+	}
     
     private function _decode_tristate(&$conditions, $param)
     {
@@ -551,12 +617,19 @@ class NotaspeseController extends AppController {
 			$this->redirect(array('action'=>'index'));
 		}
 		if ($this->Notaspesa->delete($id)) {
+			unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf');
 			$this->Session->setFlash(__('Notaspese deleted'));
 			$this->redirect($this->referer());
 		}
 		$this->Session->setFlash(__('Notaspese was not deleted'));
 		$this->redirect(array('action' => 'index'));
     }
+	
+	public function deleteDoc($id = null) {
+		unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf');
+		$this->Session->setFlash(__('Documento cancellato'));
+		$this->redirect($this->referer());
+	}
 
     public function duplicate($id) {
 

@@ -20,10 +20,7 @@
   <?php echo $this->Html->css('/DataTables/Responsive-2.2.0/css/responsive.bootstrap.min.css'); ?>    
   <?php echo $this->Html->css('bootstrap-chosen'); ?>  
   <?php echo $this->Html->css('style'); ?>  
-  
-  <script>
-    var baseurl = '<?php echo $this->request->base ?>';
-  </script>     
+     
   
   <!-- Loading Custom Stylesheets -->    
   <?php echo $this->Html->css('custom'); ?>
@@ -48,11 +45,12 @@
         <!-- .navbar -->
           <nav class="navbar " role="navigation">
             
+			
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <a class="navbar-brand" title="iGas - Gestione Aziendale Semplice" href="
                   <?php echo $this->Html->url('/pages/home'); ?>">
-                  <i class="fa fa-list btn-nav-toggle-responsive text-white"></i> 
+                  <i class="fa fa-list btn-nav-toggle-responsive text-white"></i>
                   <span class="logo"><?php echo Configure::read('iGas.NomeAzienda') ?></span>
                 </a>
             </div>
@@ -166,7 +164,7 @@
      
         
 <!-- Latest compiled and minified JavaScript -->
-<?php echo $this->Html->script("jquery-1.10.2.min"); ?>
+<?php echo $this->Html->script("jquery-1.10.2.min.js"); ?>
 <?php echo $this->Html->script("bootstrap.min.js"); ?>
 <?php echo $this->Html->script("jquery-ui-1.10.3.custom.min.js"); ?>
 <?php echo $this->Html->script("/DataTables/DataTables-1.10.16/js/jquery.dataTables.min"); ?>
@@ -186,8 +184,8 @@
 <?php echo $this->Html->script("chosen.jquery.min"); ?>
 <?php echo $this->Html->script("igas"); ?>
 
-<?php echo $this->fetch('script'); ?>
-<?php echo $this->Js->writeBuffer();  // Write cached scripts ?>
+<?php echo $this->Js->writeBuffer(); ?>
+<?php echo $scripts_for_layout; ?>
 <!-- Load JS here for Faster site load =============================-->
 
 

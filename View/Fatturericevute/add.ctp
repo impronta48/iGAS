@@ -4,14 +4,15 @@
 
 <div class="fatturericevutes form">
 <?php echo $this->Form->create('Fatturaricevuta', array(
-        'inputDefaults' => array(
+	'enctype' => 'multipart/form-data',
+	'inputDefaults' => array(
 		'div' => 'form-group',
 		'label' => array(
 			'class' => 'col col-md-2 control-label'
 		),
 		'wrapInput' => 'col col-md-4',
 		'class' => $baseformclass,
-	),	
+	),
 	'class' => 'well form-horizontal'       
     ));  ?>
 	<fieldset>
@@ -51,6 +52,10 @@
         echo $this->Form->input('scadPagamento', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
 		echo $this->Form->input('ritenutaAcconto');		
 		echo $this->Form->input('scadenzaRitenutaAcconto', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
+		// Ho notato che input type="file" non si prende gli inputDefaults settati in $this->Form->create() all'inizio del file
+		//echo $this->Form->file('uploadFile');
+		// Meglio usare questa sintassi per creare input type="file"
+		echo $this->Form->input('uploadFile', array('label'=>'Upload File PDF', 'class'=>false, 'type'=>'file'));
 		echo $this->Form->input('pagato', array('class'=>false,'wrapInput' => 'col col-md-10 col-md-offset-2', 'type'=>'checkbox'));
 		echo $this->Form->input('pagatoRitenutaAcconto', array('class'=>false, 'wrapInput' => 'col col-md-10 col-md-offset-2', 'type'=>'checkbox'));
 		

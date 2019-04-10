@@ -1,15 +1,15 @@
-<?php //echo $this->Html->css('login'); ?>
+<?php echo $this->Html->css('login'); ?>
 
 <section id="login">
     <div class="row animated fadeILeftBig">
-     <div class="login-holder col-md-4 col-md-offset-4 col-sm-11 col-sm-offset-1">
+     <div class="login-holder col-md-6 col-md-offset-3">
        <h2 class="page-header text-center text-primary"> 
         <?php echo $this->Html->image('logo-igas.png',['class'=>'img-responsive']) ?>
         Benvenuti su iGAS<br>
         <?php echo Configure::read('iGas.NomeAzienda') ?> <br>
         <small>Gestione Aziendale Semplice</small> 
         </h2>
-       <?php echo $this->Form->create('User', array(
+        <?php echo $this->Form->create('User', array(
        			'url' => array('controller' => 'users', 'action' =>'login'),
 				    'inputDefaults' => array(									
 									'label' => false,
@@ -43,8 +43,7 @@
     		    	</div>
     		    </div>
         </div>
-				<?php echo $this->Form->end();?>
-      </form>
+		<?php echo $this->Form->end();?>
     </div>
   </div>
 </section>

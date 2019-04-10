@@ -56,7 +56,6 @@
     <li><?php echo $this->Html->link('<i class="fa fa-book"></i> Prima Nota (Per mese)', '/primanota/totalimese/' . date('Y'), array('data-original-title'=>'Totali per Mese Prima Nota','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-eur"></i> Ore per Attivita', '/ore/attivita/', array('data-original-title'=>'Ore per Attivita','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-eur"></i> Avanzamento Generale', '/attivita/avanzamento_gen', array('data-original-title'=>'Avanzamento Generale','escape' => false)) ?></li>
-    <li><?php echo $this->Html->link('<i class="fa fa-eur"></i> Offerto Acquistio', '/attivita/offerto_acquisito?anno='. date('Y'), array('data-original-title'=>'Avanzamento Generale','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-eur"></i> Bilancio', '/primanota/bilancio/anno:' . date('Y') , array('data-original-title'=>'Bilancio','escape' => false)) ?></li> 
     <li><?php echo $this->Html->link('<i class="fa fa-eur"></i> Prima Nota Per Anno', '/primanota/per_anno', array('data-original-title'=>'Prima Nota Per Anno','escape' => false)) ?></li> 
     <li><?php echo $this->Html->link('<i class="fa fa-eur"></i> Pivot Bilancio', '/primanota/pivot/' . date('Y'), array('data-original-title'=>'Pivot Bilancio','escape' => false)) ?></li>

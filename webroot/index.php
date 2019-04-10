@@ -92,7 +92,7 @@ if (php_sapi_name() == 'cli-server') {
 
 define(
         'CAKE_CORE_INCLUDE_PATH',
-        ROOT . DS . APP_DIR . DS . 'Vendor' . DS . 'cakephp' . DS . 'cakephp' . DS . 'lib'
+        ROOT . DS . APP_DIR . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS . 'lib'
 );    
     
 

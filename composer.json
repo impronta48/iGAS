@@ -29,9 +29,10 @@
         "phpoffice/phpexcel": "^1.8",
         "mikehaertl/phpwkhtmltopdf": "^2.2",        
         "dereuromark/cakephp-tools": "2.x-dev",
-        "robmorgan/phinx": "^0.10.6"
+        "robmorgan/phinx": "^0.10.6",
+		"google/apiclient": "^2.0"
     },
     "config": {
-        "vendor-dir": "Vendor/"
+        "vendor-dir": "vendor/"
     }
 }

@@ -3,7 +3,7 @@ class AttivitaController extends AppController {
 
 	public $name = 'Attivita';
     public $helpers = array('Number','Html');
-    public $components = array('Paginator','Cookie');
+    public $components = array('Paginator','Cookie','UploadFiles');
  
 	function index() {
 		$this->Attivita->recursive = 0;        
@@ -225,14 +225,24 @@ class AttivitaController extends AppController {
                     unset($this->request->data['Persona']['DisplayName2']);
                 }                                      
 
-                //Faccio save all per salvare anche i dettagli della persona
-                if ($this->Attivita->saveAll($this->request->data)) {
-				$this->Session->setFlash('Attività salvata con successo, si può procedere.');
-                                 //Rimango sulla stessa pagina in edit
-                                $this->redirect(array('action' => 'edit', $this->Attivita->id ));
-				} else {
-                                    $this->Session->setFlash(__('The attivita could not be saved. Please, try again.'));
-				}
+               //Faccio save all per salvare anche i dettagli della persona
+               if ($this->Attivita->saveAll($this->request->data)) {
+                $this->Session->setFlash('Attività salvata con successo, si può procedere.');
+                if(!$id){
+                    //Prendo l'id legato al salvataggio
+                    $id = $this->Attivita->getLastInsertID();
+                }
+                    // Qua gestisco l'upload del documento
+                    $uploaded_file=$this->request->data['Attivita']['uploadFile'];
+                    $uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller,'_preventivo');
+                    if(strlen($uploadError)>0){
+                        $this->Flash->error(__($uploadError));
+                    }
+                    //Rimango sulla stessa pagina in edit
+                    $this->redirect(array('action' => 'edit', $this->Attivita->id ));
+                } else {
+                    $this->Session->setFlash(__('The attivita could not be saved. Please, try again.'));
+                }
 		}
 		if (empty($this->request->data)) {
 			$this->request->data = $this->Attivita->read(null, $id);
@@ -252,6 +262,7 @@ class AttivitaController extends AppController {
 			$this->redirect(array('action'=>'index'));
 		}
 		if ($this->Attivita->delete($id)) {
+            unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'_preventivo.pdf');
 			$this->Session->setFlash(__('Attivita deleted'));
 			$this->redirect(array('action'=>'index'));
 		}
@@ -259,6 +270,12 @@ class AttivitaController extends AppController {
 		$this->redirect(array('action' => 'index'));
 	}
 
+    public function deleteDoc($id = null) {
+		unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'_preventivo.pdf');
+		$this->Session->setFlash(__('Documento cancellato'));
+		$this->redirect($this->referer());
+    }
+    
     function suggest()
 	{
         $data = array();

@@ -2,9 +2,9 @@
 <?php echo $this->Html->script('faseattivita',array('inline' => false)); ?>
 <?php $baseformclass = Configure::read('iGas.baseFormClass'); ?> 
 
-
 <div class="fatturericevutes form">
 <?php echo $this->Form->create('Fatturaricevuta', array(
+		'enctype' => 'multipart/form-data',
         'inputDefaults' => array(
 		'div' => 'form-group',
 		'label' => array(
@@ -19,7 +19,7 @@
 		<fieldset>
 		<legend>Modifica Documento Ricevuto</legend>
 	<?php
-        echo $this->Form->input('id');
+        echo $this->Form->input('id');// Questo non è valorizzato
         echo $this->Form->input('fornitore_id', array('class' => 'chosen-select'));    
         echo $this->Form->input('protocollo_ricezione');
 		echo $this->Form->input('legenda_tipo_documento_id', array('options'=>$legenda_tipo_documento,'label'=>'Tipo Documento','class' => 'chosen-select'));
@@ -39,9 +39,16 @@
         echo $this->Form->input('scadPagamento', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
 		echo $this->Form->input('ritenutaAcconto');		
 		echo $this->Form->input('scadenzaRitenutaAcconto', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
+		if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf')){
+			echo 'E\' già stato caricato un documento. ';
+			echo $this->Html->link('Download this PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$id.'.pdf', array('class'=>'btn btn-xs btn-primary'));
+			echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
+			echo $this->Html->link(__('Delete this PDF'), array('action' => 'deleteDoc', $id), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s.pdf?', $id));
+			echo '<br />Un nuovo upload sovrascriverà il vecchio documento.';
+		}
+		echo $this->Form->input('uploadFile', array('label'=>'Upload File PDF', 'class'=>false, 'type'=>'file'));
 		echo $this->Form->input('pagato', array('class'=>false,'wrapInput' => 'col col-md-10 col-md-offset-2', 'type'=>'checkbox','enabled'=>'false'));
 		echo $this->Form->input('pagatoRitenutaAcconto', array('class'=>false, 'wrapInput' => 'col col-md-10 col-md-offset-2', 'type'=>'checkbox'));
-		
 	?>
 	</fieldset>
     <?php echo $this->Form->button('Salva Fattura Ricevuta', array('name'=>'submit-fr', 'class'=>'btn btn-primary')); ?>

@@ -1,10 +1,8 @@
 $('document').ready(function(){
-	if ( $.fn.chosen) {
-		$(".chosen-select").chosen({ width: "95%" });
-	}
+
+	$(".chosen-select").chosen({ width: "95%" });
   
 	// Settings object that controls default parameters for library methods:
-	if ( $.fn.accounting) {
 	accounting.settings = {
 		currency: {
 			symbol : "€",   // default currency symbol is '€'
@@ -19,7 +17,6 @@ $('document').ready(function(){
 			decimal : ","
 		}
 	}
-	
 
 	// These can be changed externally to edit the library's defaults:
 	accounting.settings.currency.format = "%s %v";
@@ -30,7 +27,7 @@ $('document').ready(function(){
 		neg : "%s -%v", // for negative values, eg. "$ (1.00)" [optional]
 		zero: "%s  0,00"  // for zero values, eg. "$  --" [optional]
 	}; 
-	}
+
   	// Sidebar dropdown
 	$('ul.nav-list').accordion({    
 	    //set localStorage for current index on activate event

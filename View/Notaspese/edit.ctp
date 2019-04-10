@@ -24,6 +24,7 @@
 <h1>Modifica riga di nota spese</h1>
 <div class="notaspese form">
     <?php echo $this->Form->create('Notaspesa', array(
+	'enctype' => 'multipart/form-data',
 	'inputDefaults' => array(
 		'div' => 'form-group',
 		'label' => array(
@@ -32,7 +33,8 @@
 		'wrapInput' => 'col col-md-4',
 		'class' => 'form-control'
 	),	
-  'url' => '/notaspese/add',
+	'url' => array('controller' => 'Notaspese', 'action' => 'add', 'id' => $id),
+    //'url' => '/notaspese/add',
 	'class' => 'well form-horizontal'        
     )); ?>
 
@@ -59,6 +61,16 @@
 	<?php echo $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'class'=>'fase ' . $baseformclass)); ?> 
     <?php echo $this->Form->input('eCatSpesa', array('options'=>$eCatSpesa, 'label'=>'Tipo di Spesa')); ?>
     <?php echo $this->Form->input('descrizione'); ?>    
+	<?php
+	if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf')){
+		echo 'E\' già stato caricato un documento. ';
+		echo $this->Html->link('Download this PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$id.'.pdf', array('class'=>'btn btn-xs btn-primary'));
+		echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
+		echo $this->Html->link(__('Delete this PDF'), array('action' => 'deleteDoc', $id), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s.pdf?', $id));
+		echo '<br />Un nuovo upload sovrascriverà il vecchio documento.';
+	}
+	echo $this->Form->input('uploadFile', array('label'=>'Upload scontrino', 'class'=>false, 'type'=>'file'));
+	?>
     <fieldset id="spostamento">
         <legend>Spostamento</legend>
         <!-- Inserire origine del dipendente dalla sua anagrafica -->

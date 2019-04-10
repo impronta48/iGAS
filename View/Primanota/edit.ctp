@@ -8,6 +8,7 @@
 <div class="primanota form">
 		<legend><?php echo __('Edit Prima Nota'); ?></legend>        
             <?php echo $this->Form->create('Primanota',array(
+								'enctype' => 'multipart/form-data',
                                 'inputDefaults' => array(
                                     'div' => 'form-group',
                                     'label' => array(
@@ -75,7 +76,17 @@
             </div>
             <div id="aggiungi-fattura-ricevuta" class="scomparsa">
                 <?php echo  $this->Form->input('fatturaricevuta_id', array('label'=>'Fattura Ricevuta', 'options'=>$fatturaricevuta)); ?> 
-            </div>           
+            </div>
+			<?php
+			if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$this->request->data['Primanota']['id'].'.pdf')):
+					echo 'E\' già stato caricato un documento. ';
+					echo $this->Html->link('Download this PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$this->request->data['Primanota']['id'].'.pdf', array('class'=>'btn btn-xs btn-primary'));
+					echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
+					echo $this->Html->link(__('Delete this PDF'), array('action' => 'deleteDoc', $this->request->data['Primanota']['id']), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s_preventivo.pdf?', $this->request->data['Primanota']['id']));
+					echo '<br />Un nuovo upload sovrascriverà il vecchio documento.';
+				endif;
+			echo $this->Form->input('uploadFile', array('label'=>'Upload File PDF', 'class'=>false, 'type'=>'file'));
+			?>
             
             <?php echo  $this->Form->end('Salva'); ?>
         </div>
