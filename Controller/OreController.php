@@ -763,17 +763,7 @@ class OreController extends AppController {
             if ($this->Ora->save($this->request->data)) {
                 $this->Session->setFlash('Ora Aggiunta correttamente.');
 				
-				//Visto che a questo punto l'ora è inserita posso inviare una mail di conferma
-				$emailObj = new CakeEmail('smtp');
-				$emailObj->template('confermacaricamentoore');
-				$emailObj->sender(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
-				$emailObj->from(array('bill@microsoft.com' =>'Bill Gates'));
-				$emailObj->to('test@localhost');
-				$emailObj->emailFormat('text');
-				$emailObj->returnPath('postmaster@localhost');
-				$emailObj->replyTo(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
-				$emailObj->subject('Foglio ore caricato');
-				$emailObj->send();
+
 				
                 //A Seconda del submit gestisco un'operazione diversa
                 if (isset($this->request->data['submit-ns']))
@@ -823,8 +813,8 @@ class OreController extends AppController {
         //Applico il filtro alle condizioni del report ore mostrato in basso
         //(di default o passate come parametro)
         $conditions['Ora.eRisorsa'] =$persona;
-        $conditions['YEAR(data)'] = $anno;
-        $conditions['MONTH(data)'] = $mese;
+        $conditions['YEAR(Ora.data)'] = $anno;
+        $conditions['MONTH(Ora.data)'] = $mese;
         //Non filtro su giorno e attività perchè voglio vedere il report mensile della persona
         //$conditions['DAY(data)'] = $giorno;
         //$conditions['Ora.eAttivita'] = $attivita;
@@ -834,9 +824,9 @@ class OreController extends AppController {
             array(
                 'conditions' => $conditions,
                 'fields' => array(
-                    'id','Ora.eRisorsa', 'numOre', 'data', 'dettagliAttivita', 'luogoTrasferta', 'eAttivita','Faseattivita.Descrizione'
+                    'id','Ora.eRisorsa', 'numOre', 'Ora.data', 'dettagliAttivita', 'luogoTrasferta', 'eAttivita','Faseattivita.Descrizione'
                 ),
-                'order' => 'data'
+                'order' => 'Ora.data'
             )
         );
         
@@ -898,7 +888,7 @@ class OreController extends AppController {
         }
         else
         {
-            $conditions['YEAR(data)'] = date('Y');    
+            $conditions['YEAR(Ora.data)'] = date('Y');    
         }
 
         $persone = $this->Ora->find('all', array(
