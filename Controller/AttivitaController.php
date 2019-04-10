@@ -759,12 +759,12 @@ class AttivitaController extends AppController {
             , (SELECT round(SUM(r.importo)) FROM fattureemesse f 
                         left JOIN righefatture r ON (r.fattura_id = f.id )
                         WHERE Attivita.id = f.attivita_id
-                        AND (YEAR(f.DATA)=2018)
+                        # AND (YEAR(f.DATA)=2018)
             ) AS Attivita__fatturato
-            , (SELECT round(SUM(p.importo)/1.22) FROM primanota p 
+            , (SELECT round(SUM(p.imponibile)) FROM primanota p 
                         JOIN fattureemesse f ON (p.fatturaemessa_id = f.id)
                         where Attivita.id = f.attivita_id
-                        AND (YEAR(f.DATA)=2018)
+                        # AND (YEAR(f.DATA)=2018)
             ) AS Attivita__incassato 
             #, ROUND(ImportoAcquisito-(select Attivita__fatturato)) AS Attivita__daFatturare
             #, ROUND((SELECT Attivita__fatturato)-(select Attivita__incassato)) AS Attivita__daIncassare

@@ -21,9 +21,8 @@
             <?php echo $this->Form->input('qta');?>
             <?php echo $this->Form->input('um');?>
             <?php echo $this->Form->input('costou');?>
+            <?php echo $this->Form->input('vendutou');?>
             <?php echo $this->Form->input('sc1');?>
-            <?php echo $this->Form->input('sc2');?>
-            <?php echo $this->Form->input('sc3');?>
 
             <?php echo $this->Form->input('legenda_codici_iva_id', array('options'=>$legendaCodiceiva, 'default'=>Configure::read('iGas.IvaDefault')));?>
         

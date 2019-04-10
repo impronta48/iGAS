@@ -189,7 +189,7 @@ class PersoneController extends AppController {
         $persone = Configure::read('Attivita.personeFoglioOre');
         $proj_speciali = Configure::read('iGas.progettiSpeciali');        
         $tabore= $this->_getOreconsulente($persone, $anno, $mese);
-
+        
         $this->set('ore', $tabore);
         $this->set('mese', $mese);
         $this->set('anno', $anno);

@@ -66,9 +66,8 @@
             <?php echo $this->Form->input('qta');?>
             <?php echo $this->Form->input('um');?>
             <?php echo $this->Form->input('costou');?>            
-            <?php echo $this->Form->input('sc1');?>
-            <?php echo $this->Form->input('sc2');?>
-            <?php echo $this->Form->input('sc3');?>
+            <?php echo $this->Form->input('vendutou');?>            
+            <?php echo $this->Form->input('data');?>            
             <?php echo $this->Form->input('legenda_codici_iva_id', array('options'=>$legendaCodiceiva, 'default'=>Configure::read('iGas.IvaDefault')));?>
             <?php echo $this->Form->hidden('persona_id',array('type'=>'text')); ?>
             <?php echo $this->Form->input('Persona.DisplayName',array('type'=>'text', 'label' => 'Persona')); ?>
@@ -96,16 +95,18 @@
             <?php endif; ?>
 			<th>Descrizione</th>
 			<th>Qta</th>
-			<th>Qtà spedita</th>
+			<th>Qtà usata</th>
 			<th>UM</th>
 			<th>Costo U.</th>
+			<th>Venduto U.</th>
 			<th>Iva</th>
-			<th>Totale</th>
+			<th>Totale Costo</th>
+			<th>Totale Venduto</th>
             <th>Soggetto</th>			
 			<th>Stato</th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
-	<?php $tot_righe = 0;
+	<?php $tot_righe = 0; $tot_righev = 0;
           foreach ($faseattivitanegativa as $faseattivita): ?>
 	<tr>
         <?php if (empty($id)): ?>
@@ -140,8 +141,10 @@
 		</td>
 		<td><?php echo h($faseattivita['Faseattivita']['um']); ?>&nbsp;</td>
         <td><?php echo h($faseattivita['Faseattivita']['costou']); ?>&nbsp; &euro;</td>        
+        <td><?php echo h($faseattivita['Faseattivita']['vendutou']); ?>&nbsp; &euro;</td>        
 		<td><?php echo h($faseattivita['LegendaCodiciIva']['Descrizione']); ?>&nbsp;</td>
         <td><?php $tot = $faseattivita['Faseattivita']['costou']*$faseattivita['Faseattivita']['qta']; $tot_righe += $tot; echo h($tot); ?>&nbsp;&euro;</td>		
+        <td><?php $totv = $faseattivita['Faseattivita']['vendutou']*$faseattivita['Faseattivita']['qta']; $tot_righev += $totv; echo h($totv); ?>&nbsp;&euro;</td>		
         <td><?php echo $faseattivita['Persona']['DisplayName']; ?></td>
 		<td><?php echo $faseattivita['LegendaStatoAttivita']['name']; ?></td>
 		<td class="actions">
@@ -153,8 +156,9 @@
     <tfoot>
     <tr class="bg-success">       
         <td class="bg-success"></td>
-        <td colspan="6" class="bg-success"><b>Totale</b></td>        
+        <td colspan="7" class="bg-success"><b>Totale</b></td>        
         <td class="bg-success"><b><?php echo $tot_righe; $tot_uscite= $tot_righe; ?> &euro;</b></td>
+        <td class="bg-success"><b><?php echo $tot_righev; $tot_uscitev= $tot_righev; ?> &euro;</b></td>
         <td colspan="3" class="bg-success"></td>
     </tr>
     </tfoot>

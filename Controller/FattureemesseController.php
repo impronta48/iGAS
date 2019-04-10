@@ -160,11 +160,9 @@ class FattureemesseController extends AppController {
 
         //Qui tiro su l'anagrafica dell'azienda che emette la fattura
         $pid = Configure::read('iGas.idAzienda');
-        $azienda =  $this->Persona->findById($pid);
-        $pid = Configure::read('iGas.idAzienda');
         $azienda = $this->Persona->findById($pid);
         $this->set('azienda', $azienda);
-        $f = $this->Fatturaemessa->findById($id);
+        $f = $this->Fatturaemessa->findById($id);        
 
         //Passo alla view i dati della fattura
 		$this->set('fatturaemessa', $f );

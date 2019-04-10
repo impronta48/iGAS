@@ -148,13 +148,14 @@ Inflector::rules('singular', array(
 //CakePlugin::load('Migrations');
 //CakePlugin::load('Config', array('bootstrap' => true));
 //CakePlugin::load('Shim');
-CakePlugin::load('PhpExcel');
-CakePlugin::load('DebugKit');
+
+
 CakePlugin::load('BoostCake');
 CakePlugin::load('Tags');
 CakePlugin::load('ClearCache');
 CakePlugin::load('Tools', array('bootstrap' => true));
-
+CakePlugin::load('PhpExcel');
+CakePlugin::load('DebugKit');
 /**
  * You can attach event listeners to the request lifecycle as Dispatcher Filter . By Default CakePHP bundles two filters:
  *
