@@ -39,6 +39,7 @@
         
         <div id="aggiungi-attivita" class="panel-body collapse">
             <?php echo $this->Form->create('Faseattivita',array(
+                                'enctype' => 'multipart/form-data',
                                 'inputDefaults' => array(
                                     'div' => 'form-group',
                                     'label' => array(
@@ -65,15 +66,17 @@
             <?php echo $this->Form->input('Descrizione');?>
             <?php echo $this->Form->input('qta');?>
             <?php echo $this->Form->input('um');?>
-            <?php echo $this->Form->input('costou');?>            
-            <?php echo $this->Form->input('vendutou');?>            
-            <?php echo $this->Form->input('data');?>            
+            <?php echo $this->Form->input('costou', array('label'=> 'Costo Unità'));?>
+            <?php echo $this->Form->input('vendutou', array('label'=> 'Venduto Unità'));?>            
+            <?php echo $this->Form->input('sc1');?>
+            <?php echo $this->Form->input('sc2');?>
+            <?php echo $this->Form->input('sc3');?>
             <?php echo $this->Form->input('legenda_codici_iva_id', array('options'=>$legendaCodiceiva, 'default'=>Configure::read('iGas.IvaDefault')));?>
             <?php echo $this->Form->hidden('persona_id',array('type'=>'text')); ?>
             <?php echo $this->Form->input('Persona.DisplayName',array('type'=>'text', 'label' => 'Persona')); ?>
-                        
             <?php echo $this->Form->input('legenda_stato_attivita_id');?>
-             <?php echo $this->Form->input('note', array('type'=>'text'));?>
+            <?php echo $this->Form->input('note', array('type'=>'text'));?>
+            <?php echo $this->Form->input('uploadFile', array('label'=>'Upload File', 'class'=>false, 'type'=>'file')); ?>
             <div class="col col-md-offset-3">
                 <?php echo  $this->Form->button('Aggiungi ',array('class'=>'btn btn-primary', )); ?>
             </div>
@@ -83,7 +86,7 @@
     </div>
     </div>
 
-    <h2>Uscite</h2>
+    <h2>Preventivo Costi e Venduto</h2>
 
     <div class="table-responsive">
 	<table class="table table-condensed table-striped">
@@ -94,20 +97,22 @@
                 <th>Sel</th>
             <?php endif; ?>
 			<th>Descrizione</th>
-			<th>Qta</th>
-			<th>Qtà usata</th>
+			<th>Qtà</th>
+			<th>Qtà utilizzata</th>
 			<th>UM</th>
 			<th>Costo U.</th>
-			<th>Venduto U.</th>
+            <th>Venduto U.</th>
 			<th>Iva</th>
-			<th>Totale Costo</th>
-			<th>Totale Venduto</th>
+			<th>Tot. Costi</th>
+            <th>Tot. Venduto</th>
             <th>Soggetto</th>			
 			<th>Stato</th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
-	<?php $tot_righe = 0; $tot_righev = 0;
-          foreach ($faseattivitanegativa as $faseattivita): ?>
+    <?php 
+        $tot_righe = $totVenduto_righe = 0;
+        foreach ($faseattivitanegativa as $faseattivita): 
+    ?>
 	<tr>
         <?php if (empty($id)): ?>
             <td><?php echo $this->Html->link($faseattivita['Attivita']['name'],'/faseattivita/index/'. $faseattivita['Attivita']['id']); ?></td>
@@ -135,30 +140,45 @@
 						$cls = 'bg-warning';
 					}
 				}
-			
-				echo '<span class="badge '.$cls.'">'.$spedito.' / '.$da_spedire.'</span>';
+                //echo '<span class="badge '.$cls.'">'.$spedito.' / '.$da_spedire.'</span>';
+                $spedito = ($faseattivita['Faseattivita']['qtaUtilizzata'] == NULL) ? 0 : $faseattivita['Faseattivita']['qtaUtilizzata'];
+                echo '<span class="badge '.$cls.'">'.$spedito.' / '.$da_spedire.'</span>';
 			?>
 		</td>
 		<td><?php echo h($faseattivita['Faseattivita']['um']); ?>&nbsp;</td>
-        <td><?php echo h($faseattivita['Faseattivita']['costou']); ?>&nbsp; &euro;</td>        
+        <td><?php echo h($faseattivita['Faseattivita']['costou']); ?>&nbsp; &euro;</td>
         <td><?php echo h($faseattivita['Faseattivita']['vendutou']); ?>&nbsp; &euro;</td>        
 		<td><?php echo h($faseattivita['LegendaCodiciIva']['Descrizione']); ?>&nbsp;</td>
         <td><?php $tot = $faseattivita['Faseattivita']['costou']*$faseattivita['Faseattivita']['qta']; $tot_righe += $tot; echo h($tot); ?>&nbsp;&euro;</td>		
-        <td><?php $totv = $faseattivita['Faseattivita']['vendutou']*$faseattivita['Faseattivita']['qta']; $tot_righev += $totv; echo h($totv); ?>&nbsp;&euro;</td>		
+        <td><?php $totVenduto = $faseattivita['Faseattivita']['vendutou']*$faseattivita['Faseattivita']['qta']; $totVenduto_righe += $totVenduto; echo h($totVenduto); ?>&nbsp;&euro;</td>
         <td><?php echo $faseattivita['Persona']['DisplayName']; ?></td>
 		<td><?php echo $faseattivita['LegendaStatoAttivita']['name']; ?></td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $faseattivita['Faseattivita']['id'])); ?>
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $faseattivita['Faseattivita']['id'],$faseattivita['Faseattivita']['attivita_id']), null, __('Are you sure you want to delete # %s?', $faseattivita['Faseattivita']['id'])); ?>
-		</td>
+            <?php 
+            foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+                if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$faseattivita['Faseattivita']['attivita_id'].'_'.$faseattivita['Faseattivita']['id'].'.'.$ext)){
+                    echo $this->Html->link('FILE', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$faseattivita['Faseattivita']['attivita_id'].'_'.$faseattivita['Faseattivita']['id'].'.'.$ext, array('class'=>'btn btn-xs btn-primary','title'=>'View or Download attached File')); 
+                }
+            }
+			?>
+            <?php 
+                foreach($primenoteDiFasi as $primanota){
+                    if($faseattivita['Faseattivita']['id'] == $primanota['Primanota']['faseattivita_id']){
+                        echo $this->Html->link('Prima Nota',array('controller' => 'primanota','action' => 'edit',$primanota['Primanota']['id']));
+                    }
+                }
+            ?>
+        </td>
 	</tr>    
 <?php endforeach; ?>    
     <tfoot>
     <tr class="bg-success">       
         <td class="bg-success"></td>
-        <td colspan="7" class="bg-success"><b>Totale</b></td>        
+        <td colspan="7" class="bg-success"><b>Totali</b></td>        
         <td class="bg-success"><b><?php echo $tot_righe; $tot_uscite= $tot_righe; ?> &euro;</b></td>
-        <td class="bg-success"><b><?php echo $tot_righev; $tot_uscitev= $tot_righev; ?> &euro;</b></td>
+        <td class="bg-success"><b><?php echo $totVenduto_righe; $totVenduto_uscite= $totVenduto_righe; ?> &euro;</b></td>
         <td colspan="3" class="bg-success"></td>
     </tr>
     </tfoot>
@@ -167,7 +187,7 @@
 </div>
 
 
-  <h2>Entrate</h2>
+  <h2>Entrate previste</h2>
   <div class="table-responsive">
     <table class="table table-condensed table-striped">
     <tr>
@@ -177,18 +197,22 @@
                 <th>Sel</th>
             <?php endif; ?>
             <th><?php echo $this->Paginator->sort('Descrizione'); ?></th>
-            <th><?php echo $this->Paginator->sort('qta'); ?></th>
-            <th>Qtà spedita</th>
-            <th><?php echo $this->Paginator->sort('um'); ?></th>
+            <th>Qtà</th>
+            <th>Qtà utilizzata</th>
+            <th>UM</th>
             <th><?php echo $this->Paginator->sort('costou','Costo U.'); ?></th>
-            <th><?php echo $this->Paginator->sort('legenda_codici_iva_id','Iva'); ?></th>
-            <th>Totale</th>
+            <th><?php echo $this->Paginator->sort('vendutou','Venduto U.'); ?></th>
+            <th>Iva</th>
+            <th>Tot. Costi</th>
+            <th>Tot. Venduto</th>
             <th><?php echo $this->Paginator->sort('Soggetto'); ?></th>          
             <th><?php echo $this->Paginator->sort('legenda_stato_attivita_id','Stato'); ?></th>
             <th class="actions"><?php echo __('Actions'); ?></th>
     </tr>
-    <?php $tot_righe = 0;
-          foreach ($faseattivitapositiva as $faseattivita): ?>
+    <?php 
+        $tot_righe = $totVenduto_righe = 0;
+        foreach ($faseattivitapositiva as $faseattivita): 
+    ?>
     <tr>
         <?php if (empty($id)): ?>
             <td><?php echo $this->Html->link($faseattivita['Attivita']['name'],'/faseattivita/index/'. $faseattivita['Attivita']['id']); ?></td>
@@ -221,33 +245,41 @@
             ?>
         </td>
         <td><?php echo h($faseattivita['Faseattivita']['um']); ?>&nbsp;</td>
-        <td><?php echo h($faseattivita['Faseattivita']['costou']); ?>&nbsp; &euro;</td>        
+        <td><?php echo h($faseattivita['Faseattivita']['costou']); ?>&nbsp; &euro;</td>
+        <td><?php echo h($faseattivita['Faseattivita']['vendutou']); ?>&nbsp; &euro;</td>        
         <td><?php echo h($faseattivita['LegendaCodiciIva']['Descrizione']); ?>&nbsp;</td>
         <td><?php $tot = $faseattivita['Faseattivita']['costou']*$faseattivita['Faseattivita']['qta']; $tot_righe += $tot; echo h($tot); ?>&nbsp;&euro;</td>        
+        <td><?php $totVenduto = $faseattivita['Faseattivita']['vendutou']*$faseattivita['Faseattivita']['qta']; $totVenduto_righe += $totVenduto; echo h($totVenduto); ?>&nbsp;&euro;</td> 
         <td><?php echo $faseattivita['Persona']['DisplayName']; ?></td>
         <td><?php echo $faseattivita['LegendaStatoAttivita']['name']; ?></td>
         <td class="actions">
             <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $faseattivita['Faseattivita']['id'])); ?>
             <?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $faseattivita['Faseattivita']['id'],$faseattivita['Faseattivita']['attivita_id']), null, __('Are you sure you want to delete # %s?', $faseattivita['Faseattivita']['id'])); ?>
+            <?php 
+            foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+                if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$faseattivita['Faseattivita']['attivita_id'].'_'.$faseattivita['Faseattivita']['id'].'.'.$ext)){
+                    echo $this->Html->link('FILE', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$faseattivita['Faseattivita']['attivita_id'].'_'.$faseattivita['Faseattivita']['id'].'.'.$ext, array('class'=>'btn btn-xs btn-primary','title'=>'View or Download attached File')); 
+                }
+            }
+			?>
         </td>
     </tr>    
 <?php endforeach; ?>    
     <tfoot>
     <tr class="bg-success">       
         <td class="bg-success"></td>
-        <td colspan="6" class="bg-success"><b>Totale</b></td>        
+        <td colspan="7" class="bg-success"><b>Totali</b></td>        
         <td class="bg-success"><b><?php echo $tot_righe ?> &euro;</b></td>
+        <td class="bg-success"><b><?php echo $totVenduto_righe ?> &euro;</b></td>
         <td colspan="3" class="bg-success"></td>
     </tr>
     </tfoot>
     </table>
     </div>
    
-
+</div>
 
 <h2>Utile Commessa: <?php echo $tot_righe - $tot_uscite ?>&euro;</h2>
-
-</div>
 
 <?php $this->Html->scriptStart(array('inline' => false)); ?>
 $(function() { 

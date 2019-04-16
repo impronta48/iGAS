@@ -85,14 +85,14 @@
     </table>
     
 	<br><br>
-    <?php if (!empty($attivita['Faseattivita'])):?>
+    <?php if (!empty($attivita['Faseattivita'])): ?>
 	<table cellspacing="0" cellpadding="5" style="border: 1px dotted gray" width="100%">
 
 		<tr style="border-bottom:1px dotted gray;">			            
 			<td class="bg-gray" align="left"><b>Descrizione</b></td>			
 			<td class="bg-gray" align="right"><b>Unità Misura</b></td>
             <td class="bg-gray" align="right"><b>Qta</b></td>
-			<td class="bg-gray" align="right"><b>Costo Unitario</b></td>			
+			<td class="bg-gray" align="right"><b>Venduto Unitario</b></td>			
 			<td class="bg-gray" align="right"><b>Importo totale</b></td>
             <td class="bg-gray" align="right"><b>Iva</b></td>
 		</tr>
@@ -103,11 +103,12 @@
         $importo_tot = 0;
         $iva_tot = 0;        
 		foreach ($attivita['Faseattivita'] as $riga):
+            if ($riga['entrata'] == false): 
 			$class = null;
 			if ($i++ % 2 == 0) {
 				$class = ' class="altrow"';
 			}
-            $importo = $riga['qta'] * $riga['costou'] ;            
+            $importo = $riga['qta'] * $riga['vendutou'] ;            
             $importo_tot += $importo;         
             if(isset($riga['legenda_codici_iva_id'])) { $iva_tot += $percentiva[$riga['legenda_codici_iva_id']]* $importo /100; }
 		?>
@@ -115,10 +116,11 @@
 			<td><?php echo $riga['Descrizione'];?></td>
 			<td align="right"><?php echo $riga['um'];?></td>			
             <td align="right"><?php echo $riga['qta'];?></td>
-            <td align="right"><?php echo $this->Number->currency($riga['costou'],'EUR');?> </td>
+            <td align="right"><?php echo $this->Number->currency($riga['vendutou'],'EUR');?> </td>
             <td align="right" class="totale"><?php echo $this->Number->currency($importo,'EUR'); ?></td>			
             <td align="right"><?php if(isset($riga['legenda_codici_iva_id'])) {echo $legendacodiciiva[$riga['legenda_codici_iva_id']];};?></td>
 		</tr>
+        <?php endif; ?>
     	<?php endforeach; ?>        
         
         <tfoot>

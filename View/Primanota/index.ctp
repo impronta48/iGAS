@@ -144,11 +144,15 @@
             $class = ' class="altrow"';
         }
     ?>
-    <tr<?php echo $class;?>>
+    <tr <?php echo $class;?>>
         <td class="actions">
-			<?php if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$p['Primanota']['id'].'.pdf')): ?>
-            <?php echo $this->Html->link('Download PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$p['Primanota']['id'].'.pdf',array('class'=>"btn btn-primary btn-xs glow btn-edit-riga" )); ?>
-			<?php endif; ?>
+            <?php 
+            foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+                if(file_exists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$p['Primanota']['id'].'.'.$ext)):
+                echo $this->Html->link('View Attachment', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$p['Primanota']['id'].'.'.$ext,array('class'=>'btn btn-primary btn-xs glow btn-edit-riga'));
+                endif;
+            }
+            ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $p['Primanota']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga" )); ?>
             <?php 
 			if (isset($id)){
@@ -246,10 +250,41 @@
                                 ),
                                 'class' => 'well form-horizontal'
                     )); ?>
-
-                    <?php echo  $this->Form->input('data', array('type'=>'date', 'class'=>false, 'dateFormat'=>'DMY')); ?>
-                    <?php echo  $this->Form->input('importoEntrata', array('placeholder'=>'10.2', 'label'=>'Entrata', 'wrapInput' => 'col col-md-2')); ?>
-                    <?php echo  $this->Form->input('importoUscita', array('placeholder'=>'10.2', 'label'=>'Uscita', 'wrapInput' => 'col col-md-2')); ?>
+                    <div class="col col-md-12">
+                    <?php echo $this->Form->input('data', array('type'=>'date', 'class'=>false, 'dateFormat'=>'DMY')); ?>
+					<div id="entrataUscitaBox">
+                    <div id="entrataUscitaBoxTest"></div>
+					<?php
+                    if(!isset($this->request->data['Primanota']['importoUscita'])){
+                        echo $this->Form->input('importoEntrata', 
+                                                array("class"=>"form-control", 
+                                                    'placeholder'=>'10.2', 
+                                                    'label'=>array('text'=>'Entrata',
+                                                            'class'=>'col col-md-3 control-label entrata-label',
+                                                            'id'=>'entrataUscitaLabel'), 
+                                                    'wrapInput' => 'input-group input-group-md col-md-9', 
+                                                    'afterInput' => '<div class="input-group-btn"><button type="button" id="entratauscitaswitch" class="btn btn-md btn-default entrata-button" title="Calcola come uscita">Calcola come uscita</button></div>'));
+                        echo '<div id="imponibileIva">';
+                        echo $this->Form->input('imponibile', array('placeholder'=>'8.36', 'label'=>'Imponibile', 'wrapInput' => 'col col-md-9'));
+					    echo $this->Form->input('iva', array('placeholder'=>'1.84', 'label'=>'Iva', 'wrapInput' => 'col col-md-9'));
+                        echo '</div>';
+                    }else{
+                        echo $this->Form->input('importoUscita', 
+                                                array("class"=>"form-control", 
+                                                    'placeholder'=>'10.2', 
+                                                    'label'=>array('text'=>'Uscita',
+                                                            'class'=>'col col-md-3 control-label uscita-label',
+                                                            'id'=>'entrataUscitaLabel'), 
+                                                    'wrapInput' => 'input-group input-group-md col-md-9', 
+                                                    'afterInput' => '<div class="input-group-btn"><button type="button" id="entratauscitaswitch" class="btn btn-md btn-default uscita-button" title="Calcola come entrata">Calcola come entrata</button></div>'));
+                        echo '<div id="imponibileIva">';
+                        echo $this->Form->input('imponibileUscita', array('placeholder'=>'8.36', 'label'=>'Imponibile', 'wrapInput' => 'col col-md-9','default'=>-$this->request->data['Primanota']['imponibileUscita']));
+					    echo $this->Form->input('ivaUscita', array('placeholder'=>'1.84', 'label'=>'Iva', 'wrapInput' => 'col col-md-9','default'=>-$this->request->data['Primanota']['imponibileUscita']));
+                        echo '</div>';
+                    }
+					?>
+                    </div>
+                    </div>
                     <?php
                         if (!empty($id))
                         {
@@ -267,7 +302,7 @@
                     <?php echo  $this->Form->hidden('persona_id',array('type'=>'text')); ?>
                     <?php echo  $this->Form->input('persona_descr',array('placeholder'=>'Inizia a scrivere per cercare la persona')); ?>
                     <?php echo  $this->Form->input('descr'); ?>
-					<?php echo $this->Form->input('uploadFile', array('label'=>'Upload File PDF', 'class'=>false, 'type'=>'file')); ?>
+					<?php echo $this->Form->input('uploadFile', array('label'=>'Upload File', 'class'=>false, 'type'=>'file')); ?>
 
                     <div class="clearfix"></div>
                     <div class="well well-sm col col-md-offset-3">
@@ -390,6 +425,28 @@ $('document').ready(function() {
     //Gestione del double scroll superiore ed inferiore
     $('.dataTables_wrapper').wrap('<div id="scroll_div"></div>');
     $('#scroll_div').doubleScroll();
+	
+	//Questo serve in Aggiungi riga di Prima Nota per cambiare tra modalità entrata e uscita
+	$('#entratauscitaswitch').on('click', function(){
+		if($(this).hasClass('entrata-button')){
+            $(this).text('Calcola come entrata').attr('title','Calcola come entrata');
+            $(this).removeClass('entrata-button').addClass('uscita-button');
+            $("#entrataUscitaLabel").text('Uscita').attr('for','PrimanotaImportoUscita');
+            $("#entrataUscitaLabel").removeClass('entrata-label').addClass('uscita-label');
+            $("#PrimanotaImportoEntrata").attr('name','data[Primanota][importoUscita]').attr('id','PrimanotaImportoUscita');
+            $("#imponibileIva").html('<div class="form-group"><label for="PrimanotaImponibileUscita" class="col col-md-3 control-label">Imponibile</label><div class="col col-md-9"><input name="data[Primanota][imponibileUscita]" class="form-control" placeholder="8.36" type="text" id="PrimanotaImponibileUscita"/></div></div>'
+                                    + '<div class="form-group"><label for="PrimanotaIvaUscita" class="col col-md-3 control-label">Iva</label><div class="col col-md-9"><input name="data[Primanota][ivaUscita]" class="form-control" placeholder="1.84" type="text" id="PrimanotaIvaUscita"/></div></div>');
+		}else if($(this).hasClass('uscita-button')){
+            $(this).text('Calcola come uscita').attr('title','Calcola come uscita');
+            $(this).removeClass('uscita-button').addClass('entrata-button');
+            $("#entrataUscitaLabel").text('Entrata').attr('for','PrimanotaImportoEntrata');
+            $("#entrataUscitaLabel").removeClass('uscita-label').addClass('entrata-label');
+            $("#PrimanotaImportoUscita").attr('name','data[Primanota][importoEntrata]').attr('id','PrimanotaImportoEntrata');
+            $("#imponibileIva").html('<div class="form-group"><label for="PrimanotaImponibile" class="col col-md-3 control-label">Imponibile</label><div class="col col-md-9"><input name="data[Primanota][imponibile]" class="form-control" placeholder="8.36" type="text" id="PrimanotaImponibile"/></div></div>'
+                                    + '<div class="form-group"><label for="PrimanotaIva" class="col col-md-3 control-label">Iva</label><div class="col col-md-9"><input name="data[Primanota][iva]" class="form-control" placeholder="1.84" type="text" id="PrimanotaIva"/></div></div>');
+		}
+	});
+	
 });
 
 

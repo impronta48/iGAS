@@ -67,6 +67,47 @@ class Faseattivita extends AppModel {
 
     );
 	
+    public function beforeSave($options = Array()) {
+            //debug($this->data['Faseattivita']);
+            //die();
+	}
+    
+	public function afterSave($created, $options = Array()) {
+		//debug($this->data['Faseattivita']['qtaUtilizzata']);
+    	//die();
+		if($created) {
+            //debug($this->data['Faseattivita']);
+            //die();
+            $this->Attivita->id = $this->data['Faseattivita']['attivita_id'];
+            $nuovaOffertaAlCliente = $this->Attivita->read('Attivita.OffertaAlCliente')['Attivita']['OffertaAlCliente']+($this->data['Faseattivita']['vendutou']*$this->data['Faseattivita']['qta']);
+            $this->Attivita->saveField('OffertaAlCliente', $nuovaOffertaAlCliente); 
+		} else {
+			//Se in questo momento è settato $this->data['Faseattivita']['qtaUtilizzata']
+			//vuol dire che sicuramente non sto modificando direttamente la Faseattivita tramite il suo form
+			//e quindi non devo aggiornare Attivita.OffertaAlCliente perchè non è sicuramente
+			//stata modificato nè il venduto ne la quantità ma al max solo la qtaUtilizzata
+			if(!isset($this->data['Faseattivita']['qtaUtilizzata'])){
+				$this->Attivita->id = $this->data['Faseattivita']['attivita_id'];
+				$nuovaOffertaAlCliente = $this->Attivita->read('Attivita.OffertaAlCliente')['Attivita']['OffertaAlCliente']-($this->data['Faseattivita']['old_venduto']*$this->data['Faseattivita']['old_qta']);
+				$nuovaOffertaAlCliente += ($this->data['Faseattivita']['vendutou']*$this->data['Faseattivita']['qta']);
+				$this->Attivita->saveField('OffertaAlCliente', $nuovaOffertaAlCliente); 
+			}
+        }
+	}
+    
+    public function beforeDelete($cascade = true) {
+        //debug($this->data);
+        //die();
+    }
+    
+    public function afterDelete() {
+        //debug($this->data);
+        //die();
+        $this->Attivita->id = $this->data['Faseattivita']['attivita_id'];
+		$nuovaOffertaAlCliente = $this->Attivita->read('Attivita.OffertaAlCliente')['Attivita']['OffertaAlCliente']-($this->data['Faseattivita']['vendutou']*$this->data['Faseattivita']['qta']);
+        $this->Attivita->saveField('OffertaAlCliente', $nuovaOffertaAlCliente);
+    }
+
 	//returns a list wich is good for a combobox
 	public function getSimple($attivita_id = null, $solo_entrata = 0)
 	{

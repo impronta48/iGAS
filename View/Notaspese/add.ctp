@@ -262,13 +262,13 @@
                   $soldi = "";
                 }
 
-				$linkScontrino='';
-				$scontrinoToDrive='';
-				if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$r['Notaspesa']['id'].'.pdf')){
-					$linkScontrino=$this->Html->link('View Scontrino', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$r['Notaspesa']['id'].'.pdf', array('class'=>'btn btn-xs btn-primary','title'=>'View or Download PDF'));
-					$scontrinoToDrive=$this->Html->link('Upload Scontrino in Drive', array('action'=>'setUploadToDrive',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga"));					
-				} 
-
+				$linkScontrino=$scontrinoToDrive='';
+                foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+                    if(file_exists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$r['Notaspesa']['id'].'.'.$ext)){
+                        $linkScontrino=$this->Html->link('View Scontrino', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$r['Notaspesa']['id'].'.'.$ext, array('class'=>'btn btn-xs btn-primary','title'=>'View or Download'));
+                        $scontrinoToDrive=$this->Html->link('Upload Scontrino in Drive', array('action'=>'setUploadToDrive',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga"));					
+                    }
+                }
                 echo $this->Html->tableCells(
                     array($d->format('D d'),
                           $eAttivita[$r['Notaspesa']['eAttivita']] . '<small class="text-muted">/' . substr($r['Faseattivita']['Descrizione'],0,40) . '</small>',
@@ -280,7 +280,7 @@
                           array(                            
                             //'<div class="btn btn-primary btn-xs glow btn-edit-riga" id="'. $r['Notaspesa']['id'] . '">Edit</div>'.
                             $this->Html->Link('Edit',array('action'=>'edit',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga")).                        
-                            $this->Html->Link('Del',array('action'=>'delete',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-del-riga" ),"Sicuro di voler cancellare questa riga?").
+                            $this->Html->Link('Del',array('action'=>'delete',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-del-riga"),__('Sicuro di voler cancellare la nota %s?',$r['Notaspesa']['id'])).
                             $this->Html->Link('Duplicate',array('action'=>'duplicate',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga" )).    
 							$linkScontrino.
 							$scontrinoToDrive,

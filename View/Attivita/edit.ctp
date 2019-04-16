@@ -133,16 +133,20 @@
             </div>            
             
             <?php     
-                echo $this->Form->input('OffertaAlCliente');
+                echo $this->Form->input('OffertaAlCliente', array('disabled' => true));
                 echo $this->Form->input('ImportoAcquisito');
-				if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'_preventivo.pdf')):
-					echo 'E\' già stato caricato un documento. ';
-					echo $this->Html->link('Download this PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$id.'_preventivo.pdf', array('class'=>'btn btn-xs btn-primary'));
-					echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
-					echo $this->Html->link(__('Delete this PDF'), array('action' => 'deleteDoc', $id), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s_preventivo.pdf?', $id));
-					echo '<br />Un nuovo upload sovrascriverà il vecchio documento.';
-				endif;
-				echo $this->Form->input('uploadFile', array('label'=>'Upload File PDF', 'class'=>false, 'type'=>'file'));
+                foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+                    if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$id.'_preventivo.'.$ext)){
+                        echo '<div class="alert alert-warning">';
+                        echo 'E\' già stato caricato un documento.<br />';
+                        echo $this->Html->link(__('View Attachment'), HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$id.'_preventivo.'.$ext, array('title'=>'View related Attachment','class'=>'btn btn-xs btn-primary'));
+                        echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
+                        echo $this->Html->link(__('Delete Attachment'), array('action' => 'deleteDoc', $id), array('title'=>'Delete related Attachment','class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s_preventivo.%s?', $id, $ext));
+                        echo '<br />Un nuovo upload sovrascriverà il vecchio allegato.';
+                        echo '</div>';
+                    }
+                }
+				echo $this->Form->input('uploadFile', array('label'=>'Upload File', 'class'=>false, 'type'=>'file'));
             ?>
             <?php echo $this->Form->submit('Salva', array('class'=>'col-md-offset-2  btn btn-primary')); ?>
          </div>

@@ -67,4 +67,4 @@ foreach($ore as $pkey => $persona){
 }   
 
 
-$this->PhpExcel->addTableFooter()->output('report_fasi_'.$anno.'_'.$mese.'.xls', 'Excel5');
+$this->PhpExcel->addTableFooter()->output('report_fasi_'.$anno.'_'.$mese.'.xls', 'Xls');

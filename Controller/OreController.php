@@ -656,13 +656,13 @@ class OreController extends AppController {
     //Massimoi - 30/8/2013 - Mostra quali fogli ore sono stati caricati per ogni dipendente per ogni anno
     function riassuntocaricamenti($anno)
     {
-        $conditions = array('YEAR(Ora.data)' => $anno);
+        $conditions = array('YEAR(data)' => $anno);
 
         $conteggi = $this->Ora->find('all', array(
                                         'conditions' => $conditions,
-                                        'group' => array('Persona.Cognome', 'MONTH(Ora.data)'),
-                                        'order' => array('Persona.Cognome', 'MONTH(Ora.data)'),
-                                        'fields' => array('Persona.Cognome', 'MONTH(Ora.data) as Mese', 'SUM(Ora.numOre) as OreTot')
+                                        'group' => array('Persona.Cognome', 'MONTH(data)'),
+                                        'order' => array('Persona.Cognome', 'MONTH(data)'),
+                                        'fields' => array('Persona.Cognome', 'MONTH(data) as Mese', 'SUM(Ora.numOre) as OreTot')
         ));
 
         //Giro la tabella risultante in modo da avere questa struttura associativa (che mi facilita la view)
@@ -688,6 +688,156 @@ class OreController extends AppController {
         $this->set('conteggi', $risult);
         $this->set('title_for_layout', "$anno | Riassunto Caricamenti | Foglio Ore");       
     }
+
+    /**
+     * Ancora non testato qui
+     *
+     * @param [type] $idPersona
+     * @param [type] $anno
+     * @param [type] $mese
+     * @return void
+     */
+    public function inviaMailDiSollecito($idPersona = null, $anno = null, $mese = null){
+        if(empty($idPersona) or $idPersona == NULL){
+            $this->Session->setFlash('Id Persona non valido.');
+            $this->redirect(array('action' => 'check',date('Y')));
+        }
+        $this->autoRender = false;
+        $this->loadModel('Persona');
+        $conditions = array('Persona.id' => $idPersona);
+        $persona = $this->Persona->find('first', array(
+            'conditions' => $conditions,
+            'fields' => array('Persona.id', 'Persona.DisplayName', 'Persona.EMail')
+        ));
+        if(empty($persona['Persona']['EMail']) || $persona['Persona']['EMail'] == NULL){
+            $this->Session->setFlash('L\'impiegato selezionato non ha un indirizzo mail settato.');
+            $this->redirect(array('action' => 'check',date('Y')));
+        }
+        $emailObj = new CakeEmail('smtp');
+        $emailObj->viewVars(array('personaDisplayName' => $persona['Persona']['DisplayName']));
+        $emailObj->template('sollecitoore');
+        $emailObj->sender(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
+        $emailObj->from(array('bill@microsoft.com' =>'Bill Gates'));
+        $emailObj->to($persona['Persona']['EMail']);
+        $emailObj->emailFormat('text');
+        $emailObj->returnPath('postmaster@localhost');
+        $emailObj->replyTo(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
+        $emailObj->subject('Non hai caricato tutte le ore di '.$anno.'-'.$mese);
+        $emailObj->send();
+        $this->Session->setFlash('Mail di sollecito inviata correttamente.');
+        $this->redirect(array('action' => 'check',date('Y')));
+    }
+
+    public function check($anno) {
+        $conditions = array('YEAR(data)' => $anno);
+        $conditionsImpiegati = array('YEAR(dataValidita)' => $anno);
+        $conteggi = $this->Ora->find('all', array(
+            'conditions' => $conditions,
+            'group' => array('Persona.Cognome', 'MONTH(data)'),
+            'order' => array('Persona.Cognome', 'MONTH(data)'),
+            'fields' => array('Persona.id', 'Persona.Cognome', 'Persona.Nome', 'MONTH(data) as Mese', 'SUM(Ora.numOre) as OreTot')
+        ));
+        $this->loadModel('Impiegato');
+        $conteggiImpiegati = $this->Impiegato->find('all', array(
+            //'conditions' => $conditionsImpiegati,
+            'group' => array('Persona.Cognome', 'dataValidita'),
+            'order' => array('Persona.Cognome', 'dataValidita'),
+            'fields' => array('persona_id', 'oreLun', 'oreMar', 'oreMer', 'oreGio', 'oreVen', 'oreSab', 'oreDom', 'Persona.Cognome', 'Persona.Nome', 'dataValidita')
+        ));
+        $p = $pImp = '';
+        $risult = $risultImpiegati = array();
+        $ore = $oreDaCaricare = array('1'=>0,'2'=>0,'3'=>0,'4'=>0,'5'=>0,'6'=>0,
+        '7'=>0,'8'=>0,'9'=>0,'10'=>0,'11'=>0,'12'=>0);
+        foreach ($conteggi as $c) {
+            //Se cambia persona svuoto l'array
+            if ($p != $c['Persona']['id'])
+            {
+                if($p != '')
+                {
+                    $risult[$p] = $ore;
+                }
+                $p = $c['Persona']['id'];
+                $ore = array(
+                            'Cognome' => $c['Persona']['Cognome'],
+                            'Nome' => $c['Persona']['Nome'],
+                            'Mesi' => array('1'=>0,'2'=>0,'3'=>0,'4'=>0,'5'=>0,'6'=>0,
+                                    '7'=>0,'8'=>0,'9'=>0,'10'=>0,'11'=>0,'12'=>0)
+                            );
+            }
+            
+            foreach(@$ore['Mesi'] as $keyMonth => $val){
+                if($c[0]['Mese'] == $keyMonth){
+                    $ore['Mesi'][$keyMonth] = $c[0]['OreTot'];
+                }
+            }
+            
+        }
+        foreach ($conteggiImpiegati as $c) {
+            //Se cambia persona svuoto l'array
+            if ($pImp != $c['Impiegato']['persona_id']){ 
+                if($pImp != ''){
+                    $risultImpiegati[$pImp] = $oreDaCaricare;
+                }
+                $pImp = $c['Impiegato']['persona_id'];
+                $oreDaCaricare = array(
+                            'Cognome' => $c['Persona']['Cognome'],
+                            'Nome' => $c['Persona']['Nome'],
+                            'Mesi' => array('1'=>0,'2'=>0,'3'=>0,'4'=>0,'5'=>0,'6'=>0,
+                                    '7'=>0,'8'=>0,'9'=>0,'10'=>0,'11'=>0,'12'=>0)
+                            );
+            }
+            foreach($oreDaCaricare['Mesi'] as $keyMonth => $val){
+                if(date('Y',strtotime($c['Impiegato']['dataValidita'])) == $anno){
+                    //debug(date('Y-m',strtotime($c['Impiegato']['dataValidita'])));
+                    //debug(date('Y-m',strtotime($anno.'-'.$keyMonth)));
+                    /*
+                    debug(
+                        strtotime(date('Y-m',strtotime($anno.'-'.$keyMonth))) - strtotime(date('Y-m',strtotime($c['Impiegato']['dataValidita'])))
+                    );
+                    */
+                    if(strtotime(date('Y-m',strtotime($c['Impiegato']['dataValidita']))) - strtotime(date('Y-m',strtotime($anno.'-'.$keyMonth))) <= 0){
+                            $oreDaCaricare['Mesi'][$keyMonth] = $c['Impiegato']['oreLun']+$c['Impiegato']['oreMar']+$c['Impiegato']['oreMer']+$c['Impiegato']['oreGio']+$c['Impiegato']['oreVen']+$c['Impiegato']['oreSab']+$c['Impiegato']['oreDom'];
+                    } else { 
+                        if($oreDaCaricare['Mesi'][$keyMonth] == '' || $oreDaCaricare['Mesi'][$keyMonth] == NULL){
+                            $oreDaCaricare['Mesi'][$keyMonth] = 'ANNOPRECEDENTE';
+                        }
+                    }
+                } else {
+                    for($a = $anno;$a>1990;--$a){// Qua 1990 fa schifo ma tanto esco con break appena posso...
+                        if(date('Y',strtotime($c['Impiegato']['dataValidita'])) == $a){
+                            if($oreDaCaricare['Mesi'][$keyMonth] == '' || $oreDaCaricare['Mesi'][$keyMonth] == NULL){
+                                prev($c);
+                                $oreDaCaricare['Mesi'][$keyMonth] = $c['Impiegato']['oreLun']+$c['Impiegato']['oreMar']+$c['Impiegato']['oreMer']+$c['Impiegato']['oreGio']+$c['Impiegato']['oreVen']+$c['Impiegato']['oreSab']+$c['Impiegato']['oreDom'];
+                                next($c);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $risultImpiegati[$pImp] = $oreDaCaricare;
+        if(count($conteggi)>0){
+            $risult[$p] = $ore;
+            foreach($risultImpiegati as $keyPersona => $impiegatoData){
+                if(!array_key_exists($keyPersona,$risult)){
+                    $risult[$keyPersona] = array(
+                        'Cognome' => $impiegatoData['Cognome'], 
+                        'Nome' => $impiegatoData['Nome'], 
+                        'Mesi' => array('1'=>0,'2'=>0,'3'=>0,'4'=>0,'5'=>0,'6'=>0,
+                        '7'=>0,'8'=>0,'9'=>0,'10'=>0,'11'=>0,'12'=>0)
+                        );
+                }
+            }
+        } else {
+            $risult = array();
+        }
+        //debug($risult);
+        //debug($risultImpiegati);
+        $this->set('conteggi', $risult);
+        $this->set('conteggiImpiegati', $risultImpiegati);
+        $this->set('title_for_layout', "$anno | Check Ore");
+	}
 
     public function stampa() {  
         if (!isset($this->request->data['Ora']))
@@ -763,7 +913,21 @@ class OreController extends AppController {
             if ($this->Ora->save($this->request->data)) {
                 $this->Session->setFlash('Ora Aggiunta correttamente.');
 				
-
+                //Visto che a questo punto l'ora è inserita posso inviare una mail di conferma
+                //Da spostare in una sezione per permettere all'amministratore di inviare mail di sollecito
+                //verso quelli che non hanno caricato ore.
+                /*
+				$emailObj = new CakeEmail('smtp');
+				$emailObj->template('confermacaricamentoore');
+				$emailObj->sender(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
+				$emailObj->from(array('bill@microsoft.com' =>'Bill Gates'));
+				$emailObj->to('test@localhost');
+				$emailObj->emailFormat('text');
+				$emailObj->returnPath('postmaster@localhost');
+				$emailObj->replyTo(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
+				$emailObj->subject('Foglio ore caricato');
+                $emailObj->send();
+                */
 				
                 //A Seconda del submit gestisco un'operazione diversa
                 if (isset($this->request->data['submit-ns']))
@@ -790,6 +954,7 @@ class OreController extends AppController {
 				
 
             }
+            $this->Session->setFlash($this->Ora->error);
             $this->Session->setFlash('Impossibile salvare questa ora.');
         }
         
@@ -813,8 +978,8 @@ class OreController extends AppController {
         //Applico il filtro alle condizioni del report ore mostrato in basso
         //(di default o passate come parametro)
         $conditions['Ora.eRisorsa'] =$persona;
-        $conditions['YEAR(Ora.data)'] = $anno;
-        $conditions['MONTH(Ora.data)'] = $mese;
+        $conditions['YEAR(data)'] = $anno;
+        $conditions['MONTH(data)'] = $mese;
         //Non filtro su giorno e attività perchè voglio vedere il report mensile della persona
         //$conditions['DAY(data)'] = $giorno;
         //$conditions['Ora.eAttivita'] = $attivita;
@@ -824,9 +989,9 @@ class OreController extends AppController {
             array(
                 'conditions' => $conditions,
                 'fields' => array(
-                    'id','Ora.eRisorsa', 'numOre', 'Ora.data', 'dettagliAttivita', 'luogoTrasferta', 'eAttivita','Faseattivita.Descrizione'
+                    'id','Ora.eRisorsa', 'numOre', 'data', 'dettagliAttivita', 'luogoTrasferta', 'eAttivita','Faseattivita.Descrizione'
                 ),
-                'order' => 'Ora.data'
+                'order' => 'data'
             )
         );
         
@@ -853,6 +1018,7 @@ class OreController extends AppController {
                                                     'giorno' => $this->request->data['Ora']['data']['day'],
                                              ));
             }
+            $this->Session->setFlash($this->Ora->error);
             $this->Session->setFlash('Impossibile salvare questa ora.');
         }
         
@@ -888,7 +1054,7 @@ class OreController extends AppController {
         }
         else
         {
-            $conditions['YEAR(Ora.data)'] = date('Y');    
+            $conditions['YEAR(data)'] = date('Y');    
         }
 
         $persone = $this->Ora->find('all', array(
@@ -928,7 +1094,9 @@ class OreController extends AppController {
         if (!$id) {
 			$this->Session->setFlash(__('Invalid id for Ore'));
 			$this->redirect(array('action'=>'index'));
-		}
+        }
+        $this->Ora->id = $id;
+        $varToPassToModel = $this->Ora->read(['numOre','faseattivita_id'])['Ora'];
 		if ($this->Ora->delete($id)) {
 			$this->Session->setFlash(__('Ore deleted'));
 			$this->redirect($this->referer());
@@ -1083,5 +1251,6 @@ class OreController extends AppController {
         $this->set('result', $result);
         
     }
+
 }
 ?>

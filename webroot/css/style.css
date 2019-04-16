@@ -89,7 +89,7 @@
     margin-right: 20px;
   }
 }
-@media (min-width: 1280px) {
+@media (min-width: 900px) {
   /* line 63, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\responsive.less */
   @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/responsive\.less}line{font-family:\0000363}}
   .navbar .btn-nav-toggle-responsive {
@@ -339,6 +339,7 @@ a {
   line-height: 67.78px;
   font-family: 'Droid Sans', sans-serif;
   font-weight: 700;
+  float: none;
 }
 /* line 285, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\style.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/style\.less}line{font-family:\00003285}}
@@ -369,9 +370,12 @@ a {
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/style\.less}line{font-family:\00003309}}
 .navbar .btn-nav-toggle-responsive {
   background: none;
-  border-color: #303336;
-  border-radius: 0px;
+  border: 1px solid white;
+  border-radius: 5px;
   color: #FFFFFF;
+  padding-top: 5px;
+  padding-bottom: 2px;
+  margin: auto 15px auto 20px;
 }
 /* line 320, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\style.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/style\.less}line{font-family:\00003320}}
@@ -741,6 +745,7 @@ a {
   border-right: 2px solid #303336;
   width: 240px;
   height: 100%;
+  z-index: 10000;
 }
 /* line 733, C:\Users\massimoi\Documents\Html\igas\app\webroot\less\style.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/C\:\/Users\/massimoi\/Documents\/Html\/igas\/app\/webroot\/less\/style\.less}line{font-family:\00003733}}
@@ -1743,7 +1748,7 @@ external-event:active {
   /* default BORDER color */
   border-radius: 0px;
   /* default BACKGROUND color */
-  color: #FFF !important;
+  /* color: #FFF !important; */
   /* default TEXT color */
   font-size: .85em;
   cursor: default;
@@ -4063,4 +4068,7 @@ input[type=number] {
     }
 }
 
+.navbar-header {
+  margin-top: 10px;
+}
 

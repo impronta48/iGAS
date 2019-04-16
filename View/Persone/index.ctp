@@ -46,7 +46,7 @@
                                     ),
                                 ));
                                 ?>  
-                                    <label>Filtra per categoria</class>
+                                    <label>Filtra per categoria</label>
                                     <?php
                                     echo $this->Form->input("cat", array(
                                         'placeholder' => 'categoria',
@@ -164,7 +164,7 @@
 			$class = ' class="altrow"';
 		}
 	?>
-	<tr<?php echo $class;?>>
+	<tr <?php echo $class;?>>
         <td>
             
             <?php

@@ -62,13 +62,15 @@
     <?php echo $this->Form->input('eCatSpesa', array('options'=>$eCatSpesa, 'label'=>'Tipo di Spesa')); ?>
     <?php echo $this->Form->input('descrizione'); ?>    
 	<?php
-	if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf')){
-		echo 'E\' già stato caricato un documento. ';
-		echo $this->Html->link('Download this PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$id.'.pdf', array('class'=>'btn btn-xs btn-primary'));
-		echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
-		echo $this->Html->link(__('Delete this PDF'), array('action' => 'deleteDoc', $id), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s.pdf?', $id));
-		echo '<br />Un nuovo upload sovrascriverà il vecchio documento.';
-	}
+    foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+        if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$id.'.'.$ext)){
+            echo 'E\' già stato caricato uno scontrino. ';
+            echo $this->Html->link(__('Download this '.strtoupper($ext)), HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$id.'.'.$ext, array('class'=>'btn btn-xs btn-primary'));
+            echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
+            echo $this->Html->link(__('Delete this '.strtoupper($ext)), array('action' => 'deleteDoc', $id), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s.%s?', $id, $ext));
+            echo '<br />Un nuovo upload sovrascriverà il vecchio scontrino.';
+        }
+    }
 	echo $this->Form->input('uploadFile', array('label'=>'Upload scontrino', 'class'=>false, 'type'=>'file'));
 	?>
     <fieldset id="spostamento">

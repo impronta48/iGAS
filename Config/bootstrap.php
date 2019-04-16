@@ -93,7 +93,8 @@ Inflector::rules('plural', array(
                         'legenda_tipo_impiegato' => 'legenda_tipi_impiegati',
                         'vettore' => 'vettori',                        
                         'ordine' => 'ordini',                        
-                        
+						'cespite' => 'cespiti',   
+						'cespitecalendario' => 'cespiticalendario' 
                         ),
     
                     'uninflected' => array(
@@ -105,7 +106,8 @@ Inflector::rules('plural', array(
 							'legenda_mezzi', 
                             'legenda_porto',
                             'legenda_causale_trasporto',
-                            'legenda_tipo_documento',                            
+							'legenda_tipo_documento',
+							'legenda_tipo_attivita_calendario',                            
                             'legenda_unita_misura',
 							'ddt', 
 						),
@@ -122,7 +124,8 @@ Inflector::rules('singular', array(
                             'legenda_mezzi', 
                             'legenda_porto',
                             'legenda_causale_trasporto',
-							'legenda_tipo_documento',							
+							'legenda_tipo_documento',
+							'legenda_tipo_attivita_calendario', 							
                             'legenda_unita_misura',
                             'legenda_codici_iva',
                             'ddt', 
@@ -148,14 +151,13 @@ Inflector::rules('singular', array(
 //CakePlugin::load('Migrations');
 //CakePlugin::load('Config', array('bootstrap' => true));
 //CakePlugin::load('Shim');
-
-
+CakePlugin::load('PhpExcel');
+CakePlugin::load('DebugKit');
 CakePlugin::load('BoostCake');
 CakePlugin::load('Tags');
 CakePlugin::load('ClearCache');
 CakePlugin::load('Tools', array('bootstrap' => true));
-CakePlugin::load('PhpExcel');
-CakePlugin::load('DebugKit');
+
 /**
  * You can attach event listeners to the request lifecycle as Dispatcher Filter . By Default CakePHP bundles two filters:
  *

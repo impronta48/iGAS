@@ -52,4 +52,4 @@
         $this->PhpExcel->addTableRow($somma, true);
 }   
 
-$this->PhpExcel->addTableFooter()->output('report_'.$anno.'_'.$mese.'.xls', 'Excel5');
+$this->PhpExcel->addTableFooter()->output('report_'.$anno.'_'.$mese.'.xls', 'Xls');

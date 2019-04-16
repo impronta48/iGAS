@@ -2,16 +2,16 @@
 App::uses('Component', 'Controller');
 
 /**
- * Component for working with PHPExcel class.
+ * Component for working with \PhpOffice\PhpSpreadsheet\Spreadsheet class.
  *
  * @package PhpExcel
  * @author segy
  */
 class PhpExcelComponent extends Component {
     /**
-     * Instance of PHPExcel class
+     * Instance of \PhpOffice\PhpSpreadsheet\Spreadsheet class
      *
-     * @var PHPExcel
+     * @var \PhpOffice\PhpSpreadsheet\Spreadsheet
      */
     protected $_xls;
 
@@ -43,9 +43,9 @@ class PhpExcelComponent extends Component {
      */
     public function createWorksheet() {
         // load vendor classes
-        App::import('Vendor', 'PhpExcel.PHPExcel');
+        App::import('Vendor', 'PhpExcel.\PhpOffice\PhpSpreadsheet\Spreadsheet');
 
-        $this->_xls = new PHPExcel();
+        $this->_xls = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $this->_row = 1;
 
         return $this;
@@ -59,9 +59,9 @@ class PhpExcelComponent extends Component {
      */
     public function loadWorksheet($file) {
         // load vendor classes
-        App::import('Vendor', 'PhpExcel.PHPExcel');
+        App::import('Vendor', 'PhpExcel.\PhpOffice\PhpSpreadsheet\Spreadsheet');
 
-        $this->_xls = PHPExcel_IOFactory::load($file);
+        $this->_xls = \PhpOffice\PhpSpreadsheet\IOFactory::load($file);
         $this->setActiveSheet(0);
         $this->_row = 1;
 
@@ -111,7 +111,7 @@ class PhpExcelComponent extends Component {
 
     /**
      * Overloaded __call
-     * Move call to PHPExcel instance
+     * Move call to \PhpOffice\PhpSpreadsheet\Spreadsheet instance
      *
      * @param string function name
      * @param array arguments
@@ -167,7 +167,7 @@ class PhpExcelComponent extends Component {
         // offset
         $offset = 0;
         if (isset($params['offset']))
-            $offset = is_numeric($params['offset']) ? (int)$params['offset'] : PHPExcel_Cell::columnIndexFromString($params['offset']);
+            $offset = is_numeric($params['offset']) ? (int)$params['offset'] : \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($params['offset']);
 
         // font name
         if (isset($params['font']))
@@ -250,11 +250,11 @@ class PhpExcelComponent extends Component {
 
         // filter (has to be set for whole range)
         if (count($this->_tableParams['filter']))
-            $this->_xls->getActiveSheet()->setAutoFilter(PHPExcel_Cell::stringFromColumnIndex($this->_tableParams['filter'][0]) . ($this->_tableParams['header_row']) . ':' . PHPExcel_Cell::stringFromColumnIndex($this->_tableParams['filter'][count($this->_tableParams['filter']) - 1]) . ($this->_tableParams['header_row'] + $this->_tableParams['row_count']));
+            $this->_xls->getActiveSheet()->setAutoFilter(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($this->_tableParams['filter'][0]) . ($this->_tableParams['header_row']) . ':' . \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($this->_tableParams['filter'][count($this->_tableParams['filter']) - 1]) . ($this->_tableParams['header_row'] + $this->_tableParams['row_count']));
 
         // wrap
         foreach ($this->_tableParams['wrap'] as $col)
-            $this->_xls->getActiveSheet()->getStyle(PHPExcel_Cell::stringFromColumnIndex($col) . ($this->_tableParams['header_row'] + 1) . ':' . PHPExcel_Cell::stringFromColumnIndex($col) . ($this->_tableParams['header_row'] + $this->_tableParams['row_count']))->getAlignment()->setWrapText(true);
+            $this->_xls->getActiveSheet()->getStyle(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col) . ($this->_tableParams['header_row'] + 1) . ':' . \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col) . ($this->_tableParams['header_row'] + $this->_tableParams['row_count']))->getAlignment()->setWrapText(true);
 
         return $this;
     }
@@ -268,7 +268,7 @@ class PhpExcelComponent extends Component {
     public function addData($data, $offset = 0) {
         // solve textual representation
         if (!is_numeric($offset))
-            $offset = PHPExcel_Cell::columnIndexFromString($offset);
+            $offset = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($offset);
 
         foreach ($data as $d)
             $this->_xls->getActiveSheet()->setCellValueByColumnAndRow($offset++, $this->_row, $d);
@@ -305,7 +305,7 @@ class PhpExcelComponent extends Component {
      * @return PHPExcel_Writer_Iwriter
      */
     public function getWriter($writer) {
-        return PHPExcel_IOFactory::createWriter($this->_xls, $writer);
+        return \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($this->_xls, $writer);
     }
 
     /**

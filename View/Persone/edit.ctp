@@ -1,7 +1,7 @@
 <?php echo $this->Html->script("persona.js",array('inline' => false)); ?>
 <?php echo $this->Html->script('tags',array('inline' => false)); ?>
 <?php echo $this->Html->script("jquery.tagsinput.min",array('inline' => false)); ?>
-<?php echo $this->Html->script("validate",array('inline' => false)); ?>
+<?php echo $this->Html->script("validate1.19",array('inline' => false)); ?>
 <?php echo $this->Html->script("validator/iban",array('inline' => false)); ?>
 <?php echo $this->Html->script("validator/complete_url",array('inline' => false)); ?>
 <?php echo $this->Html->script("validator/messages_it",array('inline' => false)); ?>
@@ -47,7 +47,7 @@
         <div class="panel-body">
         <?php
             echo $this->Form->input('id');
-            echo $this->Form->input('Nome');
+            echo $this->Form->input('Nome', array('required'=>true));
             echo $this->Form->input('Cognome');        		
             echo $this->Form->input('Societa');
             echo $this->Form->input('DisplayName', array('class'=> 'form-control required'));
@@ -148,6 +148,7 @@
             <?php
             echo $this->Form->input('piva');
             echo $this->Form->input('cf');
+			echo $this->Form->input('indirizzoPEC', array('class'=> 'form-control email', 'label'=> 'Indirizzo Posta PEC'));
             echo $this->Form->input('EntePubblico', array('class'=>false, 'wrapInput' => 'col col-md-9 col-md-offset-3', 'label'=> array('class'=>false)));
             echo $this->Form->input('codiceIPA', ['label'=> 'Codice Destinatario SDI / Codice IPA (Pubblica Amministrazione)']);
             ?>

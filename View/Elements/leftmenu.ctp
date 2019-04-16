@@ -30,6 +30,7 @@
             <li><?php echo $this->Html->link("<i class='fa fa-bolt'></i><span class='hidden-minibar'> Inserisci Mie Ore</span>", '/ore/add/',array('escape' => false, 'data-original-title'=>'Inserici Ore')) ?></li>
             <li><?php echo $this->Html->link("<i class='fa fa-clock-o'></i><span class='hidden-minibar'> Inserisci Ore</span>", '/ore/scegli_persona',array('escape' => false, 'data-original-title'=>'Inserici Ore')) ?></li>
             <li><?php echo $this->Html->link("<i class='fa fa-table'></i><span class='hidden-minibar'> Gestione Foglio Ore</span>", '/ore/riassuntocaricamenti/'. date("Y"),array('escape' => false, 'data-original-title'=>'Gestione Foglio Ore')) ?></li>
+            <li><?php echo $this->Html->link("<i class='fa fa-table'></i><span class='hidden-minibar'> Check Ore</span>", '/ore/check/'. date("Y"),array('escape' => false, 'data-original-title'=>'Check Ore')) ?></li>
             <li><?php echo $this->Html->link("<i class='fa fa-briefcase'></i><span class='hidden-minibar'> Nota Spese</span>", '/notaspese/scegli_persona',array('escape' => false, 'data-original-title'=>'Nota Spese')) ?></li>
     </ul>
 </li>
@@ -39,9 +40,20 @@
         <i class='fa fa-file'></i><span class="hidden-minibar">Documenti</span>
     </a>    
     <ul>
-
     <li><?php echo $this->Html->link("<i class='fa fa-file-text'></i><span class='hidden-minibar'> Documenti Ricevuti</span>", '/fatturericevute/?anno=' . date('Y'),array('escape' => false, 'data-original-title'=>'Fatture Ricevute')) ?></li>
     <li><?php echo $this->Html->link("<i class='fa fa-euro'></i><span class='hidden-minibar'> Prima Nota</span>", '/primanota/?from='. date('Y-m-d', strtotime('first day of last month')),array('escape' => false, 'data-original-title'=>'Prima Nota')) ?></li>
+</ul>
+
+<li>
+    <a class="dropdown" href="#" data-original-title="Cespiti">
+        <i class="fa fa-building"></i><span class="hidden-minibar">Cespiti</span>
+    </a>    
+    <ul>
+    <li><?php echo $this->Html->link("<i class='fa fa-archive'></i><span class='hidden-minibar'>Cespiti</span>", '/cespiti', Array('escape' => false, 'data-original-title'=>'Cespiti')) ?></li>
+    <li><?php echo $this->Html->link("<i class='fa fa-gears'></i><span class='hidden-minibar'>Aggiungi</span>", '/cespiti/add', Array('escape' => false, 'data-original-title'=>'Cespiti')) ?></li>
+    <li><?php echo $this->Html->link("<i class='fa fa-calendar-o'></i><span class='hidden-minibar'>Aggiungi evento</span>", '/cespiti/eventadd', Array('escape' => false, 'data-original-title'=>'Cespiti')) ?></li>
+    <li><?php echo $this->Html->link("<i class='fa fa-calendar'></i><span class='hidden-minibar'>Lista Eventi</span>", '/cespiti/eventlist', Array('escape' => false, 'data-original-title'=>'Cespiti')) ?></li>
+    <li><?php echo $this->Html->link("<i class='fa fa-calendar'></i><span class='hidden-minibar'>Visualizza Calendario</span>", '/cespiti/calendar', Array('escape' => false, 'data-original-title'=>'Cespiti')) ?></li>
 </ul>
 
 <li  >
@@ -71,6 +83,7 @@
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Banche', '/provenienzesoldi', array('data-original-title'=>'Banche','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Codici Iva', '/legendaCodiciIva', array('data-original-title'=>'Codici Iva','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Categorie Spesa', '/LegendaCatSpesa', array('data-original-title'=>'Categorie Spesa','escape' => false)) ?></li>
+    <li><?php echo $this->Html->link('<i class="fa fa-calendar"></i> Tipi Attività Calendario', '/legenda_tipo_attivita_calendario', array('data-original-title'=>'Legenda Tipo Attivita Calendario','escape' => false)) ?></li>   
     <li><?php echo $this->Html->link('<i class="fa fa-truck"></i> Mezzi', '/legenda_mezzi', array('data-original-title'=>'Legenda Mezzi','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-truck"></i> Vettori', '/vettori', array('data-original-title'=>'Vettori','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-truck"></i> Porto', '/legenda_porto', array('data-original-title'=>'Porto','escape' => false)) ?></li>

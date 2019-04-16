@@ -3,8 +3,8 @@
 class PersoneController extends AppController {
 
     public $name = 'Persone';
-    public $components = array('RequestHandler','Paginator', 'PhpExcel.PhpExcel');    
-    public $helpers = array('PhpExcel.PhpExcel');
+    public $components = array('RequestHandler','Paginator','PhpExcel.PhpSpreadsheet');    
+    public $helpers = array('PhpExcel.PhpSpreadsheet');
         
     function index() {
         		
@@ -189,7 +189,7 @@ class PersoneController extends AppController {
         $persone = Configure::read('Attivita.personeFoglioOre');
         $proj_speciali = Configure::read('iGas.progettiSpeciali');        
         $tabore= $this->_getOreconsulente($persone, $anno, $mese);
-        
+
         $this->set('ore', $tabore);
         $this->set('mese', $mese);
         $this->set('anno', $anno);

@@ -1,1 +1,1 @@
-<b>iGAS <?php echo exec('git describe --always') ?> </b> - Gestione Aziendale Semplice <a href="http://impronta48.it" target="_blank"><img src="//impronta48.it/iMpronta-web.png" alt="" height="16" align="absMiddle" width="100"></a> &copy; 1993-2017 - CakePHP
+<b>iGAS <?php echo exec('git describe --always') ?> </b> - Gestione Aziendale Semplice <a href="http://impronta48.it" target="_blank"><!--<img src="//impronta48.it/iMpronta-web.png" alt="" height="16" align="absMiddle" width="100"></a>--> &copy; 1993-2017 - CakePHP

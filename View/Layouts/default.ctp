@@ -10,7 +10,8 @@
 
   <!-- Loading Bootstrap -->
   <!-- Latest compiled and minified CSS -->
-  <?php echo $this->Html->css('jquery-ui.min'); ?>  
+  <?php //echo $this->Html->css('jQueryUI/1.10.3/jquery-ui.min'); //LEGACY ?>  
+  <?php echo $this->Html->css('jQueryUI/1.12.1/jquery-ui.min'); // DOPO LA JQUERY MIGRATION ?>  
   <?php echo $this->Html->css('bootstrap.min'); ?>  
   
   <!-- Loading Stylesheets -->    
@@ -18,7 +19,7 @@
   <?php echo $this->Html->css('/DataTables/DataTables-1.10.16/css/dataTables.bootstrap.min.css'); ?>  
   <?php echo $this->Html->css('/DataTables/Buttons-1.4.2/css/buttons.bootstrap.min.css'); ?>  
   <?php echo $this->Html->css('/DataTables/Responsive-2.2.0/css/responsive.bootstrap.min.css'); ?>    
-  <?php echo $this->Html->css('bootstrap-chosen'); ?>  
+  <?php echo $this->Html->css('bootstrap-chosen'); ?> 
   <?php echo $this->Html->css('style'); ?>  
      
   
@@ -29,7 +30,6 @@
   <?php
         echo $this->Html->meta(
         'favicon.ico',
-        'favicon.ico',    
         array('type' => 'icon')
         );			
   ?> 
@@ -48,9 +48,10 @@
 			
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand" title="iGas - Gestione Aziendale Semplice" href="
-                  <?php echo $this->Html->url('/pages/home'); ?>">
-                  <i class="fa fa-list btn-nav-toggle-responsive text-white"></i>
+				<button class="btn-nav-toggle-responsive">
+					<i class="fa fa-list text-white fa-2x"></i>
+				</button>
+                <a class="navbar-brand" title="iGas - Gestione Aziendale Semplice" href="<?php echo $this->Html->url('/pages/home'); ?>">
                   <span class="logo"><?php echo Configure::read('iGas.NomeAzienda') ?></span>
                 </a>
             </div>
@@ -59,7 +60,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav user-menu navbar-right top-navbar-usermenu" id="user-menu">
 
-                   <?php //Prende l'immagine dell'utente o una di default se non c'è
+                   <?php //Prende l'immagine dell'utente o una di default se non c'?
 
                          $path = 'profiles/'. env('PHP_AUTH_USER') . '.png';
                          //$u = env('PHP_AUTH_USER') ;
@@ -164,24 +165,28 @@
      
         
 <!-- Latest compiled and minified JavaScript -->
-<?php echo $this->Html->script("jquery-1.10.2.min.js"); ?>
-<?php echo $this->Html->script("bootstrap.min.js"); ?>
-<?php echo $this->Html->script("jquery-ui-1.10.3.custom.min.js"); ?>
+<?php //echo $this->Html->script("jQuery/1.10.2/jquery-1.10.2.min"); //LEGACY ?>
+<?php echo $this->Html->script("jQuery/3.3.1/jquery-3.3.1.min"); // DOPO LA JQUERY MIGRATION ?>
+<?php echo $this->Html->script("bootstrap.min"); ?>
+<?php //echo $this->Html->script("jQueryUI/1.10.3/jquery-ui-1.10.3.custom.min"); //LEGACY ?>
+<?php echo $this->Html->script("jQueryUI/1.12.1/jquery-ui.min"); // DOPO LA JQUERY MIGRATION ?>
 <?php echo $this->Html->script("/DataTables/DataTables-1.10.16/js/jquery.dataTables.min"); ?>
-<?php echo $this->Html->script("/DataTables/DataTables-1.10.16/js/dataTables.bootstrap.min.js"); ?>
-<?php echo $this->Html->script("//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"); ?>
-<?php echo $this->Html->script("//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"); ?>
-<?php echo $this->Html->script("/DataTables/Buttons-1.4.2/js/dataTables.buttons.min.js"); ?>
-<?php echo $this->Html->script("/DataTables/Buttons-1.4.2/js/buttons.bootstrap.min.js"); ?>
-<?php echo $this->Html->script("/DataTables/Buttons-1.4.2/js/buttons.html5.min.js"); ?>
-<?php echo $this->Html->script("/DataTables/Buttons-1.4.2/js/buttons.print.min.js"); ?>
-<?php echo $this->Html->script("/DataTables/Responsive-2.2.0/js/dataTables.responsive.min.js"); ?>
-<?php echo $this->Html->script("/DataTables/Responsive-2.2.0/js/responsive.bootstrap.min.js"); ?>
-<?php echo $this->Html->script("validate.js"); ?>
-<?php echo $this->Html->script("jquery.ui.touch-punch.min"); ?>
-<?php echo $this->Html->script("jquery.doubleScroll"); ?>
-<?php echo $this->Html->script("accounting.min"); ?>
-<?php echo $this->Html->script("chosen.jquery.min"); ?>
+<?php echo $this->Html->script("/DataTables/DataTables-1.10.16/js/dataTables.bootstrap.min"); ?>
+<?php //echo $this->Html->script("//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"); // Perchè caricare dall'online versioni così vecchie? ?>
+<?php //echo $this->Html->script("//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"); // Perchè caricare dall'online versioni così vecchie? ?>
+<?php echo $this->Html->script("pdfmake/0.1.32/pdfmake.min"); ?>
+<?php echo $this->Html->script("pdfmake/0.1.32/vfs_fonts"); ?>
+<?php echo $this->Html->script("/DataTables/Buttons-1.4.2/js/dataTables.buttons.min"); ?>
+<?php echo $this->Html->script("/DataTables/Buttons-1.4.2/js/buttons.bootstrap.min"); ?>
+<?php echo $this->Html->script("/DataTables/Buttons-1.4.2/js/buttons.html5.min"); ?>
+<?php echo $this->Html->script("/DataTables/Buttons-1.4.2/js/buttons.print.min"); ?>
+<?php echo $this->Html->script("/DataTables/Responsive-2.2.0/js/dataTables.responsive.min"); ?>
+<?php echo $this->Html->script("/DataTables/Responsive-2.2.0/js/responsive.bootstrap.min"); ?>
+<?php echo $this->Html->script("validate1.19"); // Questo è compatibile sia con jQuery 1.10.2 che con jQuery 3.3.1 ?>
+<?php echo $this->Html->script("jquery.ui.touch-punch.min"); // Questa sembra roba vecchia e non credo neanche sia usata nel sito (Non la tocco per la migrazione a jQuery 3.3.1) ?>
+<?php echo $this->Html->script("jquery.doubleScroll"); // Questa anche se vecchia è già la versione più aggiornata (Non la tocco per la migrazione a jQuery 3.3.1) ?>
+<?php echo $this->Html->script("accounting.min"); // Questa è la versione più recente (Non la tocco per la migrazione a jQuery 3.3.1) ?>
+<?php echo $this->Html->script("chosen.jquery.min"); // Non è la versione più recente ma sembra compatibile sia con jQuery 3.3.1 che con 1.10.2 jQuery ?>
 <?php echo $this->Html->script("igas"); ?>
 
 <?php echo $this->Js->writeBuffer(); ?>

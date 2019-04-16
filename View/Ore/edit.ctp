@@ -16,6 +16,7 @@
     )); ?>
     
     <?php echo $this->Form->input('id'); ?>
+    <?php echo $this->Form->hidden('old_numOre', array('default' => $this->request->data['Ora']['numOre']));?>
     <?php echo $this->Form->input('eRisorsa', array('default' => $eRisorsa, 'options' => $eRisorse, 'label' => 'Persona', 'class'=>'chosen-select col col-md-8')); ?>
     
     <?php

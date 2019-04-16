@@ -26,7 +26,7 @@
         "cakedc/migrations": "2.4",
         "mailchimp/mailchimp": ">=2.0.0",
         "codaxis/cakephp-bootstrap3-helpers": "1.1",        
-        "phpoffice/phpexcel": "^1.8",
+        "phpoffice/phpspreadsheet":"1.6.0",
         "mikehaertl/phpwkhtmltopdf": "^2.2",        
         "dereuromark/cakephp-tools": "2.x-dev",
         "robmorgan/phinx": "^0.10.6",

@@ -2,6 +2,9 @@
 
 class GoogleDriveComponent extends Component{
 	
+	public const DEBUG = false; // false = no Debug, true = Debug active 
+	public const DEBUGFILE = APP.'googleDebug.log';
+
 	function echoCurrentUrl(){
 		return Router::url(null, true);
 	}
@@ -9,18 +12,45 @@ class GoogleDriveComponent extends Component{
 	public function getController(Controller $controller) {
 		$this->Controller = $controller;
 	}
-	
+
 	/**
-	 * Google Drive Upload
-	 *
-	 * @param  Google_Service_Gmail $service Authorized Gmail API instance.
-	 * @param  string that contain the local server path of the file that you want upload.
-	 * @param  string that contain the Drive folder ID in whitch should be saved the file.
-	 * @return string that contain if message was sent or an error.
+	 * Google Directory Tree Generator
+	 * @param Google_Service_Gmail $service Authorized Gmail API instance.
+	 * @param array that contain as first argument the parent Drive folder ID and other subdir names.
+	 * @return mixed string with the last created child folder ID or false in case of errors.
 	 */
-	function upload($googleService,$fileToUpload,$folderId=null){
-		//Controllo se ci sono file analoghi già caricati
-		$fileName=explode('.',basename($fileToUpload));	
+	function dirTreeGen($googleService,$folderParams){
+		$parentFolderId=$folderParams[0];
+		$driveDestFolder=null;
+		for($i=1;$i<count($folderParams);$i++){
+			$fileList = Array();
+			$fileList = $this->checkIfIsInDrive($googleService,$folderParams[$i],$parentFolderId);
+			if(count($fileList)<=0){
+				$fileMetadata = new Google_Service_Drive_DriveFile(array(
+					'parents' => array($parentFolderId),
+					'name' => $folderParams[$i],
+					'mimeType' => 'application/vnd.google-apps.folder'));
+				$driveDestFolder = $googleService->files->create($fileMetadata, array(
+					'fields' => 'id'));
+				$parentFolderId=$driveDestFolder->id;
+			} else {
+				$parentFolderId=$fileList[0]->id;
+			}
+			//debug($parentFolderId);
+			//debug($fileList);
+		}
+		return $parentFolderId;
+	}
+
+	/**
+	 * Google Drive Duplicates
+	 * 
+	 * @param Google_Service_Gmail $service Authorized Gmail API instance.
+	 * @param string containing the file or directory name that must be checked
+	 * @param string containing the Drive folder ID in witch should be checked the presence of given file or dir
+	 * @return array empty if there aren't already uploaded files or an array containing Drive objects.
+	 */
+	function checkIfIsInDrive($googleService,$entityName,$parentFolder=null){
 		$fileList = Array();
 		$pageToken = null;
 		do{
@@ -30,10 +60,15 @@ class GoogleDriveComponent extends Component{
 					$parameters['pageToken'] = $pageToken;
 				}
 				$parameters['q'] = array(
-								'name = \''.$fileName[0].'\'',
-								'trashed = false',
-								'\'.$folderId.\' in parents');
+								"name = '$entityName'",
+								"trashed = false",
+								//"mimeType = 'application/vnd.google-apps.folder'",
+								"'$parentFolder' in parents");
 				$files = $googleService->files->listFiles($parameters);
+				//debug($files->files);
+				//$file = $googleService->files->get($files[0]->id, array('fields' => 'parents'));
+				//debug($file->parents);
+				//$previousParents = join(',', $file->parents);
 				$fileList = array_merge($fileList, $files->files);
 				$pageToken = $files->getNextPageToken();
 			} catch(Exception $e){
@@ -41,6 +76,23 @@ class GoogleDriveComponent extends Component{
 				$pageToken = null;
 			}
 		}while($pageToken);
+		return $fileList;
+	}
+	
+	/**
+	 * Google Drive Upload
+	 *
+	 * @param Google_Service_Gmail $service Authorized Gmail API instance.
+	 * @param string that contain the local server path of the file that you want upload.
+	 * @param array that contain the Drive folder ID in witch should be saved the file and other dir names for create Drive subfolders.
+	 * @return string that contain if file was successfully uploaded or an error.
+	 */
+	function upload($googleService,$fileToUpload,$folderParams=null){
+		$folderId=$this->dirTreeGen($googleService,$folderParams);
+		//debug($folderId);//DEBUG
+		$fileName=explode('.',basename($fileToUpload));	
+		//Controllo se ci sono file analoghi già caricati
+		$fileList=$this->checkIfIsInDrive($googleService,Router::getRequest(true)->param('controller').$fileName[0],$folderId);
 		//Se non è già stato caricato un file analogo procedo con il download
 		if(count($fileList)<=0){
 			try {
@@ -51,7 +103,7 @@ class GoogleDriveComponent extends Component{
 					'parents' => array($folderId)
 				));
 
-				$file->setName($fileName[0]);
+				$file->setName(Router::getRequest(true)->param('controller').$fileName[0]);
 				$file->setDescription(Router::getRequest(true)->param('controller').' - '.basename($fileToUpload));
 				$result = $googleService->files->create(
 					$file,array(
@@ -72,7 +124,27 @@ class GoogleDriveComponent extends Component{
 			return 'Su Google Drive è già presente uno scontrino correllato alla fattura '.$fileName[0];
 		}
 	}
-	
+
+	/**
+	 * Google Drive Delete
+	 * 
+	 * @param Google_Service_Gmail $googleService Authorized Gmail API instance.
+	 * @param integer the LOCAL file id, not the DRIVE file id.
+	 * @return string containing success or error message
+	 */
+	function deleteFile($googleService,$scontrinoIdToDelete){
+		$fileList = Array();
+		$fileList=$this->checkIfIsInDrive($googleService,Router::getRequest(true)->param('controller').$scontrinoIdToDelete);
+		if(count($fileList)<=0){
+			return 'No file to erase from Google Drive';
+		}
+		try {
+			$googleService->files->delete($fileList[0]['id']);
+			return 'File successfully erased from Google Drive';
+		} catch (Exception $e) {
+			return "An error occurred when deleting the file on Google Drive: " . $e->getMessage();
+		}
+	}
 }
 
 ?>

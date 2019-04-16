@@ -225,24 +225,24 @@ class AttivitaController extends AppController {
                     unset($this->request->data['Persona']['DisplayName2']);
                 }                                      
 
-               //Faccio save all per salvare anche i dettagli della persona
-               if ($this->Attivita->saveAll($this->request->data)) {
-                $this->Session->setFlash('Attività salvata con successo, si può procedere.');
-                if(!$id){
-                    //Prendo l'id legato al salvataggio
-                    $id = $this->Attivita->getLastInsertID();
-                }
-                    // Qua gestisco l'upload del documento
-                    $uploaded_file=$this->request->data['Attivita']['uploadFile'];
-                    $uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller,'_preventivo');
-                    if(strlen($uploadError)>0){
-                        $this->Flash->error(__($uploadError));
-                    }
-                    //Rimango sulla stessa pagina in edit
-                    $this->redirect(array('action' => 'edit', $this->Attivita->id ));
-                } else {
+                //Faccio save all per salvare anche i dettagli della persona
+                if ($this->Attivita->saveAll($this->request->data)) {
+					$this->Session->setFlash('Attività salvata con successo, si può procedere.');
+					if(!$id){
+						//Prendo l'id legato al salvataggio
+						$id = $this->Attivita->getLastInsertID();
+					}
+					// Qua gestisco l'upload del documento
+					$uploaded_file=$this->request->data['Attivita']['uploadFile'];
+					$uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller,'_preventivo');
+					if(strlen($uploadError)>0){
+						$this->Flash->error(__($uploadError));
+					}
+					//Rimango sulla stessa pagina in edit
+					$this->redirect(array('action' => 'edit', $this->Attivita->id ));
+				} else {
                     $this->Session->setFlash(__('The attivita could not be saved. Please, try again.'));
-                }
+				}
 		}
 		if (empty($this->request->data)) {
 			$this->request->data = $this->Attivita->read(null, $id);
@@ -262,20 +262,24 @@ class AttivitaController extends AppController {
 			$this->redirect(array('action'=>'index'));
 		}
 		if ($this->Attivita->delete($id)) {
-            unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'_preventivo.pdf');
+            $fileExt=$this->UploadFiles->checkIfFileExists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'_preventivo.');
+            if(!empty($fileExt)){
+                unlink(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'_preventivo.'.$fileExt);
+            }
 			$this->Session->setFlash(__('Attivita deleted'));
 			$this->redirect(array('action'=>'index'));
 		}
 		$this->Session->setFlash(__('Attivita was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
-
-    public function deleteDoc($id = null) {
-		unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'_preventivo.pdf');
+	
+	public function deleteDoc($id = null) {
+        $fileExt=$this->UploadFiles->checkIfFileExists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'_preventivo.');
+		unlink(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'_preventivo.'.$fileExt);
 		$this->Session->setFlash(__('Documento cancellato'));
 		$this->redirect($this->referer());
-    }
-    
+	}
+
     function suggest()
 	{
         $data = array();
@@ -579,33 +583,29 @@ class AttivitaController extends AppController {
         $conditionsFr = array();
         $conditionsFa = array();
         $conditionsNs = array();
-        $nomeattivita = '';
-        $progetto = '';
-        $area = '';
-        $anno = '';
         $tit = '';
 		
-        if (!empty( $nomeattivita = $this->request->query('nomeattivita')))
-        {           
-            $conditions['Attivita.name LIKE'] = '%'. $nomeattivita .'%';
-			$tit = "attività che contengono: " . $nomeattivita;
+        if (!empty($this->request->named['nomeattivita']))
+        {
+            $conditions['Attivita.name LIKE'] = '%'. $this->request->named['nomeattivita'] .'%';
+			$tit = "attività che contengono: " . $this->request->named['nomeattivita'];
         }   
         
-        if (!empty($progetto = $this->request->query('progetto')))
+        if (!empty($this->request->named['progetto']))
         {
-            $conditions['Attivita.progetto_id'] = $progetto;			
-			$p = $this->Attivita->Progetto->findById($progetto);
+            $conditions['Attivita.progetto_id'] = $this->request->named['progetto'];			
+			$p = $this->Attivita->Progetto->findById($this->request->named['progetto']);
 			$tit = $p['Progetto']['name'];
         }   
         
-		if (!empty($area= $this->request->query('area')))
+		if (!empty($this->request->named['area']))
         {
-            $conditions['Attivita.area_id'] = $area;			
+            $conditions['Attivita.area_id'] = $this->request->named['area'];			
         }  
 
-        if (!empty($anno = $this->request->query('anno')))
+        if (!empty($this->request->named['anno']))
         {
-            $conditions['YEAR(Attivita.DataInizio)'] = $anno;
+            $conditions['YEAR(Attivita.DataInizio)'] = $this->request->named['anno'];
         }  
 		
 		$this->set('title_for_layout', 'Avanzamento Generale');
@@ -711,109 +711,14 @@ class AttivitaController extends AppController {
 				$aree[$t['Area']['id']] = $t['Area']['name']; 
 		}
 		//Se c'è l'area, l'aggiungo al titolo
-		if (!empty($this->request->query('area')))
+		if (!empty($this->request->named['area']))
 		{
-			$tit .= 'Area: ' .  $aree[$this->request->query('area')];
+			$tit .= 'Area: ' .  $aree[$this->request->named['area']];
 		}
-        $this->set('progetti', $this->Attivita->Progetto->find('list'));		
-        $anni_meno = Configure::read('Fattureemesse.anni');
-        $anni = array();
-        for ($i=date('Y'); $i>=date('Y')-$anni_meno; $i--)
-        {
-            $anni[$i] = $i;			
-        }        
-		$this->set('anni', $anni);		
-		$this->set(compact('a','pnu','pne','fentrate','fuscite','ns','ore','aree','tit','docric','nomeattivita','progetto','anno','area'));		
-	}
-    
-    //Mostra la differenza tra il valore offerto e l'acquisito e il fatturato
-	function offerto_acquisito()
-	{
-        $conditions = [];    
-        $nomeattivita = '';
-        $progetto = '';
-        $area = '';
-        $anno = '';
-        $tit = '';
 		
-        if (!empty( $nomeattivita = $this->request->query('nomeattivita')))
-        {           
-            $conditions['Attivita.name LIKE'] = '%'. $nomeattivita .'%';
-			$tit = "attività che contengono: " . $nomeattivita;
-        }   
-        
-        if (!empty($progetto = $this->request->query('progetto')))
-        {
-            $conditions['Attivita.progetto_id'] = $progetto;			
-			$p = $this->Attivita->Progetto->findById($progetto);
-			$tit = $p['Progetto']['name'];
-        }   
-        
-		if (!empty($area= $this->request->query('area')))
-        {
-            $conditions['Attivita.area_id'] = $area;			
-        }  
-
-        $conditions_offerte = $conditions;
-        if (empty($anno = $this->request->query('anno')))
-        {
-            $anno = date('Y');  //Se non passi l'anno intendo l'anno corrente                    
-        }  
-                
-        $this->set('title_for_layout', 'Confronto Offerto/Acquisito');
-        //Devo usare una query base perchè è troppo incasinato da fare con l'orm
-        $this->Attivita->virtualFields['fatturato'] = 0;
-        $this->Attivita->virtualFields['incassato'] = 0;
-        $db = $this->Attivita->getDataSource();
-        $offerte= $db->fetchAll(
-            "
-            ##confronto fatturato con pagato per un anno specifico
-            SELECT Attivita.id
-            , Attivita.name
-            , Attivita.OffertaAlCliente
-            , Attivita.ImportoAcquisito
-            , Attivita.area_id
-            , (SELECT round(SUM(r.importo)) FROM fattureemesse f 
-                        left JOIN righefatture r ON (r.fattura_id = f.id )
-                        WHERE Attivita.id = f.attivita_id
-                        # AND (YEAR(f.DATA)=2018)
-            ) AS Attivita__fatturato
-            , (SELECT round(SUM(p.imponibile)) FROM primanota p 
-                        JOIN fattureemesse f ON (p.fatturaemessa_id = f.id)
-                        where Attivita.id = f.attivita_id
-                        # AND (YEAR(f.DATA)=2018)
-            ) AS Attivita__incassato 
-            #, ROUND(ImportoAcquisito-(select Attivita__fatturato)) AS Attivita__daFatturare
-            #, ROUND((SELECT Attivita__fatturato)-(select Attivita__incassato)) AS Attivita__daIncassare
-            from attivita Attivita			
-            WHERE year(Attivita.dataPresentazione) = :anno
-            OR (YEAR(Attivita.dataPresentazione) < :anno AND  YEAR(dataFinePrevista) >= :anno)
-            #GROUP BY Attivita.id
-            ORDER BY Attivita.area_id, Attivita.id;
-            ",
-            array('anno'=>$anno)
-        );
-        //debug($offerte);
-
-        $temp = $this->Attivita->Area->find('all', array(
-					'recursive' => -1,
-					));
-		foreach ($temp as $t)
-		{
-				$aree[$t['Area']['id']] = $t['Area']['name']; 
-		}
-        
-        $this->set('progetti', $this->Attivita->Progetto->find('list'));		
-        $anni_meno = Configure::read('Fattureemesse.anni');
-        $anni = array();
-        for ($i=date('Y'); $i>=date('Y')-$anni_meno; $i--)
-        {
-            $anni[$i] = $i;			
-        }        
-		$this->set('anni', $anni);		
-		$this->set(compact('aree','tit','nomeattivita','progetto','anno','area','offerte','fatturato'));		
-    }
-    
+		$this->set(compact('a','pnu','pne','fentrate','fuscite','ns','ore','aree','tit','docric'));		
+	}
+	
 	function attivita_fasi()
 	{
 		$this->set('title_for_layout', 'Avanzamento Generale');

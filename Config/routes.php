@@ -38,7 +38,7 @@
  * how to customize the loading of plugin routes.
  */
 	CakePlugin::routes();
-  Router::parseExtensions('ajax','json','pdf','xls','xml');
+  Router::parseExtensions('ajax','json','pdf','xls');
 
 	//Router::connect('/login', array('plugin'=>'authake','controller' => 'user', 'action' => 'login'));
 /*	

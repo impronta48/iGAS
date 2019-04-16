@@ -23,23 +23,28 @@
         
             <?php echo  $this->Form->input('id'); ?>
             <?php echo  $this->Form->input('data', array('type'=>'date', 'class'=>false, 'dateFormat'=>'DMY')); ?>            
-            <?php   if (!isset($this->request->data['Primanota']['importo']))
-            		{
-            			$importo = 0;
-            		}
-            		else{
-            			$importo =$this->request->data['Primanota']['importo'];	
-            		}            		
-                    if ($importo>0)
-                    {
-                        echo  $this->Form->input('importoEntrata', array('placeholder'=>'10.2', 'label'=>'Entrata', 'wrapInput' => 'col col-md-2','default'=>$importo));
-                        echo  $this->Form->input('importoUscita', array('placeholder'=>'10.2', 'label'=>'Uscita', 'wrapInput' => 'col col-md-2'));       
-                    }
-                    else
-                    {
-                        echo  $this->Form->input('importoEntrata', array('placeholder'=>'10.2', 'label'=>'Entrata', 'wrapInput' => 'col col-md-2'));
-                        echo  $this->Form->input('importoUscita', array('placeholder'=>'10.2', 'label'=>'Uscita', 'wrapInput' => 'col col-md-2','default'=>-$importo));       
-                    }            
+            <?php   
+                if (!isset($this->request->data['Primanota']['importo']))
+                {
+                    $importo = $imponibile = $iva = 0;
+                }
+                else{
+                    $importo = $this->request->data['Primanota']['importo'];	
+                    $imponibile = $this->request->data['Primanota']['imponibile'];	
+                    $iva = $this->request->data['Primanota']['iva'];	
+                }           		
+                if ($importo>0)
+                {
+                    echo $this->Form->input('importoEntrata', array('placeholder'=>'10.2', 'label'=>'Entrata', 'wrapInput' => 'col col-md-2','default'=>$importo));
+                    echo $this->Form->input('imponibile', array('placeholder'=>'8.36', 'label'=>'Imponibile', 'wrapInput' => 'col col-md-9','default'=>$imponibile));
+                    echo $this->Form->input('iva', array('placeholder'=>'1.84', 'label'=>'Iva', 'wrapInput' => 'col col-md-9','default'=>$iva));     
+                }
+                else
+                {
+                    echo $this->Form->input('importoUscita', array('placeholder'=>'10.2', 'label'=>'Uscita', 'wrapInput' => 'col col-md-2','default'=>-$importo)); 
+                    echo $this->Form->input('imponibileUscita', array('placeholder'=>'8.36', 'label'=>'Imponibile', 'wrapInput' => 'col col-md-9','default'=>-$imponibile));
+                    echo $this->Form->input('ivaUscita', array('placeholder'=>'1.84', 'label'=>'Iva', 'wrapInput' => 'col col-md-9','default'=>-$iva));      
+                }      
             ?>
             <?php             
                 if (!empty($id))
@@ -78,14 +83,16 @@
                 <?php echo  $this->Form->input('fatturaricevuta_id', array('label'=>'Fattura Ricevuta', 'options'=>$fatturaricevuta)); ?> 
             </div>
 			<?php
-			if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$this->request->data['Primanota']['id'].'.pdf')):
-					echo 'E\' già stato caricato un documento. ';
-					echo $this->Html->link('Download this PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$this->request->data['Primanota']['id'].'.pdf', array('class'=>'btn btn-xs btn-primary'));
-					echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
-					echo $this->Html->link(__('Delete this PDF'), array('action' => 'deleteDoc', $this->request->data['Primanota']['id']), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s_preventivo.pdf?', $this->request->data['Primanota']['id']));
-					echo '<br />Un nuovo upload sovrascriverà il vecchio documento.';
-				endif;
-			echo $this->Form->input('uploadFile', array('label'=>'Upload File PDF', 'class'=>false, 'type'=>'file'));
+            foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+                if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$this->request->data['Primanota']['id'].'.'.$ext)){
+                    echo 'E\' già stato caricato uno scontrino. ';
+                    echo $this->Html->link(__('Download Attachment'), HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$this->request->data['Primanota']['id'].'.'.$ext, array('title'=>'Download related Attachment','class'=>'btn btn-xs btn-primary'));
+                    echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
+                    echo $this->Html->link(__('Delete Attachment'), array('action' => 'deleteDoc', $this->request->data['Primanota']['id']), array('title'=>'Delete related Attachment','class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s.%s?', $this->request->data['Primanota']['id'], $ext));
+                    echo '<br />Un nuovo upload sovrascriverà il vecchio allegato.';
+                }
+            }
+			echo $this->Form->input('uploadFile', array('label'=>'Upload File', 'class'=>false, 'type'=>'file'));
 			?>
             
             <?php echo  $this->Form->end('Salva'); ?>

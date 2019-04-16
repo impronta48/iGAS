@@ -110,10 +110,12 @@
 	<?php foreach ($fatturericevute as $f): ?>
 	<tr>
         <td class="actions">
-			<?php 
-			if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$f['Fatturaricevuta']['id'].'.pdf')){
-				echo $this->Html->link('View PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$f['Fatturaricevuta']['id'].'.pdf', array('class'=>'btn btn-xs btn-primary','title'=>'View or Download PDF')); 
-			} 
+            <?php 
+            foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+                if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$f['Fatturaricevuta']['id'].'.'.$ext)){
+                    echo $this->Html->link('View Doc', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$f['Fatturaricevuta']['id'].'.'.$ext, array('class'=>'btn btn-xs btn-primary','title'=>'View or Download this Document')); 
+                }
+            }
 			?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $f['Fatturaricevuta']['id']), array('class'=>'btn btn-xs btn-primary')); ?>
 			<?php echo $this->Html->link(__('Del'), array('action' => 'delete', $f['Fatturaricevuta']['id']), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete # %s?', $f['Fatturaricevuta']['id'])); ?>

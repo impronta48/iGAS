@@ -11,43 +11,6 @@ class FatturericevuteController extends AppController {
 	public $components = array('Paginator', 'UploadFiles', 'GoogleDrive', 'GoogleMail');
     public $uses = array('Fatturaricevuta', 'Primanota');
 	
-	function test_google(){
-		//$this->Session->setFlash(__($this->GoogleDrive->echoCurrentUrl()));
-		//$this->GoogleDrive->getController($this);//Cercavo di passare l'oggetto Controller al Component per poer poi fare $this->Controller->redirect nel Component
-		$googleApiObj=new Google_Client;
-		$googleApiObj->setApplicationName(Configure::read('iGas.NomeAzienda'));
-		//$googleApiObj->setDeveloperKey(Configure::read('google_key'));
-		//$oauth_creds=APP.'vendor'.DS.'google'.DS.'client_secret_688204231769-vf1vgfin2vmibr40pr2io9eejq94hkgh.apps.googleusercontent.com.json';
-		$oauth_creds=Configure::read('google.oauth');
-		$googleApiObj->setAuthConfig($oauth_creds);
-		//$googleApiObj->setAccessType('offline');
-		//Uncomment this following 2 lines to upload to Drive
-		//$googleApiObj->addScope(Google_Service_Drive::DRIVE);
-		//$googleService = new Google_Service_Drive($googleApiObj);
-		//Uncomment this following 2 lines to send mails through gmail
-		$googleApiObj->setScopes(Google_Service_Gmail::GMAIL_COMPOSE);
-		$googleService = new Google_Service_Gmail($googleApiObj);
-		$redirect_uri = Router::url(null, true);
-		$googleApiObj->setRedirectUri($redirect_uri);
-		//debug($this->request->query);
-		//debug($redirect_uri);
-		if (isset($this->request->query['code'])) {
-			$token = $googleApiObj->fetchAccessTokenWithAuthCode($this->request->query['code']);
-			//debug($token);
-			$googleApiObj->setAccessToken($token);
-			$this->Session->write('upload_token', $token);
-			//$this->redirect(filter_var($redirect_uri, FILTER_SANITIZE_URL));
-		} else {
-			$auth_url = $googleApiObj->createAuthUrl();
-			debug($auth_url);
-			//$this->redirect(filter_var($auth_url, FILTER_SANITIZE_URL));
-			$this->redirect(filter_var($auth_url, FILTER_SANITIZE_URL));
-		}
-		//$result=$this->GoogleDrive->upload($googleService);
-		$result=$this->GoogleMail->sendMessage($googleService,'me');
-		$this->Session->setFlash(__($result));		
-	}
-	
 /**
  * index method
  *
@@ -116,7 +79,6 @@ class FatturericevuteController extends AppController {
         $this->set('attivita', $this->Fatturaricevuta->Attivita->find('list'));
         $this->set('legendatipodocumento', $this->Fatturaricevuta->LegendaTipoDocumento->find('list'));
         $this->set('legendacatspesa', $this->Fatturaricevuta->LegendaCatSpesa->find('list'));
-        
     }
 
 
@@ -249,7 +211,10 @@ class FatturericevuteController extends AppController {
 			throw new NotFoundException(__('Fattura Ricevuta non valida'));
 		}
 		if ($this->Fatturaricevuta->delete()) {
-			unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf');
+            $fileExt=$this->UploadFiles->checkIfFileExists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.');
+            if(!empty($fileExt)){
+                unlink(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.'.$fileExt);
+            }
 			$this->Session->setFlash(__('Cancellata la fattura ricevuta'));
 			return $this->redirect(array('action' => 'index'));
 		}
@@ -258,7 +223,8 @@ class FatturericevuteController extends AppController {
 	}
 	
 	public function deleteDoc($id = null) {
-		unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf');
+        $fileExt=$this->UploadFiles->checkIfFileExists(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.');
+		unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.'.$fileExt);
 		$this->Session->setFlash(__('Documento cancellato'));
 		$this->redirect($this->referer());
 	}

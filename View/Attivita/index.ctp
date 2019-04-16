@@ -99,7 +99,7 @@
 
     <tbody>
 	<?php
-	$i = 0;
+    $i = 0;
 	foreach ($attivita as $attivita):
 	?>
 
@@ -158,11 +158,17 @@
 				  <li class="">
                     <?php echo $this->Html->link(__('Avanzamento'), array('controller'=>'attivita', 'action' => 'avanzamento', $attivita['Attivita']['id'])); ?>
                   </li>
-				  <?php if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$attivita['Attivita']['id'].'_preventivo.pdf')): ?>
-				  <li class="">
-                    <?php echo $this->Html->link('Download PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$attivita['Attivita']['id'].'_preventivo.pdf'); ?>
-                  </li>
-				  <?php endif; ?>
+                <?php 
+                  foreach(Configure::read('iGas.commonFiles') as $ext => $mimes): 
+                    if(file_exists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$attivita['Attivita']['id'].'_preventivo.'.$ext)): 
+                ?>
+                    <li class="">
+                        <?php echo $this->Html->link('View Attachment', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$attivita['Attivita']['id'].'_preventivo.'.$ext); ?>
+                    </li>
+                <?php 
+                    endif;
+                  endforeach; 
+                ?>
                   <li class="">
                     <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $attivita['Attivita']['id'])); ?>
                   </li>

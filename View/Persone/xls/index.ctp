@@ -1,12 +1,12 @@
 <?php
-$this->PhpExcel->createWorksheet();
+$this->PhpSpreadsheet->createWorksheet();
 $row = array();
 foreach ($persone[0]['Persona'] as $k => $d) {
     $row[] = array('label'=>$k);
 }
 
-$this->PhpExcel->addTableHeader($row, array('name' => 'Cambria', 'bold' => true));
-$this->PhpExcel->getActiveSheet()->getStyle("A1")->getFont()->setSize(14)->setBold(true);
+$this->PhpSpreadsheet->addTableHeader($row, array('name' => 'Cambria', 'bold' => true));
+$this->PhpSpreadsheet->getActiveSheet()->getStyle("A1")->getFont()->setSize(14)->setBold(true);
 
 foreach ($persone as $p) {
     $row = array();    
@@ -15,7 +15,7 @@ foreach ($persone as $p) {
         $row[] = $d;        
     }
     
-    $this->PhpExcel->addTableRow($row, true);
+    $this->PhpSpreadsheet->addTableRow($row, true);
 }
 
-$this->PhpExcel->output($name, 'Excel5');
+$this->PhpSpreadsheet->output($name, 'Xls');

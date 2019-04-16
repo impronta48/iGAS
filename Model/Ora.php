@@ -19,6 +19,19 @@ class Ora extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
+		'Impiegato' => array(
+			'className' => 'Impiegato',
+			'foreignKey' => 'eRisorsa',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
 		'Attivita' => array(
 			'className' => 'Attivita',
 			'foreignKey' => 'eAttivita',
@@ -72,6 +85,79 @@ class Ora extends AppModel {
 
 	),
 	);
+
+	public function beforeSave($options = Array()) {
+		// Se faseattivita_id == 0 le ore caricate non sono legate a nessuna faseattività e non devo quindi modificare nulla in nessuna fase
+		if($this->data['Ora']['faseattivita_id'] != 0){
+			$this->Faseattivita->id = $this->data['Ora']['faseattivita_id'];
+			$faseAttivitaQtaData = $this->Faseattivita->read('Faseattivita.qta, Faseattivita.qtaUtilizzata, Faseattivita.um');
+			$qta = $faseAttivitaQtaData['Faseattivita']['qta'];
+			$qtaUtilizzata = $faseAttivitaQtaData['Faseattivita']['qtaUtilizzata'];
+			$um = $faseAttivitaQtaData['Faseattivita']['um'];
+			if($um == 'gg' or $um == 'ore'){
+				$hDayWork = ($um == 'gg') ? 8 : 1;
+				if(isset($this->data['Ora']['old_numOre'])){ // Se è settato vuol dire che è un edit
+					$qtaNew = $qtaUtilizzata - ((int)$this->data['Ora']['old_numOre']/$hDayWork);
+					$qtaNew += ((int)$this->data['Ora']['numOre']/$hDayWork);
+				} else {
+					$qtaNew = $qtaUtilizzata + ((int)$this->data['Ora']['numOre']/$hDayWork);
+				}
+				if($qtaNew > $qta){
+					$this->error = __('Hai inserito un numero superiore di ore ripetto al necessario');
+					return false; // false in beforeSave non fa procedere con il salvataggio
+				}
+				//debug($this->data['Ora']['numOre']);
+				//debug((int)$this->data['Ora']['numOre']/$hDayWork);
+				//debug($faseAttivitaQtaData);
+				//die();
+			}
+		}
+		return true;
+	}
+
+	public function afterSave($created, $options = Array()) {
+		// Se faseattivita_id == 0 le ore caricate non sono legate a nessuna faseattività e non devo quindi modificare nulla in nessuna fase
+		if($this->data['Ora']['faseattivita_id'] != 0){
+			$this->Faseattivita->id = $this->data['Ora']['faseattivita_id'];
+			$faseAttivitaQtaData = $this->Faseattivita->read('Faseattivita.qtaUtilizzata, Faseattivita.um');
+			$qtaUtilizzata = $faseAttivitaQtaData['Faseattivita']['qtaUtilizzata'];
+			$um = $faseAttivitaQtaData['Faseattivita']['um'];
+			if($um == 'gg' or $um == 'ore'){
+				$hDayWork = ($um == 'gg') ? 8 : 1;
+				if($created) {
+					//debug($this->data['Ora']);
+					//die();
+					$qtaNew = $qtaUtilizzata + ((int)$this->data['Ora']['numOre']/$hDayWork);
+				} else {
+					$qtaNew = $qtaUtilizzata - ((int)$this->data['Ora']['old_numOre']/$hDayWork);
+					$qtaNew += ((int)$this->data['Ora']['numOre']/$hDayWork);
+				}
+				$this->Faseattivita->saveField('qtaUtilizzata', $qtaNew);
+			}
+		}
+	}
+
+	public function beforeDelete($cascade = true) {
+        //debug($this->data);
+        //die();
+    }
+    
+    public function afterDelete() {
+        //debug($this->data);
+		//die();
+		// Se faseattivita_id == 0 le ore caricate non sono legate a nessuna faseattività e non devo quindi modificare nulla in nessuna fase
+		if($this->data['Ora']['faseattivita_id'] != 0){
+			$this->Faseattivita->id = $this->data['Ora']['faseattivita_id'];
+			$faseAttivitaQtaData = $this->Faseattivita->read('Faseattivita.qtaUtilizzata, Faseattivita.um');
+			$qtaUtilizzata = $faseAttivitaQtaData['Faseattivita']['qtaUtilizzata'];
+			$um = $faseAttivitaQtaData['Faseattivita']['um'];
+			if($um == 'gg' or $um == 'ore'){
+				$hDayWork = ($um == 'gg') ? 8 : 1;
+				$qtaNew = $qtaUtilizzata - ((int)$this->data['Ora']['numOre']/$hDayWork);
+				$this->Faseattivita->saveField('qtaUtilizzata', $qtaNew);
+			}
+		}
+    }
 
 	public function getPersone()
     {

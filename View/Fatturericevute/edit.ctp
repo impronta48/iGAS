@@ -39,14 +39,20 @@
         echo $this->Form->input('scadPagamento', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
 		echo $this->Form->input('ritenutaAcconto');		
 		echo $this->Form->input('scadenzaRitenutaAcconto', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
-		if(file_exists(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf')){
-			echo 'E\' già stato caricato un documento. ';
-			echo $this->Html->link('Download this PDF', HTTP_BASE.'/'.APP_DIR.'/files/'.$this->request->controller.'/'.$id.'.pdf', array('class'=>'btn btn-xs btn-primary'));
-			echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
-			echo $this->Html->link(__('Delete this PDF'), array('action' => 'deleteDoc', $id), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s.pdf?', $id));
-			echo '<br />Un nuovo upload sovrascriverà il vecchio documento.';
+		//Questo è profondamente sbagliato ma l'alternativa è creare un metodo nel Controller che non sarà
+		//associato a nessuna View. Si potrebbe anche mettere nel Component UploadFilesComponent.php ma
+		//leggo in giro che è sbagliato perchè i Component dovrebbero essere fruibili solo dai Controller 
+		//ed infatti di default i Controller non sono Visibili alle View. 
+		foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+			if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$id.'.'.$ext)){
+				echo 'E\' già stato caricato uno documento.';
+				echo $this->Html->link(__('Download this '.strtoupper($ext)), HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$id.'.'.$ext, array('class'=>'btn btn-xs btn-primary'));
+				echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
+				echo $this->Html->link(__('Delete this '.strtoupper($ext)), array('action' => 'deleteDoc', $id), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s.%s?', $id, $ext));
+				echo '<br />Un nuovo upload sovrascriverà il vecchio documento.';
+			}
 		}
-		echo $this->Form->input('uploadFile', array('label'=>'Upload File PDF', 'class'=>false, 'type'=>'file'));
+		echo $this->Form->input('uploadFile', array('label'=>'Upload File', 'class'=>false, 'type'=>'file'));
 		echo $this->Form->input('pagato', array('class'=>false,'wrapInput' => 'col col-md-10 col-md-offset-2', 'type'=>'checkbox','enabled'=>'false'));
 		echo $this->Form->input('pagatoRitenutaAcconto', array('class'=>false, 'wrapInput' => 'col col-md-10 col-md-offset-2', 'type'=>'checkbox'));
 	?>

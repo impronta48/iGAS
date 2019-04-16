@@ -1,7 +1,7 @@
 <?php
-$this->PhpExcel->createWorksheet();
+$this->PhpSpreadsheet->createWorksheet();
 $styleArray = array();
-$this->PhpExcel->getDefaultStyle()->applyFromArray($styleArray);  
+$this->PhpSpreadsheet->getDefaultStyle()->applyFromArray($styleArray);  
   $titoli = array(
         array('label' => 'Data'), 
         array('label' => 'Descr'), 
@@ -14,8 +14,8 @@ $this->PhpExcel->getDefaultStyle()->applyFromArray($styleArray);
         array('label' => 'Categoria Spesa'),
         array('label' => 'Provenienza'),
       );  
-  $this->PhpExcel->addTableHeader($titoli, array('name' => 'Cambria', 'bold' => true));
-  $this->PhpExcel->getActiveSheet()->getStyle("A1:J1")->getFont()->setBold(true);
+  $this->PhpSpreadsheet->addTableHeader($titoli, array('name' => 'Cambria', 'bold' => true));
+  $this->PhpSpreadsheet->getActiveSheet()->getStyle("A1:J1")->getFont()->setBold(true);
 
   foreach ($primanota as $p) {
 
@@ -46,7 +46,7 @@ $this->PhpExcel->getDefaultStyle()->applyFromArray($styleArray);
     $row[] = $p['Primanota']['persona_descr'];
     $row[] = $p['LegendaCatSpesa']['name'];
     $row[] = $p['Provenienzasoldi']['name'];
-    $this->PhpExcel->addTableRow($row, true);
+    $this->PhpSpreadsheet->addTableRow($row, true);
   }
 
-$this->PhpExcel->addTableFooter()->output("$name.xls", 'Excel5');
+$this->PhpSpreadsheet->addTableFooter()->output("$name.xls", 'Xls');

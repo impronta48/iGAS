@@ -174,7 +174,15 @@
 				{
 					$fatturato = 'ERRORE: Non fatturabile ma fatturato';
 				}
-				
+                
+                $trOddBgClass=$trEvenBgClass='';
+                foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+                    if(file_exists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$r['Notaspesa']['id'].'.'.$ext)){
+                        $trOddBgClass='bg-primary ';
+                        $trEvenBgClass='bg-info ';
+                    }
+                }
+                
                 echo $this->Html->tableCells(
                     array(
                         $this->Form->checkbox('Notaspesa.'. $r['Notaspesa']['id'] .'.id', array(                                                                                                         
@@ -197,10 +205,10 @@
                             $this->Html->link('Edit',array('action'=>'edit',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow" )) .
                             $this->Html->link('Del',array('action'=>'delete',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow" )),                        
                             array('class'=>'actions'),
-                            ), 
-
+                          ),
                       ),
-                    array('class' => 'darker'));
+                    array('class' => $trOddBgClass.'darker'),
+                    array('class' => $trEvenBgClass));
                     $tot +=  $r['Notaspesa']['importo'];
                     $totkm +=  $r['Notaspesa']['km'];
                 ?>

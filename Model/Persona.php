@@ -24,7 +24,17 @@ class Persona extends AppModel {
             'foreignKey' => 'eRisorsa',		
 		),
 	); 
-
+	
+	/*
+	// Questa non è vera validazione lato client perchè comunque il round trip c'è, 
+	// al massimo non avviene l'inserimento a DB
+	public $validate = array(
+		'indirizzoPEC' => array(
+							'rule' => 'email',
+							'allowEmpty' => true,
+							'message' => 'Inserisci una mail valida')
+	);
+	*/
 
 }
 ?>

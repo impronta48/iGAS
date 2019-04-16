@@ -1,6 +1,6 @@
 <?php
 class PrimanotaController extends AppController {
-    public $helpers = array('Cache', 'PhpExcel.PhpExcel');
+    public $helpers = array('Cache', 'PhpExcel.PhpSpreadsheet');
 	public $cacheAction = "1 day";
     public $components = array('DataTable', 'Paginator', 'UploadFiles');
 	public $paginate = array(
@@ -38,17 +38,6 @@ class PrimanotaController extends AppController {
 				if(strlen($uploadError)>0){
 					$this->Flash->error(__($uploadError));
 				}
-				/*
-				if(!empty($uploaded_file['tmp_name'])) {
-					if ($uploaded_file['type'] != 'application/pdf') {
-						$this->Flash->error(__('Formato file non valido, sono amessi solo PDF'));
-					} else { // Salvo il file 
-						if(!move_uploaded_file($uploaded_file['tmp_name'], WWW_ROOT.'files/primanota/'.$id.'.pdf')) {
-							$this->Flash->set(__('Errore salvataggio file. Riprovare'));
-						}
-					}
-				}
-				*/
                 $this->Session->setFlash('PrimaNota Salvata con Successo');
             }
             else {
@@ -156,17 +145,6 @@ class PrimanotaController extends AppController {
 				if(strlen($uploadError)>0){
 					$this->Flash->error(__($uploadError));
 				}
-				/*
-				if(!empty($uploaded_file['tmp_name'])) {
-					if ($uploaded_file['type'] != 'application/pdf') {
-						$this->Flash->error(__('Formato file non valido, sono amessi solo PDF'));
-					} else { // Salvo il file 
-						if(!move_uploaded_file($uploaded_file['tmp_name'], WWW_ROOT.'files/primanota/'.$id.'.pdf')) {
-							$this->Flash->set(__('Errore salvataggio file. Riprovare'));
-						}
-					}
-				}
-				*/
 				$this->Session->setFlash('Riga di Prima Nota salvata con successo');
 				$attivita_id = $this->request->data['Primanota']['attivita_id'];
                 $this->redirect(array('controller'=>'primanota','action'=>'index'));
@@ -191,15 +169,15 @@ class PrimanotaController extends AppController {
 		}
 
     }
-/**
- * delete method
- *
- * @throws NotFoundException
- * @param string $id = id prima nota
- * @param string $aid  = attivita_id
- * @return void
- */
- public function delete($id = null, $aid = null) {
+	/**
+	* delete method
+	*
+	* @throws NotFoundException
+	* @param string $id = id prima nota
+	* @param string $aid  = attivita_id
+	* @return void
+	*/
+	public function delete($id = null, $aid = null) {
         $this->Primanota->id = $id;
         if (!$this->Primanota->exists()) {
             throw new NotFoundException(__('Invalid PrimaNota'));
@@ -208,7 +186,10 @@ class PrimanotaController extends AppController {
         //e segnalare all'utente che quella riga non è più pagata
 
         if ($this->Primanota->delete()) {
-			unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf');
+			$fileExt=$this->UploadFiles->checkIfFileExists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.');
+            if(!empty($fileExt)){
+                unlink(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.'.$fileExt);
+            }
             $this->Session->setFlash(__('Primanota deleted'));
             return $this->redirect(array('action' => 'index', $aid));
         }
@@ -218,27 +199,31 @@ class PrimanotaController extends AppController {
  }
 
 	public function deleteDoc($id = null) {
-		unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf');
+		$fileExt=$this->UploadFiles->checkIfFileExists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.');
+		unlink(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.'.$fileExt);
 		$this->Session->setFlash(__('Documento cancellato'));
 		$this->redirect($this->referer());
 	}
 
-     //Converte i campi importoentrata e uscita in un unico campo importo con il segno positivo o negativo
-private   function _gestioneImporto()
-    {
+    //Converte i campi importoentrata e uscita in un unico campo importo con il segno positivo o negativo
+	private function _gestioneImporto(){
         //Gestisco i campi utili solo alla visualizzazione
-            if ($this->request->data['Primanota']['importoEntrata'])
-            {
-                $this->request->data['Primanota']['importo'] = str_replace(',','.', $this->request->data['Primanota']['importoEntrata']);
-            }
-            else
-            {
-                //Se è un'uscita va memorizzata con il meno
-                $this->request->data['Primanota']['importo'] = -  str_replace(',','.', $this->request->data['Primanota']['importoUscita']);
-            }
-            //Tolgo questi campi che servivano solo per facilitare l'input
-            unset($this->request->data['Primanota']['ImportoEntrata']);
-            unset($this->request->data['Primanota']['ImportoUscita']);
+		if (isset($this->request->data['Primanota']['importoEntrata'])/*and $this->request->data['Primanota']['importoEntrata']*/)
+		{
+			$this->request->data['Primanota']['importo'] = str_replace(',','.', $this->request->data['Primanota']['importoEntrata']);
+			$this->request->data['Primanota']['imponibile'] = str_replace(',','.', $this->request->data['Primanota']['imponibile']);
+			$this->request->data['Primanota']['iva'] = str_replace(',','.', $this->request->data['Primanota']['iva']);
+		}
+		else
+		{
+			//Se è un'uscita va memorizzata con il meno
+			$this->request->data['Primanota']['importo'] = - str_replace(',','.', $this->request->data['Primanota']['importoUscita']);
+			$this->request->data['Primanota']['imponibile'] = - str_replace(',','.', $this->request->data['Primanota']['imponibileUscita']);
+			$this->request->data['Primanota']['iva'] = - str_replace(',','.', $this->request->data['Primanota']['ivaUscita']);
+		}
+		//Tolgo questi campi che servivano solo per facilitare l'input
+		unset($this->request->data['Primanota']['ImportoEntrata']);
+		unset($this->request->data['Primanota']['ImportoUscita']);
     }
 
 
@@ -325,7 +310,11 @@ private function _preparaDropDown()
         //Prendo l'anno a cui si riferisce come namedparameter
         if (!empty($this->request->query('anno')))
         {
-            return  $this->request->query('anno');
+            return $this->request->query('anno');
+        }
+        if (!empty($this->params['named']['anno']))
+        {
+            return $this->params['named']['anno'];
         }
         if (empty($anno) )
         {
@@ -385,7 +374,6 @@ private function _preparaDropDown()
             ));
         //Uscite
         $this->set('pnu', $pn);
-        $this->set('anno',$anno);
 
     }
 
