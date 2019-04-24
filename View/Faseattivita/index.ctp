@@ -279,7 +279,8 @@
    
 </div>
 
-<h2>Utile Commessa: <?php echo $tot_righe - $tot_uscite ?>&euro;</h2>
+<h2>Utile Commessa: <?php echo $totVenduto_uscite - $tot_uscite ?>&euro;</h2>
+<h2>Da incassare: <?php echo $totVenduto_uscite - $totVenduto_righe ?>&euro;</h2>
 
 <?php $this->Html->scriptStart(array('inline' => false)); ?>
 $(function() { 
