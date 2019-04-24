@@ -713,15 +713,12 @@ class OreController extends AppController {
             $this->Session->setFlash('L\'impiegato selezionato non ha un indirizzo mail settato.');
             $this->redirect(array('action' => 'check',date('Y')));
         }
-        $emailObj = new CakeEmail('smtp');
+        $emailObj = new CakeEmail();
         $emailObj->viewVars(array('personaDisplayName' => $persona['Persona']['DisplayName']));
-        $emailObj->template('sollecitoore');
-        $emailObj->sender(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
-        $emailObj->from(array('bill@microsoft.com' =>'Bill Gates'));
+        $emailObj->template('sollecitoore');        
+        $emailObj->from(Configure::read('iGas.emailSender'));
         $emailObj->to($persona['Persona']['EMail']);
-        $emailObj->emailFormat('text');
-        $emailObj->returnPath('postmaster@localhost');
-        $emailObj->replyTo(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
+        $emailObj->emailFormat('text');                
         $emailObj->subject('Non hai caricato tutte le ore di '.$anno.'-'.$mese);
         $emailObj->send();
         $this->Session->setFlash('Mail di sollecito inviata correttamente.');
