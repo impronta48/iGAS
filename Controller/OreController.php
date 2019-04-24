@@ -656,13 +656,13 @@ class OreController extends AppController {
     //Massimoi - 30/8/2013 - Mostra quali fogli ore sono stati caricati per ogni dipendente per ogni anno
     function riassuntocaricamenti($anno)
     {
-        $conditions = array('YEAR(data)' => $anno);
+        $conditions = array('YEAR(Ora.data)' => $anno);
 
         $conteggi = $this->Ora->find('all', array(
                                         'conditions' => $conditions,
-                                        'group' => array('Persona.Cognome', 'MONTH(data)'),
-                                        'order' => array('Persona.Cognome', 'MONTH(data)'),
-                                        'fields' => array('Persona.Cognome', 'MONTH(data) as Mese', 'SUM(Ora.numOre) as OreTot')
+                                        'group' => array('Persona.Cognome', 'MONTH(Ora.data)'),
+                                        'order' => array('Persona.Cognome', 'MONTH(Ora.data)'),
+                                        'fields' => array('Persona.Cognome', 'MONTH(Ora.data) as Mese', 'SUM(Ora.numOre) as OreTot')
         ));
 
         //Giro la tabella risultante in modo da avere questa struttura associativa (che mi facilita la view)
