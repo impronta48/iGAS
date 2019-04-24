@@ -729,13 +729,13 @@ class OreController extends AppController {
     }
 
     public function check($anno) {
-        $conditions = array('YEAR(data)' => $anno);
+        $conditions = array('YEAR(Ora.data)' => $anno);
         $conditionsImpiegati = array('YEAR(dataValidita)' => $anno);
         $conteggi = $this->Ora->find('all', array(
             'conditions' => $conditions,
-            'group' => array('Persona.Cognome', 'MONTH(data)'),
-            'order' => array('Persona.Cognome', 'MONTH(data)'),
-            'fields' => array('Persona.id', 'Persona.Cognome', 'Persona.Nome', 'MONTH(data) as Mese', 'SUM(Ora.numOre) as OreTot')
+            'group' => array('Persona.Cognome', 'MONTH(Ora.data)'),
+            'order' => array('Persona.Cognome', 'MONTH(Ora.data)'),
+            'fields' => array('Persona.id', 'Persona.Cognome', 'Persona.Nome', 'MONTH(Ora.data) as Mese', 'SUM(Ora.numOre) as OreTot')
         ));
         $this->loadModel('Impiegato');
         $conteggiImpiegati = $this->Impiegato->find('all', array(
