@@ -86,7 +86,7 @@ class Ora extends AppModel {
 	),
 	);
 
-	public function beforeSave($options = Array()) {
+	/* public function beforeSave($options = Array()) {
 		// Se faseattivita_id == 0 le ore caricate non sono legate a nessuna faseattività e non devo quindi modificare nulla in nessuna fase
 		if($this->data['Ora']['faseattivita_id'] != 0){
 			$this->Faseattivita->id = $this->data['Ora']['faseattivita_id'];
@@ -113,8 +113,8 @@ class Ora extends AppModel {
 			}
 		}
 		return true;
-	}
-
+	} */
+/* 
 	public function afterSave($created, $options = Array()) {
 		// Se faseattivita_id == 0 le ore caricate non sono legate a nessuna faseattività e non devo quindi modificare nulla in nessuna fase
 		if($this->data['Ora']['faseattivita_id'] != 0){
@@ -135,7 +135,7 @@ class Ora extends AppModel {
 				$this->Faseattivita->saveField('qtaUtilizzata', $qtaNew);
 			}
 		}
-	}
+	} */
 
 	public function beforeDelete($cascade = true) {
         //debug($this->data);
