@@ -153,7 +153,8 @@ class FattureemesseController extends AppController {
 		if (!$id) {
 			$this->Session->setFlash(__('Invalid fatturaemessa'));
 			$this->redirect(array('action' => 'index'));
-		}
+        }
+        
         //Questo mi serve per tirare su l'anagrafica dell'utente
         $this->Fatturaemessa->Behaviors->load('Containable');
         $this->Fatturaemessa->contain('Attivita.Persona','ProvenienzaSoldi','Rigafattura','Rigafattura.Codiceiva');
@@ -174,6 +175,7 @@ class FattureemesseController extends AppController {
         $cli = str_replace(' ', '', substr($f['Attivita']['Persona']['DisplayName'], 0, 8));
 		//8 caratteri dell'attivita
         $att = str_replace(' ', '', substr($f['Attivita']['name'], 0, 8));
+        Configure::write('debug', 0);
         $this->set('name', "$anno-$progressivo-" . Configure::read('iGas.NomeAzienda') . "Fattura-$cli-$att.pdf" );        
 	}
 
@@ -475,7 +477,7 @@ class FattureemesseController extends AppController {
           $this->redirect(array('controller'=> 'fattureemesse',  'action'=>'edit', $fattura_id) );
         }
         else {
-          $this->flash('Errore nel salvataggio della fattura');
+          $this->Session->setFlash('Errore nel salvataggio della fattura');
         }
     }
 

@@ -51,4 +51,3 @@ $pdf->setOptions(["print-media-type"]);
 echo $pdf->send();
 $this->response->type('application/pdf');
 $this->response->download($name);
-
