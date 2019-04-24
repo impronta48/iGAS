@@ -69,7 +69,7 @@ class AppController extends Controller {
     function beforeFilter() {
               
         //Configure AuthComponent
-        $this->theme = Configure::read('iGas.theme'); 
+        //$this->theme = Configure::read('iGas.theme'); 
         //$this->Auth->allow(); //Permetto tutto
         //permetto il verbno display sulle pagine statiche
         //$this->Auth->allow('display');
