@@ -799,7 +799,12 @@ class OreController extends AppController {
                             $oreDaCaricare['Mesi'][$keyMonth] = $c['Impiegato']['oreLun']+$c['Impiegato']['oreMar']+$c['Impiegato']['oreMer']+$c['Impiegato']['oreGio']+$c['Impiegato']['oreVen']+$c['Impiegato']['oreSab']+$c['Impiegato']['oreDom'];
                     } else { 
                         if($oreDaCaricare['Mesi'][$keyMonth] == '' || $oreDaCaricare['Mesi'][$keyMonth] == NULL){
-                            $oreDaCaricare['Mesi'][$keyMonth] = 'ANNOPRECEDENTE';
+                          //$oreDaCaricare['Mesi'][$keyMonth] = 'ANNOPRECEDENTE';//Linea creata in fase di test. Ora non più necessaria.
+                          if(prev($c)){
+                              $oreDaCaricare['Mesi'][$keyMonth] = $c['Impiegato']['oreLun']+$c['Impiegato']['oreMar']+$c['Impiegato']['oreMer']+$c['Impiegato']['oreGio']+$c['Impiegato']['oreVen']+$c['Impiegato']['oreSab']+$c['Impiegato']['oreDom'];                             
+                          } else {
+                            $oreDaCaricare['Mesi'][$keyMonth] = 0;                             
+                          }  
                         }
                     }
                 } else {
