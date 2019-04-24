@@ -1056,7 +1056,7 @@ class OreController extends AppController {
         }
         else
         {
-            $conditions['YEAR(data)'] = date('Y');    
+            $conditions['YEAR(Ora.data)'] = date('Y');    
         }
 
         $persone = $this->Ora->find('all', array(
