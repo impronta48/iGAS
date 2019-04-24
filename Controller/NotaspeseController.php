@@ -512,7 +512,7 @@ class NotaspeseController extends AppController {
 		//$this->GoogleDrive->getController($this);//Cercavo di passare l'oggetto Controller al Component per poter poi fare $this->Controller->redirect nel Component
 		$id=$this->Session->read('scontrinoIdToUpload');//Se qua faccio $this->Session->consume $id non viene valorizzato. Questo è assurdo.
         $fileToUpload=WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.pdf';
-        debug($fileToUpload);
+        $this->log("Tentativo di upload su drive di $fileToUpload");
 		//$this->Session->delete('scontrinoIdToUpload');//Se deleto questa $id della riga sopra diventa null. Questo è assurdo.
 		$googleApiObj=new Google_Client;
 		$googleApiObj->setApplicationName(Configure::read('iGas.NomeAzienda'));
