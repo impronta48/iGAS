@@ -980,8 +980,8 @@ class OreController extends AppController {
         //Applico il filtro alle condizioni del report ore mostrato in basso
         //(di default o passate come parametro)
         $conditions['Ora.eRisorsa'] =$persona;
-        $conditions['YEAR(data)'] = $anno;
-        $conditions['MONTH(data)'] = $mese;
+        $conditions['YEAR(Ora.data)'] = $anno;
+        $conditions['MONTH(Ora.data)'] = $mese;
         //Non filtro su giorno e attività perchè voglio vedere il report mensile della persona
         //$conditions['DAY(data)'] = $giorno;
         //$conditions['Ora.eAttivita'] = $attivita;
@@ -991,9 +991,9 @@ class OreController extends AppController {
             array(
                 'conditions' => $conditions,
                 'fields' => array(
-                    'id','Ora.eRisorsa', 'numOre', 'data', 'dettagliAttivita', 'luogoTrasferta', 'eAttivita','Faseattivita.Descrizione'
+                    'id','Ora.eRisorsa', 'numOre', 'Ora.data', 'dettagliAttivita', 'luogoTrasferta', 'eAttivita','Faseattivita.Descrizione'
                 ),
-                'order' => 'data'
+                'order' => 'Ora.data'
             )
         );
         
