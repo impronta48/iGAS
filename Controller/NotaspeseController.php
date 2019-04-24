@@ -3,7 +3,7 @@ App::uses('AppController', 'Controller');
 class NotaspeseController extends AppController {
 	
     public $components = array('RequestHandler', 'UploadFiles', 'GoogleDrive');
-    public $helpers = array('Tristate', 'Table');
+    public $helpers = array('Tristate', 'Table', 'PdfToImage');
     
     private function getConditionFromQueryString()
     {
@@ -165,7 +165,8 @@ class NotaspeseController extends AppController {
 	
 	function add($id = null){
 		//debug($this->Session->read('notaspeseUploadReferer'));
-		//debug($this->Session->read('scontrinoIdToUpload'));
+        //debug($this->Session->read('scontrinoIdToUpload'));
+
         $persona=1;
         $anno=date('Y');
         $mese=date('M');
@@ -187,17 +188,17 @@ class NotaspeseController extends AppController {
         if (isset($this->request->params['named']['anno']))
         {
             $anno= $this->request->params['named']['anno'];
-            $conditions['YEAR(Notaspesa.data)'] = $anno;
+            $conditions['YEAR(data)'] = $anno;
         }
         if (isset($this->request->params['named']['mese']))
         {
             $mese= $this->request->params['named']['mese'];
-            $conditions['MONTH(Notaspesa.data)'] = $mese;
+            $conditions['MONTH(data)'] = $mese;
         }
         if (isset($this->request->params['named']['giorno']))
         {
             $giorno= $this->request->params['named']['giorno'];
-            $conditions['DAY(Notaspesa.data)'] = $giorno;
+            $conditions['DAY(data)'] = $giorno;
         }
         if (isset($this->request->params['named']['attivita']))
         {
@@ -226,17 +227,17 @@ class NotaspeseController extends AppController {
         if (isset($this->request->query['anno']))
         {
             $anno= $this->request->query['anno'];
-            $conditions['YEAR(Notaspesa.data)'] = $anno;
+            $conditions['YEAR(data)'] = $anno;
         }
         if (isset($this->request->query['mese']))
         {
             $mese= $this->request->query['mese'];
-            $conditions['MONTH(Notaspesa.data)'] = $mese;
+            $conditions['MONTH(data)'] = $mese;
         }
         if (isset($this->request->query['giorno']))
         {
             $giorno= $this->request->query['giorno'];
-            $conditions['DAY(Notaspesa.data)'] = $giorno;
+            $conditions['DAY(data)'] = $giorno;
         }
         if (isset($this->request->query['attivita']))
         {
@@ -246,7 +247,7 @@ class NotaspeseController extends AppController {
         if (isset($this->request->query['dest']))
         {
             $destinazione= $this->request->query['dest'];            
-        }    
+        }
 
 		//Mi hanno chiamato per salvare
 		if (!empty($this->data)) {		
@@ -259,27 +260,45 @@ class NotaspeseController extends AppController {
                 $attivita = $this->data['Notaspesa']['eAttivita'];
                 $persona = $this->data['Notaspesa']['eRisorsa'];
                 $destinazione = $this->data['Notaspesa']['destinazione'];
-				
+
+                //Questi tre valori devono essere passati in qualche modo al metodo $this->GoogleDrive->upload()
+                //Lo faccio con le sessioni
+                $this->Session->write('IdPersona', $persona);
+                $this->Session->write('NomePersona', $this->Notaspesa->Persona->find('list', array('conditions' => array('id' => $persona)))[$persona]);
+                $this->Session->write('Anno', $anno);
+                $this->Session->write('Mese', $mese);
 				if(!$id){
 					//Prendo l'id legato al salvataggio
 					$id = $this->Notaspesa->getLastInsertID();
 				}
 				// Qua gestisco l'upload del documento su filesystem
 				$uploaded_file=$this->request->data['Notaspesa']['uploadFile'];
-				$uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller);
+				$uploadError=$this->UploadFiles->upload($id,$uploaded_file,strtolower($this->request->controller));
 				if(strlen($uploadError)>0){
 					$this->Flash->error(__($uploadError));
+				} else {
+					//$this->setUploadToDrive($id);
 				}
 
                 //A seconda del submit premuto vado nella direzione opportuna
                 if (isset($this->request->data['submit-ore'] ))
                 {
-                   $this->redirect(array('controller' => 'ore',  'action' => 'add', 'persona'=>$persona,'attivita'=>$attivita,'anno'=>$anno,'mese'=>$mese,'giorno'=>$giorno));
+                    //$this->redirect(array('controller' => 'ore',  'action' => 'add','?'=>['persona'=>$persona,'attivita'=>$attivita,'anno'=>$anno,'mese'=>$mese,'giorno'=>$giorno]));
+                    if($this->GoogleDrive::DEBUG===true){
+                        error_log("\n\n\n#######################################################\n",3,$this->GoogleDrive::DEBUGFILE);
+                        error_log("INIZIO UPLOAD SU DRIVE CHIAMANDO setUploadToDrive()\n",3,$this->GoogleDrive::DEBUGFILE);
+                    }
+                    $this->setUploadToDrive($id,array('controller' => 'ore',  'action' => 'add','?'=>['persona'=>$persona,'attivita'=>$attivita,'anno'=>$anno,'mese'=>$mese,'giorno'=>$giorno]));
                 }
                 else
                 {
-                   $this->redirect(array('action' => 'add', 'persona'=>$persona,'attivita'=>$attivita,'anno'=>$anno,'mese'=>$mese,'giorno'=>$giorno,'dest'=>$destinazione));
-                   //$this->redirect(array('action' => 'add', 'persona'=>$persona,'anno'=>$anno,'mese'=>$mese));
+                    //$this->redirect(array('action' => 'add', '?'=>['persona'=>$persona,'attivita'=>$attivita,'anno'=>$anno,'mese'=>$mese,'giorno'=>$giorno,'dest'=>$destinazione]));
+                    if($this->GoogleDrive::DEBUG===true){
+                        error_log("\n\n\n#######################################################\n",3,$this->GoogleDrive::DEBUGFILE);
+                        error_log("INIZIO UPLOAD SU DRIVE CHIAMANDO setUploadToDrive()\n",3,$this->GoogleDrive::DEBUGFILE);
+                    }
+                    $this->setUploadToDrive($id,array('action' => 'add', '?'=>['persona'=>$persona,'attivita'=>$attivita,'anno'=>$anno,'mese'=>$mese,'giorno'=>$giorno,'dest'=>$destinazione]));
+                    //$this->redirect(array('action' => 'add', 'persona'=>$persona,'anno'=>$anno,'mese'=>$mese));
                 }
 
 			} else {
@@ -319,10 +338,10 @@ class NotaspeseController extends AppController {
             array(
                 'conditions' => $conditions,
                 'fields' => array(
-                   'id','Notaspesa.eRisorsa', 'importo', 'Notaspesa.data', 'descrizione', 'origine',
+                   'id','Notaspesa.eRisorsa', 'importo', 'data', 'descrizione', 'origine',
                    'destinazione','km', 'eAttivita','LegendaCatSpesa.name', 'fatturabile', 'rimborsabile', 'provenienzasoldi_id', 'faseattivita_id','Faseattivita.Descrizione',                    
                 ),
-                'order' => array('Notaspesa.eRisorsa',  'Notaspesa.data'),                
+                'order' => array('Notaspesa.eRisorsa',  'data'),                
             )
         );
         
@@ -393,12 +412,12 @@ class NotaspeseController extends AppController {
         if (isset($this->request->params['named']['anno']))
         {
             $anno= $this->request->params['named']['anno'];
-            $conditions['YEAR(Notaspesa.data)'] = $anno;
+            $conditions['YEAR(data)'] = $anno;
         }
         if (isset($this->request->params['named']['mese']))
         {
             $mese= $this->request->params['named']['mese'];
-            $conditions['MONTH(Notaspesa.data)'] = $mese;
+            $conditions['MONTH(data)'] = $mese;
         }    
         if (isset($this->request->params['named']['giorno']))
         {
@@ -425,10 +444,10 @@ class NotaspeseController extends AppController {
             array(
                 'conditions' => $conditions,
                 'fields' => array(
-                   'id','Notaspesa.eRisorsa', 'importo', 'Notaspesa.data', 'descrizione', 'origine',
+                   'id','Notaspesa.eRisorsa', 'importo', 'data', 'descrizione', 'origine',
                    'destinazione','km', 'eAttivita','LegendaCatSpesa.name', 'fatturabile', 'rimborsabile', 'faseattivita_id','Faseattivita.Descrizione',                    
                 ),
-                'order' => array('Notaspesa.eRisorsa',  'Notaspesa.data'),				
+                'order' => array('Notaspesa.eRisorsa',  'data'),				
             )
         );
 		
@@ -500,52 +519,190 @@ class NotaspeseController extends AppController {
         }                
     }
 	
-	public function setUploadToDrive($id = null) {
+	public function setUploadToDrive($id = null, $redirect = null) {
+        $this->autoRender = false; 
 		$this->Session->write('scontrinoIdToUpload', $id);
-		$refPage=explode($this->request->params['controller'],$this->referer());
-		$this->Session->write('notaspeseUploadReferer', '/'.$this->request->params['controller'].$refPage[1]);
-		$this->redirect(array('controller' => 'notaspese', 'action' => 'uploadToDrive'));
+        $refPage=explode(strtolower($this->request->params['controller']),$this->referer());
+		//debug($refPage);die();
+        //$this->Session->write('notaspeseUploadReferer', '/'.strtolower($this->request->params['controller']).$refPage[1]);
+        $thisUrl=Router::url(Array('','?'=>$this->request->query,$this->request->named),true);
+        $this->Session->write('notaspeseUploadReferer',$redirect);
+        if($this->GoogleDrive::DEBUG===true){
+            error_log("------------------------------------\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log("Sono in setUploadToDrive(), creo 2 variabili di sessione:\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log('scontrinoIdToUpload: '.$this->Session->read('scontrinoIdToUpload')."\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log('notaspeseUploadReferer: '.print_r($this->Session->read('notaspeseUploadReferer'),true)."\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log("Redirigo verso /notaspese/uploadToDrive\n",3,$this->GoogleDrive::DEBUGFILE);
+        }
+        $this->redirect(array('controller' => 'notaspese', 'action' => 'uploadToDrive'));
+    }
+    
+    public function setDeleteFromDrive($id = null, $redirect = null) {
+        $this->autoRender = false; 
+        $this->Session->write('scontrinoIdToDelete', $id);
+        $refPage=explode(strtolower($this->request->params['controller']),$this->referer());
+        //debug($refPage);die();
+        //$thisUrl=Router::url(Array('','?'=>$this->request->query),true);
+        $this->Session->write('notaspeseUploadReferer', '/'.strtolower($this->request->params['controller']).$refPage[1]);
+        //$this->Session->write('notaspeseUploadReferer', $redirect);
+        if($this->GoogleDrive::DEBUG===true){
+            error_log("------------------------------------\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log("Sono in setDeleteFromDrive(), creo 2 variabili di sessione:\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log('scontrinoIdToDelete: '.$this->Session->read('scontrinoIdToDelete')."\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log('notaspeseUploadReferer: '.print_r($this->Session->read('notaspeseUploadReferer'),true)."\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log("Redirigo verso /notaspese/delFromDrive\n",3,$this->GoogleDrive::DEBUGFILE);
+        }
+        $this->redirect(array('controller' => 'notaspese', 'action' => 'delFromDrive'));
 	}
-	
-	public function uploadToDrive() {
-		//$this->Session->setFlash(__($this->GoogleDrive->echoCurrentUrl()));
+    
+    /**
+     * return $googleService object
+     */
+    private function googleApiConnect() {
+        //$this->autoRender = false;
+        $googleApiObj=new Google_Client;
+        $googleApiObj->setApplicationName(Configure::read('iGas.NomeAzienda'));
+        $oauth_creds=Configure::read('google.oauth');
+        $googleApiObj->setAuthConfig($oauth_creds);
+        $googleApiObj->setAccessType('offline');
+        $googleApiObj->addScope(Google_Service_Drive::DRIVE);
+        $googleService = new Google_Service_Drive($googleApiObj);
+        //$redirect_uri = Router::url(["controller"=>"notaspese","action"=>"add"], true);
+        $redirect_uri = Router::url(null, true);
+        $googleApiObj->setRedirectUri($redirect_uri);
+        //debug($this->request->query);
+        //debug($redirect_uri);
+        //die();
+        if($this->GoogleDrive::DEBUG===true){
+            error_log("------------------------------------\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log("Sono in googleApiConnect()\n",3,$this->GoogleDrive::DEBUGFILE);
+        }
+        if(null===$this->Session->read('upload_token')) {
+            if($this->GoogleDrive::DEBUG===true){
+                error_log("Non è settato nessun token in sessione"."\n",3,$this->GoogleDrive::DEBUGFILE);
+                error_log("Questo è l'url al quale Google ritornerà il token\n",3,$this->GoogleDrive::DEBUGFILE);
+                error_log($redirect_uri."\n",3,$this->GoogleDrive::DEBUGFILE);
+                error_log("Dopo la chiamata a googleApiConnect() vedo cosa c'è nella querystring\n",3,$this->GoogleDrive::DEBUGFILE);
+                error_log(print_r($this->request->query,true)."\n",3,$this->GoogleDrive::DEBUGFILE);
+            }
+            if (isset($this->request->query['code'])) {
+                $token = $googleApiObj->fetchAccessTokenWithAuthCode($this->request->query['code']);
+                if($this->GoogleDrive::DEBUG===true){
+                    error_log("Questo è il token ottenuto\n",3,$this->GoogleDrive::DEBUGFILE);
+                    error_log(print_r($token,true)."\n",3,$this->GoogleDrive::DEBUGFILE);
+                }
+                $googleApiObj->setAccessToken($token);
+                if($this->GoogleDrive::DEBUG===true){
+                    error_log("Ottenuto l'accesso passando il token all'oggetto Google_Client!!!\n",3,$this->GoogleDrive::DEBUGFILE);
+                    error_log("Setto il token in sessione per non dover rifare l'autenticazione\n",3,$this->GoogleDrive::DEBUGFILE);
+                }
+                $this->Session->write('upload_token', $token);
+            } else {
+                $auth_url = $googleApiObj->createAuthUrl();
+                //debug($auth_url);die();
+                if($this->GoogleDrive::DEBUG===true){
+                    error_log("Non ho ricevuto ancora token, quindi redirigo verso questo indirizzo di Google\n",3,$this->GoogleDrive::DEBUGFILE);
+                    error_log("Ricorda che Google, dopo aver controllato le credenziali, redirigerà verso ".$redirect_uri."\n",3,$this->GoogleDrive::DEBUGFILE);
+                    error_log(filter_var($auth_url, FILTER_SANITIZE_URL)."\n",3,$this->GoogleDrive::DEBUGFILE);
+                }
+                $this->redirect(filter_var($auth_url, FILTER_SANITIZE_URL));
+            }
+        } else {
+            if($this->GoogleDrive::DEBUG===true){
+                error_log("E' già presente un token in sessione\n",3,$this->GoogleDrive::DEBUGFILE);
+                error_log(print_r($this->Session->read('upload_token'),true)."\n",3,$this->GoogleDrive::DEBUGFILE);
+            }
+            $googleApiObj->setAccessToken($this->Session->read('upload_token'));
+            if($this->GoogleDrive::DEBUG===true){
+                error_log("Ottenuto l'accesso passando il token all'oggetto Google_Client!!!\n",3,$this->GoogleDrive::DEBUGFILE);
+            }
+        }
+        if($this->GoogleDrive::DEBUG===true){
+            error_log("Sono alla fine di googleApiConnect(), restituisco l'oggetto Google utile per usare le API\n",3,$this->GoogleDrive::DEBUGFILE);
+        }
+        return $googleService;
+    }
+    private function googleApiConnect_ok() {
+        $googleApiObj=new Google_Client;
+        $googleApiObj->setApplicationName(Configure::read('iGas.NomeAzienda'));
+        $oauth_creds=Configure::read('google.oauth');
+        $googleApiObj->setAuthConfig($oauth_creds);
+        //$googleApiObj->setAccessType('offline');
+        $googleApiObj->addScope(Google_Service_Drive::DRIVE);
+        $googleService = new Google_Service_Drive($googleApiObj);
+        //$redirect_uri = Router::url(["controller"=>"notaspese","action"=>"add"], true);
+        $redirect_uri = Router::url(null, true);
+        $googleApiObj->setRedirectUri($redirect_uri);
+        //debug($this->request->query);
+        //debug($redirect_uri);
+        if (isset($this->request->query['code'])) {
+            $token = $googleApiObj->fetchAccessTokenWithAuthCode($this->request->query['code']);
+            //debug($token);
+            $googleApiObj->setAccessToken($token);
+            $this->Session->write('upload_token', $token);
+        } else {
+            $auth_url = $googleApiObj->createAuthUrl();
+            //debug($auth_url);die();
+            $this->redirect(filter_var($auth_url, FILTER_SANITIZE_URL));
+        }
+        return $googleService;
+    }
+    
+    public function delFromDrive(){
+        if($this->GoogleDrive::DEBUG===true){
+            error_log("------------------------------------\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log("Sono in delFromDrive()\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log("Devo eliminare il file da Drive, per farlo chiamo googleApiConnect() per connettermi alle API\n",3,$this->GoogleDrive::DEBUGFILE);
+        }
+        $googleService = $this->googleApiConnect();
+        if($this->GoogleDrive::DEBUG===true){
+            error_log("------------------------------------\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log("Sono in delFromDrive(). Ora che ho l'oggetto Google API necessario posso chiamare il component GoogleDrive->deleteFile()\n",3,$this->GoogleDrive::DEBUGFILE);
+        }
+        $result=$this->GoogleDrive->deleteFile($googleService,$this->Session->read('scontrinoIdToDelete'));
+        $this->Session->setFlash(__($result));
+        //debug($this->Session->read('notaspeseUploadReferer'));
+        if($this->GoogleDrive::DEBUG===true){
+            error_log("Ho fatto tutto, redirigo verso notaspeseUploadReferer creato all'inizio di tutto questo round trip.\n",3,$this->GoogleDrive::DEBUGFILE);
+        }
+        $this->redirect($this->Session->consume('notaspeseUploadReferer'));
+    }
+
+    public function uploadToDrive() {
+        if($this->GoogleDrive::DEBUG===true){
+            error_log("------------------------------------\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log("Sono in uploadToDrive()\n",3,$this->GoogleDrive::DEBUGFILE);
+        }
+        //$this->Session->setFlash(__($this->GoogleDrive->echoCurrentUrl()));
 		//$this->GoogleDrive->getController($this);//Cercavo di passare l'oggetto Controller al Component per poter poi fare $this->Controller->redirect nel Component
-		$id=$this->Session->read('scontrinoIdToUpload');//Se qua faccio $this->Session->consume $id non viene valorizzato. Questo è assurdo.
-        $fileToUpload=WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.pdf';
-        $this->log("Tentativo di upload su drive di $fileToUpload");
-		//$this->Session->delete('scontrinoIdToUpload');//Se deleto questa $id della riga sopra diventa null. Questo è assurdo.
-		$googleApiObj=new Google_Client;
-		$googleApiObj->setApplicationName(Configure::read('iGas.NomeAzienda'));
-		//$googleApiObj->setDeveloperKey(Configure::read('google_key'));
-		$oauth_creds=Configure::read('google.oauth');
-		$googleApiObj->setAuthConfig($oauth_creds);
-		//$googleApiObj->setAccessType('offline');
-		//Uncomment this following 2 lines to upload to Drive
-		$googleApiObj->addScope(Google_Service_Drive::DRIVE);
-		$googleService = new Google_Service_Drive($googleApiObj);
-		//Uncomment this following 2 lines to send mails through gmail
-		//$googleApiObj->setScopes(Google_Service_Gmail::GMAIL_COMPOSE);
-		//$googleService = new Google_Service_Gmail($googleApiObj);
-		$redirect_uri = Router::url(null, true);
-		$googleApiObj->setRedirectUri($redirect_uri);
-		//debug($this->request->query);
-		//debug($redirect_uri);
-		if (isset($this->request->query['code'])) {
-			$token = $googleApiObj->fetchAccessTokenWithAuthCode($this->request->query['code']);
-			//debug($token);
-			$googleApiObj->setAccessToken($token);
-			$this->Session->write('upload_token', $token);
-			//$this->redirect(filter_var($redirect_uri, FILTER_SANITIZE_URL));
-		} else {
-			$auth_url = $googleApiObj->createAuthUrl();
-			debug($auth_url);
-			//$this->redirect(filter_var($auth_url, FILTER_SANITIZE_URL));
-			$this->redirect(filter_var($auth_url, FILTER_SANITIZE_URL));
-		}
-		$result=$this->GoogleDrive->upload($googleService,$fileToUpload,Configure::read('google.drive.notaspese'));
-		//$result=$this->GoogleMail->sendMessage($googleService,'me');
+        $id=$this->Session->read('scontrinoIdToUpload');//Se qua faccio $this->Session->consume $id non viene valorizzato. Questo è assurdo.
+        $fileExt=$this->UploadFiles->checkIfFileExists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.');
+        $fileToUpload=WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.'.$fileExt;
+        if(file_exists($fileToUpload)){
+            //$this->Session->delete('scontrinoIdToUpload');//Se deleto questa $id della riga sopra diventa null. Questo è assurdo.
+            if($this->GoogleDrive::DEBUG===true){
+                error_log("E' stato caricato un file sul server, lo carico anche su Drive, per farlo chiamo googleApiConnect() per connettermi alle API\n",3,$this->GoogleDrive::DEBUGFILE);
+            }
+            $googleService = $this->googleApiConnect();
+            $folderParams=Array(
+                Configure::read('google.drive.notaspese'),
+                $this->Session->consume('NomePersona').'_'.$this->Session->read('IdPersona'),
+                $this->Session->consume('Anno').'-'.$this->Session->consume('Mese').'notaspese persona '.$this->Session->consume('IdPersona')
+            );
+            if($this->GoogleDrive::DEBUG===true){
+                error_log("------------------------------------\n",3,$this->GoogleDrive::DEBUGFILE);
+                error_log("Sono in uploadToDrive(). Ora che ho l'oggetto Google API necessario posso chiamare il component GoogleDrive->upload()\n",3,$this->GoogleDrive::DEBUGFILE);
+            }
+            $result=$this->GoogleDrive->upload($googleService,$fileToUpload,$folderParams);
+        }else{
+            $result='Nessuno scontrino caricato, niente da uploadare su Google Drive';
+        }
 		$this->Session->setFlash(__($result));
-		$this->redirect($this->Session->consume('notaspeseUploadReferer'));
+        //debug($this->Session->read('notaspeseUploadReferer'));die();
+        if($this->GoogleDrive::DEBUG===true){
+            error_log("Ho fatto tutto, redirigo verso notaspeseUploadReferer creato all'inizio di tutto questo round trip.\n",3,$this->GoogleDrive::DEBUGFILE);
+        }
+        $this->redirect($this->Session->consume('notaspeseUploadReferer'));
 	}
     
     private function _decode_tristate(&$conditions, $param)
@@ -582,12 +739,12 @@ class NotaspeseController extends AppController {
             array(
                 'conditions' => $conditions,
                 'fields' => array(
-                   'id', 'Notaspesa.eRisorsa', 'importo', 'Notaspesa.data', 'descrizione', 'origine', 
+                   'id', 'Notaspesa.eRisorsa', 'importo', 'data', 'descrizione', 'origine', 
                     'destinazione', 'Faseattivita.descrizione', 'km', 'eAttivita', 'LegendaCatSpesa.name', 'rimborsato', 'fatturato',
 						'rimborsabile', 
                         'fatturabile'
                 ),
-                'order' => array('Notaspesa.eRisorsa', 'Notaspesa.data'),
+                'order' => array('Notaspesa.eRisorsa', 'data'),
             )
         );
        $this->set('result', $result); 
@@ -612,23 +769,41 @@ class NotaspeseController extends AppController {
     }
 
     public function delete($id, $dest=null) {
-        $this->autoRender = false; 
+        //$this->autoRender = false;
         if (!$id) {
 			$this->Session->setFlash(__('Invalid id for Notaspese'));
-			$this->redirect(array('action'=>'index'));
-		}
+			$this->redirect(array('action'=>'index'));//La view index non è mai esistita e non c'è il metodo index in questo controller
+        }
 		if ($this->Notaspesa->delete($id)) {
-			unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf');
-			$this->Session->setFlash(__('Notaspese deleted'));
-			$this->redirect($this->referer());
-		}
+			$fileExt=$this->UploadFiles->checkIfFileExists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.');
+            if(!empty($fileExt)){
+                unlink(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.'.$fileExt);
+                if($this->GoogleDrive::DEBUG===true){
+                    error_log("\n\n\n#######################################################\n",3,$this->GoogleDrive::DEBUGFILE);
+                    error_log("INIZIO DELETE SU DRIVE CHIAMANDO setDeleteFromDrive()\n",3,$this->GoogleDrive::DEBUGFILE);
+                }
+                $this->setDeleteFromDrive($id,Array('','?'=>$this->request->query));//Perchè questo qua non può stare e fa apparire un alert con su scritto undefined???
+            }
+            $this->Session->setFlash(__('Notaspese deleted'));
+            $this->redirect($this->referer());
+        }
 		$this->Session->setFlash(__('Notaspese was not deleted'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect(array('action' => 'index'));//La view index non è mai esistita e non c'è il metodo index in questo controller
     }
 	
 	public function deleteDoc($id = null) {
-		unlink(WWW_ROOT.'files/'.$this->request->controller.'/'.$id.'.pdf');
-		$this->Session->setFlash(__('Documento cancellato'));
+        $this->autoRender = false; 
+        $fileExt=$this->UploadFiles->checkIfFileExists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.');
+        if(unlink(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.'.$fileExt)){
+            $this->Session->setFlash(__('Documento cancellato'));
+            if($this->GoogleDrive::DEBUG===true){
+                error_log("\n\n\n#######################################################\n",3,$this->GoogleDrive::DEBUGFILE);
+                error_log("INIZIO DELETE SU DRIVE CHIAMANDO setDeleteFromDrive()\n",3,$this->GoogleDrive::DEBUGFILE);
+            }
+            $this->setDeleteFromDrive($id);
+        }else{
+            $this->Session->setFlash(__('Non è stato possibile cancellare il documento nè sul Server nè su Drive'));
+        }
 		$this->redirect($this->referer());
 	}
 
@@ -717,7 +892,7 @@ class NotaspeseController extends AppController {
         }
         else
         {
-            $conditions['YEAR(Notaspesa.data)'] = date('Y');    
+            $conditions['YEAR(data)'] = date('Y');    
         }
 
         $persone = $this->Notaspesa->find('all', array(
@@ -725,7 +900,7 @@ class NotaspeseController extends AppController {
                                         'fields' => array('DISTINCT Persona.id', 'Persona.Cognome', 'Persona.Nome')
         ));
 
-        $anni = $this->Notaspesa->find('first', array('fields' => array('DISTINCT YEAR(Notaspesa.data) as Anno'), 'order' => 'Anno'));
+        $anni = $this->Notaspesa->find('first', array('fields' => array('DISTINCT YEAR(data) as Anno'), 'order' => 'Anno'));
 
         $this->set('eRisorsa', $this->Notaspesa->Persona->find('list',array('cache' => 'persona', 'cacheConfig' => 'short')));
         $this->set('persone', $persone);
