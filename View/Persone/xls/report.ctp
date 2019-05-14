@@ -1,18 +1,18 @@
 <?php
- $this->PhpExcel->createWorksheet();
+ $this->PhpSpreadsheet->createWorksheet();
  $styleArray = array(
       'borders' => array(
           'allborders' => array(
-              'style' => PHPExcel_Style_Border::BORDER_HAIR
+              'style' => PhpOffice\PhpSpreadsheet\Style\Border::BORDER_HAIR
           )
       )
   );
- $this->PhpExcel->getDefaultStyle()->applyFromArray($styleArray);
+ $this->PhpSpreadsheet->getDefaultStyle()->applyFromArray($styleArray);
 
  foreach($ore as $pkey => $persona)
  {
 
-        $this->PhpExcel->addSheet($pkey);        
+        $this->PhpSpreadsheet->addSheet($pkey);        
         $table = array();
         $somma = array();
 
@@ -25,9 +25,9 @@
         $somma[$attivita['nome']] = 0;
             
         }
-        $this->PhpExcel->addTableRow(array($pkey ), true);
-        $this->PhpExcel->addTableHeader($table, array('name' => 'Cambria', 'bold' => true));
-				$this->PhpExcel->getActiveSheet()->getStyle("A1")->getFont()->setSize(14)->setBold(true);				
+        $this->PhpSpreadsheet->addTableRow(array($pkey ), true);
+        $this->PhpSpreadsheet->addTableHeader($table, array('name' => 'Cambria', 'bold' => true));
+		$this->PhpSpreadsheet->getActiveSheet()->getStyle("A1")->getFont()->setSize(14)->setBold(true);				
 				
 
         for($i = 1; $i <= $giorni; $i++) {

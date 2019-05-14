@@ -1,17 +1,17 @@
 <?php
- $this->PhpExcel->createWorksheet();
- $styleArray = array(
-      'borders' => array(
-          'allborders' => array(
-              'style' => PHPExcel_Style_Border::BORDER_HAIR
-          )
-      )
-  );
- $this->PhpExcel->getDefaultStyle()->applyFromArray($styleArray);
+$this->PhpSpreadsheet->createWorksheet();
+$styleArray = array(
+    'borders' => array(
+        'outline' => array(
+            'borderStyle' => PhpOffice\PhpSpreadsheet\Style\Border::BORDER_HAIR,//BORDER_THICK
+        )
+    )
+);
+ $this->PhpSpreadsheet->getDefaultStyle()->applyFromArray($styleArray);
 
  foreach($ore as $pkey => $persona)
  {
-        $this->PhpExcel->addSheet($pkey);        
+        $this->PhpSpreadsheet->addSheet($pkey);        
         $table = array();
         $somma = array();
 
@@ -22,9 +22,9 @@
           $table[] = array('label' => $nome);
           $somma[$nome] = 0;            
         }
-        $this->PhpExcel->addTableRow(array($pkey ), true);
-        $this->PhpExcel->addTableHeader($table, array('name' => 'Cambria', 'bold' => true));
-				$this->PhpExcel->getActiveSheet()->getStyle("A1")->getFont()->setSize(14)->setBold(true);								
+        $this->PhpSpreadsheet->addTableRow(array($pkey ), true);
+        $this->PhpSpreadsheet->addTableHeader($table, array('name' => 'Cambria', 'bold' => true));
+				$this->PhpSpreadsheet->getActiveSheet()->getStyle("A1")->getFont()->setSize(14)->setBold(true);								
 
         for($i = 1; $i <= $days; $i++) {
 
@@ -41,9 +41,9 @@
                     $row[] = 0;
             }
             
-             $this->PhpExcel->addTableRow($row, true);
+             $this->PhpSpreadsheet->addTableRow($row, true);
         }
 
-        $this->PhpExcel->addTableRow($somma, true);        
+        $this->PhpSpreadsheet->addTableRow($somma, true);        
 }   
-$this->PhpExcel->addTableFooter()->output('report_cons_lavoro'.$anno.'_'.$mese.'.xls', 'Xls');
+$this->PhpSpreadsheet->addTableFooter()->output('report_cons_lavoro'.$anno.'_'.$mese.'.xls', 'Xls');
