@@ -2,6 +2,7 @@
 #################################################
 Config/database.php
 Config/igas*.php
+Config/client_secret.json
 update-git-srv.sh
 node_modules/
 e2e/
@@ -16,7 +17,6 @@ vendor
 igas_*
 _*
 phinx.yml
-client_secret.json
 
 # Plugins installed via composer
 ################################
