@@ -82,6 +82,16 @@ $(document).ready(function() {
                                             ((date.getMonth()+(1+1)) > 9 ? '' : '0') + (date.getMonth()+(1+1)) + '-' +
                                             (date.getDate() > 9 ? '' : '0') + date.getDate()
                                         );
+            $('#CespitecalendarioStartTime').val(
+                                            (date.getHours() > 9 ? '' : '0') + date.getHours() + ':' + 
+                                            (date.getMinutes() > 9 ? '' : '0') + date.getMinutes() + ':' +
+                                            (date.getSeconds() > 9 ? '' : '0') + date.getSeconds()
+                                        );
+            $('#CespitecalendarioEndTime').val(
+                                            (endDate.getHours() > 9 ? '' : '0') + endDate.getHours() + ':' + 
+                                            (endDate.getMinutes() > 9 ? '' : '0') + endDate.getMinutes() + ':' +
+                                            (endDate.getSeconds() > 9 ? '' : '0') + endDate.getSeconds()
+                                        );
 			$("#divFormEventAdd").dialog({
                 title: "Aggiungi evento Calendario Cespiti",
                 autoOpen: false,

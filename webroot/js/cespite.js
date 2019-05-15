@@ -3,7 +3,7 @@ $('document').ready(function(){
 	$("#CespiteAddForm,#CespiteEditForm,#CespitecalendarioEventaddForm,#CespitecalendarioEventeditForm,#CespitecalendarioCalendarForm").validate({
 		rules:{
 			required:{
-				required:true
+				required: true
 			}
 		},
 		errorClass: "help-inline text-danger",
