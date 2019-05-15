@@ -195,24 +195,24 @@ class CespitiController extends AppController {
         foreach($relatedEvents as $event){
             $relEventUnixtimeStart = strtotime($event['Cespitecalendario']['start']);
             $relEventUnixtimeEnd = strtotime($event['Cespitecalendario']['end']);
-            //debug($relEventUnixtimeStart);
-            //debug($relEventUnixtimeEnd);
-            //debug($newEventUnixtimeStart);
-            //debug($newEventUnixtimeEnd);
+            //debug($relEventUnixtimeStart);debug($event['Cespitecalendario']['start']);//DEBUG
+            //debug($relEventUnixtimeEnd);debug($event['Cespitecalendario']['end']);//DEBUG
+            //debug($newEventUnixtimeStart);debug($this->request->data['Cespitecalendario']['start']);//DEBUG
+            //debug($newEventUnixtimeEnd);debug($this->request->data['Cespitecalendario']['end']);//DEBUG
             if(($newEventUnixtimeStart >= $relEventUnixtimeStart) && ($newEventUnixtimeStart <= $relEventUnixtimeEnd)){
+                //debug('La nuova data è già usata (il nuovo start date è compreso nella durata dell\'evento '.$event['Cespitecalendario']['id'].')');//DEBUG
                 return $event;
-                //$this->Session->setFlash('La nuova data è già usata (il nuovo start date è compreso nella durata dell\'evento '.$event['Cespitecalendario']['id'].')');
             } else if(($newEventUnixtimeEnd >= $relEventUnixtimeStart) && ($newEventUnixtimeEnd <= $relEventUnixtimeEnd)){
+                //debug('La nuova data è già usata (il nuovo end date è compreso nella durata dell\'evento '.$event['Cespitecalendario']['id'].')');//DEBUG
                 return $event;
-                //$this->Session->setFlash('La nuova data è già usata (il nuovo end date è compreso nella durata dell\'evento '.$event['Cespitecalendario']['id'].')');
             } else if(($relEventUnixtimeStart >= $newEventUnixtimeStart) && ($relEventUnixtimeEnd <= $newEventUnixtimeEnd)){
+                //debug('Il vecchio evento '.$event['Cespitecalendario']['id'].' è compreso nelle date del nuovo evento.');//DEBUG
                 return $event;
-                //echo 'Il vecchio evento '.$event['Cespitecalendario']['id'].' è compreso nelle date del nuovo evento.';
-            }
-            //debug($this->request->data['Cespitecalendario']['start']);
-            //debug($event['Cespitecalendario']['start']);
+            } 
+            //debug($this->request->data['Cespitecalendario']['start']);//DEBUG
+            //debug($event['Cespitecalendario']['start']);//DEBUG
         }
-        //debug($relatedEvents);
+        //debug($relatedEvents);//DEBUG
         return null;
     }
 
@@ -291,6 +291,8 @@ class CespitiController extends AppController {
             }
             if($this->request->data['Cespitecalendario']['repeated'] == 1){
                 // Questo è il codice che viene eseguito se l'utente decide che l'evento sarà ripetuto
+                //debug($this->request->data['Cespitecalendario']['start']);
+                //die();
                 $startIsMinorEnd = $this->_checkStartMinorEnd();
                 $groupStartIsMinorEnd = $this->_checkGroupStartMinorEnd();
                 $notBiggerThanADay = $this->_checkNotBiggerThanADay();
@@ -299,17 +301,50 @@ class CespitiController extends AppController {
                     //debug($this->request->data);
                     //die();
                     // Creo un ID da mettere su DB che legherà tutti  i  singoli eventi generati dall'evento ripetuto
+                    //debug($this->request->data['Cespitecalendario']['repeatFrom']);//DEBUG
+                    //debug($this->request->data['Cespitecalendario']['repeatTo']);//DEBUG
+                    //debug($this->request->data['Cespitecalendario']['startTime']);//DEBUG
+                    //debug($this->request->data['Cespitecalendario']['endTime']);//DEBUG
+                    //die();
                     $eventGroup = time().'_'.rand(1000000,9999999);
+                    // Nuova maniera
+                    $givenStart = $this->request->data['Cespitecalendario']['repeatFrom'].' '.$this->request->data['Cespitecalendario']['startTime'];
+                    $givenEnd = $this->request->data['Cespitecalendario']['repeatFrom'].' '.$this->request->data['Cespitecalendario']['endTime'];//sempre repeatFrom perchè i singoli eventi di un ripetuto devono durare un giorno
+                    /*
+                    // Vecchia maniera, quando non c'erano gli input time per eventi ripetuti
                     $givenStart = $this->request->data['Cespitecalendario']['start'];
                     $givenEnd = $this->request->data['Cespitecalendario']['end'];
+                    */
+                    // Nuova maniera
+                    $startDay = $this->request->data['Cespitecalendario']['repeatFrom'];
+                    $endDay = $this->request->data['Cespitecalendario']['repeatTo'];
+                    $startTime = $this->request->data['Cespitecalendario']['startTime'];
+                    $explodeEndTime = explode(':',$this->request->data['Cespitecalendario']['endTime']);
+                    // Aggiusto il time finale perchè il timepicker usa time come 16:30:00 ma a me come time finale serve 16:29:59
+                    if($explodeEndTime[1] == '30'){
+                        $this->request->data['Cespitecalendario']['endTime'] = $explodeEndTime[0].':29:59';
+                    } else if($explodeEndTime[1] == '00') {
+                        // Faccio la stessa cosa nel caso i minuti finali siano 00, perchè il timepicker usa time come 17:00:00 ma a me serve 16:59:59
+                        // Questo codice è pensato solo per orari come 22:59:59 e non per formati come 10:59:59 ma è facilmente modificabile in caso di necessità
+                        if($explodeEndTime[0] == '00' || $explodeEndTime[0] == '0'){
+                            $this->request->data['Cespitecalendario']['endTime'] = '23:59:59';
+                        } else {
+                            $this->request->data['Cespitecalendario']['endTime'] = (string)($explodeEndTime[0]-1).':59:59';
+                        }
+                    }
+                    $endTime = $this->request->data['Cespitecalendario']['endTime'];
+                    /*
+                    // Vecchia maniera, quando non c'erano gli input time per eventi ripetuti
                     // Splitto le date passate dal form in maniera da differenziare giorno ed orario
                     $startDay = explode(' ',$this->request->data['Cespitecalendario']['start'])[0];
                     $endDay = explode(' ',$this->request->data['Cespitecalendario']['end'])[0];
                     $startTime = explode(' ',$this->request->data['Cespitecalendario']['start'])[1];
                     $endTime = explode(' ',$this->request->data['Cespitecalendario']['end'])[1];
+                    */
                     // Calcolo la differenza tra giorno iniziale e giorni finale per vedere 
                     // quanti giorni sarà lungo questo evento ripetuto
-                    $start = date_create($startDay);
+                    // $start = date_create($startDay);
+                    $start = date_create($this->request->data['Cespitecalendario']['repeatFrom']);
                     $end = date_create($this->request->data['Cespitecalendario']['repeatTo']);
                     $diff = date_diff($start,$end);
                     $eventDaysDuration = $diff->format("%a");
@@ -371,6 +406,10 @@ class CespitiController extends AppController {
                         //debug('Ancora eseguito'); // DEBUG
                     }
                     //debug($repeatedEvents);die();
+                    if(!isset($repeatedEvents)){
+                        $this->Session->setFlash(__('Devi almeno selezionare un giorno negli eventi ripetuti.'));
+                        $repeatedEvents = [];
+                    }
                     // Se $alreadyBooked è ancora uguale a null vuol dire che nessun orario di nessun giorno 
                     // di questo evento ripetuto è già occupato. Quindi posso procedere con l'inserimento vero e proprio.
                     // ciclando su $repeatedEvent che contie
@@ -388,7 +427,7 @@ class CespitiController extends AppController {
                                 $success = false;
                             }
                         }
-                        if($success){
+                        if(@$success){
                             $this->Session->setFlash(__('Asset Event has been saved'));
                             $refPage = $this->Session->read('refererPage');
                             $this->Session->delete('refererPage');
