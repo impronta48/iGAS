@@ -25,7 +25,7 @@
  */
 
 // Load Composer autoload.
-require APP . 'vendor/autoload.php';
+require APP . 'Vendor/autoload.php';
 
 // Remove and re-prepend CakePHP's autoloader as Composer thinks it is the
 // most important.
@@ -147,12 +147,10 @@ Inflector::rules('singular', array(
  * CakePlugin::load('DebugKit'); //Loads a single plugin named DebugKit
  *
  */
-//CakePlugin::load('AclExtras');
-//CakePlugin::load('Migrations');
 //CakePlugin::load('Config', array('bootstrap' => true));
 //CakePlugin::load('Shim');
-CakePlugin::load('PhpExcel');
 CakePlugin::load('DebugKit');
+CakePlugin::load('PhpExcel');
 CakePlugin::load('BoostCake');
 CakePlugin::load('Tags');
 CakePlugin::load('ClearCache');

@@ -46,8 +46,8 @@ class AppController extends Controller {
             'Session',
             'RequestHandler',
             'Flash', 
-            'Tools.Common',
             'Auth',
+            'Tools.Common',            
             'Cookie',
         );  
 

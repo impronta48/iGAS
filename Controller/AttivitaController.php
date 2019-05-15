@@ -748,5 +748,49 @@ class AttivitaController extends AppController {
         return $lastmodified;
     }
 
+    //genera il budget di un anno a partire dalle fasi delle commesse caricate
+    public function budget_anno($y)
+    {
+        //cerco l'elenco delle attività che sono aperte nell'anno corrente( data_inizio <=Y && data_fine >=Y )
+        //Carico tutte le fasi per quelle attività raggruppate per persona (solo h, ore e gg) in attivita passo prima
+        //Creo una tabella che ha sulle righe l'elenco delle attivita e sulle colonne i fornitori
+        $this->Attivita->recursive = -1;
+        $this->Attivita->Faseattivita->recursive = -1;
+        $attivita_attive = $this->Attivita->find('list', [
+                ['conditions'=> [
+                    'YEAR(DataInizio) >='  => $y,
+                    'YEAR(DataFinePrevista) <=' => $y
+                ],
+                'fields' => ['id', 'name']
+                ]
+        ]);
+
+
+        //Prendo la lista degli id
+        $attivita_attive_id = array_keys($attivita_attive);
+
+        $fasi_utili = $this->Attivita->Faseattivita->find('all',[
+            'fields'=> ['SUM(qta*costou) as costoTot', 'persona_id', 'attivita_id'],
+            'conditions'=> [ 'attivita_id' => $attivita_attive_id, 'entrata'=>0],
+            'group' => ['attivita_id','persona_id'],
+        ]);
+
+        $persone = $this->Attivita->Faseattivita->find('all',[
+            'fields'=> ['DISTINCT(persona_id)', 'Persona.DisplayName'],
+            'conditions'=> [ 'attivita_id' => $attivita_attive_id, 'entrata'=>0],
+            'contain' => ['Persona']
+        ]);
+
+        $result = [];
+        foreach ($fasi_utili as $f)
+        {
+            $result[$f['Faseattivita']['attivita_id'] ][$f['Faseattivita']['persona_id']]=$f[0]['costoTot'];
+        }
+        //$this->set('attivita_attive', $attivita_attive);
+        $this->set('result', $result);
+        //$this->set('persone', $persone);
+
+    }
+
 }
 ?>
