@@ -3,6 +3,7 @@ class AttivitaController extends AppController {
 
 	public $name = 'Attivita';
     public $helpers = array('Number','Html');
+    //public $uses = array('Fatturaemessa', 'Persona','Primanota');
     public $components = array('Paginator','Cookie','UploadFiles');
  
 	function index() {
@@ -748,49 +749,184 @@ class AttivitaController extends AppController {
         return $lastmodified;
     }
 
-    //genera il budget di un anno a partire dalle fasi delle commesse caricate
-    public function budget_anno($y)
-    {
-        //cerco l'elenco delle attività che sono aperte nell'anno corrente( data_inizio <=Y && data_fine >=Y )
-        //Carico tutte le fasi per quelle attività raggruppate per persona (solo h, ore e gg) in attivita passo prima
-        //Creo una tabella che ha sulle righe l'elenco delle attivita e sulle colonne i fornitori
-        $this->Attivita->recursive = -1;
-        $this->Attivita->Faseattivita->recursive = -1;
-        $attivita_attive = $this->Attivita->find('list', [
-                ['conditions'=> [
-                    'YEAR(DataInizio) >='  => $y,
-                    'YEAR(DataFinePrevista) <=' => $y
-                ],
-                'fields' => ['id', 'name']
-                ]
-        ]);
-
-
-        //Prendo la lista degli id
-        $attivita_attive_id = array_keys($attivita_attive);
-
-        $fasi_utili = $this->Attivita->Faseattivita->find('all',[
-            'fields'=> ['SUM(qta*costou) as costoTot', 'persona_id', 'attivita_id'],
-            'conditions'=> [ 'attivita_id' => $attivita_attive_id, 'entrata'=>0],
-            'group' => ['attivita_id','persona_id'],
-        ]);
-
-        $persone = $this->Attivita->Faseattivita->find('all',[
-            'fields'=> ['DISTINCT(persona_id)', 'Persona.DisplayName'],
-            'conditions'=> [ 'attivita_id' => $attivita_attive_id, 'entrata'=>0],
-            'contain' => ['Persona']
-        ]);
-
-        $result = [];
-        foreach ($fasi_utili as $f)
-        {
-            $result[$f['Faseattivita']['attivita_id'] ][$f['Faseattivita']['persona_id']]=$f[0]['costoTot'];
-        }
-        //$this->set('attivita_attive', $attivita_attive);
-        $this->set('result', $result);
-        //$this->set('persone', $persone);
-
+    public function fattureincloud($id = null){
+		if (!$id) {
+			$this->Session->setFlash(__('Invalid fatturaemessa'));
+			$this->redirect(array('action' => 'index'));
+		}
+        //Questo mi serve per tirare su l'anagrafica dell'utente
+        $this->Attivita->Fatturaemessa->Behaviors->load('Containable');
+        $this->Attivita->Fatturaemessa->contain('Attivita.Persona','ProvenienzaSoldi','Rigafattura','Rigafattura.Codiceiva');
+        //Qui tiro su l'anagrafica dell'azienda che emette la fattura
+        $pid = Configure::read('iGas.idAzienda');
+        $azienda = $this->Attivita->Persona->findById($pid);
+        $this->set('azienda', $azienda);
+        $f = $this->Attivita->Fatturaemessa->findById($id);
+		//debug($azienda);//DEBUG
+		//debug($f);//DEBUG
+		$url = Configure::read('fattureInCloud.fatture.nuovo'); // dentro iGAS.php
+		$request = array(
+			// ATTENZIONE: LE DATE PER FATTUREINCLOUD DEVONO ESSERE NEL FORMATO DD/MM/YYYY ALTRIMENTI IL CARICAMENTO FALLISCE
+			"api_uid" => Configure::read('fattureInCloud.uid'), // OBBLIGATORIO
+			"api_key" => Configure::read('fattureInCloud.key'), // OBBLIGATORIO
+			"id_cliente" => "0", //valorizzato se è una fattura di vendita (emessa)
+			"id_fornitore" => $f['Attivita']['Persona']['id'], // valorizzato se è una fattura di acquisto
+			// Forse sarebbe meglio usare $f['Attivita']['Persona']['Societa'] solo se $f['Attivita']['Persona']['Nome'] e
+			// $f['Attivita']['Persona']['Cognome'] sono uguali a '' Se anche $f['Attivita']['Persona']['Societa'] è uguale
+			// a '' bisognerebbe scrivere UNCKNOWN
+			"nome" => $f['Attivita']['Persona']['Societa'], // OBBLIGATORIO (Nome o ragione sociale del cliente/fornitore)
+			"indirizzo_via" => $f['Attivita']['Persona']['Indirizzo'],
+			"indirizzo_cap" => $f['Attivita']['Persona']['CAP'], 
+			"indirizzo_citta" => $f['Attivita']['Persona']['Citta'], 
+			"indirizzo_provincia" => $f['Attivita']['Persona']['Provincia'], 
+			"indirizzo_extra" => $f['Attivita']['Persona']['altroIndirizzo'], //Se presente per iGAS questa var contiene solo una via.. Forse sarebbe meglio lasciare vuoto "indirizzo_extra"
+			"paese" => "Italia", // Questo non c'è in $f, doveva essere il nome completo del paese, ad esempio Italia, valutare se lasciare vuoto "paese"
+			"paese_iso" => $f['Attivita']['Persona']['Nazione'], // Questo deve essere ad esempio IT
+			"lingua" => "it", // Questo non c'è in $f
+			"piva" => $f['Attivita']['Persona']['piva'], 
+			"cf" => $f['Attivita']['Persona']['cf'], // da "indirizzo_via" a "cf" sono dati di fornitori o clienti
+			"autocompila_anagrafica" => false, 
+			"salva_anagrafica" => false, 
+			"numero" => $f['Fatturaemessa']['Progressivo'],  // Qua bisogna mettere $f['Fatturaemessa']['Progressivo']."/".$f['Fatturaemessa']['AnnoFatturazione'] oppure altro?
+			"data" => implode('/',array_reverse(explode('-',explode(' ',$f['Fatturaemessa']['created'])[0]))), // $f['Fatturaemessa']['created']
+			"valuta" => "EUR", // Questo non c'è in $f
+			"valuta_cambio" => 1, //Se non specificato viene utilizzato il tasso di cambio odierno
+			"prezzi_ivati" => false, 
+			"rivalsa" => 0, // Questo non c'è in $f
+			"cassa" => 0, // Questo non c'è in $f
+			"rit_acconto" => 0, // Questo non c'è in $f
+			"imponibile_ritenuta" => 0, // Questo non c'è in $f
+			"rit_altra" => 0, // Questo non c'è in $f
+			"marca_bollo" => 0, // Questo non c'è in $f
+			"oggetto_visibile" => $f['Attivita']['name'], 
+			"oggetto_interno" => "", 
+			"centro_ricavo" => $f['Attivita']['name'], // Non so cosa mettere, forse $f['Attivita']['name']
+			"centro_costo" => "", // Non so cosa mettere
+			"note" => "", 
+			"nascondi_scadenza" => false, 
+			"ddt" => false, 
+			"ftacc" => false, 
+			"id_template" => "0", 
+			"ddt_id_template" => "0", 
+			"ftacc_id_template" => "0", 
+			"mostra_info_pagamento" => false, 
+			"metodo_pagamento" => "Bonifico", // Questo non c'è in $f
+			"metodo_titoloN" => "IBAN", // Questo non c'è in $f
+			"metodo_descN" => $f['Attivita']['Persona']['iban'], 
+			"mostra_totali" => "tutti", 
+			"mostra_bottone_paypal" => false, 
+			"mostra_bottone_bonifico" => false, 
+			"mostra_bottone_notifica" => false, 
+			"lista_articoli" => array(array( // nell'array lista_articoli deve esserci PER FORZA almeno un articolo
+				"id" => "0",
+				"codice" => "",
+				"nome" => "", // Sul DB non c'è e se metto $f['Rigafattura'][0]['DescrizioneVoci'] è ripetuto con il campo JSON descrizione
+				"um" => "",
+				"quantita" => 1,
+				"descrizione" => $f['Rigafattura'][0]['DescrizioneVoci'],
+				"categoria" => "",
+				"prezzo_netto" => $f['Fatturaemessa']['TotaleNetto'], // OBBLIGATORIO // $f['Fatturaemessa']['TotaleNetto']
+				"prezzo_lordo" => $f['Fatturaemessa']['TotaleLordo'], // $f['Fatturaemessa']['TotaleLordo']
+				"cod_iva" => 0, // OBBLIGATORIO // Sul DB queste info sono sbagliate? Ad esempio su IGAS 'IVA al 22%' ha ID (codice) 6, su fattureincloud 'IVA al 22%' ha codice 0
+				"tassabile" => true,
+				"sconto" => 0,
+				"applica_ra_contributi" => true,
+				"ordine" => 0,
+				"sconto_rosso" => 0,
+				"in_ddt" => false,
+				"magazzino" => true
+			)),
+			"lista_pagamenti" => array(array(
+				"data_scadenza" => date_format(date_add(date_create(explode(' ',$f['Fatturaemessa']['created'])[0]),date_interval_create_from_date_string('30 days')),'d/m/Y'), // OBBLIGATORIO // in $f non c'è ma vedo che nel PDF della fattura di iGAS si vede 'Scadenza: 30 gg'. E' un dato fisso?
+				"importo" => $f['Fatturaemessa']['TotaleNetto'], // OBBLIGATORIO
+				"metodo" => "not", // OBBLIGATORIO
+				"data_saldo" => "" // In $f non c'è
+			)),
+			"ddt_numero" => "",
+			"ddt_data" => "",
+			"ddt_colli" => "",
+			"ddt_peso" => "",
+			"ddt_causale" => "",
+			"ddt_luogo" => "",
+			"ddt_trasportatore" => "",
+			"ddt_annotazioni" => "",
+			"PA" => false,
+			"PA_tipo_cliente" => "PA",
+			"PA_tipo" => "nessuno",
+			"PA_numero" => "",
+			"PA_data" => "",
+			"PA_cup" => "",
+			"PA_cig" => "",
+			"PA_codice" => "",
+			"PA_pec" => "",
+			"PA_esigibilita" => "N",
+			"PA_modalita_pagamento" => "MP01",
+			"PA_istituto_credito" => "",
+			"PA_iban" => "",
+			"PA_beneficiario" => "",
+			"extra_anagrafica" => array(array(
+				"mail" => "",
+				"tel" => "",
+				"fax" => ""
+			)),
+			"split_payment" => true
+		);
+		//error_log(date('Ymd_H:i:s')."|".$this->here."|".serialize($request)."\n",3,'C:\xampp\php\debug.log');//DEBUG
+		$options = array(
+			"http" => array(
+				"header"  => "Content-type: text/json\r\n",
+				"method"  => "POST",
+				"content" => json_encode($request)
+			),
+		);
+		$context  = stream_context_create($options);
+		$result = json_decode(file_get_contents($url, false, $context), true);
+		if(array_key_exists("error",$result)){
+			$this->Session->setFlash(__('ERROR ID: '.$result['error_code']));
+			$this->Session->setFlash(__('ERROR MESSAGE: '.$result['error']));
+		}
+		else {
+            $this->Attivita->Fatturaemessa->id = $f['Fatturaemessa']['id'];
+            $this->Attivita->Fatturaemessa->saveField('IdFattureInCloud', $result['new_id']);
+			$this->Session->setFlash(__('OK - Fattura inviata a FattureInCloud.it'));
+			$this->Session->setFlash(__(serialize($result)));
+		}
+		$this->redirect($this->referer());
     }
+    
+    function fattureincloudelimina($id){
+        if (!$id) {
+            $this->Session->setFlash(__('Parametri non validi per cancellare fattura da FattureInCloud.it'));
+            $this->redirect($this->referer());
+            die();
+        }
+        $f = $this->Attivita->Fatturaemessa->findById($id);
+        $url = Configure::read('fattureInCloud.fatture.elimina'); // dentro iGAS.php
+		$request = array(
+			"api_uid" => Configure::read('fattureInCloud.uid'), // OBBLIGATORIO
+			"api_key" => Configure::read('fattureInCloud.key'), // OBBLIGATORIO
+            "id" => $f['Fatturaemessa']['IdFattureInCloud']);
+        $options = array(
+            "http" => array(
+                "header"  => "Content-type: text/json\r\n",
+                "method"  => "POST",
+                "content" => json_encode($request)
+            ),
+        );
+        $context  = stream_context_create($options);
+        $result = json_decode(file_get_contents($url, false, $context), true);
+        if(array_key_exists("error",$result)){
+            $this->Session->setFlash(__('ERROR ID: '.$result['error_code']));
+            $this->Session->setFlash(__('ERROR MESSAGE: '.$result['error']));
+        }
+        else {
+            $this->Attivita->Fatturaemessa->id = $id;
+            $this->Attivita->Fatturaemessa->saveField('IdFattureInCloud', null);
+            $this->Session->setFlash(__('OK - Fattura eliminata da FattureInCloud.it'));
+            //$this->Session->setFlash(__(serialize($result)));
+        }
+        $this->redirect($this->referer());
+    } 
 
 }
 ?>

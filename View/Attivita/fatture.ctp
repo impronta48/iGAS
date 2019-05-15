@@ -77,6 +77,14 @@
                     </span>
                  </button>
                  <ul class="dropdown-menu" role="menu">
+                  <li>
+                    <?php echo $this->Html->link(__('Invia a Cloud'), array('action' => 'fattureincloud', $f['Fatturaemessa']['id'])); ?>
+                  </li>
+                  <?php if($f['Fatturaemessa']['IdFattureInCloud']){ ?>
+                  <li>
+                    <?php echo $this->Html->link(__('Elimina da Cloud'), array('action' => 'fattureincloudelimina', $f['Fatturaemessa']['id'])); ?>
+                  </li>
+                  <?php } ?>
                   <li >
                     <?php echo $this->Html->link(__('Print'),array('controller' => 'fattureemesse', 'action' => 'view', $f['Fatturaemessa']['id'])); ?>
                   </li>
@@ -91,6 +99,9 @@
                   </li>                  
                 </ul>
               </div>
+              <?php if($f['Fatturaemessa']['IdFattureInCloud']){ ?>
+                  <span class="badge bg-primary" title="Fattura già inviata a fattureincloud.it" alt="Fattura già inviata a fattureincloud.it"><i class="fa fa-cloud"></i> Già inviata</span>
+              <?php } ?>
             </td>             
             <?php $fatturato += sommarighe($f); ?>
     </tr>
