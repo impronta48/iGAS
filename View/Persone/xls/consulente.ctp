@@ -2,8 +2,8 @@
 $this->PhpSpreadsheet->createWorksheet();
 $styleArray = array(
     'borders' => array(
-        'outline' => array(
-            'borderStyle' => PhpOffice\PhpSpreadsheet\Style\Border::BORDER_HAIR,//BORDER_THICK
+        'allBorders' => array(
+            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_HAIR,//BORDER_THICK
         )
     )
 );
