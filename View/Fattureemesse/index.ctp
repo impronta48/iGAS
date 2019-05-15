@@ -180,7 +180,7 @@
 				  <li>
                     <?php echo $this->Html->link(__('Invia a Cloud'), array('action' => 'fattureincloud',  $fatturaemessa['Fatturaemessa']['id'])); ?>
                   </li>
-                  <?php if($fatturaemessa['Fatturaemessa']['IdFattureInCloud']){ ?>
+                  <?php if(isset($fatturaemessa['Fatturaemessa']['IdFattureInCloud'])){ ?>
                   <li>
                     <?php echo $this->Html->link(__('Elimina da Cloud'), array('action' => 'fattureincloudelimina', $fatturaemessa['Fatturaemessa']['id'])); ?>
                   </li>
@@ -203,7 +203,7 @@
 
                 </ul>
               </div>
-              <?php if($fatturaemessa['Fatturaemessa']['IdFattureInCloud']){ ?>
+              <?php if(isset($fatturaemessa['Fatturaemessa']['IdFattureInCloud'])){ ?>
                   <span class="badge bg-primary" title="Fattura già inviata a fattureincloud.it" alt="Fattura già inviata a fattureincloud.it"><i class="fa fa-cloud"></i> Già inviata</span>
               <?php } ?>
 		</td>
