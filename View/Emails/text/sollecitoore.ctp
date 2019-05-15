@@ -1,5 +1,11 @@
-Gentile <?php echo $personaDisplayName;?>, non hai caricato tutte le ore del mese.
+Gentile <?php echo $personaDisplayName;?>, 
 
-Vai all'indirizzo <?php echo HTTP_BASE.DS.APP_DIR.DS; ?>ore/add/persona:<?php echo $personaId;?>/anno:<?php echo $anno; ?>/mese:<?php echo $mese; ?> per caricare le ore del mese.
+ricevi questa mail perchè non hai caricato tutte le ore del mese.
 
-Best Regards
+Per favore completa il tuo foglio ore collegandoti all'indirizzo:
+<?= Router::url(['controller'=>'ore','action'=>'add', 'persona'=>$personaId, 'mese'=>$mese, 'anno'=>$anno ], true); ?>
+
+Grazie,
+Lo staff di <?= Configure::read('iGas.NomeAzienda') ?>
+
+
