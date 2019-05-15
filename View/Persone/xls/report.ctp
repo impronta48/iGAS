@@ -2,8 +2,8 @@
  $this->PhpSpreadsheet->createWorksheet();
  $styleArray = array(
       'borders' => array(
-          'allborders' => array(
-              'style' => PhpOffice\PhpSpreadsheet\Style\Border::BORDER_HAIR
+          'allBorders' => array(
+              'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_HAIR
           )
       )
   );
@@ -46,10 +46,10 @@
                     $row[] = "";
             }
             
-             $this->PhpExcel->addTableRow($row, true);
+             $this->PhpSpreadsheet->addTableRow($row, true);
         }
 
-        $this->PhpExcel->addTableRow($somma, true);
+        $this->PhpSpreadsheet->addTableRow($somma, true);
 }   
 
-$this->PhpExcel->addTableFooter()->output('report_'.$anno.'_'.$mese.'.xls', 'Xls');
+$this->PhpSpreadsheet->addTableFooter()->output('report_'.$anno.'_'.$mese.'.xls', 'Xls');
