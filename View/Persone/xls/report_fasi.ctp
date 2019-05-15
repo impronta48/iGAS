@@ -11,7 +11,9 @@ foreach($ore as $pkey => $persona){
     $table = array();
     $somma = array();
 
+    $table[] = array('label' => '');
     $table[] = array('label' => 'Giorno');
+    $somma[] = '';
     $somma[] = 'Totale';
 
     for($i = 1; $i <= $giorni; $i++) {
@@ -27,6 +29,7 @@ foreach($ore as $pkey => $persona){
     foreach ($persona as $attivita) {
 
         $row = array();
+        $row[] = '';
         $row[] = $attivita['nome']; //array('text' => $attivita['nome'], 'font-style' => 'italic');
 
         for($i = 1; $i <= $giorni; $i++) {
@@ -38,6 +41,7 @@ foreach($ore as $pkey => $persona){
 
         foreach ($attivita['fase'] as $fase) {
             $row = array();
+            $row[] = '';
             $row[] = $fase['nome'];
 
             for($i = 1; $i <= $giorni; $i++) {
