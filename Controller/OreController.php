@@ -656,13 +656,13 @@ class OreController extends AppController {
     //Massimoi - 30/8/2013 - Mostra quali fogli ore sono stati caricati per ogni dipendente per ogni anno
     function riassuntocaricamenti($anno)
     {
-        $conditions = array('YEAR(data)' => $anno);
+        $conditions = array('YEAR(Ora.data)' => $anno);
 
         $conteggi = $this->Ora->find('all', array(
                                         'conditions' => $conditions,
-                                        'group' => array('Persona.Cognome', 'MONTH(data)'),
-                                        'order' => array('Persona.Cognome', 'MONTH(data)'),
-                                        'fields' => array('Persona.Cognome', 'MONTH(data) as Mese', 'SUM(Ora.numOre) as OreTot')
+                                        'group' => array('Persona.Cognome', 'MONTH(Ora.data)'),
+                                        'order' => array('Persona.Cognome', 'MONTH(Ora.data)'),
+                                        'fields' => array('Persona.Cognome', 'MONTH(Ora.data) as Mese', 'SUM(Ora.numOre) as OreTot')
         ));
 
         //Giro la tabella risultante in modo da avere questa struttura associativa (che mi facilita la view)
@@ -714,7 +714,12 @@ class OreController extends AppController {
             $this->redirect(array('action' => 'check',date('Y')));
         }
         $emailObj = new CakeEmail('smtp');
-        $emailObj->viewVars(array('personaDisplayName' => $persona['Persona']['DisplayName']));
+        $emailObj->viewVars(array(
+            'personaDisplayName' => $persona['Persona']['DisplayName'],
+            'personaId' => $persona['Persona']['id'],
+            'mese' => $mese,
+            'anno' => $anno
+            ));
         $emailObj->template('sollecitoore');
         $emailObj->sender(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
         $emailObj->from(array('bill@microsoft.com' =>'Bill Gates'));
@@ -729,13 +734,13 @@ class OreController extends AppController {
     }
 
     public function check($anno) {
-        $conditions = array('YEAR(data)' => $anno);
+        $conditions = array('YEAR(Ora.data)' => $anno);
         $conditionsImpiegati = array('YEAR(dataValidita)' => $anno);
         $conteggi = $this->Ora->find('all', array(
             'conditions' => $conditions,
-            'group' => array('Persona.Cognome', 'MONTH(data)'),
-            'order' => array('Persona.Cognome', 'MONTH(data)'),
-            'fields' => array('Persona.id', 'Persona.Cognome', 'Persona.Nome', 'MONTH(data) as Mese', 'SUM(Ora.numOre) as OreTot')
+            'group' => array('Persona.Cognome', 'MONTH(Ora.data)'),
+            'order' => array('Persona.Cognome', 'MONTH(Ora.data)'),
+            'fields' => array('Persona.id', 'Persona.Cognome', 'Persona.Nome', 'MONTH(Ora.data) as Mese', 'SUM(Ora.numOre) as OreTot')
         ));
         $this->loadModel('Impiegato');
         $conteggiImpiegati = $this->Impiegato->find('all', array(
@@ -746,8 +751,10 @@ class OreController extends AppController {
         ));
         $p = $pImp = '';
         $risult = $risultImpiegati = array();
-        $ore = $oreDaCaricare = array('1'=>0,'2'=>0,'3'=>0,'4'=>0,'5'=>0,'6'=>0,
-        '7'=>0,'8'=>0,'9'=>0,'10'=>0,'11'=>0,'12'=>0);
+        $ore = $oreDaCaricare = array('Mesi' => array('1'=>0,'2'=>0,'3'=>0,'4'=>0,'5'=>0,'6'=>0,
+        '7'=>0,'8'=>0,'9'=>0,'10'=>0,'11'=>0,'12'=>0));
+        //$ore = $oreDaCaricare = array('1'=>0,'2'=>0,'3'=>0,'4'=>0,'5'=>0,'6'=>0,
+        //'7'=>0,'8'=>0,'9'=>0,'10'=>0,'11'=>0,'12'=>0);
         foreach ($conteggi as $c) {
             //Se cambia persona svuoto l'array
             if ($p != $c['Persona']['id'])
@@ -799,7 +806,12 @@ class OreController extends AppController {
                             $oreDaCaricare['Mesi'][$keyMonth] = $c['Impiegato']['oreLun']+$c['Impiegato']['oreMar']+$c['Impiegato']['oreMer']+$c['Impiegato']['oreGio']+$c['Impiegato']['oreVen']+$c['Impiegato']['oreSab']+$c['Impiegato']['oreDom'];
                     } else { 
                         if($oreDaCaricare['Mesi'][$keyMonth] == '' || $oreDaCaricare['Mesi'][$keyMonth] == NULL){
-                            $oreDaCaricare['Mesi'][$keyMonth] = 'ANNOPRECEDENTE';
+                            if(prev($c)){
+                                $oreDaCaricare['Mesi'][$keyMonth] = $c['Impiegato']['oreLun']+$c['Impiegato']['oreMar']+$c['Impiegato']['oreMer']+$c['Impiegato']['oreGio']+$c['Impiegato']['oreVen']+$c['Impiegato']['oreSab']+$c['Impiegato']['oreDom'];
+                            } else {
+                                $oreDaCaricare['Mesi'][$keyMonth] = 0;
+                            }
+                            //$oreDaCaricare['Mesi'][$keyMonth] = 'ANNOPRECEDENTE';
                         }
                     }
                 } else {
@@ -978,8 +990,8 @@ class OreController extends AppController {
         //Applico il filtro alle condizioni del report ore mostrato in basso
         //(di default o passate come parametro)
         $conditions['Ora.eRisorsa'] =$persona;
-        $conditions['YEAR(data)'] = $anno;
-        $conditions['MONTH(data)'] = $mese;
+        $conditions['YEAR(Ora.data)'] = $anno;
+        $conditions['MONTH(Ora.data)'] = $mese;
         //Non filtro su giorno e attività perchè voglio vedere il report mensile della persona
         //$conditions['DAY(data)'] = $giorno;
         //$conditions['Ora.eAttivita'] = $attivita;
@@ -1054,7 +1066,7 @@ class OreController extends AppController {
         }
         else
         {
-            $conditions['YEAR(data)'] = date('Y');    
+            $conditions['YEAR(Ora.data)'] = date('Y');    
         }
 
         $persone = $this->Ora->find('all', array(
