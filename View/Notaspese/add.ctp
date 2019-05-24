@@ -261,12 +261,15 @@
                 else {
                   $soldi = "";
                 }
-
-				$linkScontrino=$scontrinoToDrive='';
+                $linkScontrino=$scontrinoToDrive='';
                 foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
                     if(file_exists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$r['Notaspesa']['id'].'.'.$ext)){
                         $linkScontrino=$this->Html->link('View Scontrino', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$r['Notaspesa']['id'].'.'.$ext, array('class'=>'btn btn-xs btn-primary','title'=>'View or Download'));
-                        $scontrinoToDrive=$this->Html->link('Upload Scontrino in Drive', array('action'=>'setUploadToDrive',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga"));					
+                        if($r['Notaspesa']['IdGoogleCloud']){
+                            $scontrinoToDrive=$this->Html->tag('span',__('Scontrino già caricato in Drive'), array('class' => 'class="btn btn-primary btn-xs glow btn-edit-riga-riga"'));
+                        } else {
+                            $scontrinoToDrive=$this->Html->link('Upload Scontrino in Drive', array('action'=>'setUploadToDrive',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga"));					
+                        }
                     }
                 }
                 echo $this->Html->tableCells(
