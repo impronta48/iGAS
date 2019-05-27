@@ -929,7 +929,7 @@ class AttivitaController extends AppController {
             die();
         }
         $f = $this->Attivita->Fatturaemessa->findById($id);
-        $url = Configure::read('fattureInCloud.fatture.eliminaaa'); // dentro iGAS.php
+        $url = Configure::read('fattureInCloud.fatture.elimina'); // dentro iGAS.php
 		$request = array(
 			"api_uid" => Configure::read('fattureInCloud.uid'), // OBBLIGATORIO
 			"api_key" => Configure::read('fattureInCloud.key'), // OBBLIGATORIO
