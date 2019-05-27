@@ -763,8 +763,54 @@ class AttivitaController extends AppController {
         $this->set('azienda', $azienda);
         $f = $this->Attivita->Fatturaemessa->findById($id);
 		//debug($azienda);//DEBUG
-		//debug($f);//DEBUG
-		$url = Configure::read('fattureInCloud.fatture.nuovo'); // dentro iGAS.php
+        //debug($f);//DEBUG
+        $totaleNetto = ($f['Fatturaemessa']['TotaleNetto']) ? $f['Fatturaemessa']['TotaleNetto'] : 0;
+        $url = Configure::read('fattureInCloud.fatture.nuovo'); // dentro iGAS.php
+        if(count($f['Rigafattura']) == 0){
+            $listaArticoli = array(array( // nell'array lista_articoli deve esserci PER FORZA almeno un articolo
+                "id" => "", // Identificativo del prodotto (se nullo o mancante, la registrazione non viene collegata a nessun prodotto presente nell'elenco prodotti di fattureincloud)
+                "codice" => "", // Codice prodotto
+				"nome" => "", // Sul DB non c'è e se metto $f['Rigafattura'][0]['DescrizioneVoci'] è ripetuto con il campo JSON descrizione
+				"um" => "",
+				"quantita" => 1,
+				"descrizione" => "",
+				"categoria" => "",
+				"prezzo_netto" => $totaleNetto, // OBBLIGATORIO // $f['Fatturaemessa']['TotaleNetto']
+				"prezzo_lordo" => $f['Fatturaemessa']['TotaleLordo'], // $f['Fatturaemessa']['TotaleLordo']
+				"cod_iva" => 0, // OBBLIGATORIO // Sul DB queste info sono sbagliate? Ad esempio su IGAS 'IVA al 22%' ha ID (codice) 6, su fattureincloud 'IVA al 22%' ha codice 0
+				"tassabile" => true,
+				"sconto" => 0,
+				"applica_ra_contributi" => true,
+				"ordine" => 0,
+				"sconto_rosso" => 0,
+				"in_ddt" => false,
+				"magazzino" => false // Indica se viene movimentato il magazzino (true: viene movimentato; false: non viene movimentato) [Non influente se il prodotto non è collegato all'elenco prodotti, oppure la funzionalità magazzino è disattivata]
+			));
+        } else {
+            foreach($f['Rigafattura'] as $rigaFattura){
+                $prezzoLordo = (double)($rigaFattura['Importo']+(($rigaFattura['Importo']/100.00)*$rigaFattura['Codiceiva']['Percentuale']));
+                $listaArticoli[] = array( // nell'array lista_articoli deve esserci PER FORZA almeno un articolo
+                    "id" => "", // Identificativo del prodotto (se nullo o mancante, la registrazione non viene collegata a nessun prodotto presente nell'elenco prodotti di fattureincloud)
+                    "codice" => "", // Codice prodotto
+                    "nome" => "", // Sul DB non c'è e se metto $f['Rigafattura'][0]['DescrizioneVoci'] è ripetuto con il campo JSON descrizione
+                    "um" => "",
+                    "quantita" => 1,
+                    "descrizione" => $rigaFattura['DescrizioneVoci'],
+                    "categoria" => "",
+                    "prezzo_netto" => (double)$rigaFattura['Importo'], // OBBLIGATORIO // $f['Fatturaemessa']['TotaleNetto']
+                    "prezzo_lordo" => $prezzoLordo, // $f['Fatturaemessa']['TotaleLordo']
+                    "cod_iva" => 0, // OBBLIGATORIO // Sul DB queste info sono sbagliate? Ad esempio su IGAS 'IVA al 22%' ha ID (codice) 6, su fattureincloud 'IVA al 22%' ha codice 0
+                    "tassabile" => true,
+                    "sconto" => 0,
+                    "applica_ra_contributi" => true,
+                    "ordine" => $rigaFattura['Ordine'],
+                    "sconto_rosso" => 0,
+                    "in_ddt" => false,
+                    "magazzino" => false // Indica se viene movimentato il magazzino (true: viene movimentato; false: non viene movimentato) [Non influente se il prodotto non è collegato all'elenco prodotti, oppure la funzionalità magazzino è disattivata]
+                );
+            }
+        }
+        //debug($f['Rigafattura']);debug($listaArticoli);die();//DEBUG
 		$request = array(
 			// ATTENZIONE: LE DATE PER FATTUREINCLOUD DEVONO ESSERE NEL FORMATO DD/MM/YYYY ALTRIMENTI IL CARICAMENTO FALLISCE
 			"api_uid" => Configure::read('fattureInCloud.uid'), // OBBLIGATORIO
@@ -791,7 +837,7 @@ class AttivitaController extends AppController {
 			"data" => implode('/',array_reverse(explode('-',explode(' ',$f['Fatturaemessa']['created'])[0]))), // $f['Fatturaemessa']['created']
 			"valuta" => "EUR", // Questo non c'è in $f
 			"valuta_cambio" => 1, //Se non specificato viene utilizzato il tasso di cambio odierno
-			"prezzi_ivati" => false, 
+			"prezzi_ivati" => false, // Specifica se i prezzi da utilizzare per il calcolo del totale documento sono quelli netti, oppure quello lordi (comprensivi di iva)
 			"rivalsa" => 0, // Questo non c'è in $f
 			"cassa" => 0, // Questo non c'è in $f
 			"rit_acconto" => 0, // Questo non c'è in $f
@@ -817,28 +863,10 @@ class AttivitaController extends AppController {
 			"mostra_bottone_paypal" => false, 
 			"mostra_bottone_bonifico" => false, 
 			"mostra_bottone_notifica" => false, 
-			"lista_articoli" => array(array( // nell'array lista_articoli deve esserci PER FORZA almeno un articolo
-				"id" => "0",
-				"codice" => "",
-				"nome" => "", // Sul DB non c'è e se metto $f['Rigafattura'][0]['DescrizioneVoci'] è ripetuto con il campo JSON descrizione
-				"um" => "",
-				"quantita" => 1,
-				"descrizione" => $f['Rigafattura'][0]['DescrizioneVoci'],
-				"categoria" => "",
-				"prezzo_netto" => $f['Fatturaemessa']['TotaleNetto'], // OBBLIGATORIO // $f['Fatturaemessa']['TotaleNetto']
-				"prezzo_lordo" => $f['Fatturaemessa']['TotaleLordo'], // $f['Fatturaemessa']['TotaleLordo']
-				"cod_iva" => 0, // OBBLIGATORIO // Sul DB queste info sono sbagliate? Ad esempio su IGAS 'IVA al 22%' ha ID (codice) 6, su fattureincloud 'IVA al 22%' ha codice 0
-				"tassabile" => true,
-				"sconto" => 0,
-				"applica_ra_contributi" => true,
-				"ordine" => 0,
-				"sconto_rosso" => 0,
-				"in_ddt" => false,
-				"magazzino" => true
-			)),
+			"lista_articoli" => $listaArticoli,
 			"lista_pagamenti" => array(array(
 				"data_scadenza" => date_format(date_add(date_create(explode(' ',$f['Fatturaemessa']['created'])[0]),date_interval_create_from_date_string('30 days')),'d/m/Y'), // OBBLIGATORIO // in $f non c'è ma vedo che nel PDF della fattura di iGAS si vede 'Scadenza: 30 gg'. E' un dato fisso?
-				"importo" => $f['Fatturaemessa']['TotaleNetto'], // OBBLIGATORIO
+				"importo" => $totaleNetto, // OBBLIGATORIO
 				"metodo" => "not", // OBBLIGATORIO
 				"data_saldo" => "" // In $f non c'è
 			)),
@@ -901,7 +929,7 @@ class AttivitaController extends AppController {
             die();
         }
         $f = $this->Attivita->Fatturaemessa->findById($id);
-        $url = Configure::read('fattureInCloud.fatture.elimina'); // dentro iGAS.php
+        $url = Configure::read('fattureInCloud.fatture.eliminaaa'); // dentro iGAS.php
 		$request = array(
 			"api_uid" => Configure::read('fattureInCloud.uid'), // OBBLIGATORIO
 			"api_key" => Configure::read('fattureInCloud.key'), // OBBLIGATORIO
