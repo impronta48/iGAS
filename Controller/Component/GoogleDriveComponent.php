@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * 
+ * Questa classe contiene metodi utili per usare le API di Google Drive.
+ * 
+ * Non contiene metodi per connettersi alle API, quelli per adesso sono 
+ * presenti nei controller, ad esempio su NotaspeseController.php. 
+ * In futuro, per astrarre e migliorare il tutto si potrebbe creare il 
+ * component per connettersi alle API di Google prendendo spunto dalle 
+ * funzioni presenti in NotaspeseController.php
+ * 
+ * @version 1.0.3
+ * 
+ */
 class GoogleDriveComponent extends Component{
 	
 	public const DEBUG = false; // false = no Debug, true = Debug active 
@@ -15,9 +28,10 @@ class GoogleDriveComponent extends Component{
 
 	/**
 	 * Google Directory Tree Generator
-	 * @param Google_Service_Gmail $service Authorized Gmail API instance.
+	 * @param Google_Service_Drive $service Authorized Drive API instance.
 	 * @param array that contain as first argument the parent Drive folder ID and other subdir names.
 	 * @return mixed string with the last created child folder ID or false in case of errors.
+	 * @version 1.0.0
 	 */
 	function dirTreeGen($googleService,$folderParams){
 		$parentFolderId=$folderParams[0];
@@ -36,8 +50,7 @@ class GoogleDriveComponent extends Component{
 			} else {
 				$parentFolderId=$fileList[0]->id;
 			}
-			//debug($parentFolderId);
-			//debug($fileList);
+			//debug($parentFolderId);debug($fileList);
 		}
 		return $parentFolderId;
 	}
@@ -45,10 +58,11 @@ class GoogleDriveComponent extends Component{
 	/**
 	 * Google Drive Duplicates
 	 * 
-	 * @param Google_Service_Gmail $service Authorized Gmail API instance.
+	 * @param Google_Service_Drive $googleService Authorized Drive API instance.
 	 * @param string containing the file or directory name that must be checked
 	 * @param string containing the Drive folder ID in witch should be checked the presence of given file or dir
 	 * @return array empty if there aren't already uploaded files or an array containing Drive objects.
+	 * @version 1.0.0
 	 */
 	function checkIfIsInDrive($googleService,$entityName,$parentFolder=null){
 		$fileList = Array();
@@ -82,10 +96,12 @@ class GoogleDriveComponent extends Component{
 	/**
 	 * Google Drive Upload
 	 *
-	 * @param Google_Service_Gmail $service Authorized Gmail API instance.
+	 * @param Google_Service_Drive $googleService Authorized Drive API instance.
 	 * @param string that contain the local server path of the file that you want upload.
 	 * @param array that contain the Drive folder ID in witch should be saved the file and other dir names for create Drive subfolders.
-	 * @return string that contain if file was successfully uploaded or an error.
+	 * @return string that contain if file was successfully uploaded or an error, if the file is successfully uploaded it will
+	 * be returned the Google Drive file id
+	 * @version 1.0.1
 	 */
 	function upload($googleService,$fileToUpload,$folderParams=null){
 		$folderId=$this->dirTreeGen($googleService,$folderParams);
@@ -114,7 +130,8 @@ class GoogleDriveComponent extends Component{
 						)
 				);
 				//debug($result);
-				return 'File caricato con successo, l\'id del file su Google Drive è '.$result->id;
+				//return 'File caricato con successo, l\'id del file su Google Drive è '.$result->id;
+				return $result->id;
 			}
 			catch (Exception $e) {
 				//$this->Session->setFlash(__('An error occurred: '.$e->getMessage()));
@@ -128,9 +145,10 @@ class GoogleDriveComponent extends Component{
 	/**
 	 * Google Drive Delete
 	 * 
-	 * @param Google_Service_Gmail $googleService Authorized Gmail API instance.
+	 * @param Google_Service_Drive $googleService Authorized Drive API instance.
 	 * @param integer the LOCAL file id, not the DRIVE file id.
-	 * @return string containing success or error message
+	 * @return string containing success or error message. The success message should be start with SUCCESS string
+	 * @version 1.0.1
 	 */
 	function deleteFile($googleService,$scontrinoIdToDelete){
 		$fileList = Array();
@@ -140,7 +158,7 @@ class GoogleDriveComponent extends Component{
 		}
 		try {
 			$googleService->files->delete($fileList[0]['id']);
-			return 'File successfully erased from Google Drive';
+			return 'SUCCESS: File erased from Google Drive';
 		} catch (Exception $e) {
 			return "An error occurred when deleting the file on Google Drive: " . $e->getMessage();
 		}

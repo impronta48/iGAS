@@ -1,14 +1,27 @@
 <?php
 
+/**
+ * 
+ * Classe usata per le Google Gmail API.
+ * 
+ * Non contiene metodi per connettersi alle API.
+ * 
+ * @version 1.0.0
+ * 
+ */
+
 class GoogleMailComponent extends Component{
 	
 	/**
 	 * Send Message through GMAIL
 	 *
-	 * @param  Google_Service_Gmail $service Authorized Gmail API instance.
-	 * @param  string $userId User's email address. The special value 'me'
+	 * @param Google_Service_Gmail $service Authorized Gmail API instance.
+	 * @param string $userId User's email address. The special value 'me'
 	 * can be used to indicate the authenticated user.
 	 * @return string that contain if message was sent or an error.
+	 * @todo Rendere dinamici $msgSubject, $msgBody, il from, il to ed eventuali
+	 * CC e CCN magari passando il tutto come parametri singoli o array.
+	 * @version 1.0.0
 	 */
 	function sendMessage($googleService, $userId) {
 		try {

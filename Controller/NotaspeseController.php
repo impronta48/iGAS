@@ -339,7 +339,7 @@ class NotaspeseController extends AppController {
                 'conditions' => $conditions,
                 'fields' => array(
                    'id','Notaspesa.eRisorsa', 'importo', 'Notaspesa.data', 'descrizione', 'origine',
-                   'destinazione','km', 'eAttivita','LegendaCatSpesa.name', 'fatturabile', 'rimborsabile', 'provenienzasoldi_id', 'faseattivita_id','Faseattivita.Descrizione',                    
+                   'destinazione','km', 'eAttivita','LegendaCatSpesa.name', 'fatturabile', 'rimborsabile', 'provenienzasoldi_id', 'IdGoogleCloud', 'faseattivita_id','Faseattivita.Descrizione',
                 ),
                 'order' => array('Notaspesa.eRisorsa',  'Notaspesa.data'),                
             )
@@ -522,10 +522,13 @@ class NotaspeseController extends AppController {
 	public function setUploadToDrive($id = null, $redirect = null) {
         $this->autoRender = false; 
 		$this->Session->write('scontrinoIdToUpload', $id);
-        $refPage=explode(strtolower($this->request->params['controller']),$this->referer());
+        //$refPage=explode(strtolower($this->request->params['controller']),$this->referer());
 		//debug($refPage);die();
         //$this->Session->write('notaspeseUploadReferer', '/'.strtolower($this->request->params['controller']).$refPage[1]);
-        $thisUrl=Router::url(Array('','?'=>$this->request->query,$this->request->named),true);
+        //$thisUrl=Router::url(Array('','?'=>$this->request->query,$this->request->named),true);
+        if($redirect == null){
+            $redirect = $this->referer();
+        }
         $this->Session->write('notaspeseUploadReferer',$redirect);
         if($this->GoogleDrive::DEBUG===true){
             error_log("------------------------------------\n",3,$this->GoogleDrive::DEBUGFILE);
@@ -556,20 +559,39 @@ class NotaspeseController extends AppController {
 	}
     
     /**
-     * return $googleService object
+     * Questa funzione usa autenticazione con Service Account
+     * 
+     * @return object $googleService
      */
-    private function googleApiConnect() {
+    private function googleApiConnectServiceAccount() {
         //$this->autoRender = false;
-        $googleApiObj=new Google_Client;
-        $googleApiObj->setApplicationName(Configure::read('iGas.NomeAzienda'));
-        $oauth_creds=Configure::read('google.oauth');
-        $googleApiObj->setAuthConfig($oauth_creds);
-        $googleApiObj->setAccessType('offline');
+        putenv('GOOGLE_APPLICATION_CREDENTIALS='.Configure::read('google.oauth'));//ServiceAccount
+        $googleApiObj=new Google_Client();//ServiceAccount
+        $googleApiObj->useApplicationDefaultCredentials(/*'google.oauth'*/);//ServiceAccount
+        $googleApiObj->addScope(Google_Service_Drive::DRIVE);
+        $googleService = new Google_Service_Drive($googleApiObj);
+        return $googleService;
+    }
+
+    /**
+     * Questa funzione usa autenticazione oauth2
+     * E' da testare dopo le ultime modifiche fatte ma iGAS attualmente usa googleApiConnectServiceAccount per connettersi 
+     * alle API di Google
+     * 
+     * @return object $googleService
+     */
+    private function googleApiConnectOauth2() {
+        //$this->autoRender = false;
+        $googleApiObj=new Google_Client;//OAuth2
+        $googleApiObj->setApplicationName(Configure::read('iGas.NomeAzienda'));//Oauth2
+        $oauth_creds=Configure::read('google.oauth');//Oauth2
+        $googleApiObj->setAuthConfig($oauth_creds);//Oauth2
+        $googleApiObj->setAccessType('offline');//Oauth2
         $googleApiObj->addScope(Google_Service_Drive::DRIVE);
         $googleService = new Google_Service_Drive($googleApiObj);
         //$redirect_uri = Router::url(["controller"=>"notaspese","action"=>"add"], true);
-        $redirect_uri = Router::url(null, true);
-        $googleApiObj->setRedirectUri($redirect_uri);
+        $redirect_uri = Router::url(null, true);//Oauth2
+        $googleApiObj->setRedirectUri($redirect_uri);//Oauth2
         //debug($this->request->query);
         //debug($redirect_uri);
         //die();
@@ -622,6 +644,13 @@ class NotaspeseController extends AppController {
         }
         return $googleService;
     }
+
+    /**
+     * Questa funzione usa autenticazione oauth2
+     * E' uguale a googleApiConnectOauth2 ma senza sistema di debug e senza controlli per vedere se ci sono già token in sessione
+     *  
+     * @return object $googleService
+     */
     private function googleApiConnect_ok() {
         $googleApiObj=new Google_Client;
         $googleApiObj->setApplicationName(Configure::read('iGas.NomeAzienda'));
@@ -652,14 +681,20 @@ class NotaspeseController extends AppController {
         if($this->GoogleDrive::DEBUG===true){
             error_log("------------------------------------\n",3,$this->GoogleDrive::DEBUGFILE);
             error_log("Sono in delFromDrive()\n",3,$this->GoogleDrive::DEBUGFILE);
-            error_log("Devo eliminare il file da Drive, per farlo chiamo googleApiConnect() per connettermi alle API\n",3,$this->GoogleDrive::DEBUGFILE);
+            error_log("Devo eliminare il file da Drive, per farlo chiamo googleApiConnectServiceAccount() per connettermi alle API\n",3,$this->GoogleDrive::DEBUGFILE);
         }
-        $googleService = $this->googleApiConnect();
+        $googleService = $this->googleApiConnectServiceAccount();
         if($this->GoogleDrive::DEBUG===true){
             error_log("------------------------------------\n",3,$this->GoogleDrive::DEBUGFILE);
             error_log("Sono in delFromDrive(). Ora che ho l'oggetto Google API necessario posso chiamare il component GoogleDrive->deleteFile()\n",3,$this->GoogleDrive::DEBUGFILE);
         }
         $result=$this->GoogleDrive->deleteFile($googleService,$this->Session->read('scontrinoIdToDelete'));
+        if(startsWith($result, 'SUCCESS')){
+            if($this->Notaspesa->hasAny(array('Notaspesa.id' => $this->Session->read('scontrinoIdToDelete')))){
+                $this->Notaspesa->id = $this->Session->read('scontrinoIdToDelete');
+                $this->Notaspesa->saveField('IdGoogleCloud', null);
+            }
+        }
         $this->Session->setFlash(__($result));
         //debug($this->Session->read('notaspeseUploadReferer'));
         if($this->GoogleDrive::DEBUG===true){
@@ -681,9 +716,9 @@ class NotaspeseController extends AppController {
         if(file_exists($fileToUpload)){
             //$this->Session->delete('scontrinoIdToUpload');//Se deleto questa $id della riga sopra diventa null. Questo è assurdo.
             if($this->GoogleDrive::DEBUG===true){
-                error_log("E' stato caricato un file sul server, lo carico anche su Drive, per farlo chiamo googleApiConnect() per connettermi alle API\n",3,$this->GoogleDrive::DEBUGFILE);
+                error_log("E' stato caricato un file sul server, lo carico anche su Drive, per farlo chiamo googleApiConnectServiceAccount() per connettermi alle API\n",3,$this->GoogleDrive::DEBUGFILE);
             }
-            $googleService = $this->googleApiConnect();
+            $googleService = $this->googleApiConnectServiceAccount();
             $folderParams=Array(
                 Configure::read('google.drive.notaspese'),
                 $this->Session->consume('NomePersona').'_'.$this->Session->read('IdPersona'),
@@ -693,7 +728,10 @@ class NotaspeseController extends AppController {
                 error_log("------------------------------------\n",3,$this->GoogleDrive::DEBUGFILE);
                 error_log("Sono in uploadToDrive(). Ora che ho l'oggetto Google API necessario posso chiamare il component GoogleDrive->upload()\n",3,$this->GoogleDrive::DEBUGFILE);
             }
-            $result=$this->GoogleDrive->upload($googleService,$fileToUpload,$folderParams);
+            $gDriveId=$this->GoogleDrive->upload($googleService,$fileToUpload,$folderParams);//Se l'upload ha successo ritorna l'ID del file assegnato da Google
+            $result = 'File caricato con successo, l\'id del file su Google Drive è '.$gDriveId;
+            $this->Notaspesa->id = $id;
+            $this->Notaspesa->saveField('IdGoogleCloud', $gDriveId);
         }else{
             $result='Nessuno scontrino caricato, niente da uploadare su Google Drive';
         }
@@ -782,7 +820,7 @@ class NotaspeseController extends AppController {
                     error_log("\n\n\n#######################################################\n",3,$this->GoogleDrive::DEBUGFILE);
                     error_log("INIZIO DELETE SU DRIVE CHIAMANDO setDeleteFromDrive()\n",3,$this->GoogleDrive::DEBUGFILE);
                 }
-                $this->setDeleteFromDrive($id,Array('','?'=>$this->request->query));//Perchè questo qua non può stare e fa apparire un alert con su scritto undefined???
+                $this->setDeleteFromDrive($id,Array('','?'=>$this->request->query));//Con autenticazione Oauth2, Perchè questo qua non può stare e fa apparire un alert con su scritto undefined???
             }
             $this->Session->setFlash(__('Notaspese deleted'));
             $this->redirect($this->referer());
