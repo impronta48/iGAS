@@ -30,7 +30,7 @@
               <!-- Stats Boxes -->
 
   						<div class="row">  							
-                <?php echo $this->element('collaboratori_box'); ?>
+                <?php //echo $this->element('collaboratori_box'); ?>
                 <?php echo $this->element('recent_box'); ?>	
               </div>
 

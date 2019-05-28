@@ -1,4 +1,4 @@
-<?php echo $this->Html->script("persona.js",array('inline' => false)); ?>
+<?php echo $this->Html->script("persona",array('inline' => false)); ?>
 <?php echo $this->Html->script('tags',array('inline' => false)); ?>
 <?php echo $this->Html->script("jquery.tagsinput.min",array('inline' => false)); ?>
 <?php echo $this->Html->script("validate1.19",array('inline' => false)); ?>
@@ -47,7 +47,7 @@
         <div class="panel-body">
         <?php
             echo $this->Form->input('id');
-            echo $this->Form->input('Nome', array('required'=>true));
+            echo $this->Form->input('Nome');
             echo $this->Form->input('Cognome');        		
             echo $this->Form->input('Societa');
             echo $this->Form->input('DisplayName', array('class'=> 'form-control required'));

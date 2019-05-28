@@ -153,7 +153,8 @@ class FattureemesseController extends AppController {
 		if (!$id) {
 			$this->Session->setFlash(__('Invalid fatturaemessa'));
 			$this->redirect(array('action' => 'index'));
-		}
+        }
+        
         //Questo mi serve per tirare su l'anagrafica dell'utente
         $this->Fatturaemessa->Behaviors->load('Containable');
         $this->Fatturaemessa->contain('Attivita.Persona','ProvenienzaSoldi','Rigafattura','Rigafattura.Codiceiva');
@@ -174,6 +175,7 @@ class FattureemesseController extends AppController {
         $cli = str_replace(' ', '', substr($f['Attivita']['Persona']['DisplayName'], 0, 8));
 		//8 caratteri dell'attivita
         $att = str_replace(' ', '', substr($f['Attivita']['name'], 0, 8));
+        Configure::write('debug', 0);
         $this->set('name', "$anno-$progressivo-" . Configure::read('iGas.NomeAzienda') . "Fattura-$cli-$att.pdf" );        
 	}
 
@@ -314,11 +316,47 @@ class FattureemesseController extends AppController {
 			$this->Session->setFlash(__('ERROR MESSAGE: '.$result['error']));
 		}
 		else {
+            $this->Fatturaemessa->id = $f['Fatturaemessa']['id'];
+            $this->Fatturaemessa->saveField('IdFattureInCloud', $result['new_id']);
 			$this->Session->setFlash(__('OK - Fattura inviata a FattureInCloud.it'));
 			$this->Session->setFlash(__(serialize($result)));
 		}
 		$this->redirect($this->referer());
-	}
+    }
+    
+    function fattureincloudelimina($id){
+        if (!$id) {
+            $this->Session->setFlash(__('Parametri non validi per cancellare fattura da FattureInCloud.it'));
+            $this->redirect($this->referer());
+            die();
+        }
+        $f = $this->Fatturaemessa->findById($id);
+        $url = Configure::read('fattureInCloud.fatture.elimina'); // dentro iGAS.php
+		$request = array(
+			"api_uid" => Configure::read('fattureInCloud.uid'), // OBBLIGATORIO
+			"api_key" => Configure::read('fattureInCloud.key'), // OBBLIGATORIO
+            "id" => $f['Fatturaemessa']['IdFattureInCloud']);
+        $options = array(
+            "http" => array(
+                "header"  => "Content-type: text/json\r\n",
+                "method"  => "POST",
+                "content" => json_encode($request)
+            ),
+        );
+        $context  = stream_context_create($options);
+        $result = json_decode(file_get_contents($url, false, $context), true);
+        if(array_key_exists("error",$result)){
+            $this->Session->setFlash(__('ERROR ID: '.$result['error_code']));
+            $this->Session->setFlash(__('ERROR MESSAGE: '.$result['error']));
+        }
+        else {
+            $this->Fatturaemessa->id = $id;
+            $this->Fatturaemessa->saveField('IdFattureInCloud', null);
+            $this->Session->setFlash(__('OK - Fattura eliminata da FattureInCloud.it'));
+            //$this->Session->setFlash(__(serialize($result)));
+        }
+        $this->redirect($this->referer());
+    }
 	
 	function add($attivita_id = NULL) {
         $this->set('title_for_layout', 'Fattura Emessa Nuova');
@@ -475,7 +513,7 @@ class FattureemesseController extends AppController {
           $this->redirect(array('controller'=> 'fattureemesse',  'action'=>'edit', $fattura_id) );
         }
         else {
-          $this->flash('Errore nel salvataggio della fattura');
+          $this->Session->setFlash('Errore nel salvataggio della fattura');
         }
     }
 

@@ -17,6 +17,8 @@ vendor
 igas_*
 _*
 phinx.yml
+Config/client_secret.json
+webroot/files/*
 
 # Plugins installed via composer
 ################################

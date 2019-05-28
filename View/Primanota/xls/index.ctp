@@ -3,6 +3,7 @@ $this->PhpSpreadsheet->createWorksheet();
 $styleArray = array();
 $this->PhpSpreadsheet->getDefaultStyle()->applyFromArray($styleArray);  
   $titoli = array(
+        array('label' => ''),
         array('label' => 'Data'), 
         array('label' => 'Descr'), 
         array('label' => 'Protocollo'),
@@ -20,6 +21,7 @@ $this->PhpSpreadsheet->getDefaultStyle()->applyFromArray($styleArray);
   foreach ($primanota as $p) {
 
     $row = array();
+    $row[] = '';
     $row[] = $p['Primanota']['data']; 
     $row[] = $p['Primanota']['descr']; 
     

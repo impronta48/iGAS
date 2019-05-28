@@ -1,6 +1,8 @@
 <?php 
+echo $this->Html->css("bootstrap-timepicker");
 echo $this->Html->script("cespite",array('inline' => false));
 echo $this->Html->script("validate1.19",array('inline' => false));
+echo $this->Html->script("bootstrap-timepicker",array('inline' => false));
 $this->Html->addCrumb('Cespiti', '/cespiti');
 $this->Html->addCrumb('Gestione Calendario', array('controller' => 'cespiti', 'action' => 'calendar'));
 ?>
@@ -65,8 +67,6 @@ echo $this->Html->css('fullcalendar/4.0.1/fullcalendar.timegrid.min', null, Arra
     //echo $this->Form->input('Persona.DisplayName',array('type'=>'text', 'label' => array('class' => 'col col-md-2 control-label', 'text'=>'Utilizzatore')));
     echo $this->Form->input('Cespite.Nome', array('type'=>'text', 'label' => 'Cespite', 'class' => 'form-control required'));
 	echo $this->Form->input('event_type_id', array('empty' => 'Scegli il tipo di evento', 'options'=>$legenda_tipo_attivita_calendario, 'label'=>'Tipo Attività', 'class' => 'form-control'));
-    echo $this->Form->input('start', array('type'=>'text', 'label' => 'Data Inizio Evento', 'class' => 'form-control required'));
-    echo $this->Form->input('end', array('type'=>'text', 'label' => 'Data Fine Evento'));
 ?>
 
 <div class="form-group row">
@@ -75,7 +75,14 @@ echo $this->Html->css('fullcalendar/4.0.1/fullcalendar.timegrid.min', null, Arra
 <?php	echo $this->Form->input('repeated', array('label' => array('class' => '', 'text'=>'SI'), 'class' => 'form-check-input', 'div' => false, 'wrapInput' => false)); ?>
 </div>
 </div>
-
+<div class="form-group row" id="dateTimeNoRepeat">
+<div class="col col-md-12">
+<?php
+	echo $this->Form->input('start', array('type'=>'text', 'label' => 'Data Inizio Evento', 'class' => 'form-control required'));
+    echo $this->Form->input('end', array('type'=>'text', 'label' => 'Data Fine Evento'));
+?>
+</div>
+</div>
 <div class="form-group row" id="repeatOptions" style="display:none">
 <div class="col col-md-2 control-label"><strong>Opzioni</strong></div>
 <div class="col col-md-10">
@@ -101,8 +108,12 @@ echo $this->Html->css('fullcalendar/4.0.1/fullcalendar.timegrid.min', null, Arra
 	<?php echo $this->Form->checkbox('RepeatSun', array(/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false)); ?>Dom
 	</label>
 	<br /><br />
-	<?php echo $this->Form->input('repeatFrom', array('type'=>'text', 'label' => 'Dal', 'disabled' => true)); ?>
-	<?php echo $this->Form->input('repeatTo', array('type'=>'text', 'label' => 'Al')); ?> 
+	<?php echo $this->Form->input('repeatFrom', array('type'=>'text', 'label' => 'Dal', 'class' => 'form-control required', 'autocomplete' => 'off'/*, 'disabled' => true*/)); ?>
+	<?php echo $this->Form->input('repeatTo', array('type'=>'text', 'label' => 'Al', 'class' => 'form-control required', 'autocomplete' => 'off')); ?> 
+	<div class="bootstrap-timepicker timepicker">
+	<?php echo $this->Form->input('startTime', array('type'=>'text', 'label' => 'Ora inizio', 'class' => 'form-control required', 'autocomplete' => 'off')); ?> 
+	<?php echo $this->Form->input('endTime', array('type'=>'text', 'label' => 'Ora fine', 'class' => 'form-control required', 'autocomplete' => 'off')); ?> 
+	</div>
 </div>
 </div>
 
@@ -153,22 +164,42 @@ $('document').ready(function() {
 	$("#CespitecalendarioRepeated").on('click', function(){
 		if($(this).prop('checked')){
 			$('#repeatOptions').show(400);
+			$('#dateTimeNoRepeat').hide(400);
 		} else {
 			$('#repeatOptions').hide(400);
+			$('#dateTimeNoRepeat').show(400);
 		}
 	});
 
-	// $( "#CespitecalendarioRepeatFrom" ).datepicker( { dateFormat: 'yy-mm-dd' });
+	$( "#CespitecalendarioRepeatFrom" ).datepicker( { dateFormat: 'yy-mm-dd' });
 	$( "#CespitecalendarioRepeatTo" ).datepicker( { dateFormat: 'yy-mm-dd' });
+	$( "#CespitecalendarioStartTime" ).timepicker({
+		disableFocus: true,
+		showSeconds: true,
+		showMeridian: false,
+		defaultTime: false,
+		minuteStep: 30,
+		secondStep: 30
+	});
+	$( "#CespitecalendarioEndTime" ).timepicker({
+		disableFocus: true,
+		showSeconds: true,
+		showMeridian: false,
+		defaultTime: false,
+		minuteStep: 30,
+		secondStep: 30
+	});
 
 	$( "#CespitecalendarioStart" ).on('change', function(){
-		var d = new Date($(this).val().split(' ', 1));
-		d.setMonth(d.getMonth()+1);
-		var dEnd = d.getFullYear() + '-' +
-        				((d.getMonth()+1) > 9 ? '' : '0') + (d.getMonth()+1) + '-' +
-        				(d.getDate() > 9 ? '' : '0') + d.getDate()
-		$( "#CespitecalendarioRepeatFrom" ).val($(this).val().split(' ', 1));
-		$( "#CespitecalendarioRepeatTo" ).val(dEnd);
+		if($(this).val() != ''){
+			var d = new Date($(this).val().split(' ', 1));
+			d.setMonth(d.getMonth()+1);
+			var dEnd = d.getFullYear() + '-' +
+							((d.getMonth()+1) > 9 ? '' : '0') + (d.getMonth()+1) + '-' +
+							(d.getDate() > 9 ? '' : '0') + d.getDate()
+			$( "#CespitecalendarioRepeatFrom" ).val($(this).val().split(' ', 1));
+			$( "#CespitecalendarioRepeatTo" ).val(dEnd);
+		}
 	});
 
 	$('#utilizzatoreswitch').on('click', function(){
@@ -190,7 +221,10 @@ $('document').ready(function() {
 	});
 
     $("#button-chiudi").on('click', function(){
+		$('#repeatOptions').hide(400);
+		$('#dateTimeNoRepeat').show(400);
         $("#divFormEventAdd").dialog("close");
+		$("#CespitecalendarioCalendarForm")[0].reset();
     });
 
 });

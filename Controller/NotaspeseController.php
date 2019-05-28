@@ -338,10 +338,10 @@ class NotaspeseController extends AppController {
             array(
                 'conditions' => $conditions,
                 'fields' => array(
-                   'id','Notaspesa.eRisorsa', 'importo', 'data', 'descrizione', 'origine',
-                   'destinazione','km', 'eAttivita','LegendaCatSpesa.name', 'fatturabile', 'rimborsabile', 'provenienzasoldi_id', 'IdGoogleCloud', 'faseattivita_id','Faseattivita.Descrizione',                    
+                   'id','Notaspesa.eRisorsa', 'importo', 'Notaspesa.data', 'descrizione', 'origine',
+                   'destinazione','km', 'eAttivita','LegendaCatSpesa.name', 'fatturabile', 'rimborsabile', 'provenienzasoldi_id', 'IdGoogleCloud', 'faseattivita_id','Faseattivita.Descrizione',
                 ),
-                'order' => array('Notaspesa.eRisorsa',  'data'),                
+                'order' => array('Notaspesa.eRisorsa',  'Notaspesa.data'),                
             )
         );
         
@@ -412,18 +412,18 @@ class NotaspeseController extends AppController {
         if (isset($this->request->params['named']['anno']))
         {
             $anno= $this->request->params['named']['anno'];
-            $conditions['YEAR(data)'] = $anno;
+            $conditions['YEAR(Notaspesa.data)'] = $anno;
         }
         if (isset($this->request->params['named']['mese']))
         {
             $mese= $this->request->params['named']['mese'];
-            $conditions['MONTH(data)'] = $mese;
+            $conditions['MONTH(Notaspesa.data)'] = $mese;
         }    
         if (isset($this->request->params['named']['giorno']))
         {
             $giorno= $this->request->params['named']['giorno'];
             //In realtà non voglio filtrare per il giorno, ma solo portarmelo dietro
-            //$conditions['DAY(data)'] = $giorno;
+            //$conditions['DAY(Notaspesa.data)'] = $giorno;
         }
         if (isset($this->request->params['named']['attivita']))
         {
@@ -444,10 +444,10 @@ class NotaspeseController extends AppController {
             array(
                 'conditions' => $conditions,
                 'fields' => array(
-                   'id','Notaspesa.eRisorsa', 'importo', 'data', 'descrizione', 'origine',
+                   'id','Notaspesa.eRisorsa', 'importo', 'Notaspesa.data', 'descrizione', 'origine',
                    'destinazione','km', 'eAttivita','LegendaCatSpesa.name', 'fatturabile', 'rimborsabile', 'faseattivita_id','Faseattivita.Descrizione',                    
                 ),
-                'order' => array('Notaspesa.eRisorsa',  'data'),				
+                'order' => array('Notaspesa.eRisorsa',  'Notaspesa.data'),				
             )
         );
 		
@@ -777,12 +777,12 @@ class NotaspeseController extends AppController {
             array(
                 'conditions' => $conditions,
                 'fields' => array(
-                   'id', 'Notaspesa.eRisorsa', 'importo', 'data', 'descrizione', 'origine', 
+                   'id', 'Notaspesa.eRisorsa', 'importo', 'Notaspesa.data', 'descrizione', 'origine', 
                     'destinazione', 'Faseattivita.descrizione', 'km', 'eAttivita', 'LegendaCatSpesa.name', 'rimborsato', 'fatturato',
 						'rimborsabile', 
                         'fatturabile'
                 ),
-                'order' => array('Notaspesa.eRisorsa', 'data'),
+                'order' => array('Notaspesa.eRisorsa', 'Notaspesa.data'),
             )
         );
        $this->set('result', $result); 

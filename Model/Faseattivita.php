@@ -15,6 +15,7 @@ class Faseattivita extends AppModel {
  */
 	public $displayField = 'Descrizione';
     public $cacheQueries = true;
+		var $actsAs = array('Containable');
 	
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 

@@ -1,17 +1,19 @@
 <?php
-$this->PhpExcel->createWorksheet();
-$this->PhpExcel->setSheetName('Report '.$mese.'-'.$anno);
+$this->PhpSpreadsheet->createWorksheet();
+$this->PhpSpreadsheet->setSheetName('Report '.$mese.'-'.$anno);
 
 
 //AGGIUNGERE ALLO SHEET REPORT DATA DI CREAZIONE MESE ANNO E QUALCHE INFO GENERICA
 
 foreach($ore as $pkey => $persona){
-    $sheet = $this->PhpExcel->addSheet($pkey);    
+    $sheet = $this->PhpSpreadsheet->addSheet($pkey);    
 
     $table = array();
     $somma = array();
 
+    $table[] = array('label' => '');
     $table[] = array('label' => 'Giorno');
+    $somma[] = '';
     $somma[] = 'Totale';
 
     for($i = 1; $i <= $giorni; $i++) {
@@ -22,11 +24,12 @@ foreach($ore as $pkey => $persona){
 
     $table[] = array('label' => 'Totale');
 
-    $this->PhpExcel->addTableHeader($table, array('name' => 'Cambria', 'bold' => true));
+    $this->PhpSpreadsheet->addTableHeader($table, array('name' => 'Cambria', 'bold' => true));
 
     foreach ($persona as $attivita) {
 
         $row = array();
+        $row[] = '';
         $row[] = $attivita['nome']; //array('text' => $attivita['nome'], 'font-style' => 'italic');
 
         for($i = 1; $i <= $giorni; $i++) {
@@ -34,10 +37,11 @@ foreach($ore as $pkey => $persona){
         }
 
         $row[] = $attivita['somma'];
-        $this->PhpExcel->addTableRow($row, true);
+        $this->PhpSpreadsheet->addTableRow($row, true);
 
         foreach ($attivita['fase'] as $fase) {
             $row = array();
+            $row[] = '';
             $row[] = $fase['nome'];
 
             for($i = 1; $i <= $giorni; $i++) {
@@ -54,17 +58,17 @@ foreach($ore as $pkey => $persona){
             }
 
             $row[] = $fase['somma'];
-            $this->PhpExcel->addTableRow($row, true);
+            $this->PhpSpreadsheet->addTableRow($row, true);
         }
     }
 
-    $this->PhpExcel->addTableRow($somma, true);
+    $this->PhpSpreadsheet->addTableRow($somma, true);
     
     //Autosize columns
-    $this->PhpExcel->getActiveSheet()
+    $this->PhpSpreadsheet->getActiveSheet()
         ->getColumnDimension("A")
         ->setAutoSize(true);
 }   
 
 
-$this->PhpExcel->addTableFooter()->output('report_fasi_'.$anno.'_'.$mese.'.xls', 'Xls');
+$this->PhpSpreadsheet->addTableFooter()->output('report_fasi_'.$anno.'_'.$mese.'.xls', 'Xls');

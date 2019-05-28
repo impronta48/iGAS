@@ -18,21 +18,21 @@
         }
     ],
     "require": {
-        "cakephp/cakephp": "2.*",
-        "ceeram/clear_cache": "^1.1",
-        "slywalker/boost_cake": "*",        
-        "cakephp/debug_kit": "2.*",
-        "cakedc/tags": "~1",
+		"google/apiclient": "^2.0",
         "cakedc/migrations": "2.4",
-        "mailchimp/mailchimp": ">=2.0.0",
+        "cakedc/tags": "dev-master",
+        "cakephp/cakephp": "2.*",
+        "cakephp/debug_kit": "2.*",
+        "ceeram/clear_cache": "^1.1",
         "codaxis/cakephp-bootstrap3-helpers": "1.1",        
-        "phpoffice/phpspreadsheet":"1.6.0",
-        "mikehaertl/phpwkhtmltopdf": "^2.2",        
         "dereuromark/cakephp-tools": "2.x-dev",
-        "robmorgan/phinx": "^0.10.6",
-		"google/apiclient": "^2.0"
+        "mailchimp/mailchimp": ">=2.0.0",
+        "mikehaertl/phpwkhtmltopdf": "^2.2",        
+        "phpoffice/phpspreadsheet":"1.6.0",
+        "robmorgan/phinx": "^0.9.2",
+        "slywalker/boost_cake": "*"
     },
     "config": {
-        "vendor-dir": "vendor/"
+        "vendor-dir": "Vendor/"
     }
 }
