@@ -51,6 +51,9 @@ class CespitiController extends AppController {
                 $this->redirect(array('action' => 'index'));
             } else {
                 $this->request->data = $this->Cespite->findById($id);
+                if($this->request->data['Persona']['DisplayName'] == null){
+                    $this->request->data['Persona']['DisplayName'] = $this->request->data['Cespite']['proprietario_esterno'];
+                }
                 //$this->request->data = $this->Cespite->read(null, $id);
             }
         }
@@ -285,6 +288,10 @@ class CespitiController extends AppController {
 
     public function eventadd() {
         $this->loadModel('Cespitecalendario');
+        $listaAttivita = $this->Cespitecalendario->Attivita->getlist();
+        array_unshift($listaAttivita, 'Associa ad Attività');//Questo si può fare perchè listaattività parte da 1 e quindi gli id vengono mantenuti
+        $this->set('eAttivita', $listaAttivita);
+        $this->set('faseattivita', $this->Cespitecalendario->Faseattivita->getSimple());
         if(!empty($this->request->data)){
             if(!$this->Session->check('refererPage')){
                 $this->Session->write('refererPage',basename($this->request->referer()));
@@ -624,7 +631,7 @@ class CespitiController extends AppController {
                     'Cespite.DisplayName LIKE' => '%' . $this->request->query['term'] . '%'
                 ),
                 'limit' => 50,
-                'fields' => array('id', 'displayName'),
+                'fields' => array('id', 'displayName', 'costo_affitto'),
             ));
         }
 
@@ -634,6 +641,7 @@ class CespitiController extends AppController {
             $a = new StdClass();
             $a->id = $d['Cespite']['id'];
             $a->value = $d['Cespite']['displayName'];
+            $a->defaultPrice = $d['Cespite']['costo_affitto'];
             $res[] = $a;
         }
         $this->layout = 'ajax';

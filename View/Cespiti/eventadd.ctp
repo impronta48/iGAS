@@ -1,8 +1,10 @@
 <?php 
 	echo $this->Html->css("bootstrap-timepicker");
+	//echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'
     echo $this->Html->script("cespite",array('inline' => false));
 	echo $this->Html->script("validate1.19",array('inline' => false));
 	echo $this->Html->script("bootstrap-timepicker",array('inline' => false));
+	//echo $this->Html->script('faseattivita',array('inline' => false));
 	$this->Html->addCrumb('Cespiti', '/cespiti');
 	if(isset($_SERVER['HTTP_REFERER']) and basename(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH)) === 'calendar'){
 		//debug(basename(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH)));
@@ -38,9 +40,20 @@
 					'id'=>'utilizzatoreLabel'), 
 			'wrapInput' => 'input-group col-md-10', 
 			'afterInput' => '<div class="input-group-btn"><button type="button" id="utilizzatoreswitch" class="btn btn-md btn-default esterno-button" title="Utilizzatore Esterno">Utilizzatore Esterno</button></div>'));
-    //echo $this->Form->input('Persona.DisplayName',array('type'=>'text', 'label' => array('class' => 'col col-md-2 control-label', 'text'=>'Utilizzatore')));
-    echo $this->Form->input('Cespite.Nome', array('type'=>'text', 'label' => 'Cespite', 'class' => 'form-control required'));
-	echo $this->Form->input('event_type_id', array('empty' => 'Scegli il tipo di evento', 'options'=>$legenda_tipo_attivita_calendario, 'label'=>'Tipo Attività', 'class' => 'form-control'));
+	//echo $this->Form->input('Persona.DisplayName',array('type'=>'text', 'label' => array('class' => 'col col-md-2 control-label', 'text'=>'Utilizzatore')));
+	echo $this->Form->input('Cespite.Nome', array('type'=>'text', 'label' => 'Cespite', 'class' => 'form-control required'));
+	echo $this->Form->input('attivita_id', array('options' => $eAttivita, 
+                                        'label' => array('text'=>'Attività'), 
+										'class'=>'attivita chosen-select form-control input-xs',
+										'placeolder'=>'Associa ad Attività'
+                                    ) 
+								  ); 
+	/*
+	echo  $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 
+                                        'options'=>$faseattivita, 
+										'class'=>'fase form-control input-xs')); 
+	*/
+	echo $this->Form->input('event_type_id', array('empty' => 'Scegli il tipo di evento', 'options'=>$legenda_tipo_attivita_calendario, 'label'=>'Tipo Evento', 'class' => 'form-control'));
 ?>
 <div class="form-group row">
 <div class="col col-md-2 control-label"><strong>Evento Ripetuto</strong></div>
@@ -90,6 +103,8 @@
 </div>
 </div>
 <?php
+	echo $this->Form->input('prezzoAffitto', array('type'=>'text', 'label' => 'Prezzo Affitto Cespite Giornaliero'));
+	echo $this->Form->input('prezzoAffittoTot', array('type'=>'text', 'label' => 'Prezzo Affitto Cespite Evento'));
 	echo $this->Form->input('note');
 ?>
 <div class="row">
@@ -124,7 +139,9 @@ $(function() {
 		minLength: 2,
 		mustMatch : true,
 		select: function( event, ui ) {
+				console.log(ui.item);
 				$("#CespitecalendarioCespiteId").val( ui.item.id );
+				$("#CespitecalendarioPrezzoAffitto").val( ui.item.defaultPrice );
 				$(this).data("uiItem",ui.item.value);
 			}
 	}).bind("blur",function(){
@@ -181,17 +198,32 @@ $(function() {
             $('#CespitecalendarioUserId').removeAttr('value');
 			$(this).text('Utilizzatore Interno').attr('title','Utilizzatore Interno');
             $(this).removeClass('esterno-button').addClass('interno-button');
-            $("#utilizzatoreLabel").text('Utilizzatore Esterno').attr('for','PersonaDysplayName');
+            $("#utilizzatoreLabel").text('Utilizzatore Esterno').attr('for','ExternalDisplayName');
             $("#utilizzatoreLabel").removeClass('utilizzatore-label').addClass('utilizzatore-label');
 		}else if($(this).hasClass('interno-button')){
 			$('#ExternalDisplayName').addClass('ui-autocomplete-input').attr('name','data[Persona][DisplayName]').attr('id','PersonaDisplayName').val('');
             $(this).text('Utilizzatore Esterno').attr('title','Utilizzatore Esterno');
             $(this).removeClass('interno-button').addClass('esterno-button');
-            $("#utilizzatoreLabel").text('Utilizzatore Interno').attr('for','PrimanotaImportoEntrata');
+            $("#utilizzatoreLabel").text('Utilizzatore Interno').attr('for','PersonaDisplayName');
             $("#utilizzatoreLabel").removeClass('utilizzatore-label').addClass('utilizzatore-label');
             //$("#PrimanotaImportoUscita").attr('name','data[Primanota][importoEntrata]').attr('id','PrimanotaImportoEntrata');
 		}
 	});
+
+	function howManyDays( date1, date2 ) {
+		//Get 1 day in milliseconds
+		var one_day=1000*60*60*24;
+
+		// Convert both dates to milliseconds
+		var date1_ms = date1.getTime();
+		var date2_ms = date2.getTime();
+
+		// Calculate the difference in milliseconds
+		var difference_ms = date2_ms - date1_ms;
+			
+		// Convert back to days and return
+		return Math.round(difference_ms/one_day); 
+	}
 
 });
 <?php $this->Html->scriptEnd(); ?>

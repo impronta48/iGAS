@@ -29,10 +29,10 @@ class Cespite extends AppModel {
             'counterQuery' => ''
         ),
         */
-        /*
+        
         'Persona' => array(
             'className' => 'Persona',
-            'foreignKey' => 'user_id',
+            'foreignKey' => 'proprietario_interno',
             'dependent' => false,
             'conditions' => '',
             'fields' => '',
@@ -42,8 +42,25 @@ class Cespite extends AppModel {
             'exclusive' => '',
             'finderQuery' => '',
             'counterQuery' => ''
-        ),
-        */
-    );  
+        )
+        
+    );
+    
+    public function beforeSave($options = Array()) {
+        if($this->data['Cespite']['proprietario_interno']){
+            $this->Persona->id = $this->data['Cespite']['proprietario_interno'];
+            $personaDisplay = $this->Persona->read('Persona.DisplayName');
+            if($personaDisplay['Persona']['DisplayName'] != $this->data['Persona']['DisplayName']){
+                $this->data['Cespite']['proprietario_interno'] = null;
+                $this->data['Cespite']['proprietario_esterno'] = $this->data['Persona']['DisplayName'];
+            } else {
+                $this->data['Cespite']['proprietario_esterno'] = null;
+            }
+        } else {
+            if($this->data['Persona']['DisplayName']){
+                $this->data['Cespite']['proprietario_esterno'] = $this->data['Persona']['DisplayName'];
+            }
+        }
+    }
     
 }
