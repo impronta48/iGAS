@@ -1,4 +1,9 @@
 <?php 
+/**
+ * Questo file di backup contiene del codice soprattutto Javascript che potrebbe servire per creare in automatico
+ * fasiattività legate ad un evento del calendario cespiti. Attualmente non serve in quanto al massimo quando crei
+ * una faseattività, in quel punto associ un cespite alla fase.
+ */
 	echo $this->Html->css("bootstrap-timepicker");
 	//echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'
     echo $this->Html->script("cespite",array('inline' => false));
@@ -41,16 +46,18 @@
 			'wrapInput' => 'input-group col-md-10', 
 			'afterInput' => '<div class="input-group-btn"><button type="button" id="utilizzatoreswitch" class="btn btn-md btn-default esterno-button" title="Utilizzatore Esterno">Utilizzatore Esterno</button></div>'));
 	//echo $this->Form->input('Persona.DisplayName',array('type'=>'text', 'label' => array('class' => 'col col-md-2 control-label', 'text'=>'Utilizzatore')));
-	echo $this->Form->input('Cespite.DisplayName', array('type'=>'text', 'label' => 'Cespite', 'class' => 'form-control required'));
+	echo $this->Form->input('Cespite.Nome', array('type'=>'text', 'label' => 'Cespite', 'class' => 'form-control required'));
 	echo $this->Form->input('attivita_id', array('options' => $eAttivita, 
                                         'label' => array('text'=>'Attività'), 
 										'class'=>'attivita chosen-select form-control input-xs',
 										'placeolder'=>'Associa ad Attività'
                                     ) 
 								  ); 
+	/*
 	echo  $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 
                                         'options'=>$faseattivita, 
 										'class'=>'fase form-control input-xs')); 
+	*/
 	echo $this->Form->input('event_type_id', array('empty' => 'Scegli il tipo di evento', 'options'=>$legenda_tipo_attivita_calendario, 'label'=>'Tipo Evento', 'class' => 'form-control'));
 ?>
 <div class="form-group row">
@@ -102,7 +109,7 @@
 </div>
 <?php
 	echo $this->Form->input('prezzoAffitto', array('type'=>'text', 'label' => 'Prezzo Affitto Cespite Giornaliero'));
-	//echo $this->Form->input('prezzoAffittoTot', array('type'=>'text', 'label' => 'Prezzo Affitto Cespite Evento'));
+	echo $this->Form->input('prezzoAffittoTot', array('type'=>'text', 'label' => 'Prezzo Affitto Cespite Evento'));
 	echo $this->Form->input('note');
 ?>
 <div class="row">
@@ -116,6 +123,61 @@
 $(function() {
 
 	$("#CespitecalendarioPrezzoAffitto").val('0');
+
+	/**
+	* Restituisce il prezzo totale dell'affitto del cespite per l'evento in base alla durata dell'evento
+	*/
+	function howManyDays( date1, date2, prezzoAffittoGiornaliero ) {
+		if(date2 == ''){
+			$("#CespitecalendarioPrezzoAffittoTot").val(prezzoAffittoGiornaliero);
+			return prezzoAffittoGiornaliero; 
+		} else {
+			//Get 1 day in milliseconds
+			var one_day=1000*60*60*24;
+			// Convert both dates to milliseconds
+			var date1_ms = date1.getTime();
+			var date2_ms = date2.getTime();
+			// Calculate the difference in milliseconds
+			var difference_ms = date2_ms - date1_ms;
+			// Convert back to days and return
+			//console.log(date1);//DEBUG
+			//console.log(date2);//DEBUG
+			if(difference_ms == 0){
+				$("#CespitecalendarioPrezzoAffittoTot").val(prezzoAffittoGiornaliero);
+				return prezzoAffittoGiornaliero; 
+			} else {
+				$("#CespitecalendarioPrezzoAffittoTot").val(Math.round(difference_ms/one_day) * (prezzoAffittoGiornaliero * 2));
+				return Math.round(difference_ms/one_day) * (prezzoAffittoGiornaliero * 2); 
+			}
+		}
+	}
+
+	function howManySelectedDaysInRepeated(){
+		var selectedDaysInRepeatedCount = 0;
+		if($("#CespitecalendarioRepeatMon").prop('checked')){
+			selectedDaysInRepeatedCount++;
+		}
+		if($("#CespitecalendarioRepeatTue").prop('checked')){
+			selectedDaysInRepeatedCount++;
+		}
+		if($("#CespitecalendarioRepeatWed").prop('checked')){
+			selectedDaysInRepeatedCount++;
+		}
+		if($("#CespitecalendarioRepeatThu").prop('checked')){
+			selectedDaysInRepeatedCount++;
+		}
+		if($("#CespitecalendarioRepeatFri").prop('checked')){
+			selectedDaysInRepeatedCount++;
+		}
+		if($("#CespitecalendarioRepeatSat").prop('checked')){
+			selectedDaysInRepeatedCount++;
+		}
+		if($("#CespitecalendarioRepeatSun").prop('checked')){
+			selectedDaysInRepeatedCount++;
+		}
+		console.log(selectedDaysInRepeatedCount);
+		return selectedDaysInRepeatedCount;
+	}
 
 	if($('input[type=checkbox]').attr('checked')){
 		$('#repeatOptions').css({ 'display' : '' });
@@ -134,7 +196,7 @@ $(function() {
 			$( "#PersonaDisplayName" ).val($(this).data("uiItem"));
 	});
 
-    $("#CespiteDisplayName").autocomplete({
+    $("#CespiteNome").autocomplete({
 		source: "<?php echo $this->Html->url(array('controller' => 'cespiti', 'action' => 'autocomplete')) ?>",
 		minLength: 2,
 		mustMatch : true,
@@ -142,10 +204,35 @@ $(function() {
 				//console.log(ui.item);//DEBUG
 				$("#CespitecalendarioCespiteId").val( ui.item.id );
 				$("#CespitecalendarioPrezzoAffitto").val( ui.item.defaultPrice );
+				if($("#CespitecalendarioRepeated").prop('checked')){
+					howManySelectedDaysInRepeated();
+					if($( "#CespitecalendarioRepeatFrom" ).val() == ''){
+						var calStart = '';
+					} else {
+						var calStart = new Date($( "#CespitecalendarioRepeatFrom" ).val().split(' ', 1));
+					}
+					if($( "#CespitecalendarioRepeatTo" ).val() == ''){
+						var calEnd = '';
+					} else {
+						var calEnd = new Date($( "#CespitecalendarioRepeatTo" ).val().split(' ', 1));
+					}
+				} else {
+					if($( "#CespitecalendarioEnd" ).val() == ''){
+						var calStart = '';
+					} else {
+						var calStart = new Date($( "#CespitecalendarioStart" ).val().split(' ', 1));
+					}
+					if($( "#CespitecalendarioEnd" ).val() == ''){
+						var calEnd = '';
+					} else {
+						var calEnd = new Date($( "#CespitecalendarioEnd" ).val().split(' ', 1));
+					}
+				}
+				howManyDays(calStart, calEnd, $("#CespitecalendarioPrezzoAffitto").val());
 				$(this).data("uiItem",ui.item.value);
 			}
 	}).bind("blur",function(){
-			$( "#CespiteDisplayName" ).val($(this).data("uiItem"));
+			$( "#CespiteNome" ).val($(this).data("uiItem"));
 	});
 
 	$( "#CespitecalendarioStart" ).datepicker( { dateFormat: 'yy-mm-dd 00:00:00' });
@@ -155,9 +242,31 @@ $(function() {
 		if($(this).prop('checked')){
 			$('#repeatOptions').show(400);
 			$('#dateTimeNoRepeat').hide(400);
+			if($( "#CespitecalendarioRepeatFrom" ).val() == ''){
+				var calStart = '';
+			} else {
+				var calStart = new Date($( "#CespitecalendarioRepeatFrom" ).val().split(' ', 1));
+			}
+			if($( "#CespitecalendarioRepeatTo" ).val() == ''){
+				var calEnd = '';
+			} else {
+				var calEnd = new Date($( "#CespitecalendarioRepeatTo" ).val().split(' ', 1));
+			}
+			howManyDays(calStart, calEnd, $("#CespitecalendarioPrezzoAffitto").val());
 		} else {
 			$('#repeatOptions').hide(400);
 			$('#dateTimeNoRepeat').show(400);
+			if($( "#CespitecalendarioStart" ).val() == ''){
+				var calStart = '';
+			} else {
+				var calStart = new Date($( "#CespitecalendarioStart" ).val().split(' ', 1));
+			}
+			if($( "#CespitecalendarioEnd" ).val() == ''){
+				var calEnd = '';
+			} else {
+				var calEnd = new Date($( "#CespitecalendarioEnd" ).val().split(' ', 1));
+			}
+			howManyDays(calStart, calEnd, $("#CespitecalendarioPrezzoAffitto").val());
 		}
 	});
 
@@ -189,34 +298,55 @@ $(function() {
 							(d.getDate() > 9 ? '' : '0') + d.getDate()
 			$( "#CespitecalendarioRepeatFrom" ).val($(this).val().split(' ', 1));
 			$( "#CespitecalendarioRepeatTo" ).val(dEnd);
+
+			var calStart = new Date($(this).val().split(' ', 1));
+			if($( "#CespitecalendarioEnd" ).val() == ''){
+				var calEnd = '';
+			} else {
+				var calEnd = new Date($( "#CespitecalendarioEnd" ).val().split(' ', 1));
+			}
+			howManyDays(calStart, calEnd, $("#CespitecalendarioPrezzoAffitto").val());
 		}
 	});
 
-	$( "#CespitecalendarioFaseattivitaId" ).on('change', function(){
-		$.ajax({
-			url: 'getCespiteFaseAssoc?faseId='+$(this).val(),
-			type: "GET",
-			beforeSend: function() {
-				//console.log($(this).val()); //DEBUG
-			},
-			success: function (data) {
-				var res = JSON.parse(data);
-				if(res.id){
-					$("#CespitecalendarioCespiteId").val( res.id );
-					$("#CespiteDisplayName").val( res.DisplayName );
-					$("#CespitecalendarioPrezzoAffitto").val( res.defaultPrice );
-				} else {
-					alert('Attenzione, la fase attività selezionata non ha cespiti associati');
-					$("#CespitecalendarioCespiteId").val('');
-					$("#CespiteDisplayName").val('');
-					$("#CespitecalendarioPrezzoAffitto").val('');
-				}
-			},
-			error: function (xhr, status, error) { 
-				alert(xhr.responseText); // Come portare il messaggio di errore php al posto di stampare "Internal Server Error"??
-				alert("Qualcosa è andato storto, se il problema persiste contattare l'amministratore");
+	$( "#CespitecalendarioEnd" ).on('change', function(){
+		if($(this).val() != ''){
+			var calEnd = new Date($(this).val().split(' ', 1));
+			if($( "#CespitecalendarioStart" ).val() == ''){
+				var calStart = '';
+			} else {
+				var calStart = new Date($( "#CespitecalendarioStart" ).val().split(' ', 1));
 			}
-		});
+			howManyDays(calStart, calEnd, $("#CespitecalendarioPrezzoAffitto").val());
+		}
+	});
+
+	$( "#CespitecalendarioRepeatFrom" ).on('change', function(){
+		if($( "#CespitecalendarioRepeatFrom" ).val() == ''){
+			var calStart = '';
+		} else {
+			var calStart = new Date($( "#CespitecalendarioRepeatFrom" ).val().split(' ', 1));
+		}
+		if($( "#CespitecalendarioRepeatTo" ).val() == ''){
+			var calEnd = '';
+		} else {
+			var calEnd = new Date($( "#CespitecalendarioRepeatTo" ).val().split(' ', 1));
+		}
+		howManyDays(calStart, calEnd, $("#CespitecalendarioPrezzoAffitto").val());
+	});
+
+	$( "#CespitecalendarioRepeatTo" ).on('change', function(){
+		if($( "#CespitecalendarioRepeatFrom" ).val() == ''){
+			var calStart = '';
+		} else {
+			var calStart = new Date($( "#CespitecalendarioRepeatFrom" ).val().split(' ', 1));
+		}
+		if($( "#CespitecalendarioRepeatTo" ).val() == ''){
+			var calEnd = '';
+		} else {
+			var calEnd = new Date($( "#CespitecalendarioRepeatTo" ).val().split(' ', 1));
+		}
+		howManyDays(calStart, calEnd, $("#CespitecalendarioPrezzoAffitto").val());
 	});
 
 	$('#utilizzatoreswitch').on('click', function(){

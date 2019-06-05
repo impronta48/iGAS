@@ -83,8 +83,7 @@ class Cespitecalendario extends AppModel {
     );  
 
     public function beforeSave($options = Array()) {
-        debug($this->data);
-        die();
+        //debug($this->data);die();//DEBUG
     }
     
 }

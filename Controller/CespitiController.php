@@ -653,5 +653,23 @@ class CespitiController extends AppController {
         exit();
     }
 
+    function getCespiteFaseAssoc(){
+        if (isset($this->request->query['faseId'])) {
+            $this->loadModel('Faseattivita');
+            $this->Faseattivita->id = $this->request->query['faseId'];
+            $cespite = new StdClass();
+            if($this->Faseattivita->read()['Faseattivita']['cespite_id']){
+                $this->Cespite->id = $this->Faseattivita->read()['Faseattivita']['cespite_id'];
+                $cespite->id = $this->Cespite->read()['Cespite']['id'];
+                $cespite->DisplayName = $this->Cespite->read()['Cespite']['DisplayName'];
+                $cespite->defaultPrice = $this->Cespite->read()['Cespite']['costo_affitto'];
+                //debug($this->Faseattivita->read()['Faseattivita']['cespite_id']);//DEBUG
+            }
+            $this->header('Content-Type: application/json');
+            echo json_encode($cespite);
+            exit();
+        }
+    }
+
 }
 ?>

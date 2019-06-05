@@ -20,7 +20,8 @@
             <?php echo $this->Form->input('attivita_id', array('class'=>'chosen-select'));?>
             <?php echo $this->Form->input('entrata', array('options' => array(0 =>'Uscita', 1 => 'Entrata')) );?>
             <?php echo $this->Form->input('Descrizione');?>
-            
+            <?php echo $this->Form->hidden('cespite_id',array('type'=>'text')); ?>
+            <?php echo $this->Form->input('Cespite.DisplayName', array('type'=>'text', 'label' => 'Cespite associato'));?>
             <?php echo $this->Form->input('qta');?>
             <?php echo $this->Form->input('um');?>
             <?php echo $this->Form->input('costou', array('label'=> 'Costo Unità'));?>
@@ -71,7 +72,21 @@ $(function() {
 			}
 	}).bind("blur",function(){
 			$( "#PersonaDisplayName" ).val($(this).data("uiItem"));
-		});
+	});
 
-} );
+    $("#CespiteDisplayName").autocomplete({
+		source: "<?php echo $this->Html->url(array('controller' => 'cespiti', 'action' => 'autocomplete')) ?>",
+		minLength: 2,
+		mustMatch : true,
+		select: function( event, ui ) {
+				$("#FaseattivitaCespiteId").val( ui.item.id );
+                $("#FaseattivitaCostou").val( ui.item.defaultPrice );
+                $("#FaseattivitaUm").val('gg');
+                $(this).data("uiItem",ui.item.value);
+                console.log(ui.item.value);
+            }
+    }).bind("blur",function(){
+			$( "#CespiteDisplayName" ).val($(this).data("uiItem"));
+	});
+});
 <?php $this->Html->scriptEnd(); ?>
