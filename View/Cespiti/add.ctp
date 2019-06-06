@@ -23,7 +23,7 @@
     echo $this->Form->input('Persona.DisplayName', array('label' => 'Proprietario/a', 'class'=> 'form-control'));
     echo $this->Form->hidden('proprietario_interno');
     echo $this->Form->input('costo_acquisto', array('class'=> 'form-control required'));
-    echo $this->Form->input('costo_affitto', array('label'=> 'Costo Affitto Giornaliero', 'class'=> 'form-control'));
+    echo $this->Form->input('costo_affitto', array('label'=> 'Costo Affitto Giornaliero', 'class'=> 'form-control', 'data-toggle'=>'tooltip', 'data-placement'=>'top', 'title'=>'Inteso come prezzo di default per un evento che dura 24h'));
     echo $this->Form->input('data_acquisto', array('type'=>'text', 'class'=> 'form-control'));
     echo $this->Form->input('data_smaltimento', array('type'=>'text', 'class'=> 'form-control'));
 ?>
@@ -36,6 +36,8 @@
 
 <?php $this->Html->scriptStart(array('inline' => false)); ?>
 $(function() {
+
+    $('#CespiteCostoAffitto').tooltip();
 
     $("#PersonaDisplayName").on( "keyup", function( event ) {
 

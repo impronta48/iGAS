@@ -30,7 +30,9 @@ $this->Html->addCrumb('Cespiti', '/cespiti');
 ?>
     
 	<tr <?php echo $class;?> <?php echo 'style="background-color:'.$event['LegendaTipoAttivitaCalendario']['color'].'; color:'.$event['LegendaTipoAttivitaCalendario']['textColor'].'"'; ?>>
-        <td><?php echo $event['Cespite']['displayName']; ?>&nbsp;</td>
+        <td><a class="btn btn-primary btn-sm" href="<?php echo $this->Html->url(array('controller' => 'cespiti', "action" => "edit", $event['Cespite']['id'])); ?>">
+                <?php echo $event['Cespite']['displayName']; ?>              
+            </a>&nbsp;</td>
         <td><?php echo ($event['Persona']['displayName'] !== NULL) ? $event['Persona']['displayName'] : $event['Cespitecalendario']['utilizzatore_esterno'] ; ?>&nbsp;</td>
 		<td><?php echo $event['Cespitecalendario']['start']; ?>&nbsp;</td>
 		<td><?php echo $event['Cespitecalendario']['end']; ?>&nbsp;</td>
@@ -56,8 +58,13 @@ $this->Html->addCrumb('Cespiti', '/cespiti');
                 </ul>
             </div>
             <?php if($event['Cespitecalendario']['eventGroup']!==null){ ?>
-            <a class="btn btn-primary btn-xs" href="<?php echo $this->Html->url('eventlist/'.$event['Cespitecalendario']['eventGroup']); ?>">
+            <a class="btn btn-primary btn-xs" href="<?php echo $this->Html->url('eventlist/'.$event['Cespitecalendario']['eventGroup']); ?>" title="Questo evento fa parte di un gruppo eventi, clicca per vedere tutti gli eventi correlati">
                 See Group                
+            </a>
+            <?php } ?>
+            <?php if($event['Cespitecalendario']['faseattivita_id']!==null){ ?>
+            <a class="btn btn-primary btn-xs" href="<?php echo $this->Html->url(array('controller' => 'faseattivita', "action" => "edit", $event['Cespitecalendario']['faseattivita_id'])); ?>" title="Questo evento è legato ad una fase attività, clicca per visionarla">
+                See Related Fase                
             </a>
             <?php } ?>
 		</td>

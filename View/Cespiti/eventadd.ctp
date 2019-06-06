@@ -1,10 +1,10 @@
 <?php 
 	echo $this->Html->css("bootstrap-timepicker");
-	//echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'
+	echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'
     echo $this->Html->script("cespite",array('inline' => false));
 	echo $this->Html->script("validate1.19",array('inline' => false));
 	echo $this->Html->script("bootstrap-timepicker",array('inline' => false));
-	//echo $this->Html->script('faseattivita',array('inline' => false));
+	echo $this->Html->script('faseattivita',array('inline' => false));
 	$this->Html->addCrumb('Cespiti', '/cespiti');
 	if(isset($_SERVER['HTTP_REFERER']) and basename(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH)) === 'calendar'){
 		//debug(basename(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH)));
@@ -56,7 +56,7 @@
 <div class="form-group row">
 <div class="col col-md-2 control-label"><strong>Evento Ripetuto</strong></div>
 <div class="col col-md-10">
-<?php	echo $this->Form->input('repeated', array('label' => array('class' => '', 'text'=>'SI'), 'class' => 'form-check-input', 'div' => false, 'wrapInput' => false)); ?>
+<?php	echo $this->Form->input('repeated', array('label' => array('class' => '', 'text'=>'SI'), 'class' => 'form-check-input', 'div' => false, 'wrapInput' => false, 'data-toggle'=>'tooltip', 'data-placement'=>'top', 'title'=>'Seleziona questa opzione per creare un gruppo evento che sarà composto da tanti singoli eventi giornalieri che si terranno durante il periodo di tempo scelto nelle fasce orarie indicate')); ?>
 </div>
 </div>
 <div class="form-group row" id="dateTimeNoRepeat">
@@ -101,7 +101,8 @@
 </div>
 </div>
 <?php
-	echo $this->Form->input('prezzoAffitto', array('type'=>'text', 'label' => 'Prezzo Affitto Cespite Giornaliero'));
+	echo $this->Form->input('prezzo_affitto', array('type'=>'text', 'label' => 'Prezzo Affitto Cespite', 'data-toggle'=>'tooltip', 'data-placement'=>'top', 'title'=>'Il prezzo affitto che avrà il cespite durante l\'evento, se l\'evento è impostato come ripetuto, questo valore è da intendersi come prezzo per singolo evento giornaliero e non come totale del gruppo evento che verrà generato'));
+	//echo $this->Form->input('prezzoAffittoEffettivo', array('type'=>'text', 'label' => 'Prezzo Affitto Effettivo'));
 	//echo $this->Form->input('prezzoAffittoTot', array('type'=>'text', 'label' => 'Prezzo Affitto Cespite Evento'));
 	echo $this->Form->input('note');
 ?>
@@ -116,6 +117,8 @@
 $(function() {
 
 	$("#CespitecalendarioPrezzoAffitto").val('0');
+	$('#CespitecalendarioRepeated').tooltip();
+	$('#CespitecalendarioPrezzoAffitto').tooltip();
 
 	if($('input[type=checkbox]').attr('checked')){
 		$('#repeatOptions').css({ 'display' : '' });
@@ -142,6 +145,7 @@ $(function() {
 				//console.log(ui.item);//DEBUG
 				$("#CespitecalendarioCespiteId").val( ui.item.id );
 				$("#CespitecalendarioPrezzoAffitto").val( ui.item.defaultPrice );
+				//$("#CespitecalendarioPrezzoAffittoEffettivo").val( ui.item.defaultPrice );
 				$(this).data("uiItem",ui.item.value);
 			}
 	}).bind("blur",function(){
@@ -161,8 +165,18 @@ $(function() {
 		}
 	});
 
-	$( "#CespitecalendarioRepeatFrom" ).datepicker( { dateFormat: 'yy-mm-dd' });
-	$( "#CespitecalendarioRepeatTo" ).datepicker( { dateFormat: 'yy-mm-dd' });
+	$('#CespitecalendarioRepeatFrom').datepicker({
+		dateFormat: 'yy-mm-dd',
+		onSelect: function(dateText, inst) {
+			$('#CespitecalendarioRepeatTo').datepicker("option", "minDate", dateText); //no dates before selected 'from' allowed
+		}
+	});
+	$('#CespitecalendarioRepeatTo').datepicker({
+		dateFormat: 'yy-mm-dd',
+		onSelect: function(dateText, inst) {
+			$('#CespitecalendarioRepeatFrom').datepicker("option", "maxDate", dateText); //no dates after selected 'to' allowed
+		}
+	});
 	$( "#CespitecalendarioStartTime" ).timepicker({
 		disableFocus: true,
 		showSeconds: true,
@@ -205,11 +219,21 @@ $(function() {
 					$("#CespitecalendarioCespiteId").val( res.id );
 					$("#CespiteDisplayName").val( res.DisplayName );
 					$("#CespitecalendarioPrezzoAffitto").val( res.defaultPrice );
+					/////////////////////////////////////////////////////////////////////////
+					//var dateFromAPI = "2019-06-04T00:00:00Z";
+					//var dateToAPI = "2019-06-04T23:59:59Z";
+					//var datefromAPITimeStamp = (new Date(dateFromAPI)).getTime();
+					//var dateToAPITimeStamp = (new Date(dateToAPI)).getTime();
+					//var secDiff = ((dateToAPITimeStamp-datefromAPITimeStamp)/(1000))+1;
+					//alert(secDiff);
+					/////////////////////////////////////////////////////////////////////////
+					//$("#CespitecalendarioPrezzoAffittoEffettivo").val( res.defaultPrice );//86400:res.defaultPrice=secDiff:x
 				} else {
 					alert('Attenzione, la fase attività selezionata non ha cespiti associati');
 					$("#CespitecalendarioCespiteId").val('');
 					$("#CespiteDisplayName").val('');
 					$("#CespitecalendarioPrezzoAffitto").val('');
+					//$("#CespitecalendarioPrezzoAffittoEffettivo").val('');
 				}
 			},
 			error: function (xhr, status, error) { 

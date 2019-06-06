@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class CalendarioCespitiAggiuntaAttivitaIdFaseattivitaId extends AbstractMigration
+class AggiuntaCespiteIdInTabellaFaseAttivita extends AbstractMigration
 {
     /**
      * Change Method.
@@ -31,10 +31,8 @@ class CalendarioCespitiAggiuntaAttivitaIdFaseattivitaId extends AbstractMigratio
      */
     public function change()
     {
-        $cespitiCal = $this->table('cespiticalendario', ['engine' => 'MyISAM']);
-        $cespitiCal->addColumn('attivita_id', 'integer', ['null' => true])
-                ->addColumn('faseattivita_id', 'integer', ['null' => true])
-                ->addColumn('prezzo_affitto', 'float', ['null' => true])
+        $cespitiCal = $this->table('faseattivita', ['engine' => 'MyISAM']);
+        $cespitiCal->addColumn('cespite_id', 'integer', ['null' => true])
                 ->update();
     }
 }

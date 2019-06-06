@@ -65,7 +65,7 @@
             <?php echo $this->Form->input('entrata', array('options' => array(0 =>'Uscita', 1 => 'Entrata'), 'label'=> 'Tipo di fase') );?>
             <?php echo $this->Form->input('Descrizione');?>
             <?php echo $this->Form->hidden('cespite_id',array('type'=>'text')); ?>
-            <?php echo $this->Form->input('Cespite.DisplayName', array('type'=>'text', 'label' => 'Cespite Associato'));?>
+            <?php echo $this->Form->input('Cespite.DisplayName', array('type'=>'text', 'label' => 'Cespite Associato', 'required' => false));?>
             <?php echo $this->Form->input('qta');?>
             <?php echo $this->Form->input('um');?>
             <?php echo $this->Form->input('costou', array('label'=> 'Costo Unità'));?>
@@ -291,26 +291,28 @@ $(function() {
 		minLength: 2,
 		mustMatch : true,
 		select: function( event, ui ) {
-				$("#FaseattivitaPersonaId").val( ui.item.id );
+				$("#FaseattivitaPersonaId").val(ui.item.id);
 				$(this).data("uiItem",ui.item.value);
 			}
 	}).bind("blur",function(){
-			$( "#PersonaDisplayName" ).val($(this).data("uiItem"));
+			$("#PersonaDisplayName").val($(this).data("uiItem"));
     });
     
+    $("#CespiteDisplayName").rules("remove", "required"); // Not useful now
+
     $("#CespiteDisplayName").autocomplete({
 		source: "<?php echo $this->Html->url(array('controller' => 'cespiti', 'action' => 'autocomplete')) ?>",
 		minLength: 2,
 		mustMatch : true,
 		select: function( event, ui ) {
-				$("#FaseattivitaCespiteId").val( ui.item.id );
-                $("#FaseattivitaCostou").val( ui.item.defaultPrice );
+				$("#FaseattivitaCespiteId").val(ui.item.id);
+                $("#FaseattivitaCostou").val(ui.item.defaultPrice);
                 $("#FaseattivitaUm").val('gg');
                 $(this).data("uiItem",ui.item.value);
                 //console.log(ui.item.value);
             }
     }).bind("blur",function(){
-			$( "#CespiteDisplayName" ).val($(this).data("uiItem"));
+			$("#CespiteDisplayName").val($(this).data("uiItem"));
 	});
 
 } );

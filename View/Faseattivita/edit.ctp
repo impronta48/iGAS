@@ -21,7 +21,7 @@
             <?php echo $this->Form->input('entrata', array('options' => array(0 =>'Uscita', 1 => 'Entrata')) );?>
             <?php echo $this->Form->input('Descrizione');?>
             <?php echo $this->Form->hidden('cespite_id',array('type'=>'text')); ?>
-            <?php echo $this->Form->input('Cespite.DisplayName', array('type'=>'text', 'label' => 'Cespite associato'));?>
+            <?php echo $this->Form->input('Cespite.DisplayName', array('type'=>'text', 'label' => 'Cespite associato', 'required' => false));?>
             <?php echo $this->Form->input('qta');?>
             <?php echo $this->Form->input('um');?>
             <?php echo $this->Form->input('costou', array('label'=> 'Costo Unità'));?>

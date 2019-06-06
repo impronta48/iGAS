@@ -63,6 +63,7 @@
 <ul>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Statistiche Ore', '/ore/stats?from='. date('Y-m-d', strtotime('first day of last month')), array('data-original-title'=>'Statistiche Ore','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Statistiche Note Spese', '/notaspese/stats?from='. date('Y-m-d', strtotime('first day of last month')), array('data-original-title'=>'Statistiche Note Spese','escape' => false)) ?></li>
+    <li><?php echo $this->Html->link('<i class="fa fa-calendar"></i> Statistiche Utilizzo Cespiti', '/cespiti/stats?from='. date('Y-m-d', strtotime('first day of last month')), array('data-original-title'=>'Statistiche Utilizzo Cespiti','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Fatture Emesse (Elenco)', '/fattureemesse/index/anno:' . date('Y'), array('data-original-title'=>'Fatture Emesse Elenco','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-calendar"></i> Fatture Emesse (Scad.)', '/fattureemesse/scadenziario/' . date('Y'), array('data-original-title'=>'Fatture Emesse Scadenziario','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-book"></i> Prima Nota (Per mese)', '/primanota/totalimese/' . date('Y'), array('data-original-title'=>'Totali per Mese Prima Nota','escape' => false)) ?></li>

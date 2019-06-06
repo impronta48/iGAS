@@ -15,7 +15,7 @@ class Faseattivita extends AppModel {
  */
 	public $displayField = 'Descrizione';
     public $cacheQueries = true;
-		var $actsAs = array('Containable');
+	var $actsAs = array('Containable');
 	
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -42,15 +42,11 @@ class Faseattivita extends AppModel {
 		'Cespite' => array(
             'className' => 'Cespite',
             'foreignKey' => 'cespite_id',
-            'dependent' => false,
+            //'dependent' => false,
             'conditions' => '',
             'fields' => '',
             'order' => '',
             'limit' => '',
-            'offset' => '',
-            'exclusive' => '',
-            'finderQuery' => '',
-            'counterQuery' => ''
         ),
     	'LegendaStatoAttivita' => array(
 			'className' => 'LegendaStatoAttivita',
@@ -80,10 +76,15 @@ class Faseattivita extends AppModel {
 		'Ora'
 
     );
-	
+
     public function beforeSave($options = Array()) {
-            //debug($this->data['Faseattivita']);
-            //die();
+		if($this->data['Faseattivita']['cespite_id']){
+            if($this->data['Cespite']['DisplayName'] == ''){
+                $this->data['Faseattivita']['cespite_id'] = null;
+            }
+        }
+		//debug($this->data);
+		//die();
 	}
     
 	public function afterSave($created, $options = Array()) {

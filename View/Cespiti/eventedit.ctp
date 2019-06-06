@@ -1,6 +1,8 @@
 <?php 
+	echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'
     echo $this->Html->script("cespite.js",array('inline' => false));
 	echo $this->Html->script("validate1.19",array('inline' => false));
+	echo $this->Html->script('faseattivita',array('inline' => false));
 	$this->Html->addCrumb('Cespiti', '/cespiti');
 	if(isset($_SERVER['HTTP_REFERER']) and basename(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH)) === 'calendar'){
 		//debug(basename(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH)));
@@ -50,7 +52,16 @@
 	}
 	//echo $this->Form->input('Persona.DisplayName',array('type'=>'text', 'label' => array('class' => 'col col-md-2 control-label', 'text'=>'Utilizzatore')));
     echo $this->Form->input('Cespite.DisplayName', array('type'=>'text', 'label' => array('class' => 'col col-md-2 control-label', 'text'=>'Cespite')));
-    echo $this->Form->input('event_type_id', array('empty' => 'Scegli il tipo di evento', 'options'=>$legenda_tipo_attivita_calendario, 'label'=>'Tipo Attività', 'class' => 'form-control'));
+	echo $this->Form->input('attivita_id', array('options' => $eAttivita, 
+                                        'label' => array('text'=>'Attività'), 
+										'class'=>'attivita chosen-select form-control input-xs',
+										'placeolder'=>'Associa ad Attività'
+                                    ) 
+								  ); 
+	echo  $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 
+                                        'options'=>$faseattivita, 
+										'class'=>'fase form-control input-xs')); 
+	echo $this->Form->input('event_type_id', array('empty' => 'Scegli il tipo di evento', 'options'=>$legenda_tipo_attivita_calendario, 'label'=>'Tipo Attività', 'class' => 'form-control'));
 ?>
 <!--
 <div class="form-group row">
@@ -64,7 +75,9 @@
 -->
 <?php
 	echo $this->Form->input('start', array('type'=>'text', 'label' => 'Data Inizio Evento', 'autocomplete' => 'off'));
-    echo $this->Form->input('end', array('type'=>'text', 'label' => 'Data Fine Evento', 'autocomplete' => 'off'));
+	echo $this->Form->input('end', array('type'=>'text', 'label' => 'Data Fine Evento', 'autocomplete' => 'off'));
+	echo $this->Form->input('prezzo_affitto', array('type'=>'text', 'label' => 'Prezzo Affitto Cespite', 'class'=> 'form-control', 'data-toggle'=>'tooltip', 'data-placement'=>'top', 'title'=>'Il prezzo affitto che avrà il cespite durante l\'evento'));
+	//echo $this->Form->input('prezzoAffittoTot', array('type'=>'text', 'label' => 'Prezzo Affitto Cespite Evento'));
     echo $this->Form->input('note');
 ?>
 <div class="row">
@@ -87,6 +100,9 @@ if($this->request->data['Cespitecalendario']['eventGroup']!==null){
 
 <?php $this->Html->scriptStart(array('inline' => false)); ?>
 $(function() {
+
+	//$("#CespitecalendarioPrezzoAffitto").val('0');
+	$('#CespitecalendarioPrezzoAffitto').tooltip();
 
 	function activatePersonaAutocomplete(){
 		$("#PersonaDisplayName").autocomplete({
@@ -132,6 +148,33 @@ $(function() {
 
 	$( "#CespitecalendarioStart" ).datepicker( { dateFormat: 'yy-mm-dd 00:00:00' });
 	$( "#CespitecalendarioEnd" ).datepicker( { dateFormat: 'yy-mm-dd 23:59:59' });
+
+	$( "#CespitecalendarioFaseattivitaId" ).on('change', function(){
+		$.ajax({
+			url: '<?php echo HTTP_BASE.DS.APP_DIR.DS.$this->request->params['controller']; ?>/getCespiteFaseAssoc?faseId='+$(this).val(),
+			type: "GET",
+			beforeSend: function() {
+				//console.log($(this).val()); //DEBUG
+			},
+			success: function (data) {
+				var res = JSON.parse(data);
+				if(res.id){
+					$("#CespitecalendarioCespiteId").val( res.id );
+					$("#CespiteDisplayName").val( res.DisplayName );
+					$("#CespitecalendarioPrezzoAffitto").val( res.defaultPrice );
+				} else {
+					alert('Attenzione, la fase attività selezionata non ha cespiti associati');
+					$("#CespitecalendarioCespiteId").val('');
+					$("#CespiteDisplayName").val('');
+					$("#CespitecalendarioPrezzoAffitto").val('');
+				}
+			},
+			error: function (xhr, status, error) { 
+				alert(xhr.responseText); // Come portare il messaggio di errore php al posto di stampare "Internal Server Error"??
+				alert("Qualcosa è andato storto, se il problema persiste contattare l'amministratore");
+			}
+		});
+	});
 
 	$('#utilizzatoreswitch').on('click', function(){
 		if($(this).hasClass('esterno-button')){

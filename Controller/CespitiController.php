@@ -90,6 +90,10 @@ class CespitiController extends AppController {
     public function calendar() {
         // To Do
         $this->loadModel('Cespitecalendario');
+        $listaAttivita = $this->Cespitecalendario->Attivita->getlist();
+        $listaAttivita = array(0 => 'Associa ad Attività') + $listaAttivita; //Questo si può fare perchè listaattività parte da 1 e quindi 0 non sarà duplicato
+        $this->set('eAttivita', $listaAttivita);
+        $this->set('faseattivita', $this->Cespitecalendario->Faseattivita->getSimple());
         $legenda_tipo_attivita_calendario = $this->Cespitecalendario->LegendaTipoAttivitaCalendario->find('list');
 		$this->set(compact('legenda_tipo_attivita_calendario'));
     }
@@ -289,7 +293,7 @@ class CespitiController extends AppController {
     public function eventadd() {
         $this->loadModel('Cespitecalendario');
         $listaAttivita = $this->Cespitecalendario->Attivita->getlist();
-        array_unshift($listaAttivita, 'Associa ad Attività');//Questo si può fare perchè listaattività parte da 1 e quindi gli id vengono mantenuti
+        $listaAttivita = array(0 => 'Associa ad Attività') + $listaAttivita; //Questo si può fare perchè listaattività parte da 1 e quindi 0 non sarà duplicato
         $this->set('eAttivita', $listaAttivita);
         $this->set('faseattivita', $this->Cespitecalendario->Faseattivita->getSimple());
         if(!empty($this->request->data)){
@@ -532,7 +536,12 @@ class CespitiController extends AppController {
     }
 
     public function eventedit($id = null){
+        //debug((strtotime('2019-06-06 23:59:59') - strtotime('2019-06-06 00:00:00')) +1 );
         $this->loadModel('Cespitecalendario');
+        $listaAttivita = $this->Cespitecalendario->Attivita->getlist();
+        $listaAttivita = array(0 => 'Associa ad Attività') + $listaAttivita; //Questo si può fare perchè listaattività parte da 1 e quindi 0 non sarà duplicato
+        $this->set('eAttivita', $listaAttivita);
+        $this->set('faseattivita', $this->Cespitecalendario->Faseattivita->getSimple());
         if(!$id or !is_numeric($id)){
             $this->Session->setFlash(__('Invalid Asset Event id'));
             $this->redirect(array('action' => 'eventlist'));
@@ -669,6 +678,88 @@ class CespitiController extends AppController {
             echo json_encode($cespite);
             exit();
         }
+    }
+
+    function stats(){
+
+        $this->loadModel('Cespitecalendario');
+
+        $conditions = $this->getConditionFromQueryString();
+        //debug($conditions);
+
+        $attivita_list = $this->Cespitecalendario->Attivita->getlist();
+        $this->set('attivita_list', $attivita_list);
+
+        //$persona_list = $this->Notaspesa->getPersone();
+        //$this->set('persona_list', $persona_list);
+        
+        $fa = $this->Cespitecalendario->Faseattivita->getSimple();
+        $this->set('faseattivita', $fa); 
+        
+        $this->set('title_for_layout', "Statistiche Utilizzo Cespiti");  
+
+        $searchResult = $this->Cespitecalendario->find(
+            'all',
+            array(
+                'conditions' => $conditions,
+                //'fields' => array()
+            )
+        );
+
+        $this->set('searchResult', $searchResult);
+
+    }
+
+    private function getConditionFromQueryString()
+    {
+       $conditions = array();
+       $attivita="";
+       //$persone="";
+       
+       /*
+       if(isset($this->request->query['persone'])){
+            $persone = $this->request->query['persone'];                        
+            //Se la stringa è vuota non devo mettere la condizione
+            if(!empty($persone)){   
+                if(is_numeric($persone)){
+                    $persone = array($persone);
+                }
+                $conditions['Notaspesa.eRisorsa IN'] = $persone;
+            }
+        }
+        */
+
+        if (!empty($this->request->query['attivita']))
+        {
+            $attivita = $this->request->query['attivita'];            
+            //Se la stringa è vuota non devo mettere la condizione
+            if (!empty($attivita))
+            {
+                if (is_numeric($attivita)) 
+                {
+                    $attivita = array($attivita);                
+                }
+                if (is_array($attivita)) $conditions['Cespitecalendario.attivita_id IN'] = $attivita;                
+            }
+        }
+        if (!empty($this->request->query['faseattivita_id']))
+        {
+            $conditions['Cespitecalendario.faseattivita_id IN'] = $this->request->query['faseattivita_id'];
+        }
+
+        if(!empty($this->request->query['from'])){
+            $conditions['Cespitecalendario.start >='] = $this->request->query['from'];
+        }
+        if(!empty($this->request->query['to'])){
+            $conditions['Cespitecalendario.start <='] = $this->request->query['to'];
+        }else{
+            $conditions['Cespitecalendario.start <='] = date('Y-m-d');
+        }
+        
+        $this->set('attivita_selected', $attivita);
+        //$this->set('persona_selected', $persone);
+
+        return $conditions;
     }
 
 }
