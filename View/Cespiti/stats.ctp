@@ -40,14 +40,33 @@
     <?php echo $this->Form->end(); ?>
 
     <?php if(isset($searchResult)):?>
-    <?php foreach($searchResult as $key => $value):?>
-        <?php //debug($value); ?>
-        <?php echo $value['Cespite']['DisplayName']; ?>
-        <?php echo $value['Cespitecalendario']['prezzo_affitto']; ?>
-        <?php echo $value['Attivita']['name']; ?>
-        <?php echo $value['Faseattivita']['Descrizione']; ?>
-        <?php echo BR; ?>
-    <?php endforeach; ?>
+    <div class="table-responsive">
+        <table class="dataTable table table-bordered table-hover table-striped table-condensed display">
+        <thead>
+            <tr>
+                <th>Nome Cespite</th>
+                <th>Data Inizio</th>
+                <th>Data Fine</th>
+                <th>Prezzo Affitto Evento</th>
+                <th>Attività</th>
+                <th>Fase</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach($searchResult as $key => $value):?>
+            <tr>
+                <?php //debug($value); ?>
+                <td><?php echo $value['Cespite']['DisplayName']; ?></td>
+                <td><?php echo $value['Cespitecalendario']['start']; ?></td>
+                <td><?php echo $value['Cespitecalendario']['end']; ?></td>
+                <td><?php echo $value['Cespitecalendario']['prezzo_affitto']; ?></td>
+                <td><?php echo $value['Attivita']['name']; ?></td>
+                <td><?php echo $value['Faseattivita']['Descrizione']; ?></td>
+            </tr>       
+        <?php endforeach; ?>
+        </tbody>
+        </table>
+    </div>
     <?php //debug($searchResult); ?>
     <?php endif; ?>
 
@@ -56,6 +75,8 @@
 
 <?php $this->Html->scriptStart(array('inline' => false)); ?>
         $(document).ready(function() {
+
+            var dataTablePagination = true;
 
             $('#from').datepicker({
                 dateFormat: 'yy-mm-dd',
@@ -70,5 +91,19 @@
                     $('#from').datepicker("option", "maxDate", dateText); //no dates after selected 'to' allowed
                 }
             });
+
+            $('.dropdown-menu').find('form').click(function (e) {
+                e.stopPropagation();
+            });
+
+            //data table
+            $('.dataTable').dataTable({
+                aaSorting: [[1, 'asc']],
+                "iDisplayLength" : 23,
+                "paging" : true,
+                dom: 'Bfrtip',
+                buttons: ['csv', 'pdf', 'print']
+            });
+
         });
 <?php $this->Html->scriptEnd();
