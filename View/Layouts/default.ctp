@@ -68,19 +68,23 @@
                           $u = $this->Session->read('Auth.User.username');
                           $uid = $this->Session->read('Auth.User.id');                         
                           $role = $this->Session->read('Auth.User.group_id');
-                          $path = 'profiles/'. $uid . '.png';
+                          $path = 'profiles'.DS.$uid.'.png';
                           //Auth::hasRole(Configure::read('Role.admin'))
+                          //debug($this->Session->read('Auth.User.Persona.id'));
                           //debug($this->Session->read('Auth.User'));
                           //debug(IMAGES. 'profiles/'. $uid . '.png');
-                          if (!file_exists(IMAGES. 'profiles/'. $uid . '.png')){
-                              $path = 'profiles/default.png';             
+                          if (!file_exists(IMAGES.'profiles'.DS.$uid.'.png')){
+                            $path = 'profiles'.DS.'default.png';             
                           }
                           if(empty($u)){
-                              $u = 'Utente Anonimo';
+                            $u = 'Utente Anonimo';
+                          }
+                          if($this->Session->read('Auth.User.Persona.id')){
+                            $u = $this->Session->read('Auth.User.Persona.DisplayName');
                           }
                         }
                    ?>
-                  <li><a href="#" class="user dropdown-toggle" data-toggle="dropdown"><span class="username"><?php echo $this->Html->image($path , array('class'=>'user-avatar','alt'=>'')); ?> <?php echo  $u; ?> </span></a>                  
+                  <li><a href="#" class="user dropdown-toggle" data-toggle="dropdown"><span class="username"><?php echo $this->Html->image($path , array('class'=>'user-avatar','alt'=>'')); ?> Ciao <b><?php echo ucfirst($u); ?></b></span></a>                  
                     <ul class="dropdown-menu">                      
                       <li><a href="<?php echo $this->Html->url('/users/cambiapwd/'. $uid); ?>"> Cambia Password</a></li>                    
                       <li><a href="<?php echo $this->Html->url('/users/logout'); ?>" class="text-danger"><i class="fa fa-lock"></i> Logout</a></li>                                          
