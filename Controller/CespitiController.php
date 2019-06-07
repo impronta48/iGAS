@@ -687,6 +687,9 @@ class CespitiController extends AppController {
         $conditions = $this->getConditionFromQueryString();
         //debug($conditions);
 
+        $cespiti_list = $this->Cespitecalendario->Cespite->getSimple();
+        $this->set('cespiti_list', $cespiti_list);
+
         $attivita_list = $this->Cespitecalendario->Attivita->getlist();
         $this->set('attivita_list', $attivita_list);
 
@@ -705,19 +708,56 @@ class CespitiController extends AppController {
                 //'fields' => array()
             )
         );
+        //debug($searchResult);
 
+        $prezzoAffittoTot = 0;
+        $finalReport = $statHelper = [];
+        foreach ($searchResult as $key => $eventoCespite) {
+            $searchResult[$key]['Cespitecalendario']['prezzo_affitto'] = ($eventoCespite['Cespitecalendario']['prezzo_affitto']) ? $eventoCespite['Cespitecalendario']['prezzo_affitto'] : (float)0 ;
+            //debug($searchResult[$key]['Cespitecalendario']['prezzo_affitto']);
+            $prezzoAffittoTot += (float)$searchResult[$key]['Cespitecalendario']['prezzo_affitto'];
+            $statHelper[$eventoCespite['Cespite']['id']][] = [
+                $eventoCespite['Cespite']['DisplayName'], 
+                $searchResult[$key]['Cespitecalendario']['prezzo_affitto']
+            ];
+        }
+        //debug($prezzoAffittoTot);
+        //debug($statHelper);
+        foreach($statHelper as $cespiteId => $stat){
+            //debug($stat);
+            $howManyEvents = 1;
+            foreach($stat as $event){
+                //debug($cespiteId);
+                //debug($event[1]);
+                $finalReport[$cespiteId]['nomeCespite'] = $event[0];
+                @$finalReport[$cespiteId]['totaleAffitto'] += (float)$event[1];
+                $finalReport[$cespiteId]['numeroEventi'] = $howManyEvents++;
+            }
+        }
+        //debug($finalReport);
+
+        $this->set('prezzoAffittoTot', $prezzoAffittoTot);
         $this->set('searchResult', $searchResult);
-
+        //$this->set('statHelper', $statHelper);
+        $this->set('finalReport', $finalReport);
     }
 
-    private function getConditionFromQueryString()
-    {
-       $conditions = array();
-       $attivita="";
-       //$persone="";
-       
-       /*
-       if(isset($this->request->query['persone'])){
+    private function getConditionFromQueryString(){
+        //debug($this->request->query);
+        $conditions = array();
+        $attivita='';
+        //$persone='';
+        if(!empty($this->request->query['cespite_id'])){
+            $cespiti = $this->request->query['cespite_id'];
+            if(!empty($cespiti)){
+                if(is_numeric($cespiti)){
+                    $cespiti = array($cespiti);               
+                }
+            }
+            if(is_array($cespiti)) $conditions['Cespitecalendario.cespite_id IN'] = $cespiti;
+        }
+        /*
+        if(isset($this->request->query['persone'])){
             $persone = $this->request->query['persone'];                        
             //Se la stringa è vuota non devo mettere la condizione
             if(!empty($persone)){   
@@ -728,25 +768,19 @@ class CespitiController extends AppController {
             }
         }
         */
-
-        if (!empty($this->request->query['attivita']))
-        {
+        if(!empty($this->request->query['attivita'])){
             $attivita = $this->request->query['attivita'];            
             //Se la stringa è vuota non devo mettere la condizione
-            if (!empty($attivita))
-            {
-                if (is_numeric($attivita)) 
-                {
+            if(!empty($attivita)){
+                if(is_numeric($attivita)){
                     $attivita = array($attivita);                
                 }
                 if (is_array($attivita)) $conditions['Cespitecalendario.attivita_id IN'] = $attivita;                
             }
         }
-        if (!empty($this->request->query['faseattivita_id']))
-        {
+        if(!empty($this->request->query['faseattivita_id'])){
             $conditions['Cespitecalendario.faseattivita_id IN'] = $this->request->query['faseattivita_id'];
         }
-
         if(!empty($this->request->query['from'])){
             $conditions['Cespitecalendario.start >='] = $this->request->query['from'];
         }
@@ -755,7 +789,6 @@ class CespitiController extends AppController {
         }else{
             $conditions['Cespitecalendario.start <='] = date('Y-m-d');
         }
-        
         $this->set('attivita_selected', $attivita);
         //$this->set('persona_selected', $persone);
 

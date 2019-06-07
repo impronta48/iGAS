@@ -62,5 +62,33 @@ class Cespite extends AppModel {
             }
         }
     }
+
+    public function getSimple($id = null){
+        $conditions = array();
+        if(!$id){
+            $cespiti = $this->find('list',  array(
+                'fields'=>Array('Cespite.id','Cespite.DisplayName'),
+                'order'=>'Cespite.DisplayName', 
+                'conditions' => $conditions
+            ));
+            /*
+            Questo blocco è per rendere la lista più parlante e formattata
+            $notset = array('0'=> '-- Non definito --');   	
+            $cespiti =$this->find('all', array('order'=>'Cespite.DisplayName', 'conditions' => $conditions));
+            $cespiti = Hash::combine($cespiti, 
+                                '{n}.Cespite.id', 
+                                array('%.40s','{n}.Cespite.descrizione', '{n}.Cespite.costo_acquisto'),                            
+                                '{n}.Cespite.DisplayName'
+                            );
+            $cespiti = Hash::merge($notset, $cespiti);
+            */
+        } else {
+            $conditions = array('Cespite.id' => $id);
+            $cespiti = $this->find('first', array(
+                'conditions' => $conditions
+            ));
+        }
+        return $cespiti;
+	}
     
 }
