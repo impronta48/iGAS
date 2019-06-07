@@ -79,8 +79,7 @@
     <a class='dropdown' href='#' data-original-title='Utilità'>
   		<i class='fa fa-gears'></i><span class='hidden-minibar'> Tabelle di Servizio </span>
     </a>
-<ul>    
-    
+<ul>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Alias', '/aliases', array('data-original-title'=>'Alias','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Banche', '/provenienzesoldi', array('data-original-title'=>'Banche','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Codici Iva', '/legendaCodiciIva', array('data-original-title'=>'Codici Iva','escape' => false)) ?></li>

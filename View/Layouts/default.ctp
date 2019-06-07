@@ -68,16 +68,14 @@
                          if (Auth::id()) {
                           $u = $this->Session->read('Auth.User.username');
                           $uid = $this->Session->read('Auth.User.id');                         
-                          $role = $this->Session->read('Auth.User.email');
+                          $role = $this->Session->read('Auth.User.group_id');
                           //Auth::hasRole(Configure::read('Role.admin'))
-
-                         if (!file_exists(IMAGES. 'profiles/'. env('PHP_AUTH_USER') . '.png'))
-                         {
+                          //debug($this->Session->read('Auth.User'));
+                         if (!file_exists(IMAGES. 'profiles/'. $uid . '.png')){
                              $path = 'profiles/default.png';                                  
                          }                                       
                          
-                         if (empty($u))
-                         {
+                         if (empty($u)){
                              $u = 'Utente Anonimo';
                          }
                        }
@@ -104,7 +102,18 @@
                 <button class="btn  btn-nav-toggle text-primary"><i class="fa fa-angle-double-left toggle-left"></i> </button>
               </li>
 
-              <?php echo $this->element('leftmenu',array(),array("cache" => "long_view")); ?>
+              <?php 
+                  if($role == 1){
+                    // If user role is admin
+                    echo $this->element('leftmenu',array(),array("cache" => "long_view")); 
+                  } else if ($role == 2){
+                    // If user role is pm
+                    echo $this->element('leftmenupm',array(),array("cache" => "long_view")); 
+                  } else if ($role == 3){
+                    // If user role is impiegato
+                    echo $this->element('leftmenuimpiegato',array(),array("cache" => "long_view")); 
+                  }
+              ?>
             </ul>
           </div>
         </div> <!-- /.left-sidebar -->

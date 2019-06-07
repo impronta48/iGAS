@@ -2,104 +2,103 @@
 * = admin
 
 [Aree]
-* = admin, pm
+* = admin
 
 [Attivita]
-* = admin, pm
+* = admin
 index, getlist = impiegato
 
 [Cespiti]
-* = admin, pm
+* = admin
 
 [Ddt]
-* = admin, pm
+* = admin
 
 [Faseattivita]
-* = admin, pm
+* = admin
 getlist = impiegato
 
 [Fattureemesse]
-* = admin, pm
+* = admin
 
 [Fatturericevute]
-* = admin, pm
+* = admin
 
 [Impiegati]
-* = admin, pm
+* = admin
 
 [LegendaCatSpesa]
-* = admin, pm
+* = admin
 
 [LegendaCausaleTrasporto]
-* = admin, pm
+* = admin
 
 [LegendaCodiciIva]
-* = admin, pm
+* = admin
 
 [LegendaMezzi]
-* = admin, pm, impiegato
+* = admin, impiegato
 
 [LegendaPorto]
-* = admin, pm
+* = admin
 
 [LegendaStatoAttivita]
-* = admin, pm
+* = admin
 
 [LegendaTipiImpiegati]
-* = admin, pm
+* = admin
 
 [LegendaTipoDocumento]
-* = admin, pm
+* = admin
 
 [LegendaTipoAttivitaCalendario]
-* = admin, pm 
+* = admin
 
 [LegendaUnitaMisura]
-* = admin, pm
+* = admin
 
 [Notaspese]
-* = admin, pm, impiegato
+* = admin, impiegato
 
 [Oauth2]
 * = admin
 
 [Ordini]
-* = admin, pm
+* = admin
 
 [Ore]
-* = admin, pm
+* = admin
 scegli_persona, scegli_mese, add, edit, delete = impiegato
 
 [Pages]
 * = *
 
 [Persone]
-* = admin, pm
+* = admin
 index, edit, xls = impiegato
 
 [Primanota]
-* = admin, pm
+* = admin
 
 [Progetti]
-* = admin, pm
+* = admin
 
 [Provenienzesoldi]
-* = admin, pm
+* = admin
 
 [Righeddt]
-* = admin, pm
+* = admin
 
 [Righefatture]
-* = admin, pm
+* = admin
 
 [Rigeordini]
-* = admin, pm
+* = admin
 
 [Users]
 * = admin
-index = pm
 
 [Vettori]
-* = admin, pm
+* = admin
 
 

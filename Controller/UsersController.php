@@ -38,7 +38,8 @@ class UsersController extends AppController
 					// write the cookie
 					$this->Cookie->write('remember_me_cookie', $this->request->data['User'], true, '2 weeks');
 				}
-
+				//debug(Configure::read('Role.impiegato'));
+				//die();
 				if (Auth::hasRole(Configure::read('Role.impiegato')))
 				{	        			
 							//return $this->redirect(array('controller'=>'pages', 'action'=>'home'));
@@ -66,46 +67,51 @@ class UsersController extends AppController
 	
 	function add() {
 		if (!empty($this->request->data)) {
+			debug($this->request->data);
 			$this->User->create();
+			$this->request->data['User']['persona_id'] = ($this->request->data['User']['persona_id'] == 0) ? null : $this->request->data['User']['persona_id'];
 			if ($this->User->save($this->request->data)) {                                              
 				$this->Session->setFlash('User salvato con successo.');
 				$this->redirect(array('action' => 'index'));
 			}
-		}
-		else
-		{
+		} else {
 			$this->set('groups', array_flip(Configure::read('Role')));
-			$this->set('persone', $this->User->Persona->find('list'));
+			$this->set('persone', [null]+$this->User->Persona->find('list'));
 		}
 	}
 		
 
     //Modifica uno user (in particolare il gruppo e la banca di appartenenza)
-    function edit($uid)
-    {
-      if (!empty($this->request->data))
-      {	               
-          if ($this->User->save($this->request->data)) {                                
-              $this->Session->setFlash('Utente modificato con successo.','index');
-              return;
-          }
-      }
-
-      if (empty($uid))
-      {
-              $this->Session->setFlash('E\' necessario selezionare un utente a cui cambiare le impostazioni','index');
-      }
-
-	      $u = $this->User->findById($uid);
-	      $this->set('groups', array_flip(Configure::read('Role')));
-	      $this->set('persone', $this->User->Persona->find('list'));
-	      $this->request->data = $u;
-	  }
+    function edit($uid = null){
+		if(!empty($this->request->data)){
+			$this->request->data['User']['persona_id'] = ($this->request->data['User']['persona_id'] == 0) ? null : $this->request->data['User']['persona_id'];               
+			if($this->User->save($this->request->data)) {                                
+				$this->Session->setFlash('Utente modificato con successo.'/*,'index'*/);
+				//return;
+			} else {
+				$this->Session->setFlash('Problemi nella modifica dell\'utente');
+			}
+		}
+		if(empty($uid)){
+			$this->Session->setFlash('E\' necessario selezionare un utente a cui cambiare le impostazioni'/*,'index'*/);
+			$this->redirect(array('action' => 'index'));
+		} else {
+			$u = $this->User->findById($uid);
+			if (!empty($u) and is_numeric($uid)) {
+				$this->set('groups', array_flip(Configure::read('Role')));
+				$this->set('persone', ['Nessun contatto associato']+$this->User->Persona->find('list'));
+				$this->request->data = $u;
+			} else {
+				$this->Session->setFlash('ID utente non valido');
+				$this->redirect(array('action' => 'index'));
+			}
+		}
+	}
 
     function delete($id=null)
     {
         $this->User->delete($id);
-        $this->Session->setFlash('L\'utente &egrave; stato cancellato. Esiste ancora come socio, ma non pu&ograve; pi&ugrave; accedere all\'applicazione');
+        $this->Session->setFlash(html_entity_decode("L'utente &egrave; stato cancellato. Esiste ancora come socio, ma non pu&ograve; pi&ugrave; accedere all'applicazione"));
         $this->redirect(array('action'=>'index'));
     }
 
