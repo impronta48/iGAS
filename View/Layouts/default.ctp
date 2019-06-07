@@ -60,25 +60,25 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav user-menu navbar-right top-navbar-usermenu" id="user-menu">
 
-                   <?php //Prende l'immagine dell'utente o una di default se non c'?
+                   <?php //Prende l'immagine dell'utente o una di default se non c'è
 
-                         $path = 'profiles/'. env('PHP_AUTH_USER') . '.png';
-                         //$u = env('PHP_AUTH_USER') ;
+                        //$u = env('PHP_AUTH_USER') ;
              
-                         if (Auth::id()) {
+                        if(Auth::id()){
                           $u = $this->Session->read('Auth.User.username');
                           $uid = $this->Session->read('Auth.User.id');                         
                           $role = $this->Session->read('Auth.User.group_id');
+                          $path = 'profiles/'. $uid . '.png';
                           //Auth::hasRole(Configure::read('Role.admin'))
                           //debug($this->Session->read('Auth.User'));
-                         if (!file_exists(IMAGES. 'profiles/'. $uid . '.png')){
-                             $path = 'profiles/default.png';                                  
-                         }                                       
-                         
-                         if (empty($u)){
-                             $u = 'Utente Anonimo';
-                         }
-                       }
+                          //debug(IMAGES. 'profiles/'. $uid . '.png');
+                          if (!file_exists(IMAGES. 'profiles/'. $uid . '.png')){
+                              $path = 'profiles/default.png';             
+                          }
+                          if(empty($u)){
+                              $u = 'Utente Anonimo';
+                          }
+                        }
                    ?>
                   <li><a href="#" class="user dropdown-toggle" data-toggle="dropdown"><span class="username"><?php echo $this->Html->image($path , array('class'=>'user-avatar','alt'=>'')); ?> <?php echo  $u; ?> </span></a>                  
                     <ul class="dropdown-menu">                      
