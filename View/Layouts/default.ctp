@@ -45,15 +45,20 @@
         <!-- .navbar -->
           <nav class="navbar " role="navigation">
             
-			
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
 				<button class="btn-nav-toggle-responsive">
 					<i class="fa fa-list text-white fa-2x"></i>
 				</button>
-                <a class="navbar-brand" title="iGas - Gestione Aziendale Semplice" href="<?php echo $this->Html->url('/pages/home'); ?>">
-                  <span class="logo"><?php echo Configure::read('iGas.NomeAzienda') ?></span>
-                </a>
+              <?php if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)): ?>
+              <a class="navbar-brand" title="iGas - Gestione Aziendale Semplice" href="<?php echo $this->Html->url('/pages/home'); ?>">
+                <span class="logo"><?php echo Configure::read('iGas.NomeAzienda') ?></span>
+              </a>
+              <?php else: ?>
+              <span class="navbar-brand" title="iGas - Gestione Aziendale Semplice">
+                <span class="logo"><?php echo Configure::read('iGas.NomeAzienda') ?></span>
+              </span>
+              <?php endif; ?>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -80,11 +85,13 @@
                             $u = 'Utente Anonimo';
                           }
                           if($this->Session->read('Auth.User.Persona.id')){
-                            $u = $this->Session->read('Auth.User.Persona.DisplayName');
+                            $uAssoc = '<small>('.$this->Session->read('Auth.User.Persona.DisplayName').')</small>';
+                          } else {
+                            $uAssoc = '';
                           }
                         }
                    ?>
-                  <li><a href="#" class="user dropdown-toggle" data-toggle="dropdown"><span class="username"><?php echo $this->Html->image($path , array('class'=>'user-avatar','alt'=>'')); ?> Ciao <b><?php echo ucfirst($u); ?></b></span></a>                  
+                  <li><a href="#" class="user dropdown-toggle" data-toggle="dropdown"><span class="username"><?php echo $this->Html->image($path , array('class'=>'user-avatar','alt'=>'')); ?> Ciao <b><?php echo ucfirst($u); ?></b> <?php echo $uAssoc; ?></span></a>                  
                     <ul class="dropdown-menu">                      
                       <li><a href="<?php echo $this->Html->url('/users/cambiapwd/'. $uid); ?>"> Cambia Password</a></li>                    
                       <li><a href="<?php echo $this->Html->url('/users/logout'); ?>" class="text-danger"><i class="fa fa-lock"></i> Logout</a></li>                                          

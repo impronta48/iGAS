@@ -116,26 +116,57 @@ class UsersController extends AppController
     }
 
 
-	function cambiapwd($id=null)
-	{	
-		if (!empty($this->request->data)) {			
-			if ($this->User->save($this->request->data)) {
-				$this->Session->setFlash('Password salvata con successo.','index');
-			}
-		}
-		else
-		{
+	function cambiapwd($id = null) {	
+		if($id and is_numeric($id)){
 			$u = $this->User->findById($id);
+			$this->set('givenUserId', $id);
+			if($u){
+				$this->set('givenUserName', $u['User']['username']);
+			}
+		} else {
+			$this->Session->setFlash('Id non valido');
+			$this->redirect(array('action'=>'cambiapwd', $this->Session->read('Auth.User.id'))); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
 		}
-		
-		if (empty($u) || empty($id))
-	{
+		// Solo gli utenti nel gruppo admin sono in grado di modificare le password altrui.
+		// Gli utenti che non sono admin possono modificare solo la loro password.
+		if(($this->Session->read('Auth.User.id') == $id) or ($this->Session->read('Auth.User.group_id') == 1)){
+			if (!empty($this->request->data)) {	
+				if(($this->Session->read('Auth.User.group_id') == 1) and ($this->Session->read('Auth.User.id') != $id)){
+					// Se sei nel gruppo admin e se stai cercando di modificare password altrui non hai bisogno
+					// di sapere la vecchia password. Anche nel caso in cui un admin voglia modificare le pass di altri admin
+					$oldPassVerify = true;
+				} else {
+					// In tutto gli altri casi bisogna sapere la vecchia password.
+					// Anche nel caso in cui un admin voglia cambiare la propria password.
+					/*
+					debug($u['User']['password'] == $this->Auth->password($this->request->data['Users']['vecchia_password']));
+					debug($u['User']['password']);
+					debug($this->Auth->password($this->request->data['Users']['vecchia_password']));
+					die();
+					*/
+					$oldPassVerify = ($u['User']['password'] == $this->Auth->password($this->request->data['Users']['vecchia_password']));
+				}	
+				if(($oldPassVerify) and (!empty($this->request->data['Users']['nuova_password'])) and ($this->request->data['Users']['nuova_password'] == $this->request->data['Users']['conferma_password'])){
+					$this->request->data['User']['password'] = $this->request->data['Users']['nuova_password'];
+				} else {
+					$this->Session->setFlash('Le password non combaciano');
+					$this->redirect(array('action'=>'cambiapwd', $id)); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
+				}
+				if ($this->User->save($this->request->data)) {
+					$this->Session->setFlash('Password salvata con successo.');
+				}
+			}
+			if (empty($u)){
 				$this->Session->setFlash('E\' necessario selezionare un utente a cui cambiare la password');
-		$this->redirect(array('action' => 'index'));
-	}
-	
-			$this->request->data = $u;
+				$this->redirect(array('action'=>'cambiapwd', $this->Session->read('Auth.User.id'))); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
+			} else {
+				$this->request->data = $u;
+			}
+		} else {
+			$this->Session->setFlash('Non sei autorizzato a svolgere questa azione');
+			$this->redirect(array('action'=>'cambiapwd', $this->Session->read('Auth.User.id'))); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
 		}
+	}
 
 		public function password_dimenticata() {
 		if( !empty($this->request->data) ) {

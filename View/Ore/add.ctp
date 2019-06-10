@@ -16,10 +16,15 @@
     )); ?>
 
     <?php echo  $this->Form->hidden('eRisorsa',array('type'=>'text','default' => $eRisorsa)); ?>
-    <?php echo  $this->Form->input('persona_descr',
-                                        array('placeholder'=>'Inizia a scrivere per cercare la persona',
-                                        'label'=> 'Persona',
-                                        'default' => $nomePersona)); 
+    <?php
+    if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)){
+        echo $this->Form->input('persona_descr',
+                                array('placeholder'=>'Inizia a scrivere per cercare la persona',
+                                'label'=> 'Persona',
+                                'default' => $nomePersona));
+    } else {
+        echo $this->Form->input('persona_dummy', array('label'=>'Persona', 'value'=>$this->Session->read('Auth.User.Persona.DisplayName'), 'class' => 'form-control', 'disabled' => true));
+    }
     ?>
 
     <?php
@@ -32,14 +37,24 @@
 
     <div class="col  col-md-offset-4">
         <label>
-            <input type="checkbox" id="filtroAttivita" value="recenti" > Mostra tutte le attività
+            <input type="checkbox" id="filtroAttivita" value="recenti"> Mostra tutte le attività
         </label>
     </div>    
-    
+    <?php
+    if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)){
+        $aggiungiAttivita = $this->Html->link('<i class="fa fa-plus-square"></i> Aggiungi Attività', 
+                                                array('controller'=>'attivita','action'=>'edit'), 
+                                                array('class'=>'btn btn-xs btn-primary', 'escape'=>false)
+                                            );
+    } else {
+        $aggiungiAttivita = false;
+    }
+    ?>   
     <?php echo $this->Form->input('eAttivita', array('options' => $eAttivita, 
                                         'label' => array('text'=>'Attivita'), 
                                         'class'=>'attivita chosen-select ' . $baseformclass, //chosen-select
-                                    ) 
+                                        'after' => $aggiungiAttivita
+                                        ) 
                                   ); 
     ?>        
     
@@ -51,7 +66,9 @@
     <?php echo $this->Form->input('LuogoTrasferta'); ?>
     <div class="row">        
             <input type="submit" class="col-md-offset-2 btn btn-primary" value="Salva e Aggiungi altre Ore" name="submit-ore" />
-            <input type="submit" class="btn btn-primary" value="Salva e Aggiungi Nota Spese" name="submit-ns" />        
+            <?php if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)): ?>
+            <input type="submit" class="btn btn-primary" value="Salva e Aggiungi Nota Spese" name="submit-ns" />
+            <?php endif; ?>
     </div>
     <?php echo $this->Form->end();?>
 </div>
@@ -175,6 +192,6 @@
             $("#filtroAttivita").parent().hide();
         });
     } )
-<?php $this->Html->scriptEnd();
+<?php $this->Html->scriptEnd(); ?>
 
 

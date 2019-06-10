@@ -17,31 +17,41 @@
     
     <?php echo $this->Form->input('id'); ?>
     <?php echo $this->Form->hidden('old_numOre', array('default' => $this->request->data['Ora']['numOre']));?>
-    <?php echo $this->Form->input('eRisorsa', array('default' => $eRisorsa, 'options' => $eRisorse, 'label' => 'Persona', 'class'=>'chosen-select col col-md-8')); ?>
-    
+    <?php echo $this->Form->input('persona_dummy', array('label'=>'Persona', 'value'=>$this->data['Persona']['DisplayName'], 'class' => 'form-control', 'disabled' => true)); ?>
+    <?php echo $this->Form->hidden('eRisorsa', array('label' => 'Persona', 'type'=>'text', 'default' => $eRisorsa, 'value' => $eRisorsa, 'class' => 'form-control')); ?>
     <?php
-    $def = array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>'');
+    $def = array('type' => 'date', 'dateFormat' => 'DMY');
     if (strlen("$anno-$mese-$giorno")) {
         $def['selected'] = "$anno-$mese-$giorno";
     }    
     echo $this->Form->input('data', $def);
     ?>
         
-        
-    <?php echo $this->Form->input('eAttivita', array('options' => $eAttivita, 
-                                                'label' => array('text'=>'Attivita'), 
-                                                'class'=>'col col-md-8 attivita chosen-select ' . $baseformclass, //chosen-select
-                                                'after' => $this->Html->link('<i class="fa fa-plus-square"></i> Aggiungi Attività', 
-                                                            array('controller'=>'attivita','action'=>'edit'), 
-                                                            array('class'=>'btn btn-xs btn-primary', 'escape'=>false)
-                                                        ),
-                                               ) 
-                                  ); ?>        
-
-    <?php echo $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'options'=>$faseattivita, 'class'=>'fase ' . $baseformclass, 'value'=>$this->data['Ora']['faseattivita_id'])); ?> 
-    <?php echo $this->Form->input('numOre', array('label' => 'Ore')); ?>
-    <?php echo $this->Form->input('dettagliAttivita'); ?>
-    <?php echo $this->Form->input('LuogoTrasferta'); ?>
-    <?php echo $this->Form->submit(__('Submit'), array('class'=>'col-md-offset-2')); ?>
+    <?php
+    if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)){
+        $aggiungiAttivita = $this->Html->link('<i class="fa fa-plus-square"></i> Aggiungi Attività', 
+                                                array('controller'=>'attivita','action'=>'edit'), 
+                                                array('class'=>'btn btn-xs btn-primary', 'escape'=>false)
+                                            );
+    } else {
+        $aggiungiAttivita = false;
+    }
+    ?>    
+    <?php 
+    echo $this->Form->input('attivita_dummy', array('label'=>'Attività', 'value'=>$this->data['Attivita']['name'], 'class' => 'form-control', 'disabled' => true));
+    ?> 
+    <?php echo $this->Form->hidden('eAttivita', array('value'=>$this->data['Ora']['eAttivita'])); ?> 
+    <?php echo $this->Form->input('faseattivita_dummy', array('label'=>'Fase Attività', 'value'=>$this->data['Faseattivita']['Descrizione'], 'class' => 'form-control', 'disabled' => true)); ?> 
+    <?php echo $this->Form->hidden('faseattivita_id', array('label'=>'Fase Attività', 'value'=>$this->data['Ora']['faseattivita_id'])); ?> 
+    <?php echo $this->Form->input('numOre', array('label' => 'Ore', 'class' => 'form-control')); ?>
+    <?php echo $this->Form->input('dettagliAttivita', array('class' => 'form-control')); ?>
+    <?php echo $this->Form->input('LuogoTrasferta', array('class' => 'form-control')); ?>
+    <?php echo $this->Form->submit(__('Modifica'), array('class'=>'col-md-offset-2 btn btn-primary')); ?>
     <?php echo $this->Form->end();?>
 </div>
+
+<?php $this->Html->scriptStart(array('inline' => false)); ?>
+$(function() {
+    $(".chosen-select").prop('disabled', true).trigger("chosen:updated");
+});
+<?php $this->Html->scriptEnd(); ?>

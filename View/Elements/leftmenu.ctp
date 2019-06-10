@@ -19,6 +19,7 @@
     <ul>
         <li><?php echo $this->Html->link("<i class='fa fa-user'></i><span class='hidden-minibar'> Contatti</span>", '/persone',array('escape' => false, 'data-original-title'=>'Contatti')) ?></li>
         <li><?php echo $this->Html->link("<i class='fa fa-user'></i><span class='hidden-minibar'> Impiegati</span>", '/impiegati',array('escape' => false, 'data-original-title'=>'Impiegati')) ?></li>        
+        <li><?php echo $this->Html->link("<i class='fa fa-user'></i><span class='hidden-minibar'> Utenti</span>", '/users',array('escape' => false, 'data-original-title'=>'Utenti')) ?></li>   
     </ul>
 </li>
 

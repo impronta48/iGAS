@@ -12,7 +12,7 @@
                                 )); ?>
 <FIELDSET>
 <?php echo $this->Form->input('User.username'); ?>
-<?php echo $this->Form->input('User.password', array('default'=>null)); ?>
+<?php //echo $this->Form->input('User.password', array('default'=>null)); ?>
 <?php echo $this->Form->input('User.group_id'); ?>
 <?php echo $this->Form->input('User.persona_id', array('class'=>'chosen-select form-control', 'label'=>'Associa ad un contatto', 'options'=>$persone)); ?>
 <?php echo $this->Form->hidden('User.id'); ?>
@@ -21,13 +21,19 @@
 <?php echo $this->Form->submit(__('Salva Modifiche'), array('class'=>'btn btn-primary', 'div' => false)); ?>
 
 <?php echo $this->Form->reset(__('Reset'), array('class'=>'btn btn-warning', 'div' => false)); ?>
+<br>
+<br>
+<?php echo $this->html->link(__('Modifica password'),
+    array('controller' => 'users', 'action' => 'cambiapwd', $this->request->data['User']['id']),
+    array('class' => 'btn btn-primary', 'target' => '_blank', 'title' => __('Modifica password'))); 
+?>
 </div>
 <?php echo $this->Form->end(); ?>
 <?php $this->Html->scriptStart(array('inline' => false)); ?>
 $(function() {
 
 	$("#UsersReset").on('click', function() { 
-        $(".chosen-select").val(<?php echo $this->request->data['User']['persona_id']; ?>).trigger("chosen:updated");
+        $(".chosen-select").val(<?php echo ($this->request->data['User']['persona_id']) ? $this->request->data['User']['persona_id'] : 0; ?>).trigger("chosen:updated");
     });
 
 });
