@@ -24,7 +24,7 @@ class Impiegato extends AppModel {
     public function oreContratto($id,$mese,$anno)
     {
         $this->recursive = -1;
-        $impiegato = $this->findById($id);
+        $impiegato = $this->findByPersonaId($id);
         //debug($impiegato); die;
         $sommaOre=0;
         $number = cal_days_in_month(CAL_GREGORIAN, $mese, $anno); //numero di giorni nel mese corrente

@@ -34,7 +34,7 @@ Plugin/acl_extras
 Plugin/Tools
 Plugin/ClearCache
 Plugin/PhpExcel
-Plugin\Tags
+Plugin/Tags
 
 # IDE and editor specific files #
 #################################

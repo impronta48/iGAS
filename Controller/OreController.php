@@ -1103,7 +1103,7 @@ class OreController extends AppController {
             return $this->redirect(array('action' => 'scegli_mese',$this->Session->read('Auth.User.persona_id') ));   
         }
 
-        $this->set('persona', $this->Ora->Persona->findById($personaId));
+        $this->set('persona', $this->Ora->Persona->findById($persona));
         $this->set('title_for_layout', 'Scegli Mese | Foglio Ore ' . $persona );
     }
     
