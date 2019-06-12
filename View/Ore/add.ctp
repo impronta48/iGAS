@@ -1,6 +1,7 @@
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
 <?php echo $this->Html->script('faseattivita',array('inline' => false)); ?>
 <?php $baseformclass = ' form-control input-xs '; ?> 
+ORE A CONTRATTO: <?= $oreContratto ?>
 
 <div class="ore form">
     <?php echo $this->Form->create('Ora', array(
@@ -132,7 +133,7 @@
                                );
                ?>
             </tbody>
-            <tfoot>
+            <tbody>
                 <?php
                 echo $this->Html->tableCells(
                         array('Totale Generale',
@@ -142,6 +143,19 @@
                     '',
                     '',
                         ), array('class' => 'bg-success'), array('class' => 'bg-success'));
+                ?>
+            </tbody>
+            <tfoot>
+                <?php
+                $differenza=$tot-$oreContratto;
+                echo $this->Html->tableCells(
+                        array('Ore Contratto',
+                    $oreContratto,
+                    'Differenza: '. $differenza,
+                    '',
+                    '',
+                    '',
+                        ), array('class' => 'bg-primary'), array('class' => 'bg-primary'));
                 ?>
             </tfoot>
         </table>

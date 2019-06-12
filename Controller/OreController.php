@@ -969,7 +969,9 @@ class OreController extends AppController {
         }
         
         //Se passo la persona prendo solo le attività recenti        
-        $this->set('eAttivita', $this->Ora->Attivita->getlist($persona));
+        //$this->set('eAttivita', $this->Ora->Attivita->getlist($persona));
+        $this->set('eAttivita', $this->Ora->Attivita->getlist());
+
         $persona_ore = $this->Ora->Persona->findById($persona);
         $nomePersona ='';
         if (!empty($persona_ore))
@@ -983,6 +985,12 @@ class OreController extends AppController {
         $this->set('mese',$mese);
         $this->set('giorno',$giorno);
         
+        //TODO: Davide fai la chiamata a $this->Impiegato->oreContratto($persona, $mese, $anno);
+        $this->loadModel('Impiegato');
+        $oreContratto = $this->Impiegato->oreContratto($persona, $mese, $anno);
+        $this->set('oreContratto',$oreContratto);
+        
+
         //Preparo il filtro per il riepilogo delle ore
         $conditions = array();    
         //Applico il filtro alle condizioni del report ore mostrato in basso
