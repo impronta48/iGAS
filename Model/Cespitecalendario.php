@@ -54,6 +54,36 @@ class Cespitecalendario extends AppModel {
             'finderQuery' => '',
             'counterQuery' => ''
         ),
+        'Attivita' => array(
+			'className' => 'Attivita',
+			'foreignKey' => 'attivita_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'Faseattivita' => array(
+			'className' => 'Faseattivita',
+			'foreignKey' => 'faseattivita_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
     );  
+
+    public function beforeSave($options = Array()) {
+        //debug($this->data);die();//DEBUG
+    }
     
 }

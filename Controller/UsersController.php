@@ -38,7 +38,8 @@ class UsersController extends AppController
 					// write the cookie
 					$this->Cookie->write('remember_me_cookie', $this->request->data['User'], true, '2 weeks');
 				}
-
+				//debug(Configure::read('Role.impiegato'));
+				//die();
 				if (Auth::hasRole(Configure::read('Role.impiegato')))
 				{	        			
 							//return $this->redirect(array('controller'=>'pages', 'action'=>'home'));
@@ -66,70 +67,106 @@ class UsersController extends AppController
 	
 	function add() {
 		if (!empty($this->request->data)) {
+			debug($this->request->data);
 			$this->User->create();
+			$this->request->data['User']['persona_id'] = ($this->request->data['User']['persona_id'] == 0) ? null : $this->request->data['User']['persona_id'];
 			if ($this->User->save($this->request->data)) {                                              
 				$this->Session->setFlash('User salvato con successo.');
 				$this->redirect(array('action' => 'index'));
 			}
-		}
-		else
-		{
+		} else {
 			$this->set('groups', array_flip(Configure::read('Role')));
-			$this->set('persone', $this->User->Persona->find('list'));
+			$this->set('persone', [null]+$this->User->Persona->find('list'));
 		}
 	}
 		
 
     //Modifica uno user (in particolare il gruppo e la banca di appartenenza)
-    function edit($uid)
-    {
-      if (!empty($this->request->data))
-      {	               
-          if ($this->User->save($this->request->data)) {                                
-              $this->Session->setFlash('Utente modificato con successo.','index');
-              return;
-          }
-      }
-
-      if (empty($uid))
-      {
-              $this->Session->setFlash('E\' necessario selezionare un utente a cui cambiare le impostazioni','index');
-      }
-
-	      $u = $this->User->findById($uid);
-	      $this->set('groups', array_flip(Configure::read('Role')));
-	      $this->set('persone', $this->User->Persona->find('list'));
-	      $this->request->data = $u;
-	  }
+    function edit($uid = null){
+		if(!empty($this->request->data)){
+			$this->request->data['User']['persona_id'] = ($this->request->data['User']['persona_id'] == 0) ? null : $this->request->data['User']['persona_id'];               
+			if($this->User->save($this->request->data)) {                                
+				$this->Session->setFlash('Utente modificato con successo.'/*,'index'*/);
+				//return;
+			} else {
+				$this->Session->setFlash('Problemi nella modifica dell\'utente');
+			}
+		}
+		if(empty($uid)){
+			$this->Session->setFlash('E\' necessario selezionare un utente a cui cambiare le impostazioni'/*,'index'*/);
+			$this->redirect(array('action' => 'index'));
+		} else {
+			$u = $this->User->findById($uid);
+			if (!empty($u) and is_numeric($uid)) {
+				$this->set('groups', array_flip(Configure::read('Role')));
+				$this->set('persone', ['Nessun contatto associato']+$this->User->Persona->find('list'));
+				$this->request->data = $u;
+			} else {
+				$this->Session->setFlash('ID utente non valido');
+				$this->redirect(array('action' => 'index'));
+			}
+		}
+	}
 
     function delete($id=null)
     {
         $this->User->delete($id);
-        $this->Session->setFlash('L\'utente &egrave; stato cancellato. Esiste ancora come socio, ma non pu&ograve; pi&ugrave; accedere all\'applicazione');
+        $this->Session->setFlash(html_entity_decode("L'utente &egrave; stato cancellato. Esiste ancora come socio, ma non pu&ograve; pi&ugrave; accedere all'applicazione"));
         $this->redirect(array('action'=>'index'));
     }
 
 
-	function cambiapwd($id=null)
-	{	
-		if (!empty($this->request->data)) {			
-			if ($this->User->save($this->request->data)) {
-				$this->Session->setFlash('Password salvata con successo.','index');
-			}
-		}
-		else
-		{
+	function cambiapwd($id = null) {	
+		if($id and is_numeric($id)){
 			$u = $this->User->findById($id);
+			$this->set('givenUserId', $id);
+			if($u){
+				$this->set('givenUserName', $u['User']['username']);
+			}
+		} else {
+			$this->Session->setFlash('Id non valido');
+			$this->redirect(array('action'=>'cambiapwd', $this->Session->read('Auth.User.id'))); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
 		}
-		
-		if (empty($u) || empty($id))
-	{
+		// Solo gli utenti nel gruppo admin sono in grado di modificare le password altrui.
+		// Gli utenti che non sono admin possono modificare solo la loro password.
+		if(($this->Session->read('Auth.User.id') == $id) or ($this->Session->read('Auth.User.group_id') == 1)){
+			if (!empty($this->request->data)) {	
+				if(($this->Session->read('Auth.User.group_id') == 1) and ($this->Session->read('Auth.User.id') != $id)){
+					// Se sei nel gruppo admin e se stai cercando di modificare password altrui non hai bisogno
+					// di sapere la vecchia password. Anche nel caso in cui un admin voglia modificare le pass di altri admin
+					$oldPassVerify = true;
+				} else {
+					// In tutto gli altri casi bisogna sapere la vecchia password.
+					// Anche nel caso in cui un admin voglia cambiare la propria password.
+					/*
+					debug($u['User']['password'] == $this->Auth->password($this->request->data['Users']['vecchia_password']));
+					debug($u['User']['password']);
+					debug($this->Auth->password($this->request->data['Users']['vecchia_password']));
+					die();
+					*/
+					$oldPassVerify = ($u['User']['password'] == $this->Auth->password($this->request->data['Users']['vecchia_password']));
+				}	
+				if(($oldPassVerify) and (!empty($this->request->data['Users']['nuova_password'])) and ($this->request->data['Users']['nuova_password'] == $this->request->data['Users']['conferma_password'])){
+					$this->request->data['User']['password'] = $this->request->data['Users']['nuova_password'];
+				} else {
+					$this->Session->setFlash('Le password non combaciano');
+					$this->redirect(array('action'=>'cambiapwd', $id)); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
+				}
+				if ($this->User->save($this->request->data)) {
+					$this->Session->setFlash('Password salvata con successo.');
+				}
+			}
+			if (empty($u)){
 				$this->Session->setFlash('E\' necessario selezionare un utente a cui cambiare la password');
-		$this->redirect(array('action' => 'index'));
-	}
-	
-			$this->request->data = $u;
+				$this->redirect(array('action'=>'cambiapwd', $this->Session->read('Auth.User.id'))); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
+			} else {
+				$this->request->data = $u;
+			}
+		} else {
+			$this->Session->setFlash('Non sei autorizzato a svolgere questa azione');
+			$this->redirect(array('action'=>'cambiapwd', $this->Session->read('Auth.User.id'))); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
 		}
+	}
 
 		public function password_dimenticata() {
 		if( !empty($this->request->data) ) {
