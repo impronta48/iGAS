@@ -45,44 +45,53 @@
         <!-- .navbar -->
           <nav class="navbar " role="navigation">
             
-			
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
 				<button class="btn-nav-toggle-responsive">
 					<i class="fa fa-list text-white fa-2x"></i>
 				</button>
-                <a class="navbar-brand" title="iGas - Gestione Aziendale Semplice" href="<?php echo $this->Html->url('/pages/home'); ?>">
-                  <span class="logo"><?php echo Configure::read('iGas.NomeAzienda') ?></span>
-                </a>
+              <?php if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)): ?>
+              <a class="navbar-brand" title="iGas - Gestione Aziendale Semplice" href="<?php echo $this->Html->url('/pages/home'); ?>">
+                <span class="logo"><?php echo Configure::read('iGas.NomeAzienda') ?></span>
+              </a>
+              <?php else: ?>
+              <span class="navbar-brand" title="iGas - Gestione Aziendale Semplice">
+                <span class="logo"><?php echo Configure::read('iGas.NomeAzienda') ?></span>
+              </span>
+              <?php endif; ?>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav user-menu navbar-right top-navbar-usermenu" id="user-menu">
 
-                   <?php //Prende l'immagine dell'utente o una di default se non c'?
+                   <?php //Prende l'immagine dell'utente o una di default se non c'è
 
-                         $path = 'profiles/'. env('PHP_AUTH_USER') . '.png';
-                         //$u = env('PHP_AUTH_USER') ;
+                        //$u = env('PHP_AUTH_USER') ;
              
-                         if (Auth::id()) {
+                        if(Auth::id()){
                           $u = $this->Session->read('Auth.User.username');
                           $uid = $this->Session->read('Auth.User.id');                         
-                          $role = $this->Session->read('Auth.User.email');
+                          $role = $this->Session->read('Auth.User.group_id');
+                          $path = 'profiles'.DS.$uid.'.png';
                           //Auth::hasRole(Configure::read('Role.admin'))
-
-                         if (!file_exists(IMAGES. 'profiles/'. env('PHP_AUTH_USER') . '.png'))
-                         {
-                             $path = 'profiles/default.png';                                  
-                         }                                       
-                         
-                         if (empty($u))
-                         {
-                             $u = 'Utente Anonimo';
-                         }
-                       }
+                          //debug($this->Session->read('Auth.User.Persona.id'));
+                          //debug($this->Session->read('Auth.User'));
+                          //debug(IMAGES. 'profiles/'. $uid . '.png');
+                          if (!file_exists(IMAGES.'profiles'.DS.$uid.'.png')){
+                            $path = 'profiles'.DS.'default.png';             
+                          }
+                          if(empty($u)){
+                            $u = 'Utente Anonimo';
+                          }
+                          if($this->Session->read('Auth.User.Persona.id')){
+                            $uAssoc = '<small>('.$this->Session->read('Auth.User.Persona.DisplayName').')</small>';
+                          } else {
+                            $uAssoc = '';
+                          }
+                        }
                    ?>
-                  <li><a href="#" class="user dropdown-toggle" data-toggle="dropdown"><span class="username"><?php echo $this->Html->image($path , array('class'=>'user-avatar','alt'=>'')); ?> <?php echo  $u; ?> </span></a>                  
+                  <li><a href="#" class="user dropdown-toggle" data-toggle="dropdown"><span class="username"><?php echo $this->Html->image($path , array('class'=>'user-avatar','alt'=>'')); ?> Ciao <b><?php echo ucfirst($u); ?></b> <?php echo $uAssoc; ?></span></a>                  
                     <ul class="dropdown-menu">                      
                       <li><a href="<?php echo $this->Html->url('/users/cambiapwd/'. $uid); ?>"> Cambia Password</a></li>                    
                       <li><a href="<?php echo $this->Html->url('/users/logout'); ?>" class="text-danger"><i class="fa fa-lock"></i> Logout</a></li>                                          
@@ -104,7 +113,18 @@
                 <button class="btn  btn-nav-toggle text-primary"><i class="fa fa-angle-double-left toggle-left"></i> </button>
               </li>
 
-              <?php echo $this->element('leftmenu',array(),array("cache" => "long_view")); ?>
+              <?php 
+                  if($role == 1){
+                    // If user role is admin
+                    echo $this->element('leftmenu',array(),array("cache" => "long_view")); 
+                  } else if ($role == 2){
+                    // If user role is pm
+                    echo $this->element('leftmenupm',array(),array("cache" => "long_view")); 
+                  } else if ($role == 3){
+                    // If user role is impiegato
+                    echo $this->element('leftmenuimpiegato',array(),array("cache" => "long_view")); 
+                  }
+              ?>
             </ul>
           </div>
         </div> <!-- /.left-sidebar -->

@@ -61,17 +61,24 @@
 	'class' => 'well form-horizontal'        
     )); ?>
     
-    <?php echo $this->Form->input('attivita', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$attivita_list, 'value'=>$a)); ?>
+    <?php echo $this->Form->input('attivita', array('label' => 'Attività', 'multiple'=>true, 'class'=>'chosen-select'. $baseformclass,'options'=>$attivita_list, 'value'=>$a)); ?>
     <?php echo $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'multiple'=>true, 'options'=>$faseattivita,
                                     'class'=>'fase chosen-select' . $baseformclass, 'value'=>$fa
                                 )); ?> 
 
-    <?php echo $this->Form->input('persone', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p)); ?>
+    <?php
+        if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)){ 
+            echo $this->Form->input('persone', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p));
+        } else {
+            echo $this->Form->hidden('persone', array('value' => $this->Session->read('Auth.User.persona_id')));
+            echo $this->Form->input('personaDisplay_dummy', array('label' => 'Persona', 'value' => $this->Session->read('Auth.User.Persona.DisplayName'), 'Disabled' => true));
+        }
+    ?>
     
     <?php echo $this->Form->input('from', array('id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>($f?$f:null),
                                         'default'=>date('Y-m-d', strtotime('first day of last month')))); ?>
     <?php echo $this->Form->input('to', array('id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$t)); ?>
-    <?php echo $this->Form->submit(__('Filter'), array('class'=>'col-md-offset-2')); ?>
+    <?php echo $this->Form->submit(__('Filter'), array('class'=>'col-md-offset-2 btn btn-primary')); ?>
     <?php echo $this->Form->end(); ?>
 
     <?php

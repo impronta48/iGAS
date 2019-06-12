@@ -66,7 +66,11 @@ class OreController extends AppController {
 	function stats()
 	{
         $this->Ora->recursive = -1;        
-        $conditions =$this->getConditionFromQueryString();
+        $conditions = $this->getConditionFromQueryString();
+        
+        if(($this->Session->read('Auth.User.group_id') != 1) and ($this->Session->read('Auth.User.group_id') != 2)){
+            $conditions['Ora.eRisorsa IN'] = array($this->Session->read('Auth.User.persona_id'));
+        }
         
         //result1: get total number of 'ore' according to search criteria
         $result1 = $this->Ora->find(
