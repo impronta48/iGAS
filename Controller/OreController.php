@@ -1147,8 +1147,8 @@ class OreController extends AppController {
 	{
 		//Query che riporta tutte le ore lavorate aggregate per anno, attività, persona
 		$r= $this->Ora->find('all',array(
-            'group' => array('YEAR(data)',  'eAttivita', 'eRisorsa','faseattivita_id'),
-            'fields' => array('YEAR(data) as Anno', 'MONTH(data) as Mese', 'Attivita.name','Attivita.id','SUM(Ora.numOre) as Ore', 'Attivita.ImportoAcquisito','Persona.DisplayName','Faseattivita.Descrizione'),                        
+            'group' => array('YEAR(Ora.data)',  'eAttivita', 'eRisorsa','faseattivita_id'),
+            'fields' => array('YEAR(Ora.data) as Anno', 'MONTH(Ora.data) as Mese', 'Attivita.name','Attivita.id','SUM(Ora.numOre) as Ore', 'Attivita.ImportoAcquisito','Persona.DisplayName','Faseattivita.Descrizione'),                        
         ));
         
 		foreach($r as &$row){            
