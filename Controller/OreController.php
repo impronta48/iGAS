@@ -1020,8 +1020,8 @@ class OreController extends AppController {
         $this->set('result', $result); 
         $this->set('title_for_layout', "$anno-$mese-$giorno | $nomePersona | Aggiungi Ore | Foglio Ore");        
 		
-		$fa = $this->Ora->Faseattivita->getSimple();
-		$this->set('faseattivita', $fa);        
+        //$fa = $this->Ora->Faseattivita->getSimple(null,0,1);
+		//$this->set('faseattivita', $fa);
     }
 
    //Modifica delle ore manualmente (senza foglio ore)

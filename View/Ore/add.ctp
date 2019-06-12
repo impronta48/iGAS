@@ -60,12 +60,12 @@ ORE A CONTRATTO: <?= $oreContratto ?>
     ?>        
     
     <?php echo  $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 
-                                        'options'=>$faseattivita, 
+                                        'options'=>[], 
                                         'class'=>'fase ' . $baseformclass)); ?> 
     <?php echo $this->Form->input('numOre', array('label' => 'Ore')); ?>
     <?php echo $this->Form->input('dettagliAttivita'); ?>
     <?php echo $this->Form->input('LuogoTrasferta'); ?>
-    <div class="row">        
+    <div class="row">
             <input type="submit" class="col-md-offset-2 btn btn-primary" value="Salva e Aggiungi altre Ore" name="submit-ore" />
             <?php if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)): ?>
             <input type="submit" class="btn btn-primary" value="Salva e Aggiungi Nota Spese" name="submit-ns" />

@@ -62,23 +62,31 @@
                 }
                 
             ?>
+            
+            <?php
+
+             ?>
             <?php echo $this->Form->input('entrata', array('options' => array(0 =>'Uscita', 1 => 'Entrata'), 'label'=> 'Tipo di fase') );?>
             <?php echo $this->Form->input('Descrizione');?>
             <?php echo $this->Form->hidden('cespite_id',array('type'=>'text')); ?>
             <?php echo $this->Form->input('Cespite.DisplayName', array('type'=>'text', 'label' => 'Cespite Associato', 'required' => false));?>
             <?php echo $this->Form->input('qta');?>
             <?php echo $this->Form->input('um');?>
-            <?php echo $this->Form->input('costou', array('label'=> 'Costo Unità'));?>
-            <?php echo $this->Form->input('vendutou', array('label'=> 'Venduto Unità'));?>            
-            <?php echo $this->Form->input('sc1');?>
-            <?php echo $this->Form->input('sc2');?>
-            <?php echo $this->Form->input('sc3');?>
-            <?php echo $this->Form->input('legenda_codici_iva_id', array('options'=>$legendaCodiceiva, 'default'=>Configure::read('iGas.IvaDefault')));?>
             <?php echo $this->Form->hidden('persona_id', array('type'=>'text')); ?>
             <?php echo $this->Form->input('Persona.DisplayName', array('type'=>'text', 'label' => 'Persona')); ?>
+            <?php echo $this->Form->input('costou', array('label'=> 'Costo Unità'));?>
+            <?php echo $this->Form->input('vendutou', array('label'=> 'Venduto Unità'));?>       
+            <!--
+            echo $this->Form->input('sc1');
+            echo $this->Form->input('sc2');
+            echo $this->Form->input('sc3');
+            -->
+            <?php echo $this->Form->input('legenda_codici_iva_id', array('options'=>$legendaCodiceiva, 'default'=>Configure::read('iGas.IvaDefault')));?>
+            
             <?php echo $this->Form->input('legenda_stato_attivita_id');?>
             <?php echo $this->Form->input('note', array('type'=>'text'));?>
-            <?php echo $this->Form->input('uploadFile', array('label'=>'Upload File', 'class'=>false, 'type'=>'file')); ?>
+            <?php echo $this->Form->input('uploadFile', array('label'=>'Upload File', 'class'=>false, 'type'=>'file'));?>
+            
             <div class="col col-md-offset-3">
                 <?php echo  $this->Form->button('Aggiungi ', array('class'=>'btn btn-primary', )); ?>
             </div>
@@ -292,7 +300,26 @@ $(function() {
 		mustMatch : true,
 		select: function( event, ui ) {
 				$("#FaseattivitaPersonaId").val(ui.item.id);
-				$(this).data("uiItem",ui.item.value);
+                $(this).data("uiItem",ui.item.value);
+                //alert(ui.item.value);
+                console.log(ui.item);
+                //DIALOG DI CONFERMA
+                if($("#FaseattivitaCostou").val()=="")
+                    $("#FaseattivitaCostou").val(ui.item.costoU);
+                else
+                {
+                    var domanda = confirm("Vuoi sostituire il valore di Costo Unità presente con quello di "+ui.item.value+"?");
+                    if (domanda === true)
+                        $("#FaseattivitaCostou").val(ui.item.costoU); 
+                }
+                if($("#FaseattivitaVendutou").val()=="")
+                    $("#FaseattivitaVendutou").val(ui.item.vendutoU);
+                else
+                {
+                    var domanda = confirm("Vuoi sostituire il valore di Venduto Unità presente con quello di "+ui.item.value+"?");
+                    if (domanda === true)
+                        $("#FaseattivitaVendutou").val(ui.item.vendutoU); 
+                }
 			}
 	}).bind("blur",function(){
 			$("#PersonaDisplayName").val($(this).data("uiItem"));

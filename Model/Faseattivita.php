@@ -128,7 +128,7 @@ class Faseattivita extends AppModel {
     }
 
 	//returns a list wich is good for a combobox
-	public function getSimple($attivita_id = null, $solo_entrata = 0)
+	public function getSimple($attivita_id = null, $solo_entrata = 0,$solo_aperte=0)
 	{
 		$conditions = array();
 		$notset = array('0'=> '-- Non definita --');   
@@ -141,7 +141,13 @@ class Faseattivita extends AppModel {
 		if ($solo_entrata >= 0 )
 		{			
 			$conditions['entrata'] =$solo_entrata;
-		}		
+		}
+		if ($solo_aperte ==1)
+		{			
+			$conditions['legenda_stato_attivita_id !='] =2;
+			//debug($conditions);
+		}
+
 
 		$fase =$this->find('all', array('conditions' => $conditions));
         $fa = Hash::combine($fase, 
