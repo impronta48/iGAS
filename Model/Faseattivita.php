@@ -15,7 +15,7 @@ class Faseattivita extends AppModel {
  */
 	public $displayField = 'Descrizione';
     public $cacheQueries = true;
-		var $actsAs = array('Containable');
+	var $actsAs = array('Containable');
 	
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -38,7 +38,16 @@ class Faseattivita extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
+		),        
+		'Cespite' => array(
+            'className' => 'Cespite',
+            'foreignKey' => 'cespite_id',
+            //'dependent' => false,
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+        ),
     	'LegendaStatoAttivita' => array(
 			'className' => 'LegendaStatoAttivita',
 			'foreignKey' => 'legenda_stato_attivita_id',
@@ -67,10 +76,15 @@ class Faseattivita extends AppModel {
 		'Ora'
 
     );
-	
+
     public function beforeSave($options = Array()) {
-            //debug($this->data['Faseattivita']);
-            //die();
+		if($this->data['Faseattivita']['cespite_id']){
+            if($this->data['Cespite']['DisplayName'] == ''){
+                $this->data['Faseattivita']['cespite_id'] = null;
+            }
+        }
+		//debug($this->data);
+		//die();
 	}
     
 	public function afterSave($created, $options = Array()) {
@@ -78,9 +92,11 @@ class Faseattivita extends AppModel {
     	//die();
 		if($created) {
             //debug($this->data['Faseattivita']);
-            //die();
+			//die();
+			$venduto = ($this->data['Faseattivita']['vendutou'] == '') ? 0: $this->data['Faseattivita']['vendutou'];
+			$qta = ($this->data['Faseattivita']['qta'] == '') ? 0 : $this->data['Faseattivita']['qta'];
             $this->Attivita->id = $this->data['Faseattivita']['attivita_id'];
-            $nuovaOffertaAlCliente = $this->Attivita->read('Attivita.OffertaAlCliente')['Attivita']['OffertaAlCliente']+($this->data['Faseattivita']['vendutou']*$this->data['Faseattivita']['qta']);
+            $nuovaOffertaAlCliente = $this->Attivita->read('Attivita.OffertaAlCliente')['Attivita']['OffertaAlCliente']+($venduto*$qta);
             $this->Attivita->saveField('OffertaAlCliente', $nuovaOffertaAlCliente); 
 		} else {
 			//Se in questo momento è settato $this->data['Faseattivita']['qtaUtilizzata']
@@ -88,9 +104,11 @@ class Faseattivita extends AppModel {
 			//e quindi non devo aggiornare Attivita.OffertaAlCliente perchè non è sicuramente
 			//stata modificato nè il venduto ne la quantità ma al max solo la qtaUtilizzata
 			if(!isset($this->data['Faseattivita']['qtaUtilizzata'])){
+				$venduto = ($this->data['Faseattivita']['vendutou'] == '') ? $this->data['Faseattivita']['vendutou'] : 0;
+				$qta = ($this->data['Faseattivita']['qta'] == '') ? $this->data['Faseattivita']['qta'] : 0;
 				$this->Attivita->id = $this->data['Faseattivita']['attivita_id'];
 				$nuovaOffertaAlCliente = $this->Attivita->read('Attivita.OffertaAlCliente')['Attivita']['OffertaAlCliente']-($this->data['Faseattivita']['old_venduto']*$this->data['Faseattivita']['old_qta']);
-				$nuovaOffertaAlCliente += ($this->data['Faseattivita']['vendutou']*$this->data['Faseattivita']['qta']);
+				$nuovaOffertaAlCliente += ($venduto*$qta);
 				$this->Attivita->saveField('OffertaAlCliente', $nuovaOffertaAlCliente); 
 			}
         }

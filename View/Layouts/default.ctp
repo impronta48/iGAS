@@ -167,9 +167,9 @@
 <!-- Latest compiled and minified JavaScript -->
 <?php //echo $this->Html->script("jQuery/1.10.2/jquery-1.10.2.min"); //LEGACY ?>
 <?php echo $this->Html->script("jQuery/3.3.1/jquery-3.3.1.min"); // DOPO LA JQUERY MIGRATION ?>
-<?php echo $this->Html->script("bootstrap.min"); ?>
 <?php //echo $this->Html->script("jQueryUI/1.10.3/jquery-ui-1.10.3.custom.min"); //LEGACY ?>
 <?php echo $this->Html->script("jQueryUI/1.12.1/jquery-ui.min"); // DOPO LA JQUERY MIGRATION ?>
+<?php echo $this->Html->script("bootstrap.min"); ?>
 <?php echo $this->Html->script("/DataTables/DataTables-1.10.16/js/jquery.dataTables.min"); ?>
 <?php echo $this->Html->script("/DataTables/DataTables-1.10.16/js/dataTables.bootstrap.min"); ?>
 <?php //echo $this->Html->script("//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"); // Perchè caricare dall'online versioni così vecchie? ?>

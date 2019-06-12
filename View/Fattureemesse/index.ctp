@@ -115,7 +115,7 @@
                 }
             }
 	?>
-	<tr<?php echo $class;?>>
+	<tr <?php echo $class;?>>
 		<td>
            <?php echo $this->Html->link($fatturaemessa['Attivita']['name'], array('controller'=>'attivita', 'action' => 'edit', $fatturaemessa['Fatturaemessa']['attivita_id'])); ?>
 		</td>
