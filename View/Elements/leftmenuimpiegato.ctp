@@ -8,6 +8,15 @@
 </li>
 
 <li>
+    <a class="dropdown" href="#" data-original-title="Contatti">
+        <i class='fa fa-user'></i><span class="hidden-minibar">Contatti</span>
+    </a>    
+    <ul>
+        <li><?php echo $this->Html->link("<i class='fa fa-user'></i><span class='hidden-minibar'> Contatti</span>", '/persone',array('escape' => false, 'data-original-title'=>'Contatti')) ?></li>
+    </ul>
+</li>
+
+<li>
     <a class="dropdown" href="#" data-original-title="Report">
         <i class='fa fa-bullseye'></i><span class="hidden-minibar">Report</span>
     </a>    

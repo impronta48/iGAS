@@ -83,7 +83,22 @@ class PersoneController extends AppController {
         $this->set('taglist', $taglist);
     }
 
+    function view($id = null){
+        if($id){
+            $persona = $this->Persona->read(null, $id);
+            $this->set('persona', $persona['Persona']);
+        } else {
+            $this->redirect(array('action' => 'index'));
+        }
+    }
+
     function edit($id = null) {
+        if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2) or ($this->Session->read('Auth.User.persona_id') == $id)){
+            // Si può continuare
+        } else {
+            $this->redirect(array('action' => 'index'));
+        }
+        
         if (!$id && !empty($this->request->data)) {
             $this->Persona->create();
         }

@@ -7,7 +7,11 @@
 
 
 <div class="persone index">
-	<h2><i class="fa fa-user"></i> <?php echo __('Contatti');?> <a class="btn btn-primary" href="<?php echo $this->Html->url('/persone/edit') ?>"><i class="fa fa-plus"></i> Nuovo Contatto</a></h2>
+	<h2><i class="fa fa-user"></i> <?php echo __('Contatti');?> 
+    <?php if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)): ?>
+    <a class="btn btn-primary" href="<?php echo $this->Html->url('/persone/edit') ?>"><i class="fa fa-plus"></i> Nuovo Contatto</a>
+    <?php endif; ?>
+    </h2>
     
     <?php
         echo $this->Form->create("Persona",array(
@@ -121,7 +125,7 @@
 				</ul>
 			</div>
             
-            
+            <?php if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)): ?>
             <div class="btn-group">
                 <button type="button" class="btn btn-warning "><i class="fa fa-tags"></i> Assegna Etichetta</button>
                 <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
@@ -137,8 +141,8 @@
                     <li><a href="#" class="delete-tag" id="delete-tag"><i class="fa fa-trash-o"></i> Togli tutti i tag</a></li>                     
                 </ul>
 			</div>
-            
             <a href="#" class="delete-contacts btn btn-primary" id="delete-contacts"><i class="fa fa-trash-o"></i> Elimina</a>
+            <?php endif; ?>
         </div>               
                 
     </div>                   
@@ -181,6 +185,7 @@
 		<td><?php echo $persona['Persona']['tags']; ?>&nbsp;</td>
 		<td><?php echo $this->Time->format($persona['Persona']['modified'],'%d-%m-%Y'); ?>&nbsp;</td>
 		<td class="actions">
+            <?php if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)): ?>
             <div class="btn-group">                 
                  <a class="btn btn-primary btn-xs" href="<?php echo $this->Html->url('edit/'.$persona['Persona']['id']); ?>">
                      <i class="fa fa-pencil"></i>                    
@@ -191,15 +196,35 @@
                         Toggle Dropdown
                     </span>
                  </button>
-                 <ul class="dropdown-menu" role="menu">                  
-                  <li >
+                 <ul class="dropdown-menu" role="menu">
+                  <li>
+                    <?php echo $this->Html->link(__('View'), array('action' => 'view', $persona['Persona']['id'])); ?>
+                  </li>             
+                  <li>
                     <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $persona['Persona']['id'])); ?>
                   </li>
-                  <li >
+                  <li>
                     <?php echo $this->Html->link(__('Delete'), array('action' => 'delete', $persona['Persona']['id']), null, sprintf(__('Are you sure you want to delete # %s?'), $persona['Persona']['id'])); ?>
                   </li>                  
                 </ul>
             </div>
+            <?php elseif($this->Session->read('Auth.User.persona_id') == $persona['Persona']['id']): ?>
+            <?php
+            echo $this->Html->link(
+                'Edit',
+                '/persone/edit/'.$persona['Persona']['id'],
+                array('class' => 'btn btn-xs btn-primary', 'title' => 'Modifica profilo di '.$persona['Persona']['DisplayName'])
+            );
+            ?>
+            <?php else: ?>
+            <?php
+            echo $this->Html->link(
+                'View',
+                '/persone/view/'.$persona['Persona']['id'],
+                array('class' => 'btn btn-xs btn-primary', 'title' => 'Guarda profilo di '.$persona['Persona']['DisplayName'])
+            );
+            ?>
+            <?php endif; ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

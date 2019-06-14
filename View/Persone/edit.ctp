@@ -14,6 +14,7 @@
     <?php if (isset($this->request->data['Persona']['id'])) :
           $id = $this->request->data['Persona']['id'];
     ?>
+    <?php if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)): ?>
     <div class="btn-group">
     <a href="<?php echo $this->Html->url(array('controller'=>'ordini','action'=>'index', 'persona'=>$id) ); ?>" class="btn btn-default btn-sm">Ordini</a>
     <a href="<?php echo $this->Html->url(array('controller'=>'fattureemesse','action'=>'index', 'persona'=>$id) ); ?>" class="btn btn-default btn-sm">Fatture Emesse</a>
@@ -21,6 +22,7 @@
     <a href="<?php echo $this->Html->url(array('controller'=>'primanota','action'=>'index', 'persona'=>$id) ); ?>" class="btn btn-default btn-sm">Pagamenti</a>
     <a href="<?php echo $this->Html->url(array('controller'=>'impiegati','action'=>'index', $id) ); ?>" class="btn btn-default btn-sm">Costi e Tariffe</a>
     </div>    
+    <?php endif; ?>
     <hr>
     <?php endif; ?>
     
