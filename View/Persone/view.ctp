@@ -16,6 +16,7 @@
         <table class="table table-sm">
         <tr><th scope="row">Nome</th><td><?php echo $persona['Nome']; ?></td></tr>
         <tr><th scope="row">Cognome</th><td><?php echo $persona['Cognome']; ?></td></tr>
+        <tr><th scope="row">Sesso</th><td><?php echo $persona['Sex']; ?></td></tr>
         <tr><th scope="row">Società</th><td><?php echo $persona['Societa']; ?></td></tr>
         <tr><th scope="row">Titolo</th><td><?php echo $persona['Titolo']; ?></td></tr>
         <tr><th scope="row">Carica</th><td><?php echo $persona['Carica']; ?></td></tr>

@@ -53,6 +53,7 @@
             echo $this->Form->input('Cognome');        		
             echo $this->Form->input('Societa');
             echo $this->Form->input('DisplayName', array('class'=> 'form-control required'));
+            echo $this->Form->input('Sex', array('empty' => 'Non dichiarato', 'options'=>['M' => 'Maschio','F' => 'Femmina'], 'label'=>'Sesso', 'class' => 'form-control'));
             echo $this->Form->input('Titolo');
             echo $this->Form->input('Carica');                
             echo $this->Form->input('DataDiNascita', array('type'=>'text','class'=> 'form-control date'));

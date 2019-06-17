@@ -79,7 +79,14 @@
                           //debug($this->Session->read('Auth.User'));
                           //debug(IMAGES. 'profiles/'. $uid . '.png');
                           if (!file_exists(IMAGES.'profiles'.DS.$uid.'.png')){
-                            $path = 'profiles'.DS.'default.png';             
+                            //debug($this->Session->read('Auth.User.Persona.Sex'));
+                            if($this->Session->read('Auth.User.Persona.Sex') == 'M'){
+                              $path = 'profiles'.DS.'default-man.png';
+                            } elseif($this->Session->read('Auth.User.Persona.Sex') == 'F'){
+                              $path = 'profiles'.DS.'default-lady.png';
+                            } else {
+                              $path = 'profiles'.DS.'default.png';
+                            }
                           }
                           if(empty($u)){
                             $u = 'Utente Anonimo';
