@@ -294,38 +294,36 @@
 
 <?php $this->Html->scriptStart(array('inline' => false)); ?>
 $(function() { 
-    $( "#PersonaDisplayName" ).autocomplete({
+    $("#PersonaDisplayName").autocomplete({
 		source: "<?php echo $this->Html->url(array('controller' => 'persone', 'action' => 'autocomplete')) ?>",
 		minLength: 2,
 		mustMatch : true,
 		select: function( event, ui ) {
-				$("#FaseattivitaPersonaId").val(ui.item.id);
-                $(this).data("uiItem",ui.item.value);
-                //alert(ui.item.value);
-                console.log(ui.item);
-                //DIALOG DI CONFERMA
-                if($("#FaseattivitaCostou").val()=="")
-                    $("#FaseattivitaCostou").val(ui.item.costoU);
-                else
-                {
-                    var domanda = confirm("Vuoi sostituire il valore di Costo Unità presente con quello di "+ui.item.value+"?");
-                    if (domanda === true)
-                        $("#FaseattivitaCostou").val(ui.item.costoU); 
-                }
-                if($("#FaseattivitaVendutou").val()=="")
-                    $("#FaseattivitaVendutou").val(ui.item.vendutoU);
-                else
-                {
-                    var domanda = confirm("Vuoi sostituire il valore di Venduto Unità presente con quello di "+ui.item.value+"?");
-                    if (domanda === true)
-                        $("#FaseattivitaVendutou").val(ui.item.vendutoU); 
-                }
-			}
+            $("#FaseattivitaPersonaId").val(ui.item.id);
+            $(this).data("uiItem",ui.item.value);
+            //alert(ui.item.value);
+            console.log(ui.item);
+            //DIALOG DI CONFERMA
+            if($("#FaseattivitaCostou").val()=="") {
+                $("#FaseattivitaCostou").val(ui.item.costoU);
+            } else {
+                var domanda = confirm("Vuoi sostituire il valore di Costo Unità presente con quello di "+ui.item.value+"?");
+                if (domanda === true)
+                    $("#FaseattivitaCostou").val(ui.item.costoU); 
+            }
+            if($("#FaseattivitaVendutou").val()=="") {
+                $("#FaseattivitaVendutou").val(ui.item.vendutoU);
+            } else {
+                var domanda = confirm("Vuoi sostituire il valore di Venduto Unità presente con quello di "+ui.item.value+"?");
+                if (domanda === true)
+                    $("#FaseattivitaVendutou").val(ui.item.vendutoU); 
+            }
+		}
 	}).bind("blur",function(){
 			$("#PersonaDisplayName").val($(this).data("uiItem"));
     });
     
-    $("#CespiteDisplayName").rules("remove", "required"); // Not useful now
+    // $("#CespiteDisplayName").rules("remove", "required"); // Not useful now
 
     $("#CespiteDisplayName").autocomplete({
 		source: "<?php echo $this->Html->url(array('controller' => 'cespiti', 'action' => 'autocomplete')) ?>",
@@ -342,8 +340,6 @@ $(function() {
 			$("#CespiteDisplayName").val($(this).data("uiItem"));
 	});
 
-} );
-
 $('#aggiungi-fase').click( function(e) { $('h3.panel-title').trigger('click'); });
 
 $('#genera-ordine').click (function (e) {
@@ -356,4 +352,6 @@ $('#genera-ordine').click (function (e) {
       location.assign('<?php echo $this->Html->url(array('controller' => 'ordini', 'action' => 'add', '?'=>array('attivita_id'=> $id))) ?>' + '&fasi='+arrayOfValues);
   });          
 
-<?php $this->Html->scriptEnd();
+});
+
+<?php $this->Html->scriptEnd(); ?>
