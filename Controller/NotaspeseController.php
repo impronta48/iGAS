@@ -177,13 +177,14 @@ class NotaspeseController extends AppController {
         //Preparo il filtro per il riepilogo delle note spese
         $conditions = array();
         $this->set('title_for_layout', 'Aggiungi Nota Spese');
-        
 
         //Parametri passati per nome
-        if (isset($this->request->params['named']['persona']))
-        {
-            $persona= $this->request->params['named']['persona'];
-            $conditions['Notaspesa.eRisorsa'] =$persona;
+        if (isset($this->request->params['named']['persona'])) {
+            $persona = $this->request->params['named']['persona'];
+            $conditions['Notaspesa.eRisorsa'] = $persona;
+        } else if($this->Session->read('Auth.User.persona_id')) {
+            $persona = $this->Session->read('Auth.User.persona_id');
+            $conditions['Notaspesa.eRisorsa'] = $persona;
         }
         if (isset($this->request->params['named']['anno']))
         {
@@ -216,10 +217,10 @@ class NotaspeseController extends AppController {
             $persona= $this->request->query['persona'];
             $conditions['Notaspesa.eRisorsa'] =$persona;
         }
-        
-        if ($persona != $this->Session->read('Auth.User.persona_id') && 
-            Auth::hasRole(Configure::read('Role.impiegato')) )
-        {
+
+        if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2) or ($persona == $this->Session->read('Auth.User.persona_id'))){
+            // Autorizzato
+        }else{
             $this->Session->setFlash('Non sei autorizzato ad accedere al foglio ore di altri');
             return $this->redirect(array('action' => 'scegli_mese',$this->Session->read('Auth.User.persona_id') ));   
         }
@@ -351,31 +352,60 @@ class NotaspeseController extends AppController {
     //Wrapper per la funzione edit
     function edit($id) {       
 
+        if(!$this->Notaspesa->findById($id)){
+            return $this->redirect(array('controller' => 'notaspese', 
+                                            'action' => 'add', 
+                                            '?' => array(
+                                                'persona' => $this->Session->read('Auth.User.persona_id'),
+                                                'anno' => date('Y'),
+                                                'mese' => date('m')
+                                            )
+                                        )
+                                    ); 
+        }
+
+        if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2) or 
+            ($this->Notaspesa->findById($id)['Notaspesa']['eRisorsa'] == $this->Session->read('Auth.User.persona_id'))){
+            // Si può continuare
+        } else {
+            $this->Session->setFlash('Non sei autorizzato ad accedere al foglio ore di altri');
+            return $this->redirect(array('controller' => 'notaspese', 
+                                    'action' => 'add', 
+                                    '?' => array(
+                                        'persona' => $this->Session->read('Auth.User.persona_id'),
+                                        'anno' => date('Y'),
+                                        'mese' => date('m')
+                                    )
+                                )
+                            );  
+        }
+
         if (!empty($this->request->data)) {
 
             //debug($this->request->data); die
 
-                if ($this->Notaspesa->save($this->request->data, false)) {
-                    $this->Session->setFlash('Notaspese Modificata correttamente.');
-					/*
-					//Non ha senso mettere l'upload scontrino anche qua, in realtà quando fai edit dalla view edit
-					//il form ti rimanda al metodo add di questo controller....
-					$uploaded_file=$this->request->data['Notaspesa']['uploadFile'];
-					$uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller);
-					if(strlen($uploadError)>0){
-						$this->Flash->error(__($uploadError));
-					}
-					*/
-                } 
-                else {
-                    $this->Session->setFlash('Impossibile salvare questa notaspese.');
-                    debug($this->Notaspesa->validationErrors);  
+            if ($this->Notaspesa->save($this->request->data, false)) {
+                $this->Session->setFlash('Notaspese Modificata correttamente.');
+                /*
+                //Non ha senso mettere l'upload scontrino anche qua, in realtà quando fai edit dalla view edit
+                //il form ti rimanda al metodo add di questo controller....
+                $uploaded_file=$this->request->data['Notaspesa']['uploadFile'];
+                $uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller);
+                if(strlen($uploadError)>0){
+                    $this->Flash->error(__($uploadError));
                 }
+                */
+            } 
+            else {
+                $this->Session->setFlash('Impossibile salvare questa notaspese.');
+                debug($this->Notaspesa->validationErrors);  
+            }
              
         }
 		$this->data = $this->Notaspesa->findById($id);
-		$this->set('id', $id);
-		$this->set('eAttivita', $this->Notaspesa->Attivita->getlist());
+        $this->set('id', $id);
+        $this->set('eAttivita', $this->Notaspesa->Attivita->getlist());
+        $this->set('eRisorsa', $this->data['Notaspesa']['eRisorsa']);
 		$this->set('eRisorse', $this->Notaspesa->Persona->find('list',array('cache' => 'persona', 'cacheConfig' => 'short')));
 		$this->set('legenda_mezzi', $this->Notaspesa->LegendaMezzi->find('all',array('cache' => 'legendamezzi', 'cacheConfig' => 'short')));
 		$this->set('eCatSpesa', $this->Notaspesa->LegendaCatSpesa->find('list',array('cache' => 'legendacatspesa_notnull', 'cacheConfig' => 'short')));
@@ -974,6 +1004,7 @@ class NotaspeseController extends AppController {
 
         $this->set('persona', $this->Notaspesa->Persona->findById($persona));
         $this->set('title_for_layout', 'Scegli Mese | NotaSpese ' . $persona );
+
     }
     
     //Considera pagate una serie di ore, e quindi le toglie dal calcolo dell'avanzamento

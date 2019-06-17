@@ -1,5 +1,5 @@
 <div class="notaspese view">
-    <h2>Persona: <?php echo $persona['Persona']['Cognome'] ?>. Ora scegli il mese</h2>
+    <h2>Persona: <?php echo $persona['Persona']['DisplayName'] ?>. Ora scegli il mese</h2>
     <table class="table table-striped">
         <th>Mese</th>
 <?php for ($m = 1; $m <=12 ; $m++)

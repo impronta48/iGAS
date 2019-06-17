@@ -94,16 +94,16 @@ class PersoneController extends AppController {
 
     function edit($id = null) {
         if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2) or ($this->Session->read('Auth.User.persona_id') == $id)){
-            // Si può continuare
+            // Si può continuare, altrimenti vieni reindirizzato
         } else {
             $this->redirect(array('action' => 'index'));
         }
-        
-        if (!$id && !empty($this->request->data)) {
+
+        if(!$id && !empty($this->request->data)) {
             $this->Persona->create();
         }
 
-        if (!empty($this->request->data)) {
+        if(!empty($this->request->data)) {
             if ($this->Persona->save($this->request->data)) {
                 $this->Session->setFlash(__('The persona has been saved'));
                 $this->redirect(array('action' => 'index'));
@@ -111,7 +111,7 @@ class PersoneController extends AppController {
                 $this->Session->setFlash(__('The persona could not be saved. Please, try again.'));
             }
         }
-        if (empty($this->request->data)) {
+        if(empty($this->request->data)) {
             $this->request->data = $this->Persona->read(null, $id);
             
             //Leggo tutti i tag e li porto alla view

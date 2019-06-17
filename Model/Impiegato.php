@@ -34,7 +34,10 @@ class Impiegato extends AppModel {
             $timestamp = strtotime($anno.'-'.$mese.'-'.$i);
             $gSett= date('w', $timestamp);
             //var_dump($gSett);
-            $sommaOre+=$impiegato['Impiegato'][$nomiColonne[$gSett]];
+            //La @ è per togliere il notice in caso in cui una persona non abbia un tetto ore (essere impiegato)
+            //iGAS attualmente permette di far inserire ore a persone che non hanno tetti ore / contratti 
+            //probabilmente in un ottica in cui anche esterni possono lavorare
+            $sommaOre+=@$impiegato['Impiegato'][$nomiColonne[$gSett]];
         }
         return $sommaOre;
     }

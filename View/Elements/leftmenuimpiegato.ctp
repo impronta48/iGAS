@@ -4,6 +4,9 @@
     </a>    
     <ul>
         <li><?php echo $this->Html->link("<i class='fa fa-bolt'></i><span class='hidden-minibar'> Inserisci Mie Ore</span>", '/ore/add/',array('escape' => false, 'data-original-title'=>'Inserici Ore')) ?></li>
+        <?php if($this->Session->read('Auth.User.persona_id')): ?>
+        <li><?php echo $this->Html->link("<i class='fa fa-briefcase'></i><span class='hidden-minibar'> Inserisci Nota Spese</span>", '/notaspese/add?persona='.$this->Session->read('Auth.User.persona_id').'&anno='.date('Y').'&mese='.date('m'),array('escape' => false, 'data-original-title'=>'Nota Spese')) ?></li>
+        <?php endif; ?>
     </ul>
 </li>
 

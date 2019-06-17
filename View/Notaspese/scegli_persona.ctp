@@ -25,9 +25,9 @@
     		<?php echo $this->Form->hidden('persona', array('default'=>$p['Persona']['id'])) ?>
     	</td>
 
-    	<td><?php echo $this->Form->input('anno', array('default' => date('Y'),'label'=>false)); ?></td>
-     	<td><?php echo $this->Form->input('mese', array('options'=> $mesi, 'label' => false, 'default' => date('m'))); ?></td>
-     	<td><?php echo $this->Form->submit('Seleziona');?></td>
+			<td><?php echo $this->Form->input(__('anno'), array('default' => date('Y'), 'label'=>false, 'class' => 'form-control')); ?></td>
+			<td><?php echo $this->Form->input(__('mese'), array('options'=> $mesi, 'label' => false, 'default' => date('m'), 'class' => 'form-control')); ?></td>
+     	<td><?php echo $this->Form->submit(__('Seleziona'), array('class' => 'btn btn-sm btn-primary', 'title' => 'Seleziona Collaboratore'));?></td>
      	</form>
     </tr>
 <?php } ?>
@@ -38,7 +38,8 @@
 
 <?php  
 	echo $this->Form->create('Notaspesa');
- 	echo $this->Form->input('eRisorsa',array('options'=> $eRisorsa, 'label'=>'Risorse', 'class' => 'chosen-select'));
-	echo $this->Form->end(__('Avanti'));
+	echo $this->Form->input('eRisorsa', array('options'=> $eRisorsa, 'label'=>'Risorse', 'class' => 'chosen-select'));
+	echo $this->Form->submit(__('Avanti'), array('class' => 'btn btn-sm btn-primary', 'title' => 'Seleziona Collaboratore'));
+	//echo $this->Form->end(__('Avanti'), array('class' => 'btn btn-sm btn-primary', 'title' => 'Seleziona Collaboratore'));
 ?>
 </div>
