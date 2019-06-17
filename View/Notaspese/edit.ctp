@@ -30,7 +30,7 @@
 		'label' => array(
 			'class' => 'col col-md-2 control-label'
 		),
-		'wrapInput' => 'col col-md-4',
+		'wrapInput' => 'col col-md-7',
 		'class' => 'form-control'
 	),	
 	'url' => array('controller' => 'Notaspese', 'action' => 'add', 'id' => $id),

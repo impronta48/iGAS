@@ -8,9 +8,9 @@ ORE A CONTRATTO: <?= $oreContratto ?>
 	'inputDefaults' => array(
 		'div' => 'form-group',
 		'label' => array(
-			'class' => 'col col-md-2 control-label'
+			'class' => 'col col-xs-2 col-sm-2 col-md-2 control-label'
 		),
-		'wrapInput' => 'col col-md-4',
+		'wrapInput' => 'col col-xs-10 col-sm-6 col-md-7',
 		'class' => 'form-control' 
 	),	
 	'class' => 'well form-horizontal'        
@@ -52,7 +52,7 @@ ORE A CONTRATTO: <?= $oreContratto ?>
     }
     ?>   
     <?php echo $this->Form->input('eAttivita', array('options' => $eAttivita, 
-                                        'label' => array('text'=>'Attivita'), 
+                                        'label' => array('text'=>'Attività'), 
                                         'class'=>'attivita chosen-select ' . $baseformclass, //chosen-select
                                         'after' => $aggiungiAttivita
                                         ) 
