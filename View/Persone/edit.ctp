@@ -10,7 +10,7 @@
 
 <div class="persona form">
     
-    <h1 id="DisplayName"><?php echo $this->data['Persona']['DisplayName'] ?> <?php echo $this->Html->image($profilePath, array('class'=>'', 'style' => 'border-radius: 50%; border: 3px solid #ffffff; width:50px', 'alt'=>'')); ?></h1>
+    <h1 id="DisplayName"><?php echo $this->data['Persona']['DisplayName'] ?> <?php echo ($profilePath) ? $this->Html->image($profilePath, array('class'=>'', 'style' => 'border-radius: 50%; border: 3px solid #ffffff; width:50px', 'alt'=>'')) : ''; ?></h1>
     <?php if (isset($this->request->data['Persona']['id'])) :
           $id = $this->request->data['Persona']['id'];
     ?>

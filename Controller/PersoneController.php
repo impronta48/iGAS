@@ -154,6 +154,8 @@ class PersoneController extends AppController {
             $this->request->data = $this->Persona->read(null, $id);
             if($this->request->data){
                 $this->set('profilePath', $this->setAvatarToDisplay($this->request->data['Persona']));
+            } else if(!$id) {
+                $this->set('profilePath', null);
             } else {
                 $this->redirect(array('action' => 'index'));
             }
