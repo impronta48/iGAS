@@ -29,13 +29,13 @@ class Impiegato extends AppModel {
         $sommaOre=0;
         $number = cal_days_in_month(CAL_GREGORIAN, $mese, $anno); //numero di giorni nel mese corrente
         $nomiColonne = ['oreDom','oreLun','oreMar','oreMer','oreGio','oreVen','oreSab'];
-        for($i=0;$i<$number;$i++)
+        for($i=1;$i<=$number;$i++)
         {
             $timestamp = strtotime($anno.'-'.$mese.'-'.$i);
             $gSett= date('w', $timestamp);
             //var_dump($gSett);
             $sommaOre+=$impiegato['Impiegato'][$nomiColonne[$gSett]];
-        }
+        }   
         return $sommaOre;
     }
 }
