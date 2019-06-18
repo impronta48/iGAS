@@ -1,17 +1,17 @@
-<div class="ore view">
-        <b>Scegli l'anno: </b>
-        <?php
-        $anni = Configure::read('Fattureemesse.anni');
+<div class="ore view well">
+    <b>Scegli l'anno: </b>
+    <?php
+    $anni = Configure::read('Fattureemesse.anni');
 
-        $condition['controller'] = 'ore';
-        $condition['action'] = 'check';
-        for ($i = date('Y') - $anni; $i <= date('Y'); $i++) {
-            $condition[3] = $i;
-        ?>
-    <a class="btn btn-default btn-animate-demo btn-xs" href="<?php echo $this->Html->url($condition) ?>"><?php echo $i ?></a>
-        <?php
-        }
-        ?>
+    $condition['controller'] = 'ore';
+    $condition['action'] = 'check';
+    for ($i = date('Y') - $anni; $i <= date('Y'); $i++) {
+        $condition[3] = $i;
+    ?>
+    <a class="btn btn-default btn-xs" href="<?php echo $this->Html->url($condition) ?>"><?php echo $i ?></a>
+    <?php
+    }
+    ?>
 </div>
 
 <h2>Check Ore</h2>
@@ -21,7 +21,7 @@ if (count($conteggi)==0){
     echo '<h3>Nessun lavoratore ha caricato ore nel '.$this->request->pass[0].'</h3>';
 }
 ?>
-<table class="table table-striped">
+<table class="dataTable table table-striped">
 <thead>
     <tr>
         <th>Lavoratore</th>
@@ -93,3 +93,23 @@ if (count($conteggi)==0){
 
 <?php //debug($conteggi); ?>
 <?php //debug($conteggiImpiegati); ?>
+
+<?php $this->Html->scriptStart(array('inline' => false)); ?>
+        $(document).ready(function() {
+
+            var dataTablePagination = true;
+
+            //data table
+            $('.dataTable').dataTable({
+                "columnDefs": [
+                    { "searchable": false, "orderable": false, "targets": [1,2,3,4,5,6,7,8,9,10,11,12] }
+                ],
+                aaSorting: [[0, 'asc']],
+                "lengthChange": true,
+                "iDisplayLength" : 23,
+                "paging" : true,
+                dom: "frt<'col-sm-2'l><'col-sm-2'i>p"
+            });
+
+        });
+<?php $this->Html->scriptEnd(); ?>

@@ -1,18 +1,45 @@
-<div class="ore view">
-        <b>Scegli l'anno: </b>
-        <?php
-        $anni = Configure::read('Fattureemesse.anni');
+<?php 
+    $baseformclass = ' form-control'; 
+    $p = (isset($this->request->query['persone'])) ? $this->request->query['persone'] : '';
+    $a = (isset($this->request->query['attivita'])) ? $this->request->query['attivita'] : '';
+?>
+<div class="ore well">
+    <b>Scegli l'anno: </b>
+    <?php
+    $anni = Configure::read('Fattureemesse.anni');
 
-        $condition['controller'] = 'ore';
-        $condition['action'] = 'riassuntocaricamenti';
-        for ($i = date('Y') - $anni; $i <= date('Y'); $i++) {
-            $condition[3] = $i;
-        ?>
-    <a class="btn btn-default btn-animate-demo btn-xs" href="<?php echo $this->Html->url($condition) ?>"><?php echo $i ?></a>
-        <?php
-        }
-        ?>
+    $condition['controller'] = 'ore';
+    $condition['action'] = 'riassuntocaricamenti';
+    for ($i = date('Y') - $anni; $i <= date('Y'); $i++) {
+        $condition[3] = $i;
+    ?>
+    <a class="btn btn-default btn-xs" href="<?php echo $this->Html->url($condition) ?>"><?php echo $i ?></a>
+    <?php
+    }
+    ?>
 </div>
+
+<?php echo $this->Form->create('RiassuntoCaricamenti', array('id' => 'stats-form','type' => 'get',
+	'inputDefaults' => array(
+		'div' => 'form-group',
+		'label' => array(
+			'class' => 'col col-md-3 control-label'
+		),
+		'wrapInput' => 'col col-md-9',
+		'class' => 'form-control'
+	),
+	'class' => 'well form-horizontal'
+    )); ?>
+<?php echo $this->Form->input('persone', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p)); ?>
+<?php echo $this->Form->input('attivita', array('label'=>'Attività', 'multiple'=>true,'class'=>'chosen-select'. $baseformclass, 'options'=>$attivita_list, 'value'=>$a, 'data-placeholder'=>'Filtra per Attività')); ?>
+<?php echo $this->Form->submit(__('Filtra i Risultati'), array('class'=>'col-md-offset-2 btn btn-primary')); ?>
+<?php echo $this->Form->end(); ?>
+
+<?php 
+    if(!empty($a) or !empty($p)){
+        echo $this->Html->tag('span', __('Il filtro avviene solo in visualizzazione! Gli XLS esportati comprenderanno comunque tutti i contatti per l\'anno scelto!'), array('class' => 'badge bg-info')); 
+    }
+?>
 
 <h2>Caricamento fogli ore</h2>
 
