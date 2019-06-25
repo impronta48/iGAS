@@ -21,9 +21,12 @@
     echo $this->Form->input('id');
     echo $this->Form->input('DisplayName', array('label' => 'Nome Cespite', 'class'=> 'form-control required'));
     echo $this->Form->input('descrizione');
+    echo $this->Form->input('Persona.DisplayName', array('label' => 'Proprietario/a', 'class'=> 'form-control'));
+    echo $this->Form->hidden('proprietario_interno');
     echo $this->Form->input('costo_acquisto', array('class'=> 'form-control required'));
-    echo $this->Form->input('costo_affitto');
+    echo $this->Form->input('costo_affitto', array('label'=> 'Costo Affitto Giornaliero', 'class'=> 'form-control', 'data-toggle'=>'tooltip', 'data-placement'=>'top', 'title'=>'Inteso come prezzo di default per un evento che dura 24h'));
     echo $this->Form->input('data_acquisto', array('type'=>'text', 'class'=> 'form-control'));
+    echo $this->Form->input('data_smaltimento', array('type'=>'text', 'class'=> 'form-control'));
 ?>
 <div class="row">
 <?php echo $this->Form->submit('Salva', array('class'=>'btn btn-primary', 'div' => false)); ?>
@@ -35,7 +38,34 @@
 <?php $this->Html->scriptStart(array('inline' => false)); ?>
 $(function() {
 
+    $('#CespiteCostoAffitto').tooltip();
+
+    $("#PersonaDisplayName").on( "keyup", function( event ) {
+
+    }).autocomplete({
+    source: "<?php echo $this->Html->url(array('controller' => 'persone', 'action' => 'autocomplete')) ?>",
+    minLength: 2,
+    mustMatch : false,
+    select: function( event, ui ) {
+            if(ui == null){
+                $("#CespiteProprietarioInterno").val('no');
+            } else {
+                $("#CespiteProprietarioInterno").val( ui.item.id );
+                $(this).data("uiItem",ui.item.value);
+            }
+        },
+    change: function( event, ui ) {
+            if(ui != null){
+                $("#CespiteProprietarioInterno").val( ui.item.id );
+                $(this).data("uiItem",ui.item.value);
+            } else {
+                $("#CespiteProprietarioInterno").val('no');
+            }
+        }
+    });
+
 	$( "#CespiteDataAcquisto" ).datepicker( { dateFormat: 'yy-mm-dd 00:00:00' });
+    $( "#CespiteDataSmaltimento" ).datepicker( { dateFormat: 'yy-mm-dd 00:00:00' });
 
 } );
 <?php $this->Html->scriptEnd(); ?>

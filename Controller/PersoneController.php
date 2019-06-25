@@ -132,7 +132,7 @@ class PersoneController extends AppController {
                     'Persona.DisplayName LIKE' => '%' . $this->request->query['term'] . '%'
                 ),
                 'limit' => 50,
-                'fields' => array('id', 'DisplayName'),
+                'fields' => array('id', 'DisplayName','Impiegato.costoAziendale','Impiegato.venduto'),
             ));
         }
 
@@ -143,6 +143,8 @@ class PersoneController extends AppController {
             $a->id = $d['Persona']['id'];
             //$a->label = $d['Libro']['titolo'];
             $a->value = $d['Persona']['DisplayName'];
+            $a->costoU = $d['Impiegato']['costoAziendale'];
+            $a->vendutoU = $d['Impiegato']['venduto'];
             $res[] = $a;
         }
         $this->layout = 'ajax';

@@ -19,7 +19,6 @@
     <ul>
         <li><?php echo $this->Html->link("<i class='fa fa-user'></i><span class='hidden-minibar'> Contatti</span>", '/persone',array('escape' => false, 'data-original-title'=>'Contatti')) ?></li>
         <li><?php echo $this->Html->link("<i class='fa fa-user'></i><span class='hidden-minibar'> Impiegati</span>", '/impiegati',array('escape' => false, 'data-original-title'=>'Impiegati')) ?></li>        
-        <li><?php echo $this->Html->link("<i class='fa fa-user'></i><span class='hidden-minibar'> Utenti</span>", '/users',array('escape' => false, 'data-original-title'=>'Utenti')) ?></li>   
     </ul>
 </li>
 
@@ -66,7 +65,6 @@
 <ul>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Statistiche Ore', '/ore/stats?from='. date('Y-m-d', strtotime('first day of last month')), array('data-original-title'=>'Statistiche Ore','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Statistiche Note Spese', '/notaspese/stats?from='. date('Y-m-d', strtotime('first day of last month')), array('data-original-title'=>'Statistiche Note Spese','escape' => false)) ?></li>
-    <li><?php echo $this->Html->link('<i class="fa fa-calendar"></i> Statistiche Utilizzo Cespiti', '/cespiti/stats?from='. date('Y-m-d', strtotime('first day of last month')), array('data-original-title'=>'Statistiche Utilizzo Cespiti','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Fatture Emesse (Elenco)', '/fattureemesse/index/anno:' . date('Y'), array('data-original-title'=>'Fatture Emesse Elenco','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-calendar"></i> Fatture Emesse (Scad.)', '/fattureemesse/scadenziario/' . date('Y'), array('data-original-title'=>'Fatture Emesse Scadenziario','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-book"></i> Prima Nota (Per mese)', '/primanota/totalimese/' . date('Y'), array('data-original-title'=>'Totali per Mese Prima Nota','escape' => false)) ?></li>
@@ -81,8 +79,7 @@
     <a class='dropdown' href='#' data-original-title='Utilità'>
   		<i class='fa fa-gears'></i><span class='hidden-minibar'> Tabelle di Servizio </span>
     </a>
-<ul>    
-    
+<ul>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Alias', '/aliases', array('data-original-title'=>'Alias','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Banche', '/provenienzesoldi', array('data-original-title'=>'Banche','escape' => false)) ?></li>
     <li><?php echo $this->Html->link('<i class="fa fa-arrow-circle-o-right"></i> Codici Iva', '/legendaCodiciIva', array('data-original-title'=>'Codici Iva','escape' => false)) ?></li>

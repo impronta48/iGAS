@@ -316,7 +316,7 @@ class AttivitaController extends AppController {
     function getlist($recent=null){
 		$res = array();
         $data = $this->Attivita->getlist($recent);
-
+        
 		foreach ($data as $key=>$val)
 		{
 			$a = new StdClass();

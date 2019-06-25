@@ -66,7 +66,11 @@ class OreController extends AppController {
 	function stats()
 	{
         $this->Ora->recursive = -1;        
-        $conditions =$this->getConditionFromQueryString();
+        $conditions = $this->getConditionFromQueryString();
+        
+        if(($this->Session->read('Auth.User.group_id') != 1) and ($this->Session->read('Auth.User.group_id') != 2)){
+            $conditions['Ora.eRisorsa IN'] = array($this->Session->read('Auth.User.persona_id'));
+        }
         
         //result1: get total number of 'ore' according to search criteria
         $result1 = $this->Ora->find(
@@ -969,7 +973,9 @@ class OreController extends AppController {
         }
         
         //Se passo la persona prendo solo le attività recenti        
-        $this->set('eAttivita', $this->Ora->Attivita->getlist($persona));
+        //$this->set('eAttivita', $this->Ora->Attivita->getlist($persona));
+        $this->set('eAttivita', $this->Ora->Attivita->getlist());
+
         $persona_ore = $this->Ora->Persona->findById($persona);
         $nomePersona ='';
         if (!empty($persona_ore))
@@ -983,6 +989,12 @@ class OreController extends AppController {
         $this->set('mese',$mese);
         $this->set('giorno',$giorno);
         
+        //TODO: Davide fai la chiamata a $this->Impiegato->oreContratto($persona, $mese, $anno);
+        $this->loadModel('Impiegato');
+        $oreContratto = $this->Impiegato->oreContratto($persona, $mese, $anno);
+        $this->set('oreContratto',$oreContratto);
+        
+
         //Preparo il filtro per il riepilogo delle ore
         $conditions = array();    
         //Applico il filtro alle condizioni del report ore mostrato in basso
@@ -1008,8 +1020,8 @@ class OreController extends AppController {
         $this->set('result', $result); 
         $this->set('title_for_layout', "$anno-$mese-$giorno | $nomePersona | Aggiungi Ore | Foglio Ore");        
 		
-		$fa = $this->Ora->Faseattivita->getSimple();
-		$this->set('faseattivita', $fa);        
+        //$fa = $this->Ora->Faseattivita->getSimple(null,0,1);
+		//$this->set('faseattivita', $fa);
     }
 
    //Modifica delle ore manualmente (senza foglio ore)
@@ -1139,8 +1151,8 @@ class OreController extends AppController {
 	{
 		//Query che riporta tutte le ore lavorate aggregate per anno, attività, persona
 		$r= $this->Ora->find('all',array(
-            'group' => array('YEAR(data)',  'eAttivita', 'eRisorsa','faseattivita_id'),
-            'fields' => array('YEAR(data) as Anno', 'MONTH(data) as Mese', 'Attivita.name','Attivita.id','SUM(Ora.numOre) as Ore', 'Attivita.ImportoAcquisito','Persona.DisplayName','Faseattivita.Descrizione'),                        
+            'group' => array('YEAR(Ora.data)',  'eAttivita', 'eRisorsa','faseattivita_id'),
+            'fields' => array('YEAR(Ora.data) as Anno', 'MONTH(Ora.data) as Mese', 'Attivita.name','Attivita.id','SUM(Ora.numOre) as Ore', 'Attivita.ImportoAcquisito','Persona.DisplayName','Faseattivita.Descrizione'),                        
         ));
         
 		foreach($r as &$row){            
