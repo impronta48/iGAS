@@ -37,21 +37,46 @@
         $aggiungiAttivita = false;
     }
     ?>    
-    <?php 
-    echo $this->Form->input('attivita_dummy', array('label'=>'Attività', 'value'=>$this->data['Attivita']['name'], 'class' => 'form-control', 'disabled' => true));
-    ?> 
-    <?php echo $this->Form->hidden('eAttivita', array('value'=>$this->data['Ora']['eAttivita'])); ?> 
-    <?php echo $this->Form->input('faseattivita_dummy', array('label'=>'Fase Attività', 'value'=>$this->data['Faseattivita']['Descrizione'], 'class' => 'form-control', 'disabled' => true)); ?> 
-    <?php echo $this->Form->hidden('faseattivita_id', array('label'=>'Fase Attività', 'value'=>$this->data['Ora']['faseattivita_id'])); ?> 
-    <?php echo $this->Form->input('numOre', array('label' => 'Ore', 'class' => 'form-control')); ?>
+    
+    <?php echo $this->Form->input('eAttivita', array('options' => $eAttivita, 
+                                        'label' => array('text'=>'Attivita'), 
+                                        'class'=>'attivita chosen-select ' . $baseformclass, //chosen-select
+                                        'after' => $aggiungiAttivita
+                                        ) 
+                                  ); 
+    ?>        
+    
+    <?php echo  $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 
+                                        'options'=>[], 
+                                        'class'=>'fase ' . $baseformclass)); ?>     <?php echo $this->Form->input('numOre', array('label' => 'Ore', 'class' => 'form-control')); ?>
     <?php echo $this->Form->input('dettagliAttivita', array('class' => 'form-control')); ?>
     <?php echo $this->Form->input('LuogoTrasferta', array('class' => 'form-control')); ?>
     <?php echo $this->Form->submit(__('Modifica'), array('class'=>'col-md-offset-2 btn btn-primary')); ?>
     <?php echo $this->Form->end();?>
 </div>
-
 <?php $this->Html->scriptStart(array('inline' => false)); ?>
-$(function() {
-    $(".chosen-select").prop('disabled', true).trigger("chosen:updated");
-});
+    $( "#OraPersonaDescr" ).autocomplete({
+        source: "<?php echo $this->Html->url(array('controller' => 'persone', 'action' => 'autocomplete')) ?>",
+        minLength: 2,
+        mustMatch : true,
+        select: function( event, ui ) {
+                $("#OraERisorsa").val( ui.item.id );
+                $(this).data("uiItem",ui.item.value);
+            }
+        }).bind("blur",function(){
+            $( "#OraPersonaDescr" ).val($(this).data("uiItem"));
+        });
+
+    $("#filtroAttivita").change( function () {
+        var url = '<?php echo $this->Html->url(array('controller' => 'attivita', 'action' => 'getlist')) ?>';
+        $.getJSON(url, function(json){
+            var $select_elem = $("#OraEAttivita");
+            $select_elem.empty();
+            $.each(json, function (idx, obj) {
+                $select_elem.append('<option value="' + obj.value + '">' + obj.name + '</option>');
+            });
+            $select_elem.trigger("chosen:updated");
+            $("#filtroAttivita").parent().hide();
+        });
+    } )
 <?php $this->Html->scriptEnd(); ?>

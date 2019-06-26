@@ -69,7 +69,7 @@
 
                         //$u = env('PHP_AUTH_USER') ;
              
-                        if(Auth::id()){
+                        if ($this->Session->read('Auth.User.id')) {
                           $u = $this->Session->read('Auth.User.username');
                           $uid = $this->Session->read('Auth.User.id');                         
                           $role = $this->Session->read('Auth.User.group_id');
