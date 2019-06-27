@@ -973,8 +973,8 @@ class OreController extends AppController {
         }
         
         //Se passo la persona prendo solo le attività recenti        
-        //$this->set('eAttivita', $this->Ora->Attivita->getlist($persona));
-        $this->set('eAttivita', $this->Ora->Attivita->getlist());
+        $this->set('eAttivita', $this->Ora->Attivita->getlist($persona));
+        
 
         $persona_ore = $this->Ora->Persona->findById($persona);
         $nomePersona ='';
