@@ -86,9 +86,9 @@ class Ora extends AppModel {
 	),
 	);
 
-	/* public function beforeSave($options = Array()) {
-		// Se faseattivita_id == 0 le ore caricate non sono legate a nessuna faseattività e non devo quindi modificare nulla in nessuna fase
-		if($this->data['Ora']['faseattivita_id'] != 0){
+	public function beforeSave($options = Array()) {
+		// Se faseattivita_id non è settato o se faseattivita_id == 0 le ore caricate non sono legate a nessuna faseattività e non devo quindi modificare nulla in nessuna fase
+		if(isset($this->data['Ora']['faseattivita_id']) && $this->data['Ora']['faseattivita_id'] != 0){
 			$this->Faseattivita->id = $this->data['Ora']['faseattivita_id'];
 			$faseAttivitaQtaData = $this->Faseattivita->read('Faseattivita.qta, Faseattivita.qtaUtilizzata, Faseattivita.um');
 			$qta = $faseAttivitaQtaData['Faseattivita']['qta'];
@@ -113,11 +113,11 @@ class Ora extends AppModel {
 			}
 		}
 		return true;
-	} */
-/* 
+	}
+ 
 	public function afterSave($created, $options = Array()) {
-		// Se faseattivita_id == 0 le ore caricate non sono legate a nessuna faseattività e non devo quindi modificare nulla in nessuna fase
-		if($this->data['Ora']['faseattivita_id'] != 0){
+		// Se faseattivita_id non è settato o se faseattivita_id == 0 le ore caricate non sono legate a nessuna faseattività e non devo quindi modificare nulla in nessuna fase
+		if(isset($this->data['Ora']['faseattivita_id']) && $this->data['Ora']['faseattivita_id'] != 0){
 			$this->Faseattivita->id = $this->data['Ora']['faseattivita_id'];
 			$faseAttivitaQtaData = $this->Faseattivita->read('Faseattivita.qtaUtilizzata, Faseattivita.um');
 			$qtaUtilizzata = $faseAttivitaQtaData['Faseattivita']['qtaUtilizzata'];
@@ -135,7 +135,7 @@ class Ora extends AppModel {
 				$this->Faseattivita->saveField('qtaUtilizzata', $qtaNew);
 			}
 		}
-	} */
+	}
 
 	public function beforeDelete($cascade = true) {
         //debug($this->data);
