@@ -3,7 +3,7 @@
 class PersoneController extends AppController {
 
     public $name = 'Persone';
-    public $components = array('RequestHandler','Paginator','PhpExcel.PhpSpreadsheet');    
+    public $components = array('RequestHandler','Paginator','PhpExcel.PhpSpreadsheet', 'UploadFiles');    
     public $helpers = array('PhpExcel.PhpSpreadsheet');
         
     function index() {
@@ -83,22 +83,82 @@ class PersoneController extends AppController {
         $this->set('taglist', $taglist);
     }
 
+    function setAvatarToDisplay($persona){
+        $pathWithoutExt = 'profiles'.DS.@$persona['id'].'.';
+        foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+            if(!file_exists(IMAGES.$pathWithoutExt.$ext)){
+              if(@$persona['Sex'] == 'M'){
+                $path = 'profiles'.DS.'default-man.png';
+              } elseif(@$persona['Sex'] == 'F'){
+                $path = 'profiles'.DS.'default-lady.png';
+              } else {
+                $path = 'profiles'.DS.'default.png';
+              }
+            } else {
+              $path = $pathWithoutExt.$ext;
+              break;
+            }
+        }
+        return $path;
+    }
+
+    function view($id = null){
+        if($id){
+            $persona = $this->Persona->read(null, $id);
+            if($persona){
+                $this->set('persona', $persona['Persona']);
+                $this->set('profilePath', $this->setAvatarToDisplay($persona['Persona']));
+            } else {
+                $this->redirect(array('action' => 'index'));
+            }
+        } else {
+            $this->redirect(array('action' => 'index'));
+        }
+    }
+
     function edit($id = null) {
-        if (!$id && !empty($this->request->data)) {
+        if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2) or ($this->Session->read('Auth.User.persona_id') == $id)){
+            // Si può continuare, altrimenti vieni reindirizzato, questo è brutto lo so ma è la tecnica che attualmente
+            // assicura al 100% la profilazione in questo punto
+        } else {
+            $this->redirect(array('action' => 'index'));
+        }
+
+        if(!$id && !empty($this->request->data)) {
             $this->Persona->create();
         }
 
-        if (!empty($this->request->data)) {
+        if(!empty($this->request->data)) {
             if ($this->Persona->save($this->request->data)) {
                 $this->Session->setFlash(__('The persona has been saved'));
+                if(!$id){
+                    //Prendo l'id legato al salvataggio
+                    $id = $this->Persona->getLastInsertID();
+                }
+                // Qua gestisco l'upload dell'avatar
+				$uploaded_file=$this->request->data['Persona']['uploadFile'];
+				$uploadError=$this->UploadFiles->upload($id,$uploaded_file,$this->request->controller,null,true);
+				if(strlen($uploadError)>0){
+					$this->Flash->error(__($uploadError));
+				}
+                //Per settare on the fly alcune cose gender friendly di default come l'avatar se non specificato
+                if($this->Session->read('Auth.User.persona_id') == $id){
+                    $this->Session->write('Auth.User.Persona.Sex',$this->request->data['Persona']['Sex']);
+                }
                 $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash(__('The persona could not be saved. Please, try again.'));
             }
         }
-        if (empty($this->request->data)) {
+        if(empty($this->request->data)) {
             $this->request->data = $this->Persona->read(null, $id);
-            
+            if($this->request->data){
+                $this->set('profilePath', $this->setAvatarToDisplay($this->request->data['Persona']));
+            } else if(!$id) {
+                $this->set('profilePath', null);
+            } else {
+                $this->redirect(array('action' => 'index'));
+            }
             //Leggo tutti i tag e li porto alla view
             $fields=array('name');
             $t = $this->Persona->Tag->find('all', array('fields'=>$fields, 'recursive'=>-1));
@@ -118,6 +178,7 @@ class PersoneController extends AppController {
         }
         if ($this->Persona->delete($id)) {
             $this->Session->setFlash(__('Persona deleted'));
+            $this->deleteDoc($id, false);
             $this->redirect(array('action' => 'index'));
         }
         $this->Session->setFlash(__('Persona was not deleted'));
@@ -567,6 +628,43 @@ class PersoneController extends AppController {
 
         return $lastmodified;
     }
+
+    /**
+     * deleteDoc
+     * 
+     * Prende l'id di una persona e ne cancella l'avatar, alla fine redirige sempre alla pagina
+     * chiamante settando un messaggio che informa dell'esito della cancellazione.
+     * E' estremamente simile a tutti gli altri metodi deleteDoc sparsi in iGAS, sarebbe da mettere
+     * nel component UploadFiles.
+     * 
+     * @param int $id
+     * @param boolean $redirect true per redirigere alla pagine chiamate, false per non redirigere (utile
+     * nel caso in cui deleteDoc sia chiamato da qualche metodo che già redirige), default true.
+     * @return void
+     */
+    public function deleteDoc($id = null, $redirect = true) {
+        $this->autoRender = false; 
+        if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2) or ($this->Session->read('Auth.User.persona_id') == $id)){
+            // Si può continuare, altrimenti vieni reindirizzato, questo è brutto lo so ma è la tecnica che attualmente
+            // assicura al 100% la profilazione in questo punto
+        } else {
+            $this->Session->setFlash(__('Non è stato possibile cancellare immagine profilo'));
+            $this->redirect(array('action' => 'index'));
+        }
+        $fileExt=$this->UploadFiles->checkIfFileExists(WWW_ROOT.'img'.DS.'profiles'.DS.$id.'.');
+        if(unlink(WWW_ROOT.'img'.DS.'profiles'.DS.$id.'.'.$fileExt)){
+            $this->Session->setFlash(__('Immagine profilo cancellata'));
+        }else{
+            $this->Session->setFlash(__('Non è stato possibile cancellare immagine profilo'));
+        }
+        if($redirect){
+            if($this->referer()){
+                $this->redirect($this->referer());
+            } else {
+                $this->redirect(array('controller' => 'persone', 'action' => 'index'));
+            }
+        }
+	}
 
     //TODO: impostata ma non funziona correggere!
     public function deleteMulti()

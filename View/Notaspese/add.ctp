@@ -6,7 +6,8 @@
 <?php echo $this->Html->script('jquery.pulsate.min.js',false);?>		
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
 <?php echo $this->Html->script('faseattivita',array('inline' => false)); ?>
-<?php $baseformclass = Configure::read('iGas.baseFormClass'); ?> 
+<?php //$baseformclass = Configure::read('iGas.baseFormClass'); ?> 
+<?php $baseformclass = ' form-control input-xs '; ?> 
 
 <?php
 
@@ -65,7 +66,7 @@
 ?>
 
 <?php $this->Html->addCrumb("Nota Spese", "/notaspese/edit_list/persona:$eRisorsa/anno:$anno/mese:$mese/"); ?>
-<?php $this->Html->addCrumb("Aggiungi", "/add"); ?>
+<?php // $this->Html->addCrumb("Aggiungi", "/add"); ?>
 
 <h1>Inserisci Nota Spese</h1>
 
@@ -79,16 +80,23 @@
 	'inputDefaults' => array(
 		'div' => 'form-group',
 		'label' => array(
-			'class' => 'col col-md-2 control-label'
+			'class' => 'col col-xs-2 col-sm-2 col-md-2  control-label'
 		),
-		'wrapInput' => 'col col-md-4',
+		'wrapInput' => 'col col-xs-10 col-sm-6 col-md-7',
 		'class' => 'form-control'
 	),	
 	'class' => 'well form-horizontal'        
     )); ?>
 
     <?php echo $this->Form->input('id'); ?>
-    <?php echo $this->Form->input('eRisorsa', array('default' => $eRisorsa, 'options' => $eRisorse, 'label' => 'Persona', 'class'=>'chosen-select col col-md-8')); ?>
+    <?php 
+        if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)){
+            echo $this->Form->input('eRisorsa', array('default' => $eRisorsa, 'options' => $eRisorse, 'label' => 'Persona', 'class'=>'chosen-select col col-md-8')); 
+        } else {
+            echo $this->Form->input('eRisorsa', array('value' => $this->Session->read('Auth.User.persona_id'), 'type' => 'hidden')); 
+            echo $this->Form->input('eRisorsaDisplay', array('placeholder' => $this->Session->read('Auth.User.Persona.DisplayName'), 'value' => $this->Session->read('Auth.User.Persona.DisplayName'), 'disabled' => true, 'label' => 'Persona', 'class'=>'form-control col col-md-8')); 
+        }
+    ?>
     
     <?php
     $def = array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>'');
@@ -98,14 +106,20 @@
     echo $this->Form->input('data', $def);
     ?>
         
-    <?php echo $this->Form->input('eAttivita', array('options' => $eAttivita, 
-                                                'label' => array('text'=>'Attivita'), 
+    <?php 
+    if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)){
+        $aggiungiAttivita=$this->Html->link('<i class="fa fa-plus-square"></i> Aggiungi nuova Attività', 
+                                                array('controller'=>'attivita','action'=>'edit'), 
+                                                array('class'=>'btn btn-xs btn-primary', 'escape'=>false, 'target'=> 'blank','tabindex'=>-1)
+                                            );
+    } else {
+        $aggiungiAttivita='';
+    }
+    echo $this->Form->input('eAttivita', array('options' => $eAttivita, 
+                                                'label' => array('text'=>'Attività'), 
                                                 'default' => $attivita_default, 
                                                 'class'=>'col col-md-8 attivita chosen-select ' . $baseformclass, //chosen-select
-                                                'after' => $this->Html->link('<i class="fa fa-plus-square"></i> Aggiungi nuova Attività', 
-                                                            array('controller'=>'attivita','action'=>'edit'), 
-                                                            array('class'=>'btn btn-xs btn-primary', 'escape'=>false, 'target'=> 'blank','tabindex'=>-1)
-                                                        ),
+                                                'after' => $aggiungiAttivita,
                                                ) 
                                   ); 
     ?>        
@@ -264,11 +278,11 @@
                 $linkScontrino=$scontrinoToDrive='';
                 foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
                     if(file_exists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$r['Notaspesa']['id'].'.'.$ext)){
-                        $linkScontrino=$this->Html->link('View Scontrino', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$r['Notaspesa']['id'].'.'.$ext, array('class'=>'btn btn-xs btn-primary','title'=>'View or Download'));
+                        $linkScontrino=$this->Html->link('View Scontrino', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$r['Notaspesa']['id'].'.'.$ext, array(/*'class'=>'btn btn-xs btn-primary',*/'title'=>'View or Download'));
                         if($r['Notaspesa']['IdGoogleCloud']){
-                            $scontrinoToDrive=$this->Html->tag('span',__('Scontrino già caricato in Drive'), array('class' => 'class="btn btn-primary btn-xs glow btn-edit-riga-riga"'));
+                        $scontrinoToDrive=$this->Html->tag('span',__('Scontrino già caricato in Drive'), array(/*'class' => 'class="btn btn-primary btn-xs glow btn-edit-riga-riga"'*/));
                         } else {
-                            $scontrinoToDrive=$this->Html->link('Upload Scontrino in Drive', array('action'=>'setUploadToDrive',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga"));					
+                        $scontrinoToDrive=$this->Html->link('Upload Scontrino in Drive', array('action'=>'setUploadToDrive',$r['Notaspesa']['id']),array(/*'class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga"*/));					
                         }
                     }
                 }
@@ -279,15 +293,31 @@
                           $this->Text->truncate($r['LegendaCatSpesa']['name'],17), 
                           $this->Number->currency($r['Notaspesa']['importo'],'EUR').'<small class="text-muted">'. $soldi .'</small>',                                
                           $r['Notaspesa']['descrizione'],                                                     
-                          badge_fatturabile($r['Notaspesa']) . ' ' .  badge_rimborsabile($r['Notaspesa']) ,                           
+                          badge_fatturabile($r['Notaspesa']) . ' ' .  badge_rimborsabile($r['Notaspesa']),
+                          '<div class="btn-group">                 
+                          <a class="btn btn-primary btn-xs" href="edit/'.$r['Notaspesa']['id'].'"><i class="fa fa-pencil"></i></a>
+                          <button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                             <span class="caret"></span>
+                             <span class="sr-only">Toggle Dropdown</span>
+                          </button>'.
+                          '<ul class="dropdown-menu" role="menu">'.
+                          '<li>'.$this->Html->Link(__('Edit'),array('action'=>'edit',$r['Notaspesa']['id'])).'</li>'.
+                          '<li>'.$this->Html->Link(__('Del'),array('action'=>'delete',$r['Notaspesa']['id']), null, sprintf('Sicuro di voler cancellare la nota # %s?', $r['Notaspesa']['id'])).'</li>'.
+                          '<li>'.$this->Html->Link(__('Duplicate'),array('action'=>'duplicate',$r['Notaspesa']['id'])).'</li>'.
+                          '<li>'.$linkScontrino.'</li>'.
+                          '<li>'.$scontrinoToDrive.'</li>'.
+                          '</ul>'.
+                          '</div>',
+                          /*                  
                           array(                            
                             //'<div class="btn btn-primary btn-xs glow btn-edit-riga" id="'. $r['Notaspesa']['id'] . '">Edit</div>'.
-                            $this->Html->Link('Edit',array('action'=>'edit',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga")).                        
-                            $this->Html->Link('Del',array('action'=>'delete',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-del-riga"),__('Sicuro di voler cancellare la nota %s?',$r['Notaspesa']['id'])).
-                            $this->Html->Link('Duplicate',array('action'=>'duplicate',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga" )).    
+                            $this->Html->Link(__('Edit'),array('action'=>'edit',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga")).                        
+                            $this->Html->Link(__('Del'),array('action'=>'delete',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-del-riga"), sprintf('Sicuro di voler cancellare la nota # %s?', $r['Notaspesa']['id'])).
+                            $this->Html->Link(__('Duplicate'),array('action'=>'duplicate',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga" )).    
 							$linkScontrino.
 							$scontrinoToDrive,
-                            array('class'=>'actions hidden-print')),                            
+                            array('class'=>'actions hidden-print')),
+                            */                            
                           ),
                     array('class' => 'darker'));
                     $tot +=  $r['Notaspesa']['importo'];                                        

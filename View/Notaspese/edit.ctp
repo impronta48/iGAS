@@ -30,7 +30,7 @@
 		'label' => array(
 			'class' => 'col col-md-2 control-label'
 		),
-		'wrapInput' => 'col col-md-4',
+		'wrapInput' => 'col col-md-7',
 		'class' => 'form-control'
 	),	
 	'url' => array('controller' => 'Notaspese', 'action' => 'add', 'id' => $id),
@@ -39,26 +39,44 @@
     )); ?>
 
     <?php echo $this->Form->input('id'); ?>
-    <?php echo $this->Form->input('eRisorsa', array('options' => $eRisorse, 'label' => 'Persona', 'class'=>'chosen-select col col-md-8')); ?>
+    <?php 
+        if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)){
+            echo $this->Form->input('eRisorsa', array('default' => $eRisorsa, 'options' => $eRisorse, 'label' => 'Persona', 'class'=>'chosen-select col col-md-8')); 
+        } else {
+            echo $this->Form->input('eRisorsa', array('value' => $this->Session->read('Auth.User.persona_id'), 'type' => 'hidden')); 
+            echo $this->Form->input('eRisorsaDisplay', array('placeholder' => $this->Session->read('Auth.User.Persona.DisplayName'), 'value' => $this->Session->read('Auth.User.Persona.DisplayName'), 'disabled' => true, 'label' => 'Persona', 'class'=>'form-control col col-md-8')); 
+        }
+    ?>
+    <?php //echo $this->Form->input('eRisorsa', array('options' => $eRisorse, 'label' => 'Persona', 'class'=>'chosen-select col col-md-8')); ?>
     
     <?php
     $def = array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>'');
     echo $this->Form->input('data', $def);
     ?>
-        
-        
-	<?php echo $this->Form->input('eAttivita', array('options' => $eAttivita, 
-                                                'label' => array('text'=>'Attivita'),                                                 
+    <?php    
+    if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)){
+        $aggiungiAttivita=$this->Html->link('<i class="fa fa-plus-square"></i> Aggiungi Attività -se non c\'è nell\'elenco', 
+                                                array('controller'=>'attivita','action'=>'edit'), 
+                                                array('class'=>'btn btn-xs btn-primary', 'escape'=>false, 'target'=> 'blank','tabindex'=>-1)
+                                            );
+    } else {
+        $aggiungiAttivita='';
+    }
+    ?>
+    <?php 
+    echo $this->Form->input('attivita_dummy', array('label'=>'Attività', 'value'=>$this->data['Attivita']['name'], 'class' => 'form-control', 'disabled' => true));
+    ?> 
+    <?php echo $this->Form->hidden('eAttivita', array('value'=>$this->data['Notaspesa']['eAttivita'])); ?> 
+    <?php 
+    /*echo $this->Form->input('eAttivita', array('options' => $eAttivita, 
+                                                'label' => array('text'=>'Attività'),                                                 
                                                 'class'=>'col col-md-8 attivita chosen-select ' . $baseformclass, //chosen-select
-                                                'after' => $this->Html->link('<i class="fa fa-plus-square"></i> Aggiungi Attività -se non c\'è nell\'elenco', 
-                                                            array('controller'=>'attivita','action'=>'edit'), 
-                                                            array('class'=>'btn btn-xs btn-primary', 'escape'=>false, 'target'=> 'blank','tabindex'=>-1)
-                                                        ),
+                                                'after' => $aggiungiAttivita,
                                                ) 
-                                  ); 
+                                  ); */
     ?>        
-    
-	<?php echo $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'class'=>'fase ' . $baseformclass)); ?> 
+    <?php echo $this->Form->input('faseattivita_dummy', array('label'=>'Fase Attività', 'value'=>$this->data['Faseattivita']['Descrizione'], 'class' => 'form-control', 'disabled' => true)); ?> 
+	<?php echo $this->Form->hidden('faseattivita_id', array('label'=>'Fase Attività', 'class'=>'fase ' . $baseformclass)); ?> 
     <?php echo $this->Form->input('eCatSpesa', array('options'=>$eCatSpesa, 'label'=>'Tipo di Spesa')); ?>
     <?php echo $this->Form->input('descrizione'); ?>    
 	<?php
@@ -165,7 +183,7 @@
                           'wrapInput' => 'col col-md-9 col-md-offset-2',
                     )); ?>
 
-   <?php echo $this->Form->submit(__('Save'), array('class'=>'col-md-offset-2')); ?>
+   <?php echo $this->Form->submit(__('Save'), array('class'=>'btn btn-primary col-md-offset-2')); ?>
    <?php echo $this->Form->end();?>
 </div>
 

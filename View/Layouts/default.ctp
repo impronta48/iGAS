@@ -73,13 +73,24 @@
                           $u = $this->Session->read('Auth.User.username');
                           $uid = $this->Session->read('Auth.User.id');                         
                           $role = $this->Session->read('Auth.User.group_id');
-                          $path = 'profiles'.DS.$uid.'.png';
+                          $pathWithoutExt = 'profiles'.DS.$this->Session->read('Auth.User.Persona.id').'.';
                           //Auth::hasRole(Configure::read('Role.admin'))
                           //debug($this->Session->read('Auth.User.Persona.id'));
                           //debug($this->Session->read('Auth.User'));
-                          //debug(IMAGES. 'profiles/'. $uid . '.png');
-                          if (!file_exists(IMAGES.'profiles'.DS.$uid.'.png')){
-                            $path = 'profiles'.DS.'default.png';             
+                          //debug(IMAGES.$pathWithoutExt);
+                          foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+                            if(!file_exists(IMAGES.$pathWithoutExt.$ext)){
+                              if($this->Session->read('Auth.User.Persona.Sex') == 'M'){
+                                $path = 'profiles'.DS.'default-man.png';
+                              } elseif($this->Session->read('Auth.User.Persona.Sex') == 'F'){
+                                $path = 'profiles'.DS.'default-lady.png';
+                              } else {
+                                $path = 'profiles'.DS.'default.png';
+                              }
+                            } else {
+                              $path = $pathWithoutExt.$ext;
+                              break;
+                            }
                           }
                           if(empty($u)){
                             $u = 'Utente Anonimo';
@@ -92,7 +103,10 @@
                         }
                    ?>
                   <li><a href="#" class="user dropdown-toggle" data-toggle="dropdown"><span class="username"><?php echo $this->Html->image($path , array('class'=>'user-avatar','alt'=>'')); ?> Ciao <b><?php echo ucfirst($u); ?></b> <?php echo $uAssoc; ?></span></a>                  
-                    <ul class="dropdown-menu">                      
+                    <ul class="dropdown-menu">     
+                      <?php if($this->Session->read('Auth.User.Persona.id')){ ?>
+                      <li><a href="<?php echo $this->Html->url('/persone/edit/'. $this->Session->read('Auth.User.Persona.id')); ?>"> Edita Profilo</a></li>                  
+                      <?php } ?>
                       <li><a href="<?php echo $this->Html->url('/users/cambiapwd/'. $uid); ?>"> Cambia Password</a></li>                    
                       <li><a href="<?php echo $this->Html->url('/users/logout'); ?>" class="text-danger"><i class="fa fa-lock"></i> Logout</a></li>                                          
                     </ul>

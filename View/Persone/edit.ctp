@@ -10,10 +10,11 @@
 
 <div class="persona form">
     
-    <h1 id="DisplayName"><?php echo $this->data['Persona']['DisplayName'] ?> </h1>
+    <h1 id="DisplayName"><?php echo $this->data['Persona']['DisplayName'] ?> <?php echo ($profilePath) ? $this->Html->image($profilePath, array('class'=>'', 'style' => 'border-radius: 50%; border: 3px solid #ffffff; width:50px', 'alt'=>'')) : ''; ?></h1>
     <?php if (isset($this->request->data['Persona']['id'])) :
           $id = $this->request->data['Persona']['id'];
     ?>
+    <?php if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)): ?>
     <div class="btn-group">
     <a href="<?php echo $this->Html->url(array('controller'=>'ordini','action'=>'index', 'persona'=>$id) ); ?>" class="btn btn-default btn-sm">Ordini</a>
     <a href="<?php echo $this->Html->url(array('controller'=>'fattureemesse','action'=>'index', 'persona'=>$id) ); ?>" class="btn btn-default btn-sm">Fatture Emesse</a>
@@ -21,10 +22,12 @@
     <a href="<?php echo $this->Html->url(array('controller'=>'primanota','action'=>'index', 'persona'=>$id) ); ?>" class="btn btn-default btn-sm">Pagamenti</a>
     <a href="<?php echo $this->Html->url(array('controller'=>'impiegati','action'=>'index', $id) ); ?>" class="btn btn-default btn-sm">Costi e Tariffe</a>
     </div>    
+    <?php endif; ?>
     <hr>
     <?php endif; ?>
     
     <?php echo $this->Form->create('Persona', array(
+        'enctype' => 'multipart/form-data',
         'inputDefaults' => array(
 		'div' => 'form-group',
 		'label' => array(
@@ -51,6 +54,7 @@
             echo $this->Form->input('Cognome');        		
             echo $this->Form->input('Societa');
             echo $this->Form->input('DisplayName', array('class'=> 'form-control required'));
+            echo $this->Form->input('Sex', array('empty' => 'Non dichiarato', 'options'=>['M' => 'Maschio','F' => 'Femmina'], 'label'=>'Sesso', 'class' => 'form-control'));
             echo $this->Form->input('Titolo');
             echo $this->Form->input('Carica');                
             echo $this->Form->input('DataDiNascita', array('type'=>'text','class'=> 'form-control date'));
@@ -64,7 +68,23 @@
              <?php endforeach; ?>
                 <i class="fa fa-arrow-down"></i>
             </div>     
-            <?php echo $this->Form->input('tags', array('class'=>'dest-suggestion form-control tagsinput'));?>                        
+            <?php echo $this->Form->input('tags', array('class'=>'dest-suggestion form-control tagsinput'));?>
+            <?php echo $this->Form->input('uploadFile', array('label'=>'Immagine Profilo', 'class'=>false, 'type'=>'file')); ?>                        
+            <?php
+            foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
+                if(isset($id)){
+                    if(file_exists(WWW_ROOT.'img'.DS.'profiles'.DS.$id.'.'.$ext)){
+                        echo '<div class="alert alert-warning">';
+                        echo 'Immagine profilo caricata. ';
+                        echo $this->Html->link(__('View'), HTTP_BASE.DS.APP_DIR.DS.'img'.DS.'profiles'.DS.$id.'.'.$ext, array('class'=>'btn btn-xs btn-primary', 'title'=>__('View this Avatar')));
+                        echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
+                        echo $this->Html->link(__('Delete'), array('action' => 'deleteDoc', $id), array('class'=>'btn btn-xs btn-primary', 'title'=>__('View this Avatar')), __('Are you sure you want to delete %s.%s?', $id, $ext));
+                        echo '<br />Un nuovo upload sovrascriverà la vecchia immagine.';
+                        echo '</div>';
+                    }
+                }
+            }
+            ?>
             <?php echo $this->Form->submit('Salva', array('class'=>'btn btn-primary')); ?>    
             </div>
         </div>

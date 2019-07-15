@@ -660,8 +660,13 @@ class OreController extends AppController {
     //Massimoi - 30/8/2013 - Mostra quali fogli ore sono stati caricati per ogni dipendente per ogni anno
     function riassuntocaricamenti($anno)
     {
-        $conditions = array('YEAR(Ora.data)' => $anno);
-
+        $attivita_list = $this->Ora->Attivita->getlist();
+        $this->set('attivita_list', $attivita_list);
+        $persona_list = $this->Ora->getPersone();
+        $this->set('persona_list', $persona_list);
+        $conditions = [];
+        $conditions = $this->getConditionFromQueryString();
+        $conditions['YEAR(Ora.data)'] = $anno;
         $conteggi = $this->Ora->find('all', array(
                                         'conditions' => $conditions,
                                         'group' => array('Persona.Cognome', 'MONTH(Ora.data)'),
