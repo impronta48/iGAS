@@ -120,6 +120,7 @@
                                 <td class="bg-gray"><b>Descrizione</b></td>
                                 <td class="bg-gray"><b>Numero Ore</b></td>
                                 <td class="bg-gray"><b>Attivit&agrave;</b></td>
+                                <td class="bg-gray"><b>Fase</b></td>
                                 <td class="bg-gray"><b>Consulente</b></td>
                             </tr>
 
@@ -142,6 +143,7 @@
                     <td>".$o['Ora']['dettagliAttivita']."</td>
                     <td>".$o['Ora']['numOre']."</td>
                     <td>".$o['Attivita']['name']."</td>
+                    <td>".$o['Faseattivita']['Descrizione']."</td>
                     <td>".$o['Persona']['DisplayName']."</td></tr>";
 
             $ore_tot += $o['Ora']['numOre'];
@@ -155,6 +157,7 @@
                 <td class="bg-gray">Totale Ore</td>
                 <td class="bg-gray">&nbsp;</td>
                 <td class="bg-gray"><?php echo $ore_tot;?></td>
+                <td class="bg-gray">&nbsp;</td>
                 <td class="bg-gray">&nbsp;</td>
                 <td class="bg-gray">&nbsp;</td>
             </tr>
