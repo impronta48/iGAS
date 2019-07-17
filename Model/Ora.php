@@ -102,10 +102,6 @@ class Ora extends AppModel {
 				} else {
 					$qtaNew = $qtaUtilizzata + ((int)$this->data['Ora']['numOre']/$hDayWork);
 				}
-				if($qtaNew > $qta){
-					$this->error = __('Hai inserito un numero superiore di ore ripetto al necessario');
-					return false; // false in beforeSave non fa procedere con il salvataggio
-				}
 				//debug($this->data['Ora']['numOre']);
 				//debug((int)$this->data['Ora']['numOre']/$hDayWork);
 				//debug($faseAttivitaQtaData);
