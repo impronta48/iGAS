@@ -11,10 +11,6 @@
         {
             "type": "pear",
             "url": "https://pear.cakephp.org"
-        },
-        {
-            "type": "vcs",
-            "url": "https://bitbucket.org/mailchimp/mailchimp-api-php"
         }
     ],
     "require": {

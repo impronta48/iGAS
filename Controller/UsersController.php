@@ -168,39 +168,79 @@ class UsersController extends AppController
 		}
 	}
 
-		public function password_dimenticata() {
-		if( !empty($this->request->data) ) {
-			$existing_user = $this->User->findByUsername($this->request->data['User']['email']);
+	public function checkResetPass($uid, $token){
+		$existing_user = $this->User->findById($uid);
+		// debug(unserialize(openssl_decrypt($token, 'AES-128-ECB', $existing_user['User']['reset_pass_key']))); // DEBUG
+		$tokenArray = @unserialize(openssl_decrypt($token, 'AES-128-ECB', $existing_user['User']['reset_pass_key']));
+		if($tokenArray){ // Se non si riesce a decriptare il token vuol dire che qualcuno stà tentando di fare qualcosa
+			if($tokenArray['username'] != $existing_user['User']['username']){ // Questo controllo è praticamente inutile
+				$this->Session->setFlash('Dati errati', 'flash_error');
+				return false;
+			}else if(time() - $tokenArray['requestdate'] > 86400){ // Dopo un giorno il link non è più valido
+				$this->Session->setFlash('Link reset password scaduto, inviare un altra richiesta di reset', 'flash_error');
+				return false;
+			}
+			$tokenArray['uid'] = $uid;
+			return $tokenArray;
+		} else {
+			$this->Session->setFlash('Impossibile elaborare la richiesta.', 'flash_error');
+			return false;
+		}
+	}
+
+	public function password_dimenticata() {
+		$this->layout = 'notlogged';
+		$setPassMode = false;
+		$this->set('resetPass', $setPassMode);
+		if(isset($this->params['url']['uid']) and isset($this->params['url']['token'])){
+			$setPassMode = $this->checkResetPass($this->params['url']['uid'], $this->params['url']['token']);
+			if($setPassMode == false){
+				$this->set('sendSuccess', true);
+				return;
+			}
+		}
+		$this->set('resetPass', $setPassMode);
+		if(!empty($this->request->data) and $setPassMode == false) {
+			$existing_user = $this->User->findByUsername($this->request->data['User']['username']);
 			if(empty($existing_user)) {
 				$this->Session->setFlash('Utente non trovato!', 'flash_error');
 				return;
-			}
-			// aggiorna la password
-			$passwordHasher = new BlowfishPasswordHasher(/*array('hashType' => 'sha256')*/);
-			$plainPass = 'massimo,1';
-			$existing_user['User']['password'] = $passwordHasher->hash($plainPass);
-			if( $this->User->save($existing_user) ) {
-				// invia la password via mail
-				if(INVIA_MAIL) {
-					$Email = new CakeEmail();
-					$Email->from(array('info@impronta48.it' => 'iGAS - iMpronta'));
-					$Email->to( $this->request->data['User']['email'] );
-					$Email->subject('ANBIMA - Password dimenticata');
-					$Email->emailFormat('html');
-					$Email->template('password_dimenticata', 'default');
-					$Email->viewVars(array(
-						'plainPassword' => $plainPass,
-						'user' => $existing_user['User']
-					));
-					$Email->send();
-				}
-				$this->Session->setFlash('Le istruzioni per il recupero password sono state inviate all\'indirizzo email inserito', 'flash_ok_custom');
-				$this->redirect( array('action' => 'login') );
-			}
-			else {
-				$this->Session->setFlash('Si è verificato un errore.', 'flash_error_custom');
+			} else if(empty($existing_user['Persona']['EMail'])) {
+				$this->Session->setFlash('L\'utente selezionato non ha una mail associata, impossibile inviare la mail di recupero password', 'flash_error');
 				return;
 			}
+			// debug($existing_user); // DEBUG
+			$token = [];
+			$token['username'] = $existing_user['User']['username'];
+			$token['securestring'] = bin2hex(random_bytes(32));
+			$token['requestdate'] = time();
+			$secureKey = uniqid('');
+			$urlToken = urlencode(openssl_encrypt(serialize($token), 'AES-128-ECB', $secureKey));
+			// debug($urlToken); //DEBUG
+			// debug(openssl_decrypt(urldecode($urlToken), 'AES-128-ECB', $secureKey)); // DEBUG
+			if($this->User->save(array('id' => $existing_user['User']['id'], 'reset_pass_key' => $secureKey))) {
+				$Email = new CakeEmail();
+				$Email->from(array('info@impronta48.it' => 'iGAS - iMpronta'));
+				$Email->to($existing_user['Persona']['EMail']);
+				$Email->subject('iGAS - Password dimenticata');
+				$Email->emailFormat('html');
+				$Email->template('password_dimenticata', 'default');
+				$Email->viewVars(array(
+					'urlToken' => $urlToken,
+					'userId' => $existing_user['User']['id'],
+					'user' => $existing_user['User']['username']
+				));
+				$Email->send();
+				$this->Session->setFlash('Le istruzioni per il recupero password sono state inviate all\'indirizzo email dell\'utente inserito');
+				$this->set('sendSuccess', true);
+				//$this->redirect(array('action' => 'login'));
+			} else {
+				$this->Session->setFlash('Si è verificato un errore.', 'flash_error');
+				$this->set('sendSuccess', false);
+				return;
+			}
+		} else {
+				$this->set('sendSuccess', false);
 		}
 	}
 
