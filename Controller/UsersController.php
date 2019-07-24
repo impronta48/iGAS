@@ -9,12 +9,10 @@ class UsersController extends AppController
 	var $uses = array('User');
     
 	// Aggiunto per poter fare il logout di utenti non administrators
-	function beforeFilter() 
-	{
+	function beforeFilter() {
 		 parent::beforeFilter(); 
 		 $this->Auth->allowedActions = array('logout','password_dimenticata'); 
 		 //$this->Auth->allow();		 
-		 
 	}
 
 	function index() {
@@ -188,10 +186,45 @@ class UsersController extends AppController
 		}
 	}
 
-	public function password_dimenticata() {
+	public function password_dimenticata($setNew = null) {
+		if(isset($this->params['url']['eh']) and isset($this->params['url']['no'])){die();}
 		$this->layout = 'notlogged';
 		$setPassMode = false;
 		$this->set('resetPass', $setPassMode);
+		$this->set('finalSuccess', false); 
+		$this->set('sendSuccess', null); 
+		if($setNew and $setNew == 'setnew') { // Controllo se le pass immesse coincidono ed altre cose, poi resetto la password dell'utente
+			$this->set('sendSuccess', true); 
+			$existing_user = @$this->User->findById($this->request->data['User']['id']);
+			if(!empty($this->request->data)) {
+				// debug($this->request->data); // DEBUG
+				$token = [];
+				$token['username'] = $this->request->data['Conferma']['username'];
+				$token['securestring'] = $this->request->data['Conferma']['securestring'];
+				$token['requestdate'] = (int) $this->request->data['Conferma']['requestdate']; // Questo cast NON è inutile !!!
+				$urlToken = urlencode(openssl_encrypt(serialize($token), 'AES-128-ECB', $existing_user['User']['reset_pass_key']));
+				// debug(serialize($token)); //DEBUG
+				// debug($existing_user['User']['reset_pass_key']); // DEBUG
+				// debug(urlencode($this->request->data['Conferma']['requesterToken'])); // DEBUG
+				if($existing_user['User']['reset_pass_key'] == NULL or urlencode($this->request->data['Conferma']['requesterToken']) != $urlToken){
+					$this->Session->setFlash('Impossibile elaborare la richiesta.', 'flash_error');
+					// Se siamo entrati in questo blocco, qualcuno con un token personale funzionante, vuole tentare di modificare le password degli altri
+					// Allora lo redirigo in una pagina sbagliata che no nporta a niente
+					$this->redirect(array('controller' => 'users', 'action' => 'password_dimenticata', '?' => 'eh=no&no=badthing'));
+					return; // Useless
+				}
+				if($this->request->data['User']['password'] === $this->request->data['Conferma']['password']){
+					// debug('Le pass coincidono'); // DEBUG
+					$this->User->save(array('id' => $this->request->data['User']['id'], 'password' => $this->request->data['User']['password'], 'reset_pass_key' => NULL));
+					$this->Session->setFlash('Password modificata con successo.');
+					$this->set('finalSuccess', true); 
+				} else {
+					$this->Session->setFlash('Le password inserite non combaciano', 'flash_error');
+					$this->redirect(array('controller' => 'users', 'action' => 'password_dimenticata', '?' => 'uid='.$this->request->data['User']['id'].'&token='.$urlToken));
+				}
+			}
+			return;
+		}
 		if(isset($this->params['url']['uid']) and isset($this->params['url']['token'])){
 			$setPassMode = $this->checkResetPass($this->params['url']['uid'], $this->params['url']['token']);
 			if($setPassMode == false){
@@ -233,7 +266,6 @@ class UsersController extends AppController
 				$Email->send();
 				$this->Session->setFlash('Le istruzioni per il recupero password sono state inviate all\'indirizzo email dell\'utente inserito');
 				$this->set('sendSuccess', true);
-				//$this->redirect(array('action' => 'login'));
 			} else {
 				$this->Session->setFlash('Si è verificato un errore.', 'flash_error');
 				$this->set('sendSuccess', false);

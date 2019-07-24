@@ -128,7 +128,7 @@
 		      <div class="row">
               <div class="col-mod-12">
 								<ul class="breadcrumb">
-                    <?php echo $this->Html->getCrumbs(' &raquo; ', 'Home'); ?>
+                    <?php // echo $this->Html->getCrumbs(' &raquo; ', 'Home'); ?>
                 </ul>
               </div>
           </div>
