@@ -167,6 +167,7 @@ class UsersController extends AppController
 	}
 
 	public function checkResetPass($uid, $token){
+		Configure::write('debug', 0);
 		$existing_user = $this->User->findById($uid);
 		// debug(unserialize(openssl_decrypt($token, 'AES-128-ECB', $existing_user['User']['reset_pass_key']))); // DEBUG
 		$tokenArray = @unserialize(openssl_decrypt($token, 'AES-128-ECB', $existing_user['User']['reset_pass_key']));
@@ -187,6 +188,8 @@ class UsersController extends AppController
 	}
 
 	public function password_dimenticata($setNew = null) {
+		Configure::write('debug', 0);
+		$this->set('title_for_layout', 'Reset Password');
 		if(isset($this->params['url']['eh']) and isset($this->params['url']['no'])){die();}
 		$this->layout = 'notlogged';
 		$setPassMode = false;
@@ -209,11 +212,11 @@ class UsersController extends AppController
 				if($existing_user['User']['reset_pass_key'] == NULL or urlencode($this->request->data['Conferma']['requesterToken']) != $urlToken){
 					$this->Session->setFlash('Impossibile elaborare la richiesta.', 'flash_error');
 					// Se siamo entrati in questo blocco, qualcuno con un token personale funzionante, vuole tentare di modificare le password degli altri
-					// Allora lo redirigo in una pagina sbagliata che no nporta a niente
+					// Allora lo redirigo in una pagina sbagliata che non porta a niente
 					$this->redirect(array('controller' => 'users', 'action' => 'password_dimenticata', '?' => 'eh=no&no=badthing'));
 					return; // Useless
 				}
-				if($this->request->data['User']['password'] === $this->request->data['Conferma']['password']){
+				if(($this->request->data['User']['password'] === $this->request->data['Conferma']['password']) and (strlen($this->request->data['User']['password']) >= 5)){
 					// debug('Le pass coincidono'); // DEBUG
 					$this->User->save(array('id' => $this->request->data['User']['id'], 'password' => $this->request->data['User']['password'], 'reset_pass_key' => NULL));
 					$this->Session->setFlash('Password modificata con successo.');
@@ -272,7 +275,7 @@ class UsersController extends AppController
 				return;
 			}
 		} else {
-				$this->set('sendSuccess', false);
+			$this->set('sendSuccess', false);
 		}
 	}
 
