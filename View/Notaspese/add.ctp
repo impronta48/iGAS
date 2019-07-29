@@ -104,6 +104,7 @@
         $def['selected'] = "$anno-$mese-$giorno";        
     }    
     echo $this->Form->input('data', $def);
+    // echo $this->Form->input('data', array('type'=>'text', 'label' => 'Data', 'value' => "$anno-$mese-$giorno", 'dateFormat' => 'DMY', 'class' => 'form-control required'));
     ?>
         
     <?php 
@@ -355,7 +356,6 @@
         $("#non-euro-zone").hide();        
         $("#co2-calc").hide();        
         mostraViaggio();        
-                
         $( "#NotaspesaECatSpesa").change(function(e) {mostraViaggio();});
         $( "#NotaspesaRitorno").change(function(e) {mostraPercorso();});
         $( "#NotaspesaImportoVal").change(function(e) {convertiValuta();});
@@ -367,5 +367,7 @@
             return false;
             }
         );
+
+        // $( "#NotaspesaData" ).datepicker( { dateFormat: 'yy-mm-dd' });
 
 <?php $this->Html->scriptEnd(); 

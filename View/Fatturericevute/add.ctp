@@ -10,8 +10,8 @@
 		'label' => array(
 			'class' => 'col col-md-2 control-label'
 		),
-		'wrapInput' => 'col col-md-4',
-		'class' => $baseformclass,
+		'wrapInput' => 'col col-md-7',
+		'class' => 'form-control '.$baseformclass,
 	),
 	'class' => 'well form-horizontal'       
     ));  ?>
@@ -39,19 +39,22 @@
         echo $this->Form->input('protocollo_ricezione');
 		echo $this->Form->input('progressivo');        
 		echo $this->Form->input('annoFatturazione');				
-        echo $this->Form->input('dataFattura', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>'','label'=>'Data Documento'));
+        // echo $this->Form->input('dataFattura', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>'','label'=>'Data Documento'));
+		echo $this->Form->input('dataFattura', array('type' => 'text', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY', 'label'=>'Data Documento'));
 		echo $this->Form->input('motivazione');
 		echo $this->Form->input('provenienza', array('options'=> $provenienza));
 		echo $this->Form->input('attivita_id', array('class'=>'attivita chosen-select' . $baseformclass));  //array('class'=>'chosen-select')
-		echo $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'options'=>$faseattivita, 'class' => 'fase ' . $baseformclass));
+		echo $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'options'=>$faseattivita, 'class' => 'fase form-control input-xs'));
         echo $this->Form->input('legenda_cat_spesa_id', array('options'=>$legenda_cat_spesa, 'label'=>'Tipo Spesa','class' => 'chosen-select'));        
 		echo $this->Form->input('importo');		
 		echo $this->Form->input('imponibile');
 		echo $this->Form->input('iva');
 		echo $this->Form->input('fuoriIva');
-        echo $this->Form->input('scadPagamento', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
+		// echo $this->Form->input('scadPagamento', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
+		echo $this->Form->input('scadPagamento', array('type' => 'text', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY'));
 		echo $this->Form->input('ritenutaAcconto');		
-		echo $this->Form->input('scadenzaRitenutaAcconto', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
+		// echo $this->Form->input('scadenzaRitenutaAcconto', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
+		echo $this->Form->input('scadenzaRitenutaAcconto', array('type' => 'text', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY'));
 		// Ho notato che input type="file" non si prende gli inputDefaults settati in $this->Form->create() all'inizio del file
 		//echo $this->Form->file('uploadFile');
 		// Meglio usare questa sintassi per creare input type="file"
@@ -75,5 +78,9 @@
     $('#dettagli-fornitore').hide('fast');
 
     $( "#add-fornitore" ).click( function (e) { $("#dettagli-fornitore").toggle('fast'); $("#FatturaricevutaFornitoreId").parent().toggle('fast'); });
+
+	$( "#FatturaricevutaDataFattura" ).datepicker( { dateFormat: 'yy-mm-dd' });
+	$( "#FatturaricevutaScadPagamento" ).datepicker( { dateFormat: 'yy-mm-dd' });
+	$( "#FatturaricevutaScadenzaRitenutaAcconto" ).datepicker( { dateFormat: 'yy-mm-dd' });
 
 <?php $this->Html->scriptEnd();
