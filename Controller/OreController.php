@@ -669,9 +669,9 @@ class OreController extends AppController {
         $conditions['YEAR(Ora.data)'] = $anno;
         $conteggi = $this->Ora->find('all', array(
                                         'conditions' => $conditions,
-                                        'group' => array('Persona.Cognome', 'MONTH(Ora.data)'),
-                                        'order' => array('Persona.Cognome', 'MONTH(Ora.data)'),
-                                        'fields' => array('Persona.Cognome', 'MONTH(Ora.data) as Mese', 'SUM(Ora.numOre) as OreTot')
+                                        'group' => array('Persona.id', 'Persona.Cognome', 'MONTH(Ora.data)'),
+                                        'order' => array('Persona.id', 'Persona.Cognome', 'MONTH(Ora.data)'),
+                                        'fields' => array('Persona.id', 'Persona.Cognome', 'MONTH(Ora.data) as Mese', 'SUM(Ora.numOre) as OreTot')
         ));
 
         //Giro la tabella risultante in modo da avere questa struttura associativa (che mi facilita la view)
@@ -679,6 +679,7 @@ class OreController extends AppController {
         $p = '';
         $risult = array();
         $ore = array();
+        $personaId = '';
         foreach ($conteggi as $c) {
             //Se cambia persona svuoto l'array
             if ($p != $c['Persona']['Cognome'])
@@ -686,13 +687,17 @@ class OreController extends AppController {
                 if($p != '')
                 {
                     $risult[$p] = $ore;
+                    $risult[$p]['Id'] = $personaId;
                 }
                 $p = $c['Persona']['Cognome'];
+                
                 $ore = array();
             }
             $ore[$c[0]['Mese']] = $c[0]['OreTot'];
+            $personaId = $c['Persona']['id'];
         }
         $risult[$p] = $ore;
+        $risult[$p]['Id'] = $personaId;
 
         $this->set('conteggi', $risult);
         $this->set('title_for_layout', "$anno | Riassunto Caricamenti | Foglio Ore");       

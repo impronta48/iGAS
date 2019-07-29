@@ -248,10 +248,10 @@ class PersoneController extends AppController {
         exit();
     }
 
-    public function consulente($anno, $mese) {        
+    public function consulente($anno, $mese, $personaId = NULL) {        
         $persone = Configure::read('Attivita.personeFoglioOre');
-        $proj_speciali = Configure::read('iGas.progettiSpeciali');        
-        $tabore= $this->_getOreconsulente($persone, $anno, $mese);
+        $proj_speciali = Configure::read('iGas.progettiSpeciali');   
+        $tabore= $this->_getOreconsulente($persone, $anno, $mese, $personaId);
 
         $this->set('ore', $tabore);
         $this->set('mese', $mese);
@@ -335,7 +335,7 @@ class PersoneController extends AppController {
         //In ogni caso aggiungo
     }
 	
-	public function report($anno, $mese) {
+	public function report($anno, $mese, $idPersona = NULL) {
 
         $this->Persona->recursive = -1;
         $this->loadModel('Attivita');
@@ -344,7 +344,7 @@ class PersoneController extends AppController {
         // Filippo 20/04/16 - Ho impostato il numero corretto di giorni per ogni mese
         $days = cal_days_in_month(CAL_GREGORIAN, $mese, $anno);
 
-        $tabore = $this->_getOre($days, $anno, $mese);
+        $tabore = $this->_getOre($days, $anno, $mese, $idPersona);
 
 		$special = $this->Attivita->getProgettiSpeciali();
 		
@@ -359,7 +359,7 @@ class PersoneController extends AppController {
         $this->set('name', Configure::read('iGas.NomeAzienda') . "Report-ore-$anno-$mese.pdf");        
 	}
 
-    public function report_fasi($anno, $mese) { 
+    public function report_fasi($anno, $mese, $idPersona = NULL) { 
 
         $this->Persona->recursive = -1;
 
@@ -367,7 +367,7 @@ class PersoneController extends AppController {
         // Filippo 20/04/16 - Ho impostato il numero corretto di giorni per ogni mese
         $days = cal_days_in_month(CAL_GREGORIAN, $mese, $anno);
 
-        $tabore = $this->_getOreFasi($days, $anno, $mese);
+        $tabore = $this->_getOreFasi($days, $anno, $mese, $idPersona);
 
         $this->set('giorni', $days);
         $this->set('ore', $tabore);
@@ -384,7 +384,7 @@ class PersoneController extends AppController {
         
     }
 
-    private function _getOreconsulente($persone, $anno, $mese)
+    private function _getOreconsulente($persone, $anno, $mese, $personaId = NULL)
     {
         $persone_list = $this->Persona->Impiegato->attivo();
         $proj_speciali = Configure::read('iGas.progettiSpeciali');
@@ -393,14 +393,24 @@ class PersoneController extends AppController {
         $this->Attivita->recursive = -1;
         $proj_speciali_id = $this->Attivita->getProgettiSpeciali();  //Deduco gli id dal nome del progetto
 
-        //Massimoi 6/9/13 - Non c'è speranza di usare il costruttore di query di cake per una query così!
-        $ore = $this->Persona->Impiegato->query("SELECT Persona.id, DisplayName, Ora.data, numOre, eAttivita
-                                      FROM ore as Ora, persone as Persona
-                                      right join impiegati as Impiegato on Persona.id = Impiegato.persona_id
-                                      WHERE Ora.eRisorsa = Persona.id AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
-                                      AND Impiegato.disattivo = 0                                          
-                                      ORDER BY DisplayName, data
-                                      ");
+        if($personaId){
+            $ore = $this->Persona->Impiegato->query("SELECT Persona.id, DisplayName, Ora.data, numOre, eAttivita
+                                        FROM ore as Ora, persone as Persona
+                                        right join impiegati as Impiegato on Persona.id = Impiegato.persona_id
+                                        WHERE Persona.id = $personaId AND Ora.eRisorsa = $personaId AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
+                                        AND Impiegato.disattivo = 0                                          
+                                        ORDER BY DisplayName, data
+                                        ");
+        } else {
+            //Massimoi 6/9/13 - Non c'è speranza di usare il costruttore di query di cake per una query così!
+            $ore = $this->Persona->Impiegato->query("SELECT Persona.id, DisplayName, Ora.data, numOre, eAttivita
+                                        FROM ore as Ora, persone as Persona
+                                        right join impiegati as Impiegato on Persona.id = Impiegato.persona_id
+                                        WHERE Ora.eRisorsa = Persona.id AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
+                                        AND Impiegato.disattivo = 0                                          
+                                        ORDER BY DisplayName, data
+                                        ");
+        }
 
         //riordino l'array in modo che sia facile da stampare
         //-----------   | Persona                             | Persona                             | Persona
@@ -415,15 +425,18 @@ class PersoneController extends AppController {
 
         //Inizializzo
         foreach ($persone_list as $p) { 
-            foreach ($proj_speciali as $s)
-            {           
-                $tabore[$p['Persona']['DisplayName']][$s] =  array_fill(1, 31, 0);                        
+            foreach($ore as $key => $value){
+                if($p['Persona']['id'] == $value['Persona']['id']){
+                    foreach ($proj_speciali as $s){           
+                        $tabore[$p['Persona']['DisplayName']][$s] =  array_fill(1, 31, 0);                        
+                    }
+                    //Voci del foglio ore che compaiono sempre
+                    $tabore[$p['Persona']['DisplayName']]['Progetto'] =  array_fill(1, 31, 0);
+                    $tabore[$p['Persona']['DisplayName']]['Totale'] =  array_fill(1, 31, 0);
+                    $tabore[$p['Persona']['DisplayName']]['Eccesso'] =  array_fill(1, 31, 0);
+                    $tabore[$p['Persona']['DisplayName']]['Contratto'] =  $this->_getContratto($p['Persona']['id'], $anno, $mese);
+                }
             }
-            //Voci del foglio ore che compaiono sempre
-            $tabore[$p['Persona']['DisplayName']]['Progetto'] =  array_fill(1, 31, 0);
-            $tabore[$p['Persona']['DisplayName']]['Totale'] =  array_fill(1, 31, 0);
-            $tabore[$p['Persona']['DisplayName']]['Eccesso'] =  array_fill(1, 31, 0);
-            $tabore[$p['Persona']['DisplayName']]['Contratto'] =  $this->_getContratto($p['Persona']['id'], $anno, $mese);
         }
         
         //Carico le ore
@@ -448,25 +461,25 @@ class PersoneController extends AppController {
         
         //Calcolo i totali alla fine per ottimizzare ed essere sicuro di fare il conto
         //Tutti i giorni, anche in quelli che non contengono ore
-        foreach ($persone_list as $o) {    
-            for ($day =1; $day <= cal_days_in_month(CAL_GREGORIAN, $mese, $anno); $day++)
-            {
-                $sommaPrjSpeciali = 0;
-                foreach ($proj_speciali as $s)
-                {
-                    $sommaPrjSpeciali += $tabore[$o['Persona']['DisplayName']][$s][$day];                    
+        foreach ($persone_list as $o) {  
+            foreach($ore as $key => $value){  
+                if($o['Persona']['id'] == $value['Persona']['id']){
+                    for ($day =1; $day <= cal_days_in_month(CAL_GREGORIAN, $mese, $anno); $day++){
+                        $sommaPrjSpeciali = 0;
+                        foreach ($proj_speciali as $s){
+                            $sommaPrjSpeciali += $tabore[$o['Persona']['DisplayName']][$s][$day];                    
+                        }
+                        //Calcolo l'effettivo tempo impiegato tra progetti normali e speciali
+                        $tabore[$o['Persona']['DisplayName']]['Totale'][$day] =
+                            $tabore[$o['Persona']['DisplayName']]['Progetto'][$day] +
+                            $sommaPrjSpeciali;
+                        //Calcolo il Eccesso tra contratto e lavoro
+                        $tabore[$o['Persona']['DisplayName']]['Eccesso'][$day] =
+                            $tabore[$o['Persona']['DisplayName']]['Progetto'][$day] +
+                            $sommaPrjSpeciali -
+                            $tabore[$o['Persona']['DisplayName']]['Contratto'][$day] ;
+                    }
                 }
-
-                //Calcolo l'effettivo tempo impiegato tra progetti normali e speciali
-                $tabore[$o['Persona']['DisplayName']]['Totale'][$day] =
-                    $tabore[$o['Persona']['DisplayName']]['Progetto'][$day] +
-                    $sommaPrjSpeciali;
-
-                //Calcolo il Eccesso tra contratto e lavoro
-                $tabore[$o['Persona']['DisplayName']]['Eccesso'][$day] =
-                    $tabore[$o['Persona']['DisplayName']]['Progetto'][$day] +
-                    $sommaPrjSpeciali -
-                    $tabore[$o['Persona']['DisplayName']]['Contratto'][$day] ;
             }
         }
         return $tabore;
@@ -496,23 +509,35 @@ class PersoneController extends AppController {
         return $result;
     }
 
-    private function _getOre($days, $anno, $mese) {
+    private function _getOre($days, $anno, $mese, $personaId = NULL) {
 
         $persone_list = $this->Persona->Impiegato->attivo();
         $this->loadModel('Attivita');
         $this->Attivita->recursive = -1;
         $special = $this->Attivita->getProgettiSpeciali();  //Deduco gli id dal nome del progetto
 
-        //Massimoi 6/9/13 - Non c'è speranza di usare il costruttore di query di cake per una query così!
-        $ore = $this->Persona->query("SELECT Persona.id, DisplayName, Ora.data, Ora.numOre, eAttivita, Attivita.name
-                                      FROM (ore as Ora LEFT JOIN persone as Persona on Ora.eRisorsa = Persona.id)
-                                      right join impiegati as Impiegato on Persona.id = Impiegato.persona_id
-                                      LEFT JOIN attivita as Attivita on  Attivita.id = Ora.eAttivita
-                                      WHERE Ora.eRisorsa = Persona.id AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
-                                      AND Impiegato.disattivo = 0
-                                      ORDER BY Cognome, Attivita.name, data"
-                                      );
-
+        if($personaId){
+            $ore = $this->Persona->query("SELECT Persona.id, DisplayName, Ora.data, Ora.numOre, eAttivita, Attivita.name
+                                        FROM (ore as Ora LEFT JOIN persone as Persona on Ora.eRisorsa = Persona.id)
+                                        right join impiegati as Impiegato on Persona.id = Impiegato.persona_id
+                                        LEFT JOIN attivita as Attivita on  Attivita.id = Ora.eAttivita
+                                        WHERE Persona.id = $personaId AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
+                                        AND Impiegato.disattivo = 0
+                                        ORDER BY Cognome, Attivita.name, data"
+                                        );
+        } else {
+            //Massimoi 6/9/13 - Non c'è speranza di usare il costruttore di query di cake per una query così!
+            // VECCHIA QUERY FUNZIONANTE MA CHE TIRA FUORI LE ORE DI TUTTE LE PERSONE
+            $ore = $this->Persona->query("SELECT Persona.id, DisplayName, Ora.data, Ora.numOre, eAttivita, Attivita.name
+                                        FROM (ore as Ora LEFT JOIN persone as Persona on Ora.eRisorsa = Persona.id)
+                                        right join impiegati as Impiegato on Persona.id = Impiegato.persona_id
+                                        LEFT JOIN attivita as Attivita on  Attivita.id = Ora.eAttivita
+                                        WHERE Ora.eRisorsa = Persona.id AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
+                                        AND Impiegato.disattivo = 0
+                                        ORDER BY Cognome, Attivita.name, data"
+                                        );
+        }
+                                    
         $tabore = array();
 
         foreach ($ore as $riga) {
@@ -526,12 +551,16 @@ class PersoneController extends AppController {
 
         //aggiungo i valori speciali successivamente
         foreach ($persone_list as $p) {
-            foreach ($special as $key => $value) {
-                $tabore[$p['Persona']['DisplayName']][$key]['ore'] = array_fill(1, $days, 0);
-                $tabore[$p['Persona']['DisplayName']][$key]['nome'] = $value;
+            foreach($ore as $key => $value){
+                if($p['Persona']['id'] == $value['Persona']['id']){
+                    foreach ($special as $key => $value) {
+                        $tabore[$p['Persona']['DisplayName']][$key]['ore'] = array_fill(1, $days, 0);
+                        $tabore[$p['Persona']['DisplayName']][$key]['nome'] = $value;
+                    }
+                }
             }
         }
-
+        //debug($tabore);
         //Carico le ore
         foreach ($ore as $o) {
 
@@ -540,25 +569,39 @@ class PersoneController extends AppController {
             
             $tabore[ $o['Persona']['DisplayName'] ][ $o['Ora']['eAttivita'] ]['ore'] [ $day ] += $o['Ora']['numOre'];
         }
+
         return $tabore;
 
     }  
 
-    private function _getOreFasi($days, $anno, $mese) {
+    private function _getOreFasi($days, $anno, $mese, $personaId = NULL) {
 
         $persone_list = $this->Persona->Impiegato->attivo();
-
-        //Massimoi 6/9/13 - Non c'è speranza di usare il costruttore di query di cake per una query così!
-        $ore = $this->Persona->query("SELECT Persona.id, DisplayName, Ora.data, Ora.numOre, eAttivita, faseattivita_id, Attivita.name, Faseattivita.Descrizione
-                                    FROM    impiegati as Impiegato 
+        if($personaId){
+            $ore = $this->Persona->query("SELECT Persona.id, DisplayName, Ora.data, Ora.numOre, eAttivita, faseattivita_id, Attivita.name, Faseattivita.Descrizione
+                                        FROM impiegati as Impiegato 
                                             LEFT JOIN  persone as Persona  on Persona.id = Impiegato.persona_id
                                             LEFT JOIN ore as Ora on Ora.eRisorsa = Persona.id                                            
                                             LEFT JOIN attivita as Attivita on  Attivita.id = Ora.eAttivita
                                             LEFT JOIN faseattivita as Faseattivita on Ora.faseattivita_id = Faseattivita.id
-                                      WHERE MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
-                                      AND Impiegato.disattivo = 0  
-                                      ORDER BY Cognome, data, Attivita.name
-                                      ");
+                                        WHERE Persona.id = $personaId AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
+                                        AND Impiegato.disattivo = 0  
+                                        ORDER BY Cognome, data, Attivita.name
+                                        ");
+        } else {
+        // VECCHIA QUERY FUNZIONANTE MA CHE TIRA FUORI LE ORE DI TUTTE LE PERSONE
+        //Massimoi 6/9/13 - Non c'è speranza di usare il costruttore di query di cake per una query così!
+        $ore = $this->Persona->query("SELECT Persona.id, DisplayName, Ora.data, Ora.numOre, eAttivita, faseattivita_id, Attivita.name, Faseattivita.Descrizione
+                                    FROM impiegati as Impiegato 
+                                        LEFT JOIN  persone as Persona  on Persona.id = Impiegato.persona_id
+                                        LEFT JOIN ore as Ora on Ora.eRisorsa = Persona.id                                            
+                                        LEFT JOIN attivita as Attivita on  Attivita.id = Ora.eAttivita
+                                        LEFT JOIN faseattivita as Faseattivita on Ora.faseattivita_id = Faseattivita.id
+                                    WHERE MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
+                                    AND Impiegato.disattivo = 0  
+                                    ORDER BY Cognome, data, Attivita.name
+                                    ");
+        }
 
         //Creo una tabella con disposizione inversa rispetto a quella di consulente/report    
         $tabore = array();
@@ -589,7 +632,7 @@ class PersoneController extends AppController {
             $tabore[ $o['Persona']['DisplayName'] ][ $o['Ora']['eAttivita']]['fase'][$o['Ora']['faseattivita_id']]['somma'] += $o['Ora']['numOre'];
             $tabore[ $o['Persona']['DisplayName'] ][ $o['Ora']['eAttivita']]['somma'] += $o['Ora']['numOre'];
         }
-
+        //debug($tabore);
         return $tabore;
 
     }

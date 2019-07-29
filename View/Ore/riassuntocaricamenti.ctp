@@ -43,6 +43,7 @@
 
 <h2>Caricamento fogli ore</h2>
 
+<?php // debug($conteggi); ?>
 <?php foreach ($conteggi as $key => $p) { ?>
 <h3>Dipendente <?php echo $key ?></h3>
 
@@ -54,9 +55,9 @@
             <tr><?php echo $this->Html->tableCells(array("<strong>$i</strong>", $p[$i],$p[$i] / 20, 
                 array(
                     $this->Html->link('<i class="fa fa-upload"></i> Importa Xls',array('controller'=>'ore','action'=>'upload'), array('class'=>'btn btn-info', 'escape'=>false)) . ' ' .
-                    $this->Html->link('<i class="fa fa-download"></i> Foglio Presenze',array('controller'=>'persone','action'=>'consulente', $this->request->pass[0], $i),array('class'=>'btn btn-primary', 'escape'=>false, 'title'=>'Foglio presenze per il consulente del lavoro')) . ' ' .
-                    $this->Html->link('<i class="fa fa-download"></i> Report Ore-Attivit&agrave;',array('controller'=>'persone','action'=>'report', $this->request->pass[0], $i),array('class'=>'btn btn-primary', 'escape'=>false, 'title'=>'Scarica il Report Ore-Attivit&agrave;')) . ' ' .
-					$this->Html->link('<i class="fa fa-download"></i> Report Ore-Fasi',array('controller'=>'persone','action'=>'report_fasi', $this->request->pass[0], $i),array('class'=>'btn btn-primary', 'escape'=>false, 'title'=>'Scarica il Report Ore-Fasi'))
+                    $this->Html->link('<i class="fa fa-download"></i> Foglio Presenze',array('controller'=>'persone','action'=>'consulente', $this->request->pass[0], $i, $p['Id']),array('class'=>'btn btn-primary', 'escape'=>false, 'title'=>'Foglio presenze per il consulente del lavoro')) . ' ' .
+                    $this->Html->link('<i class="fa fa-download"></i> Report Ore-Attivit&agrave;',array('controller'=>'persone','action'=>'report', $this->request->pass[0], $i, $p['Id']),array('class'=>'btn btn-primary', 'escape'=>false, 'title'=>'Scarica il Report Ore-Attivit&agrave;')) . ' ' .
+					$this->Html->link('<i class="fa fa-download"></i> Report Ore-Fasi',array('controller'=>'persone','action'=>'report_fasi', $this->request->pass[0], $i, $p['Id']),array('class'=>'btn btn-primary', 'escape'=>false, 'title'=>'Scarica il Report Ore-Fasi'))
 					, 
                     array('class'=>'actions'))
             )); ?></tr>

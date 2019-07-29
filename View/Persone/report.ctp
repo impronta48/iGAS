@@ -2,11 +2,15 @@
     <h3><?php echo Configure::read('iGas.NomeAzienda'); ?> - report ore del mese: <?php echo "$mese - $anno"; ?></h3>
     <div class="row">
         <div class="actions">
+        <?php if(isset($this->request->pass[2])) { ?>
+        <?php echo $this->Html->link('PDF', array('ext' => 'pdf', $this->request->pass[0], $this->request->pass[1], $this->request->pass[2]), array('class' => 'btn btn-info', 'escape' => false)); ?>
+        <?php echo $this->Html->link('XLS', array('ext' => 'xls', $this->request->pass[0], $this->request->pass[1], $this->request->pass[2]), array('class' => 'btn btn-info', 'escape' => false)); ?>
+        <?php } else { ?>
         <?php echo $this->Html->link('PDF', array('ext' => 'pdf', $this->request->pass[0], $this->request->pass[1]), array('class' => 'btn btn-info', 'escape' => false)); ?>
         <?php echo $this->Html->link('XLS', array('ext' => 'xls', $this->request->pass[0], $this->request->pass[1]), array('class' => 'btn btn-info', 'escape' => false)); ?>
+        <?php } ?>
         </div>
     </div>
-    
         <?php foreach ($ore as $key => $value) {      
              echo '<div class="row">';
              echo "<h3>$key ($mese - $anno)</h3>".
