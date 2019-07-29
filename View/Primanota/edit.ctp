@@ -14,15 +14,16 @@
                                     'label' => array(
                                         'class' => 'col col-md-3 control-label'
                                     ),
-                                    'wrapInput' => 'col col-md-4',
-                                    'class' => $baseformclass,
+                                    'wrapInput' => 'col col-md-9',
+                                    'class' => 'form-control '.$baseformclass,
                                 ),	
                                 'class' => 'well form-horizontal',
                 
                 )); ?>  
         
             <?php echo  $this->Form->input('id'); ?>
-            <?php echo  $this->Form->input('data', array('type'=>'date', 'class'=>false, 'dateFormat'=>'DMY')); ?>            
+            <?php // echo  $this->Form->input('data', array('type'=>'date', 'class'=>false, 'dateFormat'=>'DMY')); ?>   
+            <?php echo $this->Form->input('data', array('type'=>'text', 'label' => 'Data', 'dateFormat' => 'DMY', 'class' => 'form-control')); ?>         
             <?php   
                 if (!isset($this->request->data['Primanota']['importo']))
                 {
@@ -35,15 +36,15 @@
                 }           		
                 if ($importo>0)
                 {
-                    echo $this->Form->input('importoEntrata', array('placeholder'=>'10.2', 'label'=>'Entrata', 'wrapInput' => 'col col-md-2','default'=>$importo));
-                    echo $this->Form->input('imponibile', array('placeholder'=>'8.36', 'label'=>'Imponibile', 'wrapInput' => 'col col-md-9','default'=>$imponibile));
-                    echo $this->Form->input('iva', array('placeholder'=>'1.84', 'label'=>'Iva', 'wrapInput' => 'col col-md-9','default'=>$iva));     
+                    echo $this->Form->input('importoEntrata', array('placeholder'=>'10.2', 'label'=>'Entrata', /*'wrapInput' => 'col col-md-2',*/'default'=>$importo));
+                    echo $this->Form->input('imponibile', array('placeholder'=>'8.36', 'label'=>'Imponibile', /*'wrapInput' => 'col col-md-9',*/'default'=>$imponibile));
+                    echo $this->Form->input('iva', array('placeholder'=>'1.84', 'label'=>'Iva', /*'wrapInput' => 'col col-md-9',*/'default'=>$iva));     
                 }
                 else
                 {
-                    echo $this->Form->input('importoUscita', array('placeholder'=>'10.2', 'label'=>'Uscita', 'wrapInput' => 'col col-md-2','default'=>-$importo)); 
-                    echo $this->Form->input('imponibileUscita', array('placeholder'=>'8.36', 'label'=>'Imponibile', 'wrapInput' => 'col col-md-9','default'=>-$imponibile));
-                    echo $this->Form->input('ivaUscita', array('placeholder'=>'1.84', 'label'=>'Iva', 'wrapInput' => 'col col-md-9','default'=>-$iva));      
+                    echo $this->Form->input('importoUscita', array('placeholder'=>'10.2', 'label'=>'Uscita', /*'wrapInput' => 'col col-md-2',*/'default'=>-$importo)); 
+                    echo $this->Form->input('imponibileUscita', array('placeholder'=>'8.36', 'label'=>'Imponibile', /*'wrapInput' => 'col col-md-9',*/'default'=>-$imponibile));
+                    echo $this->Form->input('ivaUscita', array('placeholder'=>'1.84', 'label'=>'Iva', /*'wrapInput' => 'col col-md-9',*/'default'=>-$iva));      
                 }      
             ?>
             <?php             
@@ -56,7 +57,7 @@
                     echo $this->Form->input('attivita_id', array('class'=>'attivita chosen-select' . $baseformclass));  //array('class'=>'chosen-select')
                 }                
             ?>
-            <?php echo  $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'options'=>$faseattivita, 'class' => 'fase ' . $baseformclass)); ?> 
+            <?php echo  $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'options'=>$faseattivita, 'class' => 'fase form-control input-xs')); ?> 
             <?php echo  $this->Form->input('legenda_cat_spesa_id', array('options'=>$legenda_cat_spesa)); ?>
             <?php echo  $this->Form->input('provenienzasoldi_id'); ?>           
                 <div class="row">   
@@ -95,7 +96,8 @@
 			echo $this->Form->input('uploadFile', array('label'=>'Upload File', 'class'=>false, 'type'=>'file'));
 			?>
             
-            <?php echo  $this->Form->end('Salva'); ?>
+            <?php echo  $this->Form->submit('Salva', array('class'=>'btn btn-primary')); ?>
+            <?php echo  $this->Form->end(); ?>
         </div>
 
 <?php $this->Html->scriptStart(array('inline' => false)); ?>    
@@ -113,5 +115,7 @@ $(function() {
 		});
   
 });
+
+$( "#PrimanotaData" ).datepicker( { dateFormat: 'yy-mm-dd' });
 
 <?php $this->Html->scriptEnd();
