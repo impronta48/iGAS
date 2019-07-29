@@ -88,8 +88,7 @@ class Faseattivita extends AppModel {
 	}
     
 	public function afterSave($created, $options = Array()) {
-		//debug($this->data['Faseattivita']['qtaUtilizzata']);
-    	//die();
+		/*
 		if($created) {
             //debug($this->data['Faseattivita']);
 			//die();
@@ -99,10 +98,6 @@ class Faseattivita extends AppModel {
             $nuovaOffertaAlCliente = $this->Attivita->read('Attivita.OffertaAlCliente')['Attivita']['OffertaAlCliente']+($venduto*$qta);
             $this->Attivita->saveField('OffertaAlCliente', $nuovaOffertaAlCliente); 
 		} else {
-			//Se in questo momento è settato $this->data['Faseattivita']['qtaUtilizzata']
-			//vuol dire che sicuramente non sto modificando direttamente la Faseattivita tramite il suo form
-			//e quindi non devo aggiornare Attivita.OffertaAlCliente perchè non è sicuramente
-			//stata modificato nè il venduto ne la quantità ma al max solo la qtaUtilizzata
 			if(!isset($this->data['Faseattivita']['qtaUtilizzata'])){
 				$venduto = ($this->data['Faseattivita']['vendutou'] == '') ? $this->data['Faseattivita']['vendutou'] : 0;
 				$qta = ($this->data['Faseattivita']['qta'] == '') ? $this->data['Faseattivita']['qta'] : 0;
@@ -111,7 +106,8 @@ class Faseattivita extends AppModel {
 				$nuovaOffertaAlCliente += ($venduto*$qta);
 				$this->Attivita->saveField('OffertaAlCliente', $nuovaOffertaAlCliente); 
 			}
-        }
+		}
+		*/
 	}
     
     public function beforeDelete($cascade = true) {
@@ -121,10 +117,12 @@ class Faseattivita extends AppModel {
     
     public function afterDelete() {
         //debug($this->data);
-        //die();
+		//die();
+		/*
         $this->Attivita->id = $this->data['Faseattivita']['attivita_id'];
 		$nuovaOffertaAlCliente = $this->Attivita->read('Attivita.OffertaAlCliente')['Attivita']['OffertaAlCliente']-($this->data['Faseattivita']['vendutou']*$this->data['Faseattivita']['qta']);
-        $this->Attivita->saveField('OffertaAlCliente', $nuovaOffertaAlCliente);
+		$this->Attivita->saveField('OffertaAlCliente', $nuovaOffertaAlCliente);
+		*/
     }
 
 	//returns a list wich is good for a combobox

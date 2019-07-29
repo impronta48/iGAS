@@ -249,12 +249,12 @@ class AttivitaController extends AppController {
 			$this->request->data = $this->Attivita->read(null, $id);
                         $this->set('title_for_layout', $this->request->data['Attivita']['name'] . ' [' .$id . '] | Modifica Attività' );
 		}
-		
 		$progetti = $this->Attivita->Progetto->find('list',array('cache' => 'progetto', 'cacheConfig' => 'short'));
 		$persone = $this->Attivita->Persona->find('list',array('cache' => 'persona', 'cacheConfig' => 'short'));
 		$aree = $this->Attivita->Area->find('list',array('cache' => 'area', 'cacheConfig' => 'short'));
-                $oreUsate = $this->Attivita->oreUsate($id); 
-		$this->set(compact('progetti','persone','aree','oreUsate'));
+        $oreUsate = $this->Attivita->oreUsate($id); 
+        $offertaAlCliente = $this->Attivita->offertaAlCliente($id);
+		$this->set(compact('progetti','persone','aree','oreUsate','offertaAlCliente'));
 	}
 
 	function delete($id = null) {

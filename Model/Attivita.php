@@ -180,8 +180,8 @@ class Attivita extends AppModel {
                 return 0;
             }
       }
-	   //Calcola il totale di ore usate da un'attività
-      function preventivo($id) {
+	   
+        function preventivo($id) {
             $r = $this->Faseattivita->find('all', array(
                 'conditions' => array('Faseattivita.attivita_id' => $id),
                 'fields' => array('SUM(Faseattivita.costou*Faseattivita.qta) as S'),
@@ -195,7 +195,23 @@ class Attivita extends AppModel {
             {
                 return 0;
             }
-      }
+        }
+
+        function offertaAlCliente($id) {
+            $r = $this->Faseattivita->find('all', array(
+                'conditions' => array('Faseattivita.attivita_id' => $id),
+                'fields' => array('SUM(Faseattivita.vendutou*Faseattivita.qta) as S'),
+                'group' => array('Faseattivita.attivita_id'),
+            ));
+            if (isset($r[0][0]['S']))
+            {
+                return $r[0][0]['S'];
+            }
+            else
+            {
+                return 0;
+            }
+        }
       
       //Se $recenti è null recupero tutte le attività, 
       //altrimenti solo quelle recenti dell'utente

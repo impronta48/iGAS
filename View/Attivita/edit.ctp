@@ -133,7 +133,7 @@
             </div>            
             
             <?php     
-                echo $this->Form->input('OffertaAlCliente', array('disabled' => true));
+                echo $this->Form->input('OffertaAlCliente', array('value' => $offertaAlCliente, 'disabled' => true));
                 echo $this->Form->input('ImportoAcquisito');
                 foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
                     if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$id.'_preventivo.'.$ext)){
