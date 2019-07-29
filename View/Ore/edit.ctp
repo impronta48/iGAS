@@ -24,7 +24,8 @@
     if (strlen("$anno-$mese-$giorno")) {
         $def['selected'] = "$anno-$mese-$giorno";
     }    
-    echo $this->Form->input('data', $def);
+    // echo $this->Form->input('data', $def);
+    echo $this->Form->input('data', array('type'=>'text', 'label' => 'Data', 'value' => "$anno-$mese-$giorno", 'dateFormat' => 'DMY', 'class' => 'form-control required'));
     ?>
         
     <?php
@@ -47,8 +48,9 @@
     ?>        
     
     <?php echo  $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 
-                                        'options'=>[], 
-                                        'class'=>'fase ' . $baseformclass)); ?>     <?php echo $this->Form->input('numOre', array('label' => 'Ore', 'class' => 'form-control')); ?>
+                                        'options'=>$faseattivita, 
+                                        'class'=>'fase form-control input-xs')); ?>     
+    <?php echo $this->Form->input('numOre', array('label' => 'Ore', 'class' => 'form-control')); ?>
     <?php echo $this->Form->input('dettagliAttivita', array('class' => 'form-control')); ?>
     <?php echo $this->Form->input('LuogoTrasferta', array('class' => 'form-control')); ?>
     <?php echo $this->Form->submit(__('Modifica'), array('class'=>'col-md-offset-2 btn btn-primary')); ?>
@@ -79,4 +81,7 @@
             $("#filtroAttivita").parent().hide();
         });
     } )
+
+    $( "#OraData" ).datepicker( { dateFormat: 'yy-mm-dd' });
+
 <?php $this->Html->scriptEnd(); ?>

@@ -33,7 +33,8 @@ ORE A CONTRATTO: <?= $oreContratto ?>
     if (strlen("$anno-$mese-$giorno")) {
         $def['value'] = "$anno-$mese-$giorno";
     }    
-    echo $this->Form->input('data', $def);
+    // echo $this->Form->input('data', $def);
+    echo $this->Form->input('data', array('type'=>'text', 'label' => 'Data', 'value' => "$anno-$mese-$giorno", 'dateFormat' => 'DMY', 'class' => 'form-control required'));
     ?>      
 
     <div class="col  col-md-offset-4">
@@ -206,6 +207,9 @@ ORE A CONTRATTO: <?= $oreContratto ?>
             $("#filtroAttivita").parent().hide();
         });
     } )
+
+    $( "#OraData" ).datepicker( { dateFormat: 'yy-mm-dd' });
+
 <?php $this->Html->scriptEnd(); ?>
 
 

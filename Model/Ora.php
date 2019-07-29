@@ -67,7 +67,7 @@ class Ora extends AppModel {
 		'message' => 'Inserire il numero di ore lavorate'
 	),
     'data' => array(
-		'rule' => array('datetime','ymd'),
+		'rule' => array('date','ymd'),
         'required' => TRUE,
 		'message' => 'Inserire una data valida'
 

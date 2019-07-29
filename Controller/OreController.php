@@ -947,16 +947,16 @@ class OreController extends AppController {
 				$emailObj->subject('Foglio ore caricato');
                 $emailObj->send();
                 */
-				
+				$dataArray = explode('-',$this->request->data['Ora']['data']);
                 //A Seconda del submit gestisco un'operazione diversa
                 if (isset($this->request->data['submit-ns']))
                 {
                     return $this->redirect(array('controller'=>'notaspese', 'action' => 'add', 
                                 'persona'=>$this->request->data['Ora']['eRisorsa'],
                                 'attivita'=>$this->request->data['Ora']['eAttivita'],
-                                'anno'=>$this->request->data['Ora']['data']['year'],
-                                'mese'=>$this->request->data['Ora']['data']['month'],
-                                'giorno'=>$this->request->data['Ora']['data']['day'],
+                                'anno'=>$dataArray[0], // $this->request->data['Ora']['data']['year']
+                                'mese'=>$dataArray[1], // $this->request->data['Ora']['data']['month']
+                                'giorno'=>$$dataArray[2], // this->request->data['Ora']['data']['day']
                                 'dest'=>$this->request->data['Ora']['LuogoTrasferta'],
                          ));
                 }
@@ -964,9 +964,9 @@ class OreController extends AppController {
                 {               
                     return $this->redirect(array('action' => 'add', 
                                                     'persona' => $this->request->data['Ora']['eRisorsa'],
-                                                    'anno' => $this->request->data['Ora']['data']['year'],
-                                                    'mese' => $this->request->data['Ora']['data']['month'],
-                                                    'giorno' => $this->request->data['Ora']['data']['day'],
+                                                    'anno' => $dataArray[0], // $this->request->data['Ora']['data']['year']
+                                                    'mese' => $dataArray[1], // $this->request->data['Ora']['data']['month']
+                                                    'giorno' => $dataArray[2], // $this->request->data['Ora']['data']['day']
                                              ));
                 }
 				
@@ -1031,18 +1031,18 @@ class OreController extends AppController {
 
    //Modifica delle ore manualmente (senza foglio ore)
    public function edit($id) {
-     
+    $this->set('faseattivita', $this->Ora->Faseattivita->getSimple());
      if (!empty($this->request->data)) {
             
             //debug($this->request->data);
             if ($this->Ora->save($this->request->data)) {
                 $this->Session->setFlash('Ora Modificata correttamente.');
-
+                $dataArray = explode('-',$this->request->data['Ora']['data']);
                 return $this->redirect(array('action' => 'add', 
                                                     'persona' => $this->request->data['Ora']['eRisorsa'],
-                                                    'anno' => $this->request->data['Ora']['data']['year'],
-                                                    'mese' => $this->request->data['Ora']['data']['month'],
-                                                    'giorno' => $this->request->data['Ora']['data']['day'],
+                                                    'anno' => $dataArray[0], // $this->request->data['Ora']['data']['year']
+                                                    'mese' => $dataArray[1], // $this->request->data['Ora']['data']['month']
+                                                    'giorno' => $dataArray[2], // $this->request->data['Ora']['data']['day']
                                              ));
             }
             $this->Session->setFlash($this->Ora->error);
