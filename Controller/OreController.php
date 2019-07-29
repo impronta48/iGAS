@@ -664,6 +664,7 @@ class OreController extends AppController {
         $this->set('attivita_list', $attivita_list);
         $persona_list = $this->Ora->getPersone();
         $this->set('persona_list', $persona_list);
+        $this->set('currentMonth', date('m'));
         $conditions = [];
         $conditions = $this->getConditionFromQueryString();
         $conditions['YEAR(Ora.data)'] = $anno;
