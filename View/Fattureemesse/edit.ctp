@@ -39,7 +39,7 @@
 		<?php echo $this->Form->input('AnnoFatturazione', array('default'=>date('Y'))); ?>
     
     <?php
-        echo $this->Form->input('data', array('dateFormat' => 'DMY', 'class'=>''));
+        echo $this->Form->input('data', array('type' => 'text', 'placeholder' => 'Clicca per impostare una data', 'class'=>'form-control'));
         echo $this->Form->input('Competenza');
 		echo $this->Form->input('Motivazione');
 		
@@ -68,9 +68,17 @@
 	?>
     </fieldset>
     <div class="row">
-        <?php echo $this->Form->submit(__('Save'), array('class'=>'col-md-offset-2 col')); ?>
-        <?php echo $this->Form->submit(__('Print'), array('class'=>'col-md-offset-2 col')); ?>
+        <?php echo $this->Form->submit(__('Salva'), array('class'=>'btn btn-primary', 'title' => 'Clicca per salvare la fattura', 'div' => false)); ?>
+        
+        <?php echo $this->Html->link(__('Stampa'), array('controller' => 'fattureemesse','action'=> 'view', $attivita_id), array( 'class' => 'btn btn-primary'))?>
+        <?php // echo $this->Form->button(__('Stampa'), array('class'=>'btn btn-primary', 'title' => 'Clicca per stampare la fattura', 'div' => false)); ?>
     </div>
     
     <?php echo $this->Form->end();?>
 </div>
+
+<?php $this->Html->scriptStart(array('inline' => false)); ?>
+
+    $( "#FatturaemessaData" ).datepicker( { dateFormat: 'yy-mm-dd' });
+
+<?php $this->Html->scriptEnd(); ?>

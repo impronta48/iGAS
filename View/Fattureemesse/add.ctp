@@ -10,7 +10,7 @@
     	echo $this->Form->input('Progressivo', array('default'=>$progressivoLibero, 'div'=>'false'));
 		echo $this->Form->input('AnnoFatturazione', array('default'=> date('Y'), 'div'=>'false'));
         echo '</fieldset>';
-		echo $this->Form->input('Serie', array('options'=>$serieOptions, 'label'=>'Serie');
+		echo $this->Form->input('Serie', array('options'=>$serieOptions, 'label'=>'Serie'));
 		echo $this->Form->input('data', array('dateFormat' => 'DMY'));
 		echo $this->Form->input('Motivazione');
 		echo $this->Form->input('CondPagamento');
