@@ -148,18 +148,18 @@ class FaseattivitaController extends AppController {
 		}
 		$fase = $this->Faseattivita->findById($id);
 		unset($fase['Faseattivita']['id']);
+		$oldDesc = $fase['Faseattivita']['Descrizione'];
 		$fase['Faseattivita']['Descrizione'] .= ' (Copy)';
 		$fase['Faseattivita']['persona_id'] = NULL;
 		$fase['Faseattivita']['qtaUtilizzata'] = 0;
+		$aid = $fase['Faseattivita']['attivita_id']; 
 		// debug($fase);
 		if($this->Faseattivita->save($fase)){
-			$this->Session->setFlash(__('The faseattivita "'.$fase['Faseattivita']['Descrizione'].'" is duplicated successfully'));
-			$aid = $fase['Faseattivita']['attivita_id']; 
-			return $this->redirect(array('action' => 'index', $aid));
+			$this->Session->setFlash(__('The faseattivita "'.$oldDesc.'" is duplicated successfully'));
 		} else {
 			$this->Session->setFlash(__('The faseattivita could not be saved. Please, try again.'));
 		}
-		
+		return $this->redirect(array('action' => 'index', $aid));
 	}
 
 /**
