@@ -49,7 +49,7 @@ foreach($ore as $pkey => $persona){
                 if($fase['ore'][$i] != '&nbsp;')
                 {
                     $row[] = $fase['ore'][$i];
-                    $somma[$i] += $fase['ore'][$i];
+                    $somma[$i+1] += $fase['ore'][$i];
                 }
                 else
                 {
