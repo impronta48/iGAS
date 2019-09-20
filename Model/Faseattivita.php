@@ -150,7 +150,7 @@ class Faseattivita extends AppModel {
 		$fase =$this->find('all', array('conditions' => $conditions));
         $fa = Hash::combine($fase, 
                             '{n}.Faseattivita.id', 
-                            array('%.40s','{n}.Faseattivita.Descrizione', '{n}.Faseattivita.entrata'),                            
+                            array('%.100s','{n}.Faseattivita.Descrizione', '{n}.Faseattivita.entrata'),                            
                             '{n}.Attivita.name'
                            );
         $fa = Hash::merge($notset, $fa);
