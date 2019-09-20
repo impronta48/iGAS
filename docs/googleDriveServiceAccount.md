@@ -15,6 +15,7 @@ Per utilizzare la funzionalità di Google Drive, bisogna ottentere le autorizzaz
 - Loggarsi su **Google Drive** usando user e password di Google usati per attivare le API di Google e generare il json con le credenziali
 - Su https://drive.google.com/drive/my-drive creare la cartella che conterrà gli scontrini chiamandola ad esempio **Notaspese**
 - Entrare in quella cartella su Drive, nella barra degli indirizzi alla fine dell'url ci sarà l'ID della cartella, prendere quell'ID e settare la variabile `google.drive.notaspese` presente nel file `Config/igas.php`.
+- Condividere la cartella con l'account di servizio creato nella google console (es: igas-labins@labins-igas.iam.gserviceaccount.com)
 
 ## Workaround
 - Per usufruire dell'upload su server iGAS e di conseguenza sui server di Google Drive, bisogna creare la directory `webroot/files/notaspese/` sul server di iGAS.
