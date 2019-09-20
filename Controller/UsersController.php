@@ -9,12 +9,10 @@ class UsersController extends AppController
 	var $uses = array('User');
     
 	// Aggiunto per poter fare il logout di utenti non administrators
-	function beforeFilter() 
-	{
+	function beforeFilter() {
 		 parent::beforeFilter(); 
 		 $this->Auth->allowedActions = array('logout','password_dimenticata'); 
 		 //$this->Auth->allow();		 
-		 
 	}
 
 	function index() {
@@ -168,39 +166,116 @@ class UsersController extends AppController
 		}
 	}
 
-		public function password_dimenticata() {
-		if( !empty($this->request->data) ) {
-			$existing_user = $this->User->findByUsername($this->request->data['User']['email']);
+	public function checkResetPass($uid, $token){
+		Configure::write('debug', 0);
+		$existing_user = $this->User->findById($uid);
+		// debug(unserialize(openssl_decrypt($token, 'AES-128-ECB', $existing_user['User']['reset_pass_key']))); // DEBUG
+		$tokenArray = @unserialize(openssl_decrypt($token, 'AES-128-ECB', $existing_user['User']['reset_pass_key']));
+		if($tokenArray){ // Se non si riesce a decriptare il token vuol dire che qualcuno stà tentando di fare qualcosa
+			if($tokenArray['username'] != $existing_user['User']['username']){ // Questo controllo è praticamente inutile
+				$this->Session->setFlash('Dati errati', 'flash_error');
+				return false;
+			}else if(time() - $tokenArray['requestdate'] > 86400){ // Dopo un giorno il link non è più valido
+				$this->Session->setFlash('Link reset password scaduto, inviare un altra richiesta di reset', 'flash_error');
+				return false;
+			}
+			$tokenArray['uid'] = $uid;
+			return $tokenArray;
+		} else {
+			$this->Session->setFlash('Impossibile elaborare la richiesta.', 'flash_error');
+			return false;
+		}
+	}
+
+	public function password_dimenticata($setNew = null) {
+		Configure::write('debug', 0);
+		$this->set('title_for_layout', 'Reset Password');
+		if(isset($this->params['url']['eh']) and isset($this->params['url']['no'])){die();}
+		$this->layout = 'notlogged';
+		$setPassMode = false;
+		$this->set('resetPass', $setPassMode);
+		$this->set('finalSuccess', false); 
+		$this->set('sendSuccess', null); 
+		if($setNew and $setNew == 'setnew') { // Controllo se le pass immesse coincidono ed altre cose, poi resetto la password dell'utente
+			$this->set('sendSuccess', true); 
+			$existing_user = @$this->User->findById($this->request->data['User']['id']);
+			if(!empty($this->request->data)) {
+				// debug($this->request->data); // DEBUG
+				$token = [];
+				$token['username'] = $this->request->data['Conferma']['username'];
+				$token['securestring'] = $this->request->data['Conferma']['securestring'];
+				$token['requestdate'] = (int) $this->request->data['Conferma']['requestdate']; // Questo cast NON è inutile !!!
+				$urlToken = urlencode(openssl_encrypt(serialize($token), 'AES-128-ECB', $existing_user['User']['reset_pass_key']));
+				// debug(serialize($token)); //DEBUG
+				// debug($existing_user['User']['reset_pass_key']); // DEBUG
+				// debug(urlencode($this->request->data['Conferma']['requesterToken'])); // DEBUG
+				if($existing_user['User']['reset_pass_key'] == NULL or urlencode($this->request->data['Conferma']['requesterToken']) != $urlToken){
+					$this->Session->setFlash('Impossibile elaborare la richiesta.', 'flash_error');
+					// Se siamo entrati in questo blocco, qualcuno con un token personale funzionante, vuole tentare di modificare le password degli altri
+					// Allora lo redirigo in una pagina sbagliata che non porta a niente
+					$this->redirect(array('controller' => 'users', 'action' => 'password_dimenticata', '?' => 'eh=no&no=badthing'));
+					return; // Useless
+				}
+				if(($this->request->data['User']['password'] === $this->request->data['Conferma']['password']) and (strlen($this->request->data['User']['password']) >= 5)){
+					// debug('Le pass coincidono'); // DEBUG
+					$this->User->save(array('id' => $this->request->data['User']['id'], 'password' => $this->request->data['User']['password'], 'reset_pass_key' => NULL));
+					$this->Session->setFlash('Password modificata con successo.');
+					$this->set('finalSuccess', true); 
+				} else {
+					$this->Session->setFlash('Le password inserite non combaciano', 'flash_error');
+					$this->redirect(array('controller' => 'users', 'action' => 'password_dimenticata', '?' => 'uid='.$this->request->data['User']['id'].'&token='.$urlToken));
+				}
+			}
+			return;
+		}
+		if(isset($this->params['url']['uid']) and isset($this->params['url']['token'])){
+			$setPassMode = $this->checkResetPass($this->params['url']['uid'], $this->params['url']['token']);
+			if($setPassMode == false){
+				$this->set('sendSuccess', true);
+				return;
+			}
+		}
+		$this->set('resetPass', $setPassMode);
+		if(!empty($this->request->data) and $setPassMode == false) {
+			$existing_user = $this->User->findByUsername($this->request->data['User']['username']);
 			if(empty($existing_user)) {
 				$this->Session->setFlash('Utente non trovato!', 'flash_error');
 				return;
-			}
-			// aggiorna la password
-			$passwordHasher = new BlowfishPasswordHasher(/*array('hashType' => 'sha256')*/);
-			$plainPass = 'massimo,1';
-			$existing_user['User']['password'] = $passwordHasher->hash($plainPass);
-			if( $this->User->save($existing_user) ) {
-				// invia la password via mail
-				if(INVIA_MAIL) {
-					$Email = new CakeEmail();
-					$Email->from(array('info@impronta48.it' => 'iGAS - iMpronta'));
-					$Email->to( $this->request->data['User']['email'] );
-					$Email->subject('ANBIMA - Password dimenticata');
-					$Email->emailFormat('html');
-					$Email->template('password_dimenticata', 'default');
-					$Email->viewVars(array(
-						'plainPassword' => $plainPass,
-						'user' => $existing_user['User']
-					));
-					$Email->send();
-				}
-				$this->Session->setFlash('Le istruzioni per il recupero password sono state inviate all\'indirizzo email inserito', 'flash_ok_custom');
-				$this->redirect( array('action' => 'login') );
-			}
-			else {
-				$this->Session->setFlash('Si è verificato un errore.', 'flash_error_custom');
+			} else if(empty($existing_user['Persona']['EMail'])) {
+				$this->Session->setFlash('L\'utente selezionato non ha una mail associata, impossibile inviare la mail di recupero password', 'flash_error');
 				return;
 			}
+			// debug($existing_user); // DEBUG
+			$token = [];
+			$token['username'] = $existing_user['User']['username'];
+			$token['securestring'] = bin2hex(random_bytes(32));
+			$token['requestdate'] = time();
+			$secureKey = uniqid('');
+			$urlToken = urlencode(openssl_encrypt(serialize($token), 'AES-128-ECB', $secureKey));
+			// debug($urlToken); //DEBUG
+			// debug(openssl_decrypt(urldecode($urlToken), 'AES-128-ECB', $secureKey)); // DEBUG
+			if($this->User->save(array('id' => $existing_user['User']['id'], 'reset_pass_key' => $secureKey))) {
+				$Email = new CakeEmail();
+				$Email->from(array('info@impronta48.it' => 'iGAS - iMpronta'));
+				$Email->to($existing_user['Persona']['EMail']);
+				$Email->subject('iGAS - Password dimenticata');
+				$Email->emailFormat('html');
+				$Email->template('password_dimenticata', 'default');
+				$Email->viewVars(array(
+					'urlToken' => $urlToken,
+					'userId' => $existing_user['User']['id'],
+					'user' => $existing_user['User']['username']
+				));
+				$Email->send();
+				$this->Session->setFlash('Le istruzioni per il recupero password sono state inviate all\'indirizzo email dell\'utente inserito');
+				$this->set('sendSuccess', true);
+			} else {
+				$this->Session->setFlash('Si è verificato un errore.', 'flash_error');
+				$this->set('sendSuccess', false);
+				return;
+			}
+		} else {
+			$this->set('sendSuccess', false);
 		}
 	}
 
