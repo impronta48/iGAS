@@ -135,6 +135,33 @@ class FaseattivitaController extends AppController {
 		$this->set(compact('attivita', 'legendaStatoAttivita', 'legendaCodiceiva'));
 	}
 
+	/**
+	 * duplicate method
+	 *
+	 * @throws NotFoundException
+	 * @param string $id
+	 * @return void
+	 */
+	public function duplicate($id = null){
+		if(!$this->Faseattivita->exists($id)){
+			throw new NotFoundException(__('Invalid faseattivita'));
+		}
+		$fase = $this->Faseattivita->findById($id);
+		unset($fase['Faseattivita']['id']);
+		$oldDesc = $fase['Faseattivita']['Descrizione'];
+		$fase['Faseattivita']['Descrizione'] .= ' (Copy)';
+		$fase['Faseattivita']['persona_id'] = NULL;
+		$fase['Faseattivita']['qtaUtilizzata'] = 0;
+		$aid = $fase['Faseattivita']['attivita_id']; 
+		// debug($fase);
+		if($this->Faseattivita->save($fase)){
+			$this->Session->setFlash(__('The faseattivita "'.$oldDesc.'" is duplicated successfully'));
+		} else {
+			$this->Session->setFlash(__('The faseattivita could not be saved. Please, try again.'));
+		}
+		return $this->redirect(array('action' => 'index', $aid));
+	}
+
 /**
  * delete method
  *

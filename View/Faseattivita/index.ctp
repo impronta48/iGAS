@@ -165,7 +165,8 @@
 		<td><?php echo $faseattivita['LegendaStatoAttivita']['name']; ?></td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $faseattivita['Faseattivita']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $faseattivita['Faseattivita']['id'],$faseattivita['Faseattivita']['attivita_id']), null, __('Are you sure you want to delete # %s?', $faseattivita['Faseattivita']['id'])); ?>
+			<?php echo $this->Html->link(__('Duplicate'), array('action' => 'duplicate', $faseattivita['Faseattivita']['id']), null, __('Are you sure you want duplicate fase attività # %s?', $faseattivita['Faseattivita']['id'])); ?>
+            <?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $faseattivita['Faseattivita']['id'],$faseattivita['Faseattivita']['attivita_id']), null, __('Are you sure you want to delete # %s?', $faseattivita['Faseattivita']['id'])); ?>
             <?php 
             foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
                 if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$faseattivita['Faseattivita']['attivita_id'].'_'.$faseattivita['Faseattivita']['id'].'.'.$ext)){
