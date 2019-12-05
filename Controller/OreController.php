@@ -5,8 +5,8 @@ App::uses('CakeEmail', 'Network/Email');// Perchè CakePHP mi obbliga a spezzare
 
 class OreController extends AppController {
 
-	public $components = array('RequestHandler');
-	public $helpers = array('Cache');
+	public $components = array('RequestHandler','PhpExcel.PhpSpreadsheet');
+	public $helpers = array('Cache','PhpExcel.PhpSpreadsheet');
 	//public $cacheAction = "1 month";
 
     private function getConditionFromQueryString()

@@ -2,8 +2,8 @@
 App::uses('AppController', 'Controller');
 class NotaspeseController extends AppController {
 	
-    public $components = array('RequestHandler', 'UploadFiles', 'GoogleDrive');
-    public $helpers = array('Tristate', 'Table', 'PdfToImage');
+    public $components = array('RequestHandler', 'UploadFiles', 'GoogleDrive', 'PhpExcel.PhpSpreadsheet');
+    public $helpers = array('Tristate', 'Table', 'PdfToImage', 'PhpExcel.PhpSpreadsheet');
     
     private function getConditionFromQueryString()
     {
@@ -917,6 +917,7 @@ class NotaspeseController extends AppController {
 		$this->set('cliente', $cliente['Persona']);
 		
         $this->Session->write('idnotaspese', $ids);
+        $this->set('legenda_mezzi', $this->Notaspesa->LegendaMezzi->find('all',array('cache' => 'legendamezzi', 'cacheConfig' => 'long')));
         $this->set('name', Configure::read('iGas.NomeAzienda') . "-NotaSpese.pdf");
     }
 

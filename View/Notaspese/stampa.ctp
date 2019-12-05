@@ -30,10 +30,9 @@
 <div class="notaspese view">   
     <div class="actions hidden-print">
         <a href="<?php echo $this->Html->url(array('ext'=>'pdf'))?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Pdf</a>        
+        <a href="<?php echo $this->Html->url(array('ext'=>'xls'))?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Xls</a>
     </div>
-    
     <br>
-
     <table width="100%">
         <tr>
             <td width="50%">
@@ -137,6 +136,7 @@
             if($ns['Notaspesa']['fatturabile'] == 0)
                 $nonFatturabili[] = $ns;
         }
+        debug($fatturabili_daFatturare);//DEBUG
         if (!empty($fatturabili_fatturati)){
             $importo_tot += $this->Table->create_table($fatturabili_fatturati, 'Fatturati');
         }
