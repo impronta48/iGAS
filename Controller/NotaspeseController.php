@@ -944,8 +944,15 @@ class NotaspeseController extends AppController {
         
         //Scrivo come destinatario della nota spese il cliente della prima attività
         $cliente_id = $righens[0]['Attivita']['cliente_id'];
-        $cliente = $this->Notaspesa->Persona->findById($cliente_id);
-        $this->set('cliente', $cliente['Persona']);
+        if (!empty($cliente_id))
+        {
+        	$cliente = $this->Notaspesa->Persona->findById($cliente_id);
+        	$this->set('cliente', $cliente['Persona']);
+        }
+        else
+        {
+        	$this->set('cliente', null);
+        }
         
         $this->Session->write('idnotaspese', $ids);
         $this->set('name', Configure::read('iGas.NomeAzienda') . "-NotaSpese-Collaboratore.pdf");
