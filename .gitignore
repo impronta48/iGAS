@@ -60,3 +60,4 @@ Thumbs.db
 !empty
 *~
 composer.lock
+package-lock.json

@@ -63,7 +63,7 @@ class Ora extends AppModel {
     var $validate = array(
 	'numOre' => array(
 		'rule' => array('numeric'),
-        'required' => TRUE,
+        'required' => FALSE,
 		'message' => 'Inserire il numero di ore lavorate'
 	),
     'data' => array(

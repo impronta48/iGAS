@@ -235,7 +235,7 @@ class FaseattivitaController extends AppController {
 	public function getlist($attivita_id = null)
 	{		
 		$this->layout = 'ajax';
-		$this->request->onlyAllow('ajax');
+		//$this->request->onlyAllow('ajax');
 		$faseattivita = Cache::read('faseattivita_'. $attivita_id, 'long');
 		if (!$faseattivita) {
 			$faseattivita = $this->Faseattivita->getSimple($attivita_id,0,1);		
