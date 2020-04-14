@@ -1029,7 +1029,7 @@ class OreController extends AppController
                 'fields' => array(
                     'id', 'Ora.eRisorsa', 'numOre', 'data', 'start', 'stop', 'location_start', 'location_stop', 'dettagliAttivita', 'eAttivita', 'faseattivita_id', 'Faseattivita.Descrizione'
                 ),
-                'order' => 'data'
+                'order' => 'start'
             )
         );
         $this->set('res', $result);

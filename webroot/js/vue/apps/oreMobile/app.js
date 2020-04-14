@@ -124,7 +124,7 @@ var addVm = new Vue({
 						"Ora": {
 							"eRisorsa": this.personaId,
 							"data": moment(now).format("YYYY-MM-DD"),
-							"start": moment(now).format("YYYY-MM-DD h:mm"),
+							"start": moment(now).format("YYYY-MM-DD HH:mm"),
 							"location_start": this.location,
 							"dettagliAttivita": this.dettagli,
 							"eAttivita": this.selecAtt,
@@ -159,7 +159,7 @@ var addVm = new Vue({
 						"Ora": {
 							"id": this.oraId,
 							"numOre": nOre,
-							"stop": moment(now).format("YYYY-MM-DD h:mm"),
+							"stop": moment(now).format("YYYY-MM-DD HH:mm"),
 							"location_stop": location,
 							"eRisorsa": this.personaId,
 							"data": moment(this.dateTimeStart).format("YYYY-MM-DD"),

@@ -44,10 +44,10 @@ function utf8ize($d)
       </b-col>
       <b-col v-else-if="loading" cols="12" class="h-100 my-3 p-2">
             <b-row id="header">
-                  <b-col cols="5">
+                  <b-col sm="12" md="5">
                         <img src="/img/logo-igas.png" alt="" style="width:100%">
                   </b-col>
-                  <b-col cols="7" class="mt-2">
+                  <b-col sm="12" md="7" class="mt-2 text-center">
                         <h5 class="strong text-info m-0">iGAS Lindbergh cs</s>
                               <h4 class="strong text-info m-0">Caricamento Ore</h4>
                   </b-col>
