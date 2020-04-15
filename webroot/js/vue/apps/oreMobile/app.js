@@ -146,7 +146,6 @@ var addVm = new Vue({
 				.catch((err) => {
 					console.error(err.message);
 				});
-			if (this.location != null) {}
 		},
 		setStop() {
 			this.getPosition()

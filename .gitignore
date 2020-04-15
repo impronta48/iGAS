@@ -16,8 +16,9 @@ vendor
 *.bat
 igas_*
 _*
-phinx.yml
 webroot/files/*
+db/.dbup
+db/dbup.phar
 
 # Plugins installed via composer
 ################################

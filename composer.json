@@ -23,9 +23,9 @@
         "codaxis/cakephp-bootstrap3-helpers": "1.1",        
         "mailchimp/mailchimp": ">=2.0.0",
         "mikehaertl/phpwkhtmltopdf": "^2.2",        
-        "phpoffice/phpspreadsheet":"1.6.0",
-        "robmorgan/phinx": "^0.9.2",
-        "slywalker/boost_cake": "*"
+        "phpoffice/phpspreadsheet":"1.6.0",        
+        "slywalker/boost_cake": "*",
+        "dereuromark/cakephp-tools": "dev-cake2"
     },
     "config": {
         "vendor-dir": "Vendor/"
