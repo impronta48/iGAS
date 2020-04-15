@@ -1,7 +1,8 @@
 Vue.component("app-ore-list", {
       template: `
-                  <div class="mt-5" name="riepilogo" v-if="active">
-                        <table class="table table-sm table-striped">
+                  <div class="mt-3 text-center" name="riepilogo" v-if="active">
+                        <b-button pill id="btnNuovo" @click="svuota()" variant="info" size="md" class="my-3">Inizia nuova attività</b-button>
+                        <table class="table table-sm table-striped text-left">
                               <thead>
                                     <tr>
                                           <th scope="col">Data e ora</th>
@@ -17,7 +18,6 @@ Vue.component("app-ore-list", {
                                     </tr>
                               </tbody>
                         </table>
-                        <b-button pill id="btnNuovo" @click="svuota()" variant="info" size="sm" class="mt-3">Carica nuovo</b-button>
                   </div>
 		`,
       props: ['personaId'],

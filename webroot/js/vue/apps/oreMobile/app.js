@@ -10,7 +10,8 @@ var addVm = new Vue({
 			allattivita: $allattivita,
 			showattivita: false,
 			cerca: null,
-			faseAttivita: null,
+			// faseAttivita: null,
+			filteredFase: [],
 			locationStart: null,
 			locationStop: null,
 			dateTimeStart: null,
@@ -21,10 +22,13 @@ var addVm = new Vue({
 			nOre: 0,
 			oraId: null,
 			ora: null,
+			riepilogo:false,
+			mesErrorLocation: null,
 
 		}
 	},
 	created() {
+		this.getOra();
 		this.loading = true;
 	},
 	computed: {
@@ -55,50 +59,41 @@ var addVm = new Vue({
 			},
 			set: function (e) {},
 		},
-		filteredFase: {
-			get: function () {
-				let list = [];
-				if (Object.keys(this.faseAttivita).length > 1) {
-					list = Object.entries(this.faseAttivita);
+
+	},
+	watch: {
+		cerca:function(val){
+			let sel = val.toLowerCase();
+			this.filteredFase = this.filteredFase.filter(function (o) {
+				return o['name'].toLowerCase().includes(sel);
+			});
+	}
+	},
+	methods: {
+		getFasi(id){
+			axios.post("/faseattivita/getlist/" + id + ".json")
+				.then(res => {
+					var faseAttivita = [];
+					if(Object.keys(res.data).length>1){
+						faseAttivita = res.data[this.allattivita[id]];
+					}
+					list = Object.entries(faseAttivita);
 					list = list.map(item => {
 						return {
 							item: item[0],
 							name: item[1]
 						};
 					});
-				}
-				list.push({
-					item: 0,
-					name: '-- Non Definita --'
-				});
-				if (this.cerca != null) {
-					let sel = this.cerca.toLowerCase();
-					list = list.filter(function (o) {
-						return o['name'].toLowerCase().includes(sel);
+					list.push({
+						item: 0,
+						name: '-- Non Definita --'
 					});
-				}
-				return list;
-			},
-			set: function (e) {},
-		},
-	},
-	watch: {
-		selecAtt: function () {
-			axios.post(app.url + "/faseattivita/getlist/" + this.selecAtt + ".json")
-				.then(res => {
-					this.cerca = null;
-					if(Object.keys(res.data).length>1){
-						this.faseAttivita = res.data[this.allattivita[this.selecAtt]];
-					}else{
-						this.faseAttivita = res.data;
-					}
+					this.filteredFase = list; 
 				})
 				.catch(e => {
 					//console.log(e)
 				});
-		}
-	},
-	methods: {
+		},
 		getPosition(options) {
 			return new Promise(function (resolve, reject) {
 				navigator.geolocation.getCurrentPosition(resolve, reject, options);
@@ -116,85 +111,98 @@ var addVm = new Vue({
 			this.showattivita = !this.showattivita;
 		},
 		setStart() {
+			var now = new Date();
+			var data = {
+				"Ora": {
+					"eRisorsa": this.personaId,
+					"data": moment(now).format("YYYY-MM-DD"),
+					"start": moment(now).format("YYYY-MM-DD HH:mm"),
+					"location_start": null,
+					"dettagliAttivita": this.dettagli,
+					"eAttivita": this.selecAtt,
+					"faseattivita_id": this.selecFase,
+				}
+			};
 			this.getPosition()
 				.then((position) => {
 					var location = position.coords.latitude + "," + position.coords.longitude;
-					var now = new Date();
-					var data = {
-						"Ora": {
-							"eRisorsa": this.personaId,
-							"data": moment(now).format("YYYY-MM-DD"),
-							"start": moment(now).format("YYYY-MM-DD HH:mm"),
-							"location_start": this.location,
-							"dettagliAttivita": this.dettagli,
-							"eAttivita": this.selecAtt,
-							"faseattivita_id": this.selecFase,
-						}
-					};
-					axios.post(app.url + "/ore/saveOra.json", data)
-						.then(res => {
-							if (res.data.result == '1') {
-								this.getOra();
-							} else {
-								console.log(res)
-							};
-						})
-						.catch(e => {
-							console.log(e)
-						});
+					data['Ora']['location_start'] = location;
+					this.salvaOra(data);
 				})
 				.catch((err) => {
-					console.error(err.message);
+					this.mesErrorLocation = 'Non è stato possibile recuperare la posizione, si prega di attivare la geolocalizzazione.';
+					this.salvaOra(data);
 				});
-			if (this.location != null) {}
 		},
 		setStop() {
+			var nOre = Math.abs(new Date() - new Date(this.dateTimeStart)) / 3600000;
+			nOre = nOre.toFixed(2);
+			var now = new Date();
+			var data = {
+				"Ora": {
+					"id": this.oraId,
+					"numOre": nOre,
+					"stop": moment(now).format("YYYY-MM-DD HH:mm"),
+					"location_stop": null,
+					"eRisorsa": this.personaId,
+					"data": moment(this.dateTimeStart).format("YYYY-MM-DD"),
+					"dettagliAttivita": this.dettagli,
+					"eAttivita": this.selecAtt,
+					"faseattivita_id": this.selecFase,
+				}
+			};
 			this.getPosition()
 				.then((position) => {
 					var location = position.coords.latitude + "," + position.coords.longitude;
-					var nOre = Math.abs(new Date() - new Date(this.dateTimeStart)) / 3600000;
-					nOre = nOre.toFixed(2);
-					var now = new Date();
-					var data = {
-						"Ora": {
-							"id": this.oraId,
-							"numOre": nOre,
-							"stop": moment(now).format("YYYY-MM-DD HH:mm"),
-							"location_stop": location,
-							"eRisorsa": this.personaId,
-							"data": moment(this.dateTimeStart).format("YYYY-MM-DD"),
-							"dettagliAttivita": this.dettagli,
-							"eAttivita": this.selecAtt,
-							"faseattivita_id": this.selecFase,
-						}
-					};
-					axios.post(app.url + "/ore/saveOra.json", data)
-						.then(res => {
-							if (res.data.result == '1') {
-								this.dateTimeStop = now;
-								this.locationStop = location;
-								this.nOre = nOre;
-							} else {
-								console.log(res)
-							};
-						})
-						.catch(e => {
-							console.log(e)
-						});
+					data['Ora']['location_stop'] = location;
+					this.salvaOra(data);
+					this.riepilogo = true;
 				})
+				.catch((err) => {
+					this.salvaOra(data);
+				});
 		},
+		salvaOra(data) {
+			axios.post("/ore/saveOra.json", data)
+				.then(res => {
+					if (res.data.result == '1') {
+						this.getOra()
+					} else {
+						console.log(res)
+					};
+				})
+				.catch(e => {
+					console.log(e)
+				});
+		},
+
 		getOra() {
-			axios.post(app.url + '/ore/getOrebyPersona/' + this.personaId + '/'+moment().format("DD")+'.json',{})
+			axios.post('/ore/getOrebyPersona/' + this.personaId + '/'+moment().format("DD")+'.json',{})
 				.then(res => {
 					if (res.data.length > 0) { 
 						let oraCaricata = res.data;
 						this.oraId = oraCaricata[0]['Ora']['id'];
 						this.dateTimeStart = oraCaricata[0]['Ora']['start'];
+						this.dateTimeStop = oraCaricata[0]['Ora']['stop'];
 						this.selecAtt = oraCaricata[0]['Ora']['eAttivita'];
 						this.selecFase = oraCaricata[0]['Ora']['faseattivita_id'];
 						this.locationStart = oraCaricata[0]['Ora']['location_start'];
+						this.locationStop = oraCaricata[0]['Ora']['location_stop'];
 						this.dettagli = oraCaricata[0]['Ora']['dettagliAttivita'];
+						this.nOre = oraCaricata[0]['Ora']['numOre'];
 						this.ora = oraCaricata[0];
+					}else{
+						this.oraId = null;
+						this.dateTimeStart = null;
+						this.dateTimeStop = null;
+						this.selecAtt = null;
+						this.selecFase = null;
+						this.locationStart = null;
+						this.locationStop = null;
+						this.dettagli = null;
+						this.nOre = null;
+						this.ora = null;
+
 					}
 				})
 				.catch(e => {
