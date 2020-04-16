@@ -14,18 +14,18 @@
         }
     ],
     "require": {
-		"google/apiclient": "^2.0",
+        "google/apiclient": "^2.0",
         "cakedc/migrations": "2.4",
         "cakedc/tags": "dev-master",
         "cakephp/cakephp": "2.*",
-        "cakephp/debug_kit": "2.2.9",
+        "cakephp/debug_kit": "2.*",
         "ceeram/clear_cache": "^1.1",
         "codaxis/cakephp-bootstrap3-helpers": "1.1",        
+        "dereuromark/cakephp-tools": "dev-cake2",
         "mailchimp/mailchimp": ">=2.0.0",
         "mikehaertl/phpwkhtmltopdf": "^2.2",        
-        "phpoffice/phpspreadsheet":"1.6.0",        
-        "slywalker/boost_cake": "*",
-        "dereuromark/cakephp-tools": "dev-cake2"
+        "phpoffice/phpspreadsheet":"1.6.*",        
+        "slywalker/boost_cake": "*"
     },
     "config": {
         "vendor-dir": "Vendor/"
