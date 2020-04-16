@@ -1,24 +1,24 @@
 # User specific & automatically generated files #
 #################################################
-Config/database.php
-Config/igas*.php
-Config/client_secret.json
-update-git-srv.sh
-node_modules/
-e2e/
-tmp
-/Vendor/*
-vendor
+*.bat
+*.jpg
+*.mo
 /build
 /tags
-*.mo
-*.jpg
-*.bat
-igas_*
+/Vendor/*
 _*
-webroot/files/*
+Config/client_secret.json
+Config/database.php
+Config/igas*.php
 db/.dbup
 db/dbup.phar
+e2e/
+igas_*
+node_modules/
+tmp
+update-git-srv.sh
+vendor
+webroot/files/*
 
 # Plugins installed via composer
 ################################
