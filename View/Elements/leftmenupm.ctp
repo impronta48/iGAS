@@ -32,6 +32,8 @@
             <li><?php echo $this->Html->link("<i class='fa fa-table'></i><span class='hidden-minibar'> Gestione Foglio Ore</span>", '/ore/riassuntocaricamenti/'. date("Y"),array('escape' => false, 'data-original-title'=>'Gestione Foglio Ore')) ?></li>
             <li><?php echo $this->Html->link("<i class='fa fa-table'></i><span class='hidden-minibar'> Check Ore</span>", '/ore/check/'. date("Y"),array('escape' => false, 'data-original-title'=>'Check Ore')) ?></li>
             <li><?php echo $this->Html->link("<i class='fa fa-briefcase'></i><span class='hidden-minibar'> Nota Spese</span>", '/notaspese/scegli_persona',array('escape' => false, 'data-original-title'=>'Nota Spese')) ?></li>
+            <li><?php echo $this->Html->link("<i class='fa fa-mobile'></i><span class='hidden-minibar'> Inserici Ore (Mobile)</span>", '/ore/addMobile',array('escape' => false, 'data-original-title'=>'Inserici Ore Mobile')) ?></li>
+
     </ul>
 </li>
 
