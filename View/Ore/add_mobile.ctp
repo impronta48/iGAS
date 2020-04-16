@@ -38,25 +38,17 @@ function utf8ize($d)
             border-bottom: 1px solid #6f3200
       }
 </style>
-<div id="ore-app">
+<div class="row" id="ore-app">
       <b-col cols="12" v-if="personaId == ''" class="pt-3">
-            A questo utente non è associato un dipendente. Per usare questa funzionalità devi essere un dipendente. 
+            A questo utente non è associato un dipendente. Per usare questa funzionalità devi essere un dipendente.
             <a href="/users/logout" class="btn btn-default">Logout</a>
       </b-col>
       <b-col cols="12" class="h-100 my-3 p-2" v-else-if="loading">
-            <b-row id="header">
-                  <b-col sm="12" md="5">
-                        <img src="/img/logo-igas.png" alt="" style="width:100%">
-                  </b-col>
-                  <b-col sm="12" md="7" class="mt-2 text-center">
-                        <h4 class="strong text-info m-0">Caricamento Ore</s>
-
-                  </b-col>
-            </b-row>
+            <h2 class="text-secondary text-center">{{personaName}}</h2>
             <template v-if="!riepilogo">
                   <b-row>
                         <b-col cols="12" class="mt-2">
-                              <h2 class="text-secondary text-center">{{personaName}}</h2>
+
                               <div class="mt-1" cols="12" v-if="selecAtt!=null"><i class="fas fa-bookmark"></i> attivita: <strong>{{ allattivita[selecAtt] }}</strong></div>
                               <div v-if="dateTimeStart != null">
                                     <i class="fas fa-clock"></i> inizio attivita: <b> {{formatDatedMYhm(dateTimeStart)}}</b>
@@ -69,7 +61,7 @@ function utf8ize($d)
                               </div>
                               <div v-if="dettagli != null">{{dettagli}}</div>
                               <map-app v-if="locationStart!=null & locationStart!=''" :location-start="locationStart" :location-stop="locationStop"></map-app>
-                              <div v-if="mesErrorLocation!=null" class="alert alert-warning">{{mesErrorLocation}}</div>
+                              <div v-if="mesError!=null" class="alert alert-warning">{{mesError}}</div>
                         </b-col>
                   </b-row>
 

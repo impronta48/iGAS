@@ -32,7 +32,7 @@
 	<?= $this->Html->css('style'); ?>
 	<?= $this->fetch('css'); ?>
 
-	<?= $this->Html->script('jquery-1.10.2.min'); ?>
+	<?= $this->Html->script('jQuery/3.3.1/jquery-3.3.1.min'); ?>
 	<script src="//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin></script>
 	<?= $this->Html->script('vue/dep/vue'); ?>
 	<?= $this->Html->script('vue/dep/bootstrap-vue.min.2.6.1'); ?>
@@ -69,9 +69,19 @@
 </style>
 
 <body>
-	<div class="container">
-		<div class="row" role="main" id="main">
-			<preloading></preloading>
+	<nav class="navbar bg-white navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header mt-0">
+				<img src="/img/logo-igas.png" alt="" style="height:70px">
+			</div>
+			<div id="navbar" class="nav navbar-nav navbar-right">
+				<h4 class="strong text-info m-0">Caricamento Ore</s>
+
+			</div>
+		</div>
+	</nav>
+	<div class="container my-2">
+		<div role="main" id="main" class="p-3">
 			<?php echo $this->Flash->render(); ?>
 			<?php echo $this->fetch('content'); ?>
 		</div>

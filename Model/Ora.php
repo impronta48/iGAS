@@ -125,8 +125,9 @@ class Ora extends AppModel {
 					//die();
 					$qtaNew = $qtaUtilizzata + ((int)$this->data['Ora']['numOre']/$hDayWork);
 				} else {
-					$qtaNew = $qtaUtilizzata - ((int)$this->data['Ora']['old_numOre']/$hDayWork);
-					$qtaNew += ((int)$this->data['Ora']['numOre']/$hDayWork);
+					// $qtaNew = $qtaUtilizzata - ((int)$this->data['Ora']['old_numOre']/$hDayWork);
+					// $qtaNew += ((int)$this->data['Ora']['numOre']/$hDayWork);
+					$qtaNew = ((int)$this->data['Ora']['numOre']/$hDayWork);
 				}
 				$this->Faseattivita->saveField('qtaUtilizzata', $qtaNew);
 			}

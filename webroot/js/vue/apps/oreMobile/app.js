@@ -23,7 +23,7 @@ var addVm = new Vue({
 			oraId: null,
 			ora: null,
 			riepilogo:false,
-			mesErrorLocation: null,
+			mesError: null,
 
 		}
 	},
@@ -71,6 +71,7 @@ var addVm = new Vue({
 	},
 	methods: {
 		getFasi(id){
+			this.selecFase = null;
 			axios.post("/faseattivita/getlist/" + id + ".json")
 				.then(res => {
 					var faseAttivita = [];
@@ -130,7 +131,7 @@ var addVm = new Vue({
 					this.salvaOra(data);
 				})
 				.catch((err) => {
-					this.mesErrorLocation = 'Non è stato possibile recuperare la posizione, si prega di attivare la geolocalizzazione.';
+					this.mesError = 'Non è stato possibile recuperare la posizione, si prega di attivare la geolocalizzazione.';
 					this.salvaOra(data);
 				});
 		},
@@ -160,6 +161,7 @@ var addVm = new Vue({
 				})
 				.catch((err) => {
 					this.salvaOra(data);
+					this.riepilogo = true;
 				});
 		},
 		salvaOra(data) {
@@ -168,11 +170,13 @@ var addVm = new Vue({
 					if (res.data.result == '1') {
 						this.getOra()
 					} else {
-						console.log(res)
+						this.mesError = 'Non è stato possibile salvare l\'attività.';
+						console.log(res);
 					};
 				})
 				.catch(e => {
-					console.log(e)
+					this.mesError = 'Non è stato possibile salvare l\'attività.';
+					console.log(res);
 				});
 		},
 
@@ -190,6 +194,7 @@ var addVm = new Vue({
 						this.locationStop = oraCaricata[0]['Ora']['location_stop'];
 						this.dettagli = oraCaricata[0]['Ora']['dettagliAttivita'];
 						this.nOre = oraCaricata[0]['Ora']['numOre'];
+						this.mesError = null;
 						this.ora = oraCaricata[0];
 					}else{
 						this.oraId = null;
@@ -202,11 +207,12 @@ var addVm = new Vue({
 						this.dettagli = null;
 						this.nOre = null;
 						this.ora = null;
+						this.mesError = null;
 
 					}
 				})
 				.catch(e => {
-					console.log(e)
+					this.mesError = 'Si è verificato un errore nel recupero dell\'ultima attività caricata.';
 				});
 		},
 	}
