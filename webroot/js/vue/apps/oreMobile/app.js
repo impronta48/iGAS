@@ -72,7 +72,7 @@ var addVm = new Vue({
 	methods: {
 		getFasi(id){
 			this.selecFase = null;
-			axios.post("/faseattivita/getlist/" + id + ".json")
+			axios.post(url + "/faseattivita/getlist/" + id + ".json")
 				.then(res => {
 					var faseAttivita = [];
 					if(Object.keys(res.data).length>1){
@@ -182,7 +182,7 @@ var addVm = new Vue({
 		},
 
 		getOra() {
-			axios.post('/ore/getOrebyPersona/' + this.personaId + '/'+moment().format("DD")+'.json',{})
+			axios.post(url + '/ore/getOrebyPersona/' + this.personaId + '/'+moment().format("DD")+'.json',{})
 				.then(res => {
 					if (res.data.length > 0) { 
 						let oraCaricata = res.data;

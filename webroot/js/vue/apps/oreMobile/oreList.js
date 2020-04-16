@@ -32,7 +32,7 @@ Vue.component("app-ore-list", {
       computed: {
             active: {
                   get: function () {
-                        return axios.post('/ore/getOrebyPersona/' + this.personaId + '.json', {})
+                        return axios.post(url + '/ore/getOrebyPersona/' + this.personaId + '.json', {})
                               .then(res => {
                                     if (res.data.length > 0) {
                                           this.riepilogo = res.data;

@@ -1,5 +1,3 @@
-<?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'
-?>
 <?php
 function utf8ize($d)
 {
@@ -18,6 +16,7 @@ function utf8ize($d)
       var $personaName = '<?= $nomePersona; ?>';
       var $eattivita = <?= json_encode(utf8ize($eAttivita)) ?>;
       var $allattivita = <?= json_encode(utf8ize($allAttivita)) ?>;
+      var url = '<?= $this->request->base; ?>';  
 </script>
 <style>
       .map {
