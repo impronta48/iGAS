@@ -78,7 +78,7 @@ class Faseattivita extends AppModel {
     );
 
     public function beforeSave($options = Array()) {
-		if($this->data['Faseattivita']['cespite_id']){
+		if(isset($this->data['Faseattivita']['cespite_id'])){
             if($this->data['Cespite']['DisplayName'] == ''){
                 $this->data['Faseattivita']['cespite_id'] = null;
             }
