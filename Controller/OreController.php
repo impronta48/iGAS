@@ -893,7 +893,7 @@ class OreController extends AppController
         }
 
         if ($this->request->is('post')) {
-            debug($this->request->data);die;
+            
             $this->Ora->create();
             if ($this->Ora->save($this->request->data)) {
                 $this->Session->setFlash('Ora Aggiunta correttamente.');
