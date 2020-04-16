@@ -9,8 +9,8 @@
 	</title>
 	<?php
 	echo $this->Html->meta(
-		'impronta.ico',
-		'impronta.ico',
+		'favicon.ico',
+		'favicon.ico',
 		array('type' => 'icon')
 	);
 	?>
@@ -20,10 +20,6 @@
 	<meta name="MobileOptimized" content="width" />
 	<meta name="HandheldFriendly" content="true" />
 	<meta http-equiv=“Content-Security-Policy” content=“default-src ‘self’ gap://ready file://* *; style-src ‘self’ ‘unsafe-inline’; script-src ‘self’ ‘unsafe-inline’ ‘unsafe-eval’” />
-	<link rel="shortcut icon" href="/img/favicon.ico" type="image/png" />
-
-	<!-- <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css' type='text/css' media='all' /> -->
-
 
 	<?= $this->Html->css('fontawesome5.11.2/css/all'); ?>
 	<?= $this->Html->css('vue/bootstrap.min.4.4.1'); ?>
@@ -72,7 +68,7 @@
 	<nav class="navbar bg-white navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header mt-0">
-				<img src="/img/logo-igas.png" alt="" style="height:70px">
+				<?= $this->Html->image('logo-igas.png', ['alt'=>'iGAS Gestione Aziendale Semplice', 'style' => 'height:70px']); ?>				
 			</div>
 			<div id="navbar" class="nav navbar-nav navbar-right">
 				<h4 class="strong text-info m-0">Caricamento Ore</s>
