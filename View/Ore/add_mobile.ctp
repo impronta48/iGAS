@@ -40,7 +40,8 @@ function utf8ize($d)
 </style>
 <div id="ore-app">
       <b-col cols="12" v-if="personaId == ''" class="pt-3">
-            Attenzione utente non riconoscuto, tornare alla login per accedere
+            A questo utente non è associato un dipendente. Per usare questa funzionalità devi essere un dipendente. 
+            <a href="/users/logout" class="btn btn-default">Logout</a>
       </b-col>
       <b-col cols="12" class="h-100 my-3 p-2" v-else-if="loading">
             <b-row id="header">
