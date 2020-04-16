@@ -166,7 +166,7 @@ var addVm = new Vue({
 				});
 		},
 		salvaOra(data) {
-			axios.post("/ore/saveOra.json", data)
+			axios.post(url + "/ore/saveOra.json", data)
 				.then(res => {
 					if (res.data.result == '1') {
 						this.getOra()
