@@ -41,7 +41,7 @@ function utf8ize($d)
 <div class="row" id="ore-app">
       <b-col cols="12" v-if="personaId == ''" class="pt-3">
             A questo utente non è associato un dipendente. Per usare questa funzionalità devi essere un dipendente.
-            <a href="/users/logout" class="btn btn-default">Logout</a>
+            <a href="<?= $this->Html->url(['controller'=> 'users', 'action'=>'logout']) ?>" class="btn btn-default">Logout</a>
       </b-col>
       <b-col cols="12" class="h-100 my-3 p-2" v-else-if="loading">
             <h2 class="text-secondary text-center">{{personaName}}</h2>
