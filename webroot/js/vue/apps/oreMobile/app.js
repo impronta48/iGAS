@@ -116,6 +116,7 @@ var addVm = new Vue({
 			var data = {
 				"Ora": {
 					"eRisorsa": this.personaId,
+					"numOre": 0,
 					"data": moment(now).format("YYYY-MM-DD"),
 					"start": moment(now).format("YYYY-MM-DD HH:mm"),
 					"location_start": null,
@@ -171,12 +172,12 @@ var addVm = new Vue({
 						this.getOra()
 					} else {
 						this.mesError = 'Non è stato possibile salvare l\'attività.';
-						console.log(res);
+						// console.log(res);
 					};
 				})
 				.catch(e => {
 					this.mesError = 'Non è stato possibile salvare l\'attività.';
-					console.log(res);
+					// console.log(res);
 				});
 		},
 
