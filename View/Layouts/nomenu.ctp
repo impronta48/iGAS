@@ -22,8 +22,8 @@
   <?php echo $this->Html->css('print', null, array('media'=>'print')); ?>
   <?php
         echo $this->Html->meta(
-            'impronta.ico',
-            'impronta.ico',
+            'favicon.ico',
+            'favicon.ico',
             array('type' => 'icon')
         );			
   ?> 

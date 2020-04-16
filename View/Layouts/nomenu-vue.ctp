@@ -72,7 +72,6 @@
 			</div>
 			<div id="navbar" class="nav navbar-nav navbar-right">
 				<h4 class="strong text-info m-0">Caricamento Ore</s>
-
 			</div>
 		</div>
 	</nav>
