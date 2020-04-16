@@ -70,9 +70,6 @@
 			<div class="navbar-header mt-0">
 				<?= $this->Html->image('logo-igas.png', ['alt'=>'iGAS Gestione Aziendale Semplice', 'style' => 'height:70px']); ?>				
 			</div>
-			<div id="navbar" class="nav navbar-nav navbar-right">
-				<h4 class="strong text-info m-0">Caricamento Ore</s>
-			</div>
 		</div>
 	</nav>
 	<div class="container my-2">

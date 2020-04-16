@@ -43,7 +43,7 @@ function utf8ize($d)
             <a href="<?= $this->Html->url(['controller'=> 'users', 'action'=>'logout']) ?>" class="btn btn-default">Logout</a>
       </b-col>
       <b-col cols="12" class="h-100 my-3 p-2" v-else-if="loading">
-            <h2 class="text-secondary text-center">{{personaName}}</h2>
+            <h2 class="text-secondary text-center"><small>Caricamento Ore</small><br>{{personaName}}</h2>
             <template v-if="!riepilogo">
                   <b-row>
                         <b-col cols="12" class="mt-2">
