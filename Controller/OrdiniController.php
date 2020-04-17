@@ -132,7 +132,7 @@ class OrdiniController extends AppController {
 		return $this->redirect(array('action' => 'index'));
 	}
 
-    function stampa($id)
+/*     function stampa($id)
     {
         $this->layout ='stampa';
         $this->response->type('pdf');
@@ -149,5 +149,5 @@ class OrdiniController extends AppController {
 		$att = str_replace(' ', '',substr($f['Attivita']['name'],0,8));
 
         $this->response->download("$anno-$progressivo-" . Configure::read('iGas.NomeAzienda')."Ordine-$cli-$att");
-    }
+    } */
 }

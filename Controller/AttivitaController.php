@@ -466,26 +466,6 @@ class AttivitaController extends AppController {
         $this->set('name', "Offerta-" . Configure::read('iGas.NomeAzienda') . "-$cli-$att-$id" );
     }
 
-    function stampa($id)
-    {
-        $this->layout ='stampa';
-        $this->response->type('pdf');
-        $this->preventivo($id);
-        $this->render('preventivo');
-		//$this->Attivita->contain('Attivita.Persona','Rigafattura','ProvenienzaSoldi','Rigafattura.Codiceiva');
-        $a = $this->Attivita->findById($id);
-
-        $d = new DateTime($a['Attivita']['DataPresentazione']);
-        $anno = $d->format('Y');
-        $progressivo = $a['Attivita']['id'];
-		//8 caratteri del cliente
-        $cli = str_replace(' ', '',substr($a['Persona']['DisplayName'], 0,8));
-		//8 caratteri dell'attivita
-		$att = str_replace(' ', '',substr($a['Attivita']['name'],0,8));
-
-        $this->response->download("$anno-$progressivo-" . Configure::read('iGas.NomeAzienda')."Offerta-$cli-$att");
-    }
-
     //Mostra l'avanzamento di una commessa, confrontando il preventivo con il consuntivo
     function avanzamento($id)
     {

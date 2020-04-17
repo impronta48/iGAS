@@ -377,18 +377,7 @@ private function _preparaDropDown()
             ));
         //Uscite
         $this->set('pnu', $pn);
-
-    }
-
-    function stampa()
-    {
-        $anno = $this->_getAnno();
-        $this->layout ='stampa';
-        $this->response->type('pdf');
-        $this->bilancio();
-        $this->render('bilancio');
-
-        $this->response->download("$anno-" . Configure::read('iGas.NomeAzienda')."-Bilancio");
+        $this->set('name',"$anno-" . Configure::read('iGas.NomeAzienda')."-Bilancio");
     }
 
     //Chiamo il bilancio e poi lo visualizzo con una pivot table
