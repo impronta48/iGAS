@@ -898,22 +898,7 @@ class OreController extends AppController
             if ($this->Ora->save($this->request->data)) {
                 $this->Session->setFlash('Ora Aggiunta correttamente.');
 
-                //Visto che a questo punto l'ora è inserita posso inviare una mail di conferma
-                //Da spostare in una sezione per permettere all'amministratore di inviare mail di sollecito
-                //verso quelli che non hanno caricato ore.
-                /*
-				$emailObj = new CakeEmail('smtp');
-				$emailObj->template('confermacaricamentoore');
-				$emailObj->sender(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
-				$emailObj->from(array('bill@microsoft.com' =>'Bill Gates'));
-				$emailObj->to('test@localhost');
-				$emailObj->emailFormat('text');
-				$emailObj->returnPath('postmaster@localhost');
-				$emailObj->replyTo(array('postmaster@localhost' => Configure::read('iGas.NomeAzienda')));
-				$emailObj->subject('Foglio ore caricato');
-                $emailObj->send();
-                */
-                $dataArray = explode('-', $this->request->data['Ora']['data']);
+                $dataArray = explode('-', $this->request->data['Ora']['data']);                
                 //A Seconda del submit gestisco un'operazione diversa
                 if (isset($this->request->data['submit-ns'])) {
                     return $this->redirect(array(
@@ -922,7 +907,7 @@ class OreController extends AppController
                         'attivita' => $this->request->data['Ora']['eAttivita'],
                         'anno' => $dataArray[0], // $this->request->data['Ora']['data']['year']
                         'mese' => $dataArray[1], // $this->request->data['Ora']['data']['month']
-                        'giorno' => $$dataArray[2], // this->request->data['Ora']['data']['day']
+                        'giorno' => $dataArray[2], // this->request->data['Ora']['data']['day']
                         'dest' => $this->request->data['Ora']['LuogoTrasferta'],
                     ));
                 } else {
