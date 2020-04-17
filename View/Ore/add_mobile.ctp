@@ -16,7 +16,7 @@ function utf8ize($d)
       var $personaName = '<?= $nomePersona; ?>';
       var $eattivita = <?= json_encode(utf8ize($eAttivita)) ?>;
       var $allattivita = <?= json_encode(utf8ize($allAttivita)) ?>;
-      var url = '<?= $this->request->base; ?>';  
+      var url = '<?= $this->request->base; ?>';
 </script>
 <style>
       .map {

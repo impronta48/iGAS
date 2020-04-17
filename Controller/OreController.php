@@ -992,9 +992,11 @@ class OreController extends AppController
         $this->layout = 'nomenu-vue';
         $persona = $this->Auth->user('persona_id');
 
+        $allAttivita=$this->Ora->Attivita->getlist();
+        //var_dump($allAttivita);die;
         //Se passo la persona prendo solo le attività recenti
         $this->set('eAttivita', $this->Ora->Attivita->getlist($persona));
-        $this->set('allAttivita', $this->Ora->Attivita->getlist());
+        $this->set('allAttivita', $allAttivita);
 
 
         $persona_ore = $this->Ora->Persona->findById($persona);

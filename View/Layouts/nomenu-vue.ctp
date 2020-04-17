@@ -68,8 +68,15 @@
 	<nav class="navbar bg-white navbar-fixed-top">
 		<div class="container">
 			<div class="navbar-header mt-0">
-				<?= $this->Html->image('logo-igas.png', ['alt'=>'iGAS Gestione Aziendale Semplice', 'style' => 'height:70px']); ?>				
+				<?= $this->Html->image('logo-igas.png', ['alt'=>'iGAS Gestione Aziendale Semplice', 'style' => 'height:70px']); ?>
 			</div>
+			<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a href="<?= $this->Html->url(['controller'=> 'users', 'action'=>'logout']) ?>" class="btn btn-primary btn-sm ">
+							<i class="fa fa-user-circle"></i> Logout
+						</a>
+					</li>
+			</ul>
 		</div>
 	</nav>
 	<div class="container my-2">
