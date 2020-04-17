@@ -1,5 +1,5 @@
 Vue.component("app-ore-list", {
-      template: `
+    template: `
                   <div class="mt-3 text-center" name="riepilogo" v-if="active">
                         <b-button pill id="btnNuovo" @click="svuota()" variant="info" size="md" class="my-3">Inizia nuova attività</b-button>
                         <table class="table table-sm table-striped text-left">
@@ -20,35 +20,35 @@ Vue.component("app-ore-list", {
                         </table>
                   </div>
 		`,
-      props: ['personaId'],
-      mixins: [formatMixin],
-      data: function () {
-            return {
-                  riepilogo: [],
-                  allattivita: $allattivita,
-            };
-      },
-      watch: {},
-      computed: {
-            active: {
-                  get: function () {
-                        return axios.post(url + '/ore/getOrebyPersona/' + this.personaId + '.json', {})
-                              .then(res => {
-                                    if (res.data.length > 0) {
-                                          this.riepilogo = res.data;
-                                    }
-                              });
-                  return true;
-                  },
-                  set: function (e) {},
+    props: ['personaId'],
+    mixins: [formatMixin],
+    data: function() {
+        return {
+            riepilogo: [],
+            allattivita: $allattivita,
+        };
+    },
+    watch: {},
+    computed: {
+        active: {
+            get: function() {
+                return axios.post(url + '/ore/getOreByPersona/' + this.personaId + '.json', {})
+                    .then(res => {
+                        if (res.data.length > 0) {
+                            this.riepilogo = res.data;
+                        }
+                    });
+                return true;
             },
+            set: function(e) {},
+        },
 
-      },
-      events: {},
-      methods: {
-            svuota() {
-                  window.location.reload(true)
-            },
+    },
+    events: {},
+    methods: {
+        svuota() {
+            window.location.reload(true)
+        },
 
-      }
+    }
 });

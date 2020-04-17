@@ -1007,11 +1007,11 @@ class OreController extends AppController
 
 
 
-        // $result = $this->getOrebyPersona($persona);
+        // $result = $this->getOreByPersona($persona);
         // $this->set('result', $result);
         $this->set('title_for_layout', date('d-m-Y')." | $nomePersona | Aggiungi Ore | Foglio Ore");
     }
-    public function getOrebyPersona($personaId, $giorno = null){
+    public function getOreByPersona($personaId, $giorno = null){
         $conditions = array();
         $conditions['Ora.eRisorsa'] = $personaId;
         $conditions['YEAR(Ora.data)'] = date('Y');
