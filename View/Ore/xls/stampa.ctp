@@ -28,7 +28,7 @@ if(!isset($cliente)){
 }else{
     $rs = $cliente['Societa'];
     if(empty($rs)){
-        $rs = $cliente['DisplayName'];                                        
+        $rs = $cliente['DisplayName'];
     }
     $this->PhpSpreadsheet->getActiveSheet()->getStyle('D9')->getFont()->setBold(true);
     $this->PhpSpreadsheet->getActiveSheet()->setCellValue('D9', $rs);
@@ -40,38 +40,53 @@ if(!empty($cliente['piva'])){
     $this->PhpSpreadsheet->getActiveSheet()->setCellValue('D13', 'P.IVA: '.$cliente['piva']);
 }
 if(!empty($cliente['cf'])){
-    $this->PhpSpreadsheet->getActiveSheet()->setCellValue('D14', 'CF: '.$cliente['cf']);				
+    $this->PhpSpreadsheet->getActiveSheet()->setCellValue('D14', 'CF: '.$cliente['cf']);
 }
 
 $this->PhpSpreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(12);
 $this->PhpSpreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(12);
-$this->PhpSpreadsheet->getActiveSheet()->getStyle('A16:G16')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FCAA04');
-$this->PhpSpreadsheet->getActiveSheet()->getStyle('A16:G16')->getFont()->setBold(true);
 $this->PhpSpreadsheet->getActiveSheet()->setCellValue('A16', 'Data');
 $this->PhpSpreadsheet->getActiveSheet()->setCellValue('B16', 'Descrizione');
 $this->PhpSpreadsheet->getActiveSheet()->setCellValue('C16', 'Numero Ore');
 $this->PhpSpreadsheet->getActiveSheet()->setCellValue('D16', 'Attività');
 $this->PhpSpreadsheet->getActiveSheet()->setCellValue('E16', 'Fase');
 $this->PhpSpreadsheet->getActiveSheet()->setCellValue('F16', 'Consulente');
+$this->PhpSpreadsheet->getActiveSheet()->setCellValue('G16', 'Località');
+$this->PhpSpreadsheet->getActiveSheet()->setCellValue('H16', 'Coord Inizio');
+$this->PhpSpreadsheet->getActiveSheet()->setCellValue('I16', 'Coord Fine');
+$this->PhpSpreadsheet->getActiveSheet()->setCellValue('J16', 'Ora Inizio');
+$this->PhpSpreadsheet->getActiveSheet()->setCellValue('K16', 'Ora Fine');
+$this->PhpSpreadsheet->getActiveSheet()->getStyle('A16:K16')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FCAA04');
+$this->PhpSpreadsheet->getActiveSheet()->getStyle('A16:K16')->getFont()->setBold(true);
 
 $ore_tot = 0;
 $startingCell = 16;
 $currentCell = $startingCell;
 foreach($ore as $o){
     $currentCell++;
-    $this->PhpSpreadsheet->getActiveSheet()->setCellValue('A'.(string)($currentCell), CakeTime::format($o['Ora']['data'], '%d-%m-%Y'));     
+    $this->PhpSpreadsheet->getActiveSheet()->setCellValue('A'.(string)($currentCell), CakeTime::format($o['Ora']['data'], '%d-%m-%Y'));
     $this->PhpSpreadsheet->getActiveSheet()->setCellValue('B'.(string)($currentCell), $o['Ora']['dettagliAttivita']);
     $this->PhpSpreadsheet->getActiveSheet()->setCellValue('C'.(string)($currentCell), $o['Ora']['numOre']);
     $this->PhpSpreadsheet->getActiveSheet()->setCellValue('D'.(string)($currentCell), $o['Attivita']['name']);
     $this->PhpSpreadsheet->getActiveSheet()->setCellValue('E'.(string)($currentCell), $o['Faseattivita']['Descrizione']);
     $this->PhpSpreadsheet->getActiveSheet()->setCellValue('F'.(string)($currentCell), $o['Persona']['DisplayName']);
+    $this->PhpSpreadsheet->getActiveSheet()->setCellValue('G'.(string)($currentCell), $o['Ora']['luogoTrasferta']);
+    $this->PhpSpreadsheet->getActiveSheet()->setCellValue('H'.(string)($currentCell), $o['Ora']['location_start']);
+    $this->PhpSpreadsheet->getActiveSheet()->setCellValue('I'.(string)($currentCell), $o['Ora']['location_stop']);
+    $this->PhpSpreadsheet->getActiveSheet()->setCellValue('J'.(string)($currentCell), $o['Ora']['start']);
+    $this->PhpSpreadsheet->getActiveSheet()->setCellValue('K'.(string)($currentCell), $o['Ora']['stop']);
     $ore_tot += $o['Ora']['numOre'];
 }
 
-$this->PhpSpreadsheet->getActiveSheet()->getStyle('A'.++$currentCell.':G'.$currentCell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FCAA04');
+$this->PhpSpreadsheet->getActiveSheet()->getStyle('A'.++$currentCell.':K'.$currentCell)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FCAA04');
 $this->PhpSpreadsheet->getActiveSheet()->getStyle('A'.(string)($currentCell))->getFont()->setBold(true);
 $this->PhpSpreadsheet->getActiveSheet()->setCellValue('A'.$currentCell, 'Totale Ore');
 $this->PhpSpreadsheet->getActiveSheet()->getStyle('C'.(string)($currentCell))->getFont()->setBold(true);
 $this->PhpSpreadsheet->getActiveSheet()->setCellValue('C'.$currentCell, $ore_tot);
 
-$this->PhpSpreadsheet->addTableFooter()->output('ReportOre.xls', 'Xls');
+foreach(range('B','K') as $columnID) {
+    $this->PhpSpreadsheet->getActiveSheet()->getColumnDimension($columnID)
+        ->setAutoSize(true);
+}
+
+$this->PhpSpreadsheet->addTableFooter()->output($name . '.xls', 'Xls');

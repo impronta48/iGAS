@@ -38,7 +38,7 @@ class DdtController extends AppController {
 			throw new NotFoundException(__('Invalid ddt'));
 		}
 		$options = array('conditions' => array('Ddt.' . $this->Ddt->primaryKey => $id));
-		$this->set('ddt', $this->Ddt->find('first', $options));        
+		$this->set('ddt', $this->Ddt->find('first', $options));
         $azienda =  $this->Ddt->Attivita->Persona->findById(Configure::read('iGas.idAzienda'));
         $this->set('azienda', $azienda);
 	}
@@ -54,9 +54,9 @@ class DdtController extends AppController {
 		}
         $this->set('attivita', $this->Ddt->Attivita->find('list'));
 		$this->Ddt->Attivita->recursive = 2; //devo tirare su anche le righe ddt associate alle fasi attività
-        $attivita_full = $this->Ddt->Attivita->findById($attivita_id);        
+        $attivita_full = $this->Ddt->Attivita->findById($attivita_id);
         $this->set('a', $attivita_full);
-        
+
 		if ($this->request->is('post')) {
 			$this->Ddt->create();
 			if ($this->Ddt->saveAll($this->request->data)) {
@@ -68,7 +68,7 @@ class DdtController extends AppController {
 		}
         else{
             $this->set('vettori', $this->Ddt->Vettore->find('list'));
-            $this->set('legenda_porto', $this->Ddt->LegendaPorto->find('list'));            
+            $this->set('legenda_porto', $this->Ddt->LegendaPorto->find('list'));
             $this->set('legenda_causale_trasporto', $this->Ddt->LegendaCausaleTrasporto->find('list'));
         }
 	}
@@ -95,11 +95,11 @@ class DdtController extends AppController {
 			$options = array('conditions' => array('Ddt.' . $this->Ddt->primaryKey => $id));
 			$this->request->data = $this->Ddt->find('first', $options);
             $attivita_id = $this->request->data['Attivita']['id'];
-            $attivita_full = $this->Ddt->Attivita->findById($attivita_id);        
+            $attivita_full = $this->Ddt->Attivita->findById($attivita_id);
             $this->set('a', $attivita_full);
             $this->set('attivita', $this->Ddt->Attivita->find('list'));
             $this->set('vettori', $this->Ddt->Vettore->find('list'));
-            $this->set('legenda_porto', $this->Ddt->LegendaPorto->find('list'));            
+            $this->set('legenda_porto', $this->Ddt->LegendaPorto->find('list'));
             $this->set('legenda_causale_trasporto', $this->Ddt->LegendaCausaleTrasporto->find('list'));
 
 		}
@@ -126,16 +126,16 @@ class DdtController extends AppController {
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
-    
-    
+
+
     function stampa($id)
-    {           
+    {
         $this->layout ='stampa';
         $this->response->type('pdf');
-        $this->view($id);        
-        $this->render('view');		
+        $this->view($id);
+        $this->render('view');
         $f = $this->Ddt->findById($id);
-		
+
         $d = new DateTime($f['Ddt']['data_inizio_trasporto']);
         $anno = $d->format('Y');
         $progressivo = $f['Ddt']['id'];
@@ -143,7 +143,7 @@ class DdtController extends AppController {
         $cli = str_replace(' ', '',substr($f['Ddt']['destinatario'], 0,8));
 		//8 caratteri dell'attivita
 		$att = str_replace(' ', '',substr($f['Attivita']['name'],0,8));
-		
-        $this->response->download("$anno-$progressivo-" . Configure::read('iGas.NomeAzienda')."DdT-$cli-$att.pdf"); 
+
+        $this->response->download("$anno-$progressivo-" . Configure::read('iGas.NomeAzienda')."DdT-$cli-$att");
     }
 }

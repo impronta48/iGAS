@@ -463,7 +463,7 @@ class AttivitaController extends AppController {
         $cli = str_replace(' ', '', substr($attivita['Persona']['DisplayName'], 0, 8));
         //8 caratteri dell'attivita
         $att = str_replace(' ', '', substr($attivita['Attivita']['name'], 0, 8));
-        $this->set('name', "Offerta-" . Configure::read('iGas.NomeAzienda') . "-$cli-$att-$id.pdf" );
+        $this->set('name', "Offerta-" . Configure::read('iGas.NomeAzienda') . "-$cli-$att-$id" );
     }
 
     function stampa($id)
@@ -483,7 +483,7 @@ class AttivitaController extends AppController {
 		//8 caratteri dell'attivita
 		$att = str_replace(' ', '',substr($a['Attivita']['name'],0,8));
 
-        $this->response->download("$anno-$progressivo-" . Configure::read('iGas.NomeAzienda')."Offerta-$cli-$att.pdf");
+        $this->response->download("$anno-$progressivo-" . Configure::read('iGas.NomeAzienda')."Offerta-$cli-$att");
     }
 
     //Mostra l'avanzamento di una commessa, confrontando il preventivo con il consuntivo

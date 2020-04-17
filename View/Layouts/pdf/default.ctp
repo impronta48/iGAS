@@ -16,12 +16,12 @@
   <!-- Loading Bootstrap -->
   <?php echo $this->Html->css('bootstrap'); ?>
 
-  <!-- Loading Stylesheets -->    
+  <!-- Loading Stylesheets -->
   <?php echo $this->Html->css('font-awesome'); ?>
   <?php echo $this->Html->css('style'); ?>
- 
-   
-  <!-- Loading Custom Stylesheets -->    
+
+
+  <!-- Loading Custom Stylesheets -->
   <?php echo $this->Html->css('custom'); ?>
   <?php echo $this->Html->css('print', array('media'=>'print','fullBase' => true)); ?>
 
@@ -38,8 +38,8 @@
                         <div class="col-md-11">
                         <?php echo $content_for_layout; ?>
                         </div>
-                    </div>                                       
-    
+                    </div>
+
 </body>
 </html>
 <?php
@@ -47,7 +47,7 @@ $list = ob_get_contents(); // Store buffer in variable
 ob_end_clean(); // End buffering and clean up
 use mikehaertl\wkhtmlto\Pdf;
 $pdf = new Pdf($list);
-$pdf->setOptions(["print-media-type"]); 
+$pdf->setOptions(["print-media-type"]);
 echo $pdf->send();
 $this->response->type('application/pdf');
-$this->response->download($name);
+$this->response->download($name . '.pdf');

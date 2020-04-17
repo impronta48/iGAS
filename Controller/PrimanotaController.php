@@ -120,7 +120,7 @@ class PrimanotaController extends AppController {
         $this->set('taglist', $taglist);
 
         $this->set('persone',$this->Primanota->Persona->find('list'));
-        $this->set('name', "PrimaNota-$from-$to-" . Configure::read('iGas.NomeAzienda') . ".pdf");
+        $this->set('name', "PrimaNota-$from-$to-" . Configure::read('iGas.NomeAzienda') . "");
     }
 
     //Verifica se un valore c'è nel cookie e poi lo salva
@@ -388,7 +388,7 @@ private function _preparaDropDown()
         $this->bilancio();
         $this->render('bilancio');
 
-        $this->response->download("$anno-" . Configure::read('iGas.NomeAzienda')."-Bilancio.pdf");
+        $this->response->download("$anno-" . Configure::read('iGas.NomeAzienda')."-Bilancio");
     }
 
     //Chiamo il bilancio e poi lo visualizzo con una pivot table

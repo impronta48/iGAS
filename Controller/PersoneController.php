@@ -3,16 +3,16 @@
 class PersoneController extends AppController {
 
     public $name = 'Persone';
-    public $components = array('RequestHandler','Paginator','PhpExcel.PhpSpreadsheet', 'UploadFiles');    
+    public $components = array('RequestHandler','Paginator','PhpExcel.PhpSpreadsheet', 'UploadFiles');
     public $helpers = array('PhpExcel.PhpSpreadsheet');
-        
+
     function index() {
-        		
-        $this->Persona->recursive = 1;        
-        $conditions = array();                
+
+        $this->Persona->recursive = 1;
+        $conditions = array();
 
         //Read querystring
-        $q = $this->request->query('q');		
+        $q = $this->request->query('q');
         $paging = $this->request->query('paging');
         $cat = $this->request->query('cat');
 
@@ -22,32 +22,32 @@ class PersoneController extends AppController {
         }
 
         if (!empty($q)) {
-            $conditions[] = array('OR' => array('Persona.nome LIKE' => "%$q%", 
-                                                'Persona.cognome LIKE' => "%$q%", 
+            $conditions[] = array('OR' => array('Persona.nome LIKE' => "%$q%",
+                                                'Persona.cognome LIKE' => "%$q%",
                                                 'Persona.DisplayName LIKE' => "%$q%",
                                                 'Persona.Societa LIKE' => "%$q%",
                                 ));
-        }   
-            
+        }
+
 		if ($this->request->ext=='xls')
-        {            
+        {
             $this->set('persone', $this->Persona->find('all', array(
                 'conditions' => $conditions,
                 'contains' => array('Persona'),
                 'recursive' => -1,
             )));
-            $this->set('name', Configure::read('iGas.NomeAzienda') . "Contatti.xls");        
+            $this->set('name', Configure::read('iGas.NomeAzienda') . "Contatti.xls");
             return;
         }
         elseif (!empty($cat))
-        {            
+        {
             $this->Paginator->settings['Tagged'] = array(
                 'tagged',
                 'model' => 'Persona',
                 'by' => $cat,
                 'conditions' => $conditions,
                 'contain' => array('Persona','Tag'),
-                'limit' => $paging,                
+                'limit' => $paging,
                 );
             $this->set('persone', $this->Paginator->paginate('Tagged'));
         }
@@ -61,7 +61,7 @@ class PersoneController extends AppController {
                 );
             $this->set('persone', $this->Paginator->paginate());
         }
-        
+
 
 		//Se hai premuto sul pulsante esporta email ti mando ad una pagina che presenta solo le mail
 		if (isset($this->request->data['export-email']))
@@ -69,7 +69,7 @@ class PersoneController extends AppController {
             $this->export_email($this->request->data['Persona']);
             return;
 		}
-		
+
         //Leggo tutti i tag e li porto alla view
         $fields=array('name');
         $t = $this->Persona->Tag->find('all', array('fields'=>$fields, 'recursive'=>-1));
@@ -248,9 +248,9 @@ class PersoneController extends AppController {
         exit();
     }
 
-    public function consulente($anno, $mese, $personaId = NULL) {        
+    public function consulente($anno, $mese, $personaId = NULL) {
         $persone = Configure::read('Attivita.personeFoglioOre');
-        $proj_speciali = Configure::read('iGas.progettiSpeciali');   
+        $proj_speciali = Configure::read('iGas.progettiSpeciali');
         $tabore= $this->_getOreconsulente($persone, $anno, $mese, $personaId);
 
         $this->set('ore', $tabore);
@@ -260,45 +260,45 @@ class PersoneController extends AppController {
         $this->set('title_for_layout', "Foglio Ore per Consulente del Lavoro | Persone");
         $this->set('days', cal_days_in_month(CAL_GREGORIAN, $mese, $anno));
         Configure::write('debug', 0);
-        $this->set('name', Configure::read('iGas.NomeAzienda') . "Report-ore-$anno-$mese.pdf");        
+        $this->set('name', Configure::read('iGas.NomeAzienda') . "Report-ore-$anno-$mese");
     }
 
     //Aggiunge un tag a tutti gli elementi passati in post
     function addtag($tag)
-    {        
+    {
         $this->request->allowMethod('ajax', 'post');
         $this->autoRender = false;
-        //$this->log($this->request->data); 
+        //$this->log($this->request->data);
         $persone= $this->request->data['Persona'];
-        
+
         foreach ($persone as $key=>$value)
         {
-            //Associa il tag passato come parametro a tutte le persone passate in post, 
+            //Associa il tag passato come parametro a tutte le persone passate in post,
             //paremetro false finale= aggiungo i tag invece di sostituire
             $this->Persona->saveTags($tag,$key, false);
         }
     }
-    
+
     //Rimuove tutti i tag a tutti gli elementi passati in post
     function deletetag()
     {
         $this->request->allowMethod('ajax', 'post');
-        $this->autoRender = false;        
+        $this->autoRender = false;
         $persone= $this->request->data['Persona'];
-        
+
         foreach ($persone as $key=>$value)
         {
-            //Tolgo tutti i tag dalle persone        
+            //Tolgo tutti i tag dalle persone
             $this->Persona->id = $key;
             $this->Persona->deleteTagged();
         }
     }
-    
+
     public function subscribe($listId=null) {
-        
-        
+
+
         $this->request->allowMethod('ajax', 'post');
-        $this->autoRender = false;        
+        $this->autoRender = false;
         $persone= $this->request->data['Persona'];
         //TODO: Gestire correttamente il nome della lista passato come paraemtro
         //Oppure accettare che il nome del parametro sia il segmento
@@ -309,7 +309,7 @@ class PersoneController extends AppController {
         } catch (Mailchimp_Error $e) {
             $this->Session->setFlash('You have not set a MailChimp API key. Set it in Config/igas.php', 'flash_error');
         }
-        
+
         foreach ($persone as $key=>$value)
         {
             $this->Persona->recursive=-1;
@@ -328,26 +328,26 @@ class PersoneController extends AppController {
                     $this->Session->setFlash('An unknown error occurred', 'flash_error');
                 }
             }
-        }        
-        
+        }
+
         //TODO: Chiedere se voglio creare un segmento per questa spedizione
         //https://apidocs.mailchimp.com/api/2.0/lists/static-segment-members-add.php
         //In ogni caso aggiungo
     }
-	
+
 	public function report($anno, $mese, $idPersona = NULL) {
 
         $this->Persona->recursive = -1;
         $this->loadModel('Attivita');
         $this->Attivita->recursive = -1;
-        
+
         // Filippo 20/04/16 - Ho impostato il numero corretto di giorni per ogni mese
         $days = cal_days_in_month(CAL_GREGORIAN, $mese, $anno);
 
         $tabore = $this->_getOre($days, $anno, $mese, $idPersona);
 
 		$special = $this->Attivita->getProgettiSpeciali();
-		
+
         $this->set('giorni', $days);
         $this->set('ore', $tabore);
         $this->set('mese', $mese);
@@ -356,14 +356,14 @@ class PersoneController extends AppController {
         $this->set('title_for_layout', "Report Ore-Attivit&agrave; | Persone");
 
         // Nome del file per il layout PDF
-        $this->set('name', Configure::read('iGas.NomeAzienda') . "Report-ore-$anno-$mese.pdf");        
+        $this->set('name', Configure::read('iGas.NomeAzienda') . "Report-ore-$anno-$mese");
 	}
 
-    public function report_fasi($anno, $mese, $idPersona = NULL) { 
+    public function report_fasi($anno, $mese, $idPersona = NULL) {
 
         $this->Persona->recursive = -1;
 
-        
+
         // Filippo 20/04/16 - Ho impostato il numero corretto di giorni per ogni mese
         $days = cal_days_in_month(CAL_GREGORIAN, $mese, $anno);
 
@@ -379,16 +379,16 @@ class PersoneController extends AppController {
         if ($this->response->type()== 'application/pdf')
         {
             $this->layout = 'landscape';
-        }                
-        $this->set('name', Configure::read('iGas.NomeAzienda') . "Report-fasi-$anno-$mese.pdf");        
-        
+        }
+        $this->set('name', Configure::read('iGas.NomeAzienda') . "Report-fasi-$anno-$mese");
+
     }
 
     private function _getOreconsulente($persone, $anno, $mese, $personaId = NULL)
     {
         $persone_list = $this->Persona->Impiegato->attivo();
         $proj_speciali = Configure::read('iGas.progettiSpeciali');
-        
+
         $this->loadModel('Attivita');
         $this->Attivita->recursive = -1;
         $proj_speciali_id = $this->Attivita->getProgettiSpeciali();  //Deduco gli id dal nome del progetto
@@ -398,7 +398,7 @@ class PersoneController extends AppController {
                                         FROM ore as Ora, persone as Persona
                                         right join impiegati as Impiegato on Persona.id = Impiegato.persona_id
                                         WHERE Persona.id = $personaId AND Ora.eRisorsa = $personaId AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
-                                        AND Impiegato.disattivo = 0                                          
+                                        AND Impiegato.disattivo = 0
                                         ORDER BY DisplayName, data
                                         ");
         } else {
@@ -407,28 +407,28 @@ class PersoneController extends AppController {
                                         FROM ore as Ora, persone as Persona
                                         right join impiegati as Impiegato on Persona.id = Impiegato.persona_id
                                         WHERE Ora.eRisorsa = Persona.id AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
-                                        AND Impiegato.disattivo = 0                                          
+                                        AND Impiegato.disattivo = 0
                                         ORDER BY DisplayName, data
                                         ");
         }
 
         //riordino l'array in modo che sia facile da stampare
         //-----------   | Persona                             | Persona                             | Persona
-        //1             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | 
-        //2             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | 
-        //3             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | 
-        //4             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | 
-        //5             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | 
+        //1             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia |
+        //2             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia |
+        //3             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia |
+        //4             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia |
+        //5             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia |
         //...
-        //31             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia |                         
+        //31             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia |
         $tabore = array();
 
         //Inizializzo
-        foreach ($persone_list as $p) { 
+        foreach ($persone_list as $p) {
             foreach($ore as $key => $value){
                 if($p['Persona']['id'] == $value['Persona']['id']){
-                    foreach ($proj_speciali as $s){           
-                        $tabore[$p['Persona']['DisplayName']][$s] =  array_fill(1, 31, 0);                        
+                    foreach ($proj_speciali as $s){
+                        $tabore[$p['Persona']['DisplayName']][$s] =  array_fill(1, 31, 0);
                     }
                     //Voci del foglio ore che compaiono sempre
                     $tabore[$p['Persona']['DisplayName']]['Progetto'] =  array_fill(1, 31, 0);
@@ -438,7 +438,7 @@ class PersoneController extends AppController {
                 }
             }
         }
-        
+
         //Carico le ore
         foreach ($ore as $o) {
             $d = new DateTime($o['Ora']['data']);
@@ -458,16 +458,16 @@ class PersoneController extends AppController {
                 }
             }
         }
-        
+
         //Calcolo i totali alla fine per ottimizzare ed essere sicuro di fare il conto
         //Tutti i giorni, anche in quelli che non contengono ore
-        foreach ($persone_list as $o) {  
-            foreach($ore as $key => $value){  
+        foreach ($persone_list as $o) {
+            foreach($ore as $key => $value){
                 if($o['Persona']['id'] == $value['Persona']['id']){
                     for ($day =1; $day <= cal_days_in_month(CAL_GREGORIAN, $mese, $anno); $day++){
                         $sommaPrjSpeciali = 0;
                         foreach ($proj_speciali as $s){
-                            $sommaPrjSpeciali += $tabore[$o['Persona']['DisplayName']][$s][$day];                    
+                            $sommaPrjSpeciali += $tabore[$o['Persona']['DisplayName']][$s][$day];
                         }
                         //Calcolo l'effettivo tempo impiegato tra progetti normali e speciali
                         $tabore[$o['Persona']['DisplayName']]['Totale'][$day] =
@@ -485,10 +485,10 @@ class PersoneController extends AppController {
         return $tabore;
 
     }
-	
+
     //Carico i valori da contratto per il mese come parametro
     private function _getContratto($pid, $anno, $mese)
-    {        
+    {
         $giorniIta = array('1'=>'Lun','2'=>'Mar','3'=>'Mer','4'=>'Gio','5'=>'Ven','6'=>'Sab','7'=>'Dom');
         $days = cal_days_in_month(CAL_GREGORIAN, $mese, $anno);
         $sett = $this->Persona->Impiegato->find('first',array('conditions'=> array('persona_id'=>$pid,
@@ -537,13 +537,13 @@ class PersoneController extends AppController {
                                         ORDER BY Cognome, Attivita.name, data"
                                         );
         }
-                                    
+
         $tabore = array();
 
         foreach ($ore as $riga) {
-            
+
             if (!array_key_exists($riga['Ora']['eAttivita'], $special))
-            {        
+            {
                 $tabore[ $riga['Persona']['DisplayName'] ][ $riga['Ora']['eAttivita'] ]['ore'] = array_fill(1, $days, 0);
                 $tabore[ $riga['Persona']['DisplayName'] ][ $riga['Ora']['eAttivita'] ]['nome'] = $riga['Attivita']['name'];
             }
@@ -566,44 +566,44 @@ class PersoneController extends AppController {
 
             $d = new DateTime($o['Ora']['data']);
             $day = intval($d->format('d'));
-            
+
             $tabore[ $o['Persona']['DisplayName'] ][ $o['Ora']['eAttivita'] ]['ore'] [ $day ] += $o['Ora']['numOre'];
         }
 
         return $tabore;
 
-    }  
+    }
 
     private function _getOreFasi($days, $anno, $mese, $personaId = NULL) {
 
         $persone_list = $this->Persona->Impiegato->attivo();
         if($personaId){
             $ore = $this->Persona->query("SELECT Persona.id, DisplayName, Ora.data, Ora.numOre, eAttivita, faseattivita_id, Attivita.name, Faseattivita.Descrizione
-                                        FROM impiegati as Impiegato 
+                                        FROM impiegati as Impiegato
                                             LEFT JOIN  persone as Persona  on Persona.id = Impiegato.persona_id
-                                            LEFT JOIN ore as Ora on Ora.eRisorsa = Persona.id                                            
+                                            LEFT JOIN ore as Ora on Ora.eRisorsa = Persona.id
                                             LEFT JOIN attivita as Attivita on  Attivita.id = Ora.eAttivita
                                             LEFT JOIN faseattivita as Faseattivita on Ora.faseattivita_id = Faseattivita.id
                                         WHERE Persona.id = $personaId AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
-                                        AND Impiegato.disattivo = 0  
+                                        AND Impiegato.disattivo = 0
                                         ORDER BY Cognome, data, Attivita.name
                                         ");
         } else {
         // VECCHIA QUERY FUNZIONANTE MA CHE TIRA FUORI LE ORE DI TUTTE LE PERSONE
         //Massimoi 6/9/13 - Non c'è speranza di usare il costruttore di query di cake per una query così!
         $ore = $this->Persona->query("SELECT Persona.id, DisplayName, Ora.data, Ora.numOre, eAttivita, faseattivita_id, Attivita.name, Faseattivita.Descrizione
-                                    FROM impiegati as Impiegato 
+                                    FROM impiegati as Impiegato
                                         LEFT JOIN  persone as Persona  on Persona.id = Impiegato.persona_id
-                                        LEFT JOIN ore as Ora on Ora.eRisorsa = Persona.id                                            
+                                        LEFT JOIN ore as Ora on Ora.eRisorsa = Persona.id
                                         LEFT JOIN attivita as Attivita on  Attivita.id = Ora.eAttivita
                                         LEFT JOIN faseattivita as Faseattivita on Ora.faseattivita_id = Faseattivita.id
                                     WHERE MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
-                                    AND Impiegato.disattivo = 0  
+                                    AND Impiegato.disattivo = 0
                                     ORDER BY Cognome, data, Attivita.name
                                     ");
         }
 
-        //Creo una tabella con disposizione inversa rispetto a quella di consulente/report    
+        //Creo una tabella con disposizione inversa rispetto a quella di consulente/report
         $tabore = array();
 
         // Filippo 20/04/16 - Ho creato questo loop per 'pulire' l'estrazione dei dati e utilizzare una sola query SQL
@@ -618,7 +618,7 @@ class PersoneController extends AppController {
             if( $riga['Ora']['faseattivita_id'] == null )
                 $tabore[ $riga['Persona']['DisplayName'] ][ $riga['Ora']['eAttivita'] ]['fase'][ $riga['Ora']['faseattivita_id'] ]['nome'] = 'Undefinded';
             else
-                $tabore[ $riga['Persona']['DisplayName'] ][ $riga['Ora']['eAttivita'] ]['fase'][ $riga['Ora']['faseattivita_id'] ]['nome'] = 
+                $tabore[ $riga['Persona']['DisplayName'] ][ $riga['Ora']['eAttivita'] ]['fase'][ $riga['Ora']['faseattivita_id'] ]['nome'] =
                        ' -'. $riga['Faseattivita']['Descrizione'];
         }
 
@@ -627,7 +627,7 @@ class PersoneController extends AppController {
 
             $d = new DateTime($o['Ora']['data']);
             $day = intval($d->format('d'));
-            
+
             $tabore[ $o['Persona']['DisplayName'] ][ $o['Ora']['eAttivita']]['fase'][$o['Ora']['faseattivita_id']]['ore'][ $day ] += $o['Ora']['numOre'];
             $tabore[ $o['Persona']['DisplayName'] ][ $o['Ora']['eAttivita']]['fase'][$o['Ora']['faseattivita_id']]['somma'] += $o['Ora']['numOre'];
             $tabore[ $o['Persona']['DisplayName'] ][ $o['Ora']['eAttivita']]['somma'] += $o['Ora']['numOre'];
@@ -636,8 +636,8 @@ class PersoneController extends AppController {
         return $tabore;
 
     }
-	
-	function export_email($persone) {		
+
+	function export_email($persone) {
 		$in = array();
 		foreach($persone as $key=>$value)
 		{
@@ -649,7 +649,7 @@ class PersoneController extends AppController {
 				'fields' => 'email',
 				)
 		);
-		
+
 		$this->set('persone', $persone);
 		$this->render('export_email');
 	}
@@ -664,7 +664,7 @@ class PersoneController extends AppController {
                                                     'order' => array('Persona.modified' => 'desc')));
 
         foreach ($res as $r) {
-            
+
             $lastmodified[$r['Persona']['id']]['Nome'] = $r['Persona']['DisplayName'];
             $lastmodified[$r['Persona']['id']]['Modifica'] = $r['Persona']['modified'];
         }
@@ -674,19 +674,19 @@ class PersoneController extends AppController {
 
     /**
      * deleteDoc
-     * 
+     *
      * Prende l'id di una persona e ne cancella l'avatar, alla fine redirige sempre alla pagina
      * chiamante settando un messaggio che informa dell'esito della cancellazione.
      * E' estremamente simile a tutti gli altri metodi deleteDoc sparsi in iGAS, sarebbe da mettere
      * nel component UploadFiles.
-     * 
+     *
      * @param int $id
      * @param boolean $redirect true per redirigere alla pagine chiamate, false per non redirigere (utile
      * nel caso in cui deleteDoc sia chiamato da qualche metodo che già redirige), default true.
      * @return void
      */
     public function deleteDoc($id = null, $redirect = true) {
-        $this->autoRender = false; 
+        $this->autoRender = false;
         if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2) or ($this->Session->read('Auth.User.persona_id') == $id)){
             // Si può continuare, altrimenti vieni reindirizzato, questo è brutto lo so ma è la tecnica che attualmente
             // assicura al 100% la profilazione in questo punto

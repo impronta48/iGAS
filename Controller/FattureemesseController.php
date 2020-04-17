@@ -154,7 +154,7 @@ class FattureemesseController extends AppController {
 			$this->Session->setFlash(__('Invalid fatturaemessa'));
 			$this->redirect(array('action' => 'index'));
         }
-        
+
         //Questo mi serve per tirare su l'anagrafica dell'utente
         $this->Fatturaemessa->Behaviors->load('Containable');
         $this->Fatturaemessa->contain('Attivita.Persona','ProvenienzaSoldi','Rigafattura','Rigafattura.Codiceiva');
@@ -176,7 +176,7 @@ class FattureemesseController extends AppController {
 		//8 caratteri dell'attivita
         $att = str_replace(' ', '', substr($f['Attivita']['name'], 0, 8));
         Configure::write('debug', 0);
-        $this->set('name', "$anno-$progressivo-" . Configure::read('iGas.NomeAzienda') . "Fattura-$cli-$att.pdf" );        
+        $this->set('name', "$anno-$progressivo-" . Configure::read('iGas.NomeAzienda') . "Fattura-$cli-$att" );
 	}
 
 	public function fattureincloud($id = null){
@@ -206,47 +206,47 @@ class FattureemesseController extends AppController {
 			// a '' bisognerebbe scrivere UNCKNOWN
 			"nome" => $f['Attivita']['Persona']['Societa'], // OBBLIGATORIO (Nome o ragione sociale del cliente/fornitore)
 			"indirizzo_via" => $f['Attivita']['Persona']['Indirizzo'],
-			"indirizzo_cap" => $f['Attivita']['Persona']['CAP'], 
-			"indirizzo_citta" => $f['Attivita']['Persona']['Citta'], 
-			"indirizzo_provincia" => $f['Attivita']['Persona']['Provincia'], 
+			"indirizzo_cap" => $f['Attivita']['Persona']['CAP'],
+			"indirizzo_citta" => $f['Attivita']['Persona']['Citta'],
+			"indirizzo_provincia" => $f['Attivita']['Persona']['Provincia'],
 			"indirizzo_extra" => $f['Attivita']['Persona']['altroIndirizzo'], //Se presente per iGAS questa var contiene solo una via.. Forse sarebbe meglio lasciare vuoto "indirizzo_extra"
 			"paese" => "Italia", // Questo non c'è in $f, doveva essere il nome completo del paese, ad esempio Italia, valutare se lasciare vuoto "paese"
 			"paese_iso" => $f['Attivita']['Persona']['Nazione'], // Questo deve essere ad esempio IT
 			"lingua" => "it", // Questo non c'è in $f
-			"piva" => $f['Attivita']['Persona']['piva'], 
+			"piva" => $f['Attivita']['Persona']['piva'],
 			"cf" => $f['Attivita']['Persona']['cf'], // da "indirizzo_via" a "cf" sono dati di fornitori o clienti
-			"autocompila_anagrafica" => false, 
-			"salva_anagrafica" => false, 
+			"autocompila_anagrafica" => false,
+			"salva_anagrafica" => false,
 			"numero" => $f['Fatturaemessa']['Progressivo'],  // Qua bisogna mettere $f['Fatturaemessa']['Progressivo']."/".$f['Fatturaemessa']['AnnoFatturazione'] oppure altro?
 			"data" => implode('/',array_reverse(explode('-',explode(' ',$f['Fatturaemessa']['created'])[0]))), // $f['Fatturaemessa']['created']
 			"valuta" => "EUR", // Questo non c'è in $f
 			"valuta_cambio" => 1, //Se non specificato viene utilizzato il tasso di cambio odierno
-			"prezzi_ivati" => false, 
+			"prezzi_ivati" => false,
 			"rivalsa" => 0, // Questo non c'è in $f
 			"cassa" => 0, // Questo non c'è in $f
 			"rit_acconto" => 0, // Questo non c'è in $f
 			"imponibile_ritenuta" => 0, // Questo non c'è in $f
 			"rit_altra" => 0, // Questo non c'è in $f
 			"marca_bollo" => 0, // Questo non c'è in $f
-			"oggetto_visibile" => $f['Attivita']['name'], 
-			"oggetto_interno" => "", 
+			"oggetto_visibile" => $f['Attivita']['name'],
+			"oggetto_interno" => "",
 			"centro_ricavo" => $f['Attivita']['name'], // Non so cosa mettere, forse $f['Attivita']['name']
 			"centro_costo" => "", // Non so cosa mettere
-			"note" => "", 
-			"nascondi_scadenza" => false, 
-			"ddt" => false, 
-			"ftacc" => false, 
-			"id_template" => "0", 
-			"ddt_id_template" => "0", 
-			"ftacc_id_template" => "0", 
-			"mostra_info_pagamento" => false, 
+			"note" => "",
+			"nascondi_scadenza" => false,
+			"ddt" => false,
+			"ftacc" => false,
+			"id_template" => "0",
+			"ddt_id_template" => "0",
+			"ftacc_id_template" => "0",
+			"mostra_info_pagamento" => false,
 			"metodo_pagamento" => "Bonifico", // Questo non c'è in $f
 			"metodo_titoloN" => "IBAN", // Questo non c'è in $f
-			"metodo_descN" => $f['Attivita']['Persona']['iban'], 
-			"mostra_totali" => "tutti", 
-			"mostra_bottone_paypal" => false, 
-			"mostra_bottone_bonifico" => false, 
-			"mostra_bottone_notifica" => false, 
+			"metodo_descN" => $f['Attivita']['Persona']['iban'],
+			"mostra_totali" => "tutti",
+			"mostra_bottone_paypal" => false,
+			"mostra_bottone_bonifico" => false,
+			"mostra_bottone_notifica" => false,
 			"lista_articoli" => array(array( // nell'array lista_articoli deve esserci PER FORZA almeno un articolo
 				"id" => "0",
 				"codice" => "",
@@ -323,7 +323,7 @@ class FattureemesseController extends AppController {
 		}
 		$this->redirect($this->referer());
     }
-    
+
     function fattureincloudelimina($id){
         if (!$id) {
             $this->Session->setFlash(__('Parametri non validi per cancellare fattura da FattureInCloud.it'));
@@ -357,7 +357,7 @@ class FattureemesseController extends AppController {
         }
         $this->redirect($this->referer());
     }
-	
+
 	function add($attivita_id = NULL) {
         $this->set('title_for_layout', 'Fattura Emessa Nuova');
         //Todo: Permettere di scegliere l'attività e non rimandare al mittente

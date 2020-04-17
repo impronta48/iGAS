@@ -28,7 +28,7 @@ class OrdiniController extends AppController {
         {
             $conditions['fornitore_id'] = $this->request->named['persona'];
         }
-        
+
 		$this->Ordine->recursive = 1; // MarcoT. devo tirare su anche le righe ordine per lo stato
         $this->Paginator->settings = array('conditions'=>$conditions);
 		$this->set('ordini', $this->Paginator->paginate());
@@ -59,7 +59,7 @@ class OrdiniController extends AppController {
 	public function add() {
         $attivita_id = $this->params['url']['attivita_id'];
         $fasi = $this->params['url']['fasi'];
-        
+
 		if ($this->request->is('post')) {
 			$this->Ordine->create();
 			if ($this->Ordine->saveAll($this->request->data)) {
@@ -75,10 +75,10 @@ class OrdiniController extends AppController {
             $fornitori = $this->Ordine->Fornitore->find('list');
             $this->set(compact('attivita', 'fornitori'));
         }
-        
+
         if (!empty($attivita_id))
         {
-            $attivita_full = $this->Ordine->Attivita->findById($attivita_id);        
+            $attivita_full = $this->Ordine->Attivita->findById($attivita_id);
             $this->set('a', $attivita_full);
         }
 
@@ -131,15 +131,15 @@ class OrdiniController extends AppController {
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
-    
+
     function stampa($id)
-    {           
+    {
         $this->layout ='stampa';
         $this->response->type('pdf');
-        $this->view($id);        
-        $this->render('view');		
+        $this->view($id);
+        $this->render('view');
         $f = $this->Ordine->findById($id);
-		
+
         $d = new DateTime('now');
         $anno = $d->format('Y');
         $progressivo = $f['Ordine']['id'];
@@ -147,7 +147,7 @@ class OrdiniController extends AppController {
         $cli = str_replace(' ', '',substr($f['Fornitore']['DisplayName'], 0,8));
 		//8 caratteri dell'attivita
 		$att = str_replace(' ', '',substr($f['Attivita']['name'],0,8));
-		
-        $this->response->download("$anno-$progressivo-" . Configure::read('iGas.NomeAzienda')."Ordine-$cli-$att.pdf"); 
+
+        $this->response->download("$anno-$progressivo-" . Configure::read('iGas.NomeAzienda')."Ordine-$cli-$att");
     }
 }

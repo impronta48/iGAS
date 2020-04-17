@@ -2,12 +2,13 @@
 //require_once (APP . 'Plugin' . DS . 'Tools'. DS . 'vendor' . DS . 'SpreadsheetExcelReader'. DS. 'SpreadsheetExcelReader.php');
 App::uses('AppController', 'Controller', 'CakeEmail', 'Network/Email');
 App::uses('CakeEmail', 'Network/Email'); // Perchè CakePHP mi obbliga a spezzare App::uses in 2 righe per far funzionare CakeEmail ???
+App::uses('CakeTime', 'Utility');
 
 class OreController extends AppController
 {
 
     public $components = array('RequestHandler', 'PhpExcel.PhpSpreadsheet');
-    public $helpers = array('Cache', 'PhpExcel.PhpSpreadsheet');
+    public $helpers = array('Cache', 'PhpExcel.PhpSpreadsheet','Ore');
     //public $cacheAction = "1 month";
 
     private function getConditionFromQueryString()
@@ -163,13 +164,14 @@ class OreController extends AppController
             array(
                 'conditions' => $conditions,
                 'fields' => array(
-                    'Ora.id', 'Ora.eRisorsa', 'numOre', 'data', 'dettagliAttivita', 'luogoTrasferta', 'eAttivita', 'pagato', 'fatturato', 'Faseattivita.Descrizione'
+                    'Ora.id', 'Ora.eRisorsa', 'numOre', 'data', 'dettagliAttivita',
+                    'luogoTrasferta', 'eAttivita', 'pagato', 'fatturato', 'Faseattivita.Descrizione',
+                    'Ora.start','Ora.stop','Ora.location_start', 'Ora.location_stop',
                 ),
                 'order' => array('Ora.eRisorsa',  'data'),
             )
         );
         $this->set('result', $result);
-
         $this->set('faseattivita_selected', $faseattivita);
         $this->set('attivita_selected', $attivita);
         $this->set('persona_selected', $persone);
@@ -839,6 +841,12 @@ class OreController extends AppController
         }
 
         $righeore = $this->Ora->find('all', array(
+            'fields' => array(
+                    'Ora.id', 'Ora.eRisorsa', 'numOre', 'data', 'dettagliAttivita',
+                    'luogoTrasferta', 'eAttivita', 'pagato', 'fatturato', 'Faseattivita.Descrizione',
+                    'Ora.start','Ora.stop','Ora.location_start', 'Ora.location_stop', 'Attivita.name',
+                    'Persona.DisplayName','Attivita.cliente_id'
+                ),
             'conditions' => array('Ora.id IN' => $ids),
             'order' => array('Ora.data'),
         ));
@@ -854,7 +862,12 @@ class OreController extends AppController
         $cliente = $this->Persona->findById($cliente_id);
 
         $this->set('cliente', $cliente['Persona']);
+        $fname =    CakeTime::format(time(),'%Y-%m-%d').
+                    "-Report-Ore-".
+                    Configure::read('iGas.NomeAzienda'). '-'.
+                    $cliente['Persona']['DisplayName'];
 
+        $this->set('name', $fname);
         $this->Session->write('idore', $ids);
     }
 
