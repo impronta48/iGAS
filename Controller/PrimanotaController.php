@@ -20,7 +20,10 @@ class PrimanotaController extends AppController {
         $this->Primanota->Fatturaemessa->Behaviors->load('Containable');
         $from = '';
         $to ='';
-        $this->Cookie->name = 'igas_primanota_' . Configure::read('iGas.NomeAzienda');
+        $this->Cookie->name = str_replace(  ' ',
+                                            '',
+                                            'igas_primanota_' . Configure::read('iGas.NomeAzienda')
+                                             );
         $conditions = array();
 
         //Se salvo il form iniziale passo da qui
@@ -44,9 +47,9 @@ class PrimanotaController extends AppController {
                 $this->Session->setFlash('Errore durante il salvataggio della Prima Nota');
             }
         }
-        
+
         $this->_preparaDropDown();
-                
+
         //Leggo tutti i parametri in variabili
         $attivita_id= $id;
         $campi = array('attivita' =>array('db'=> 'Primanota.attivita_id', 'valore'=>null),
@@ -69,13 +72,13 @@ class PrimanotaController extends AppController {
         }
 
         //eccezione: per ragioni storiche accetto il doppio tipo di parametro
-        if (empty($id))     
+        if (empty($id))
         {
             $attivita_id = $this->request->query('attivita');
         }
-        
+
         //Se non ci sono parametri prendo dal cookie, se ce n'è anche solo uno uso quello
-        if (!$valorizzato) 
+        if (!$valorizzato)
         {
             $cookieprep = $this->Cookie->read('Primanota.filtro');
             foreach ($campi as $c => $v)
@@ -89,16 +92,16 @@ class PrimanotaController extends AppController {
             if (!empty($campi[$c]['valore'])) {
                 $conditions[$campi[$c]['db']] = $campi[$c]['valore'];
                 $cookieprep[$c] = $campi[$c]['valore'];
-                
-            }          
+
+            }
             $this->set("v_$c", $campi[$c]['valore']);
-        }        
+        }
         //Salvo un cookie con il filtro impostato
         $this->Cookie->write('Primanota.filtro', $cookieprep, false, '365 days');
 
         $this->set('primanota', $this->Primanota->find('all',
                         array('conditions'=>$conditions,
-                              'order'=>array('Primanota.data DESC'),                              
+                              'order'=>array('Primanota.data DESC'),
                              )
                   ));
 
@@ -117,7 +120,7 @@ class PrimanotaController extends AppController {
         $this->set('taglist', $taglist);
 
         $this->set('persone',$this->Primanota->Persona->find('list'));
-        $this->set('name', "PrimaNota-$from-$to-" . Configure::read('iGas.NomeAzienda') . ".pdf");    
+        $this->set('name', "PrimaNota-$from-$to-" . Configure::read('iGas.NomeAzienda') . ".pdf");
     }
 
     //Verifica se un valore c'è nel cookie e poi lo salva

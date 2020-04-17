@@ -73,7 +73,7 @@ class OreController extends AppController
                 )
             )
         );
-        //result2: get total number of 'ore' according to search criteria grouped by attivita                
+        //result2: get total number of 'ore' according to search criteria grouped by attivita
         $result2 = $this->Ora->find(
             'all',
             array(
@@ -90,7 +90,7 @@ class OreController extends AppController
                 ),
             )
         );
-        //result3: get total number of 'ore' according to search criteria grouped by risorsa (persona)        
+        //result3: get total number of 'ore' according to search criteria grouped by risorsa (persona)
         $result3 = $this->Ora->find(
             'all',
             array(
@@ -400,12 +400,12 @@ class OreController extends AppController
                             'name' => $attivita_alias,
                             'area_id' => 1,                    //TODO: Leggere una variabile di configurazione: default_area
                             'progetto_id' => 6,                //TODO: Leggere una variabile di configurazione: default_project
-                            'cliente_id' => 1,                //TODO: Leggere una variabile di configurazione: default_customer							
+                            'cliente_id' => 1,                //TODO: Leggere una variabile di configurazione: default_customer
                         ),
                     );
                     $this->Attivita->create();
                     $this->Attivita->save($d);
-                    //Leggo l'array completa dell'attività					
+                    //Leggo l'array completa dell'attività
                     $attivita = $this->Attivita->read();
                     // ] Massimoi
 
@@ -532,7 +532,7 @@ class OreController extends AppController
                 'eAttivita' => $attivita['Attivita']['id'],
                 'eRisorsa' => $risorsa_id,
                 'data' => $details['anno'] . '-' . $this->_formatMese($details['mese']) . '-01 00:00:00',
-                'eCatSpesa' => 0, //???				
+                'eCatSpesa' => 0, //???
                 'importo' => $importo,
                 'fatturabile' => 0, //???
                 'rimborsabile' => 0, //???
@@ -867,11 +867,11 @@ class OreController extends AppController
         $giorno = date('d');
         $attivita = 1;
 
-        //  if ($persona != $this->Session->read('Auth.User.persona_id') && 
+        //  if ($persona != $this->Session->read('Auth.User.persona_id') &&
         //          Auth::hasRole(Configure::read('Role.impiegato')) )
         // {
         //      $this->Session->setFlash('Non sei autorizzato ad accedere al foglio ore di altri');
-        //      return $this->redirect(array('action' => 'scegli_mese',$this->Session->read('Auth.User.persona_id') ));   
+        //      return $this->redirect(array('action' => 'scegli_mese',$this->Session->read('Auth.User.persona_id') ));
         // }
 
         if (isset($this->request->params['named']['persona'])) {
@@ -893,12 +893,12 @@ class OreController extends AppController
         }
 
         if ($this->request->is('post')) {
-            
+
             $this->Ora->create();
             if ($this->Ora->save($this->request->data)) {
                 $this->Session->setFlash('Ora Aggiunta correttamente.');
 
-                $dataArray = explode('-', $this->request->data['Ora']['data']);                
+                $dataArray = explode('-', $this->request->data['Ora']['data']);
                 //A Seconda del submit gestisco un'operazione diversa
                 if (isset($this->request->data['submit-ns'])) {
                     return $this->redirect(array(
@@ -924,7 +924,7 @@ class OreController extends AppController
             $this->Session->setFlash('Impossibile salvare questa ora.');
         }
 
-        //Se passo la persona prendo solo le attività recenti        
+        //Se passo la persona prendo solo le attività recenti
         $this->set('eAttivita', $this->Ora->Attivita->getlist($persona));
 
 
@@ -961,7 +961,8 @@ class OreController extends AppController
             array(
                 'conditions' => $conditions,
                 'fields' => array(
-                    'id', 'Ora.eRisorsa', 'numOre', 'data', 'dettagliAttivita', 'luogoTrasferta', 'eAttivita', 'Faseattivita.Descrizione'
+                    'id', 'Ora.eRisorsa', 'numOre', 'data', 'dettagliAttivita', 'luogoTrasferta', 'eAttivita', 'Faseattivita.Descrizione',
+                    'Ora.start', 'Ora.stop', 'location_start', 'location_stop'
                 ),
                 'order' => 'data'
             )
@@ -978,7 +979,7 @@ class OreController extends AppController
         $this->layout = 'nomenu-vue';
         $persona = $this->Auth->user('persona_id');
 
-        //Se passo la persona prendo solo le attività recenti        
+        //Se passo la persona prendo solo le attività recenti
         $this->set('eAttivita', $this->Ora->Attivita->getlist($persona));
         $this->set('allAttivita', $this->Ora->Attivita->getlist());
 
@@ -1273,7 +1274,7 @@ class OreController extends AppController
         return $totale;
     }
 
-    //Genera il timesheet annuale per una persona filtrando sui 
+    //Genera il timesheet annuale per una persona filtrando sui
     //1) progetti passati come parametro in get attivita_id
     //2) la persona passata in persona_id
     //3) la persona passata in anno

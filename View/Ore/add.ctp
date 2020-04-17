@@ -1,6 +1,6 @@
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
 <?php echo $this->Html->script('faseattivita',array('inline' => false)); ?>
-<?php $baseformclass = ' form-control input-xs '; ?> 
+<?php $baseformclass = ' form-control input-xs '; ?>
 ORE A CONTRATTO: <?= $oreContratto ?>
 
 <div class="ore form">
@@ -11,9 +11,9 @@ ORE A CONTRATTO: <?= $oreContratto ?>
 			'class' => 'col col-xs-2 col-sm-2 col-md-2 control-label'
 		),
 		'wrapInput' => 'col col-xs-10 col-sm-6 col-md-7',
-		'class' => 'form-control' 
-	),	
-	'class' => 'well form-horizontal'        
+		'class' => 'form-control'
+	),
+	'class' => 'well form-horizontal'
     )); ?>
 
     <?php echo  $this->Form->hidden('eRisorsa',array('type'=>'text','default' => $eRisorsa)); ?>
@@ -32,44 +32,44 @@ ORE A CONTRATTO: <?= $oreContratto ?>
     $def = array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>'');
     if (strlen("$anno-$mese-$giorno")) {
         $def['value'] = "$anno-$mese-$giorno";
-    }    
+    }
     // echo $this->Form->input('data', $def);
     echo $this->Form->input('data', array('type'=>'text', 'label' => 'Data', 'value' => "$anno-$mese-$giorno", 'dateFormat' => 'DMY', 'class' => 'form-control required'));
-    ?>      
+    ?>
 
     <div class="col  col-md-offset-4">
         <label>
             <input type="checkbox" id="filtroAttivita" value="recenti"> Mostra tutte le attività
         </label>
-    </div>    
+    </div>
     <?php
     if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)){
-        $aggiungiAttivita = $this->Html->link('<i class="fa fa-plus-square"></i> Aggiungi Attività', 
-                                                array('controller'=>'attivita','action'=>'edit'), 
+        $aggiungiAttivita = $this->Html->link('<i class="fa fa-plus-square"></i> Aggiungi Attività',
+                                                array('controller'=>'attivita','action'=>'edit'),
                                                 array('class'=>'btn btn-xs btn-primary', 'escape'=>false)
                                             );
     } else {
         $aggiungiAttivita = false;
     }
-    ?>   
-    <?php echo $this->Form->input('eAttivita', array('options' => $eAttivita, 
-                                        'label' => array('text'=>'Attività'), 
+    ?>
+    <?php echo $this->Form->input('eAttivita', array('options' => $eAttivita,
+                                        'label' => array('text'=>'Attività'),
                                         'class'=>'attivita chosen-select ' . $baseformclass, //chosen-select
                                         'after' => $aggiungiAttivita
-                                        ) 
-                                  ); 
-    ?>        
-    
-    <?php echo  $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 
-                                        'options'=>[], 
-                                        'class'=>'fase ' . $baseformclass)); ?> 
+                                        )
+                                  );
+    ?>
+
+    <?php echo  $this->Form->input('faseattivita_id', array('label'=>'Fase Attività',
+                                        'options'=>[],
+                                        'class'=>'fase ' . $baseformclass)); ?>
     <?php echo $this->Form->input('numOre', array('label' => 'Ore')); ?>
     <?php echo $this->Form->input('dettagliAttivita'); ?>
     <?php echo $this->Form->input('LuogoTrasferta'); ?>
     <div class="row">
-            <input type="submit" class="col-md-offset-2 btn btn-primary" value="Salva e Aggiungi altre Ore" name="submit-ore" />            
+            <input type="submit" class="col-md-offset-2 btn btn-primary" value="Salva e Aggiungi altre Ore" name="submit-ore" />
             <input type="submit" class="btn btn-primary" value="Salva e Aggiungi Nota Spese" name="submit-ns" />
-            
+
     </div>
     <?php echo $this->Form->end();?>
 </div>
@@ -81,7 +81,7 @@ ORE A CONTRATTO: <?= $oreContratto ?>
         <?php
         //per Compatibilità con l'action detail
         $attivita_list = $eAttivita;
-        ?>         
+        ?>
         <div class="table-responsive">
         <table id="ore-attivita" class="display table table-condensed" cellspacing="1">
             <thead>
@@ -90,14 +90,14 @@ ORE A CONTRATTO: <?= $oreContratto ?>
             <tbody>
                 <?php $tot = 0; $day = 0;
                 foreach ($result as $r): ?>
-                    
+
                     <?php
                     //Questo blocco serve per scrivere il totale ore di ogni giorno
                     $d = new DateTime($r['Ora']['data']);
-                    if ($day != $d->format('d')) {                       
+                    if ($day != $d->format('d')) {
                         //Se non è la prima volta scrivo una riga di totali
                         if ($day > 0)
-                        {          
+                        {
                             echo $this->Html->tableCells(
                                 array("Totale&nbsp;Giorno&nbsp;$day",
                                     array($totday, array('class'=>'bg-success')),
@@ -106,27 +106,31 @@ ORE A CONTRATTO: <?= $oreContratto ?>
                                     '',
                                     '',
                                     ),
-                                array('class' => 'bg-warning'), 
+                                array('class' => 'bg-warning'),
                                 array('class' => 'bg-warning')
                                );
-                            
+
                         }
                         $day = $d->format('d');
                         $totday=0;
                         $scrividay = $d->format('D d');
                     }
-                    
+
+                    $attivitaDetail = $attivita_list[$r['Ora']['eAttivita']]. '<small class="text-muted">/' . substr($r['Faseattivita']['Descrizione'],0,40) . '</small>';
+                    $luogoDetail = getLuogoDetail($r);
+                    $oraDetail = getOraDetail($r);
+
                     echo $this->Html->tableCells(array(
                         $scrividay,
-                        $r['Ora']['numOre'],
-                        $attivita_list[$r['Ora']['eAttivita']]. '<small class="text-muted">/' . substr($r['Faseattivita']['Descrizione'],0,40) . '</small>',
+                        $oraDetail,
+                        $attivitaDetail,
                         $r['Ora']['dettagliAttivita'],
-                        $r['Ora']['luogoTrasferta'],    
+                        $luogoDetail,
                         array(
-                            '<a  class="btn btn-primary btn-xs glow btn-edit-riga" href="'. $this->Html->url('/ore/edit/'. $r['Ora']['id']) . '">Edit</div>'.                            
-                            $this->Html->link('Del',array('action'=>'delete',$r['Ora']['id']),array('class'=>"btn btn-primary btn-xs glow" )),                        
+                            '<a  class="btn btn-primary btn-xs glow btn-edit-riga" href="'. $this->Html->url('/ore/edit/'. $r['Ora']['id']) . '">Edit</div>'.
+                            $this->Html->link('Del',array('action'=>'delete',$r['Ora']['id']),array('class'=>"btn btn-primary btn-xs glow" )),
                             array('class'=>'actions'),
-                            ), 
+                            ),
                         ),
                         array('class' => 'darker')
                         );
@@ -135,7 +139,7 @@ ORE A CONTRATTO: <?= $oreContratto ?>
                     $scrividay='';
                     ?>
                 <?php endforeach; ?>
-                
+
                 <?php //Ultimo giorno
                 echo $this->Html->tableCells(
                                 array("Totale&nbsp;Giorno&nbsp;$day",
@@ -145,7 +149,7 @@ ORE A CONTRATTO: <?= $oreContratto ?>
                                     '',
                                     '',
                                     ),
-                                array('class' => 'bg-warning'), 
+                                array('class' => 'bg-warning'),
                                 array('class' => 'bg-warning')
                                );
                ?>
@@ -180,6 +184,46 @@ ORE A CONTRATTO: <?= $oreContratto ?>
     </div>
 
 <?php endif; ?>
+
+<?php
+    function getLuogoDetail($r)
+    {
+        $luogoDetail = $r['Ora']['luogoTrasferta'] ;
+        if (!empty($r['Ora']['location_start']) || !empty( $r['Ora']['location_stop'] ) )
+        {
+            $luogoDetail .= ' <a data-toggle="tooltip" data-original-title="';
+
+            if (!empty($r['Ora']['location_start']) )
+            {
+                $luogoDetail .=  'Inizio: ' . $r['Ora']['location_start'] ;
+            }
+            if (!empty($r['Ora']['location_stop']) )
+            {
+                $luogoDetail .= ' Fine: ' . $r['Ora']['location_stop'] ;
+            }
+
+            $luogoDetail .= '"href="https://www.google.com/maps/search/?api=1&query=' .
+                                urlencode( $r['Ora']['location_start'] ) . '" ' .
+                            'data-placement="top" target="map" class="btn bg-primary text-white btn-xs">Coord</a>';
+        }
+
+        return $luogoDetail;
+    }
+
+    function getOraDetail($r)
+    {
+        $oraDetail = $r['Ora']['numOre'];
+        $start = (!empty($r['Ora']['start'])) ? date('H:i', strtotime($r['Ora']['start'])) : '--';
+        $stop = (!empty($r['Ora']['stop'])) ? date('H:i', strtotime($r['Ora']['stop'])) : '--';
+
+        if (!empty($r['Ora']['start']) || !empty($r['Ora']['stop'])){
+            $oraDetail .= "<small class=\"text-muted\"> ($start - $stop) </small>";
+        }
+
+        return $oraDetail;
+    }
+
+?>
 
 <?php $this->Html->scriptStart(array('inline' => false)); ?>
     $( "#OraPersonaDescr" ).autocomplete({

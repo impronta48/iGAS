@@ -10,20 +10,20 @@
 
   <!-- Loading Bootstrap -->
   <!-- Latest compiled and minified CSS -->
-  <?php //echo $this->Html->css('jQueryUI/1.10.3/jquery-ui.min'); //LEGACY ?>  
-  <?php echo $this->Html->css('jQueryUI/1.12.1/jquery-ui.min'); // DOPO LA JQUERY MIGRATION ?>  
-  <?php echo $this->Html->css('bootstrap.min'); ?>  
-  
-  <!-- Loading Stylesheets -->    
+  <?php //echo $this->Html->css('jQueryUI/1.10.3/jquery-ui.min'); //LEGACY ?>
+  <?php echo $this->Html->css('jQueryUI/1.12.1/jquery-ui.min'); // DOPO LA JQUERY MIGRATION ?>
+  <?php echo $this->Html->css('bootstrap.min'); ?>
+
+  <!-- Loading Stylesheets -->
   <?php echo $this->Html->css('font-awesome'); ?>
-  <?php echo $this->Html->css('/DataTables/DataTables-1.10.16/css/dataTables.bootstrap.min.css'); ?>  
-  <?php echo $this->Html->css('/DataTables/Buttons-1.4.2/css/buttons.bootstrap.min.css'); ?>  
-  <?php echo $this->Html->css('/DataTables/Responsive-2.2.0/css/responsive.bootstrap.min.css'); ?>    
-  <?php echo $this->Html->css('bootstrap-chosen'); ?> 
-  <?php echo $this->Html->css('style'); ?>  
-     
-  
-  <!-- Loading Custom Stylesheets -->    
+  <?php echo $this->Html->css('/DataTables/DataTables-1.10.16/css/dataTables.bootstrap.min.css'); ?>
+  <?php echo $this->Html->css('/DataTables/Buttons-1.4.2/css/buttons.bootstrap.min.css'); ?>
+  <?php echo $this->Html->css('/DataTables/Responsive-2.2.0/css/responsive.bootstrap.min.css'); ?>
+  <?php echo $this->Html->css('bootstrap-chosen'); ?>
+  <?php echo $this->Html->css('style'); ?>
+
+
+  <!-- Loading Custom Stylesheets -->
   <?php echo $this->Html->css('custom'); ?>
   <?php echo $this->Html->css('print', null, array('media'=>'print')); ?>
 
@@ -31,20 +31,20 @@
         echo $this->Html->meta(
         'favicon.ico',
         array('type' => 'icon')
-        );			
-  ?> 
- 
+        );
+  ?>
+
   <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
     <!--[if lt IE 9]>
     <?php echo $this->Html->script("html5shiv.js"); ?>
     <![endif]-->
   </head>
-    	
+
   <body class="loading">
-      <div class="site-holder">        
+      <div class="site-holder">
         <!-- .navbar -->
           <nav class="navbar " role="navigation">
-            
+
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
 				<button class="btn-nav-toggle-responsive">
@@ -68,10 +68,10 @@
                    <?php //Prende l'immagine dell'utente o una di default se non c'è
 
                         //$u = env('PHP_AUTH_USER') ;
-             
+
                         if ($this->Session->read('Auth.User.id')) {
                           $u = $this->Session->read('Auth.User.username');
-                          $uid = $this->Session->read('Auth.User.id');                         
+                          $uid = $this->Session->read('Auth.User.id');
                           $role = $this->Session->read('Auth.User.group_id');
                           $pathWithoutExt = 'profiles'.DS.$this->Session->read('Auth.User.Persona.id').'.';
                           //Auth::hasRole(Configure::read('Role.admin'))
@@ -102,18 +102,18 @@
                           }
                         }
                    ?>
-                  <li><a href="#" class="user dropdown-toggle" data-toggle="dropdown"><span class="username"><?php echo $this->Html->image($path , array('class'=>'user-avatar','alt'=>'')); ?> Ciao <b><?php echo ucfirst($u); ?></b> <?php echo $uAssoc; ?></span></a>                  
-                    <ul class="dropdown-menu">     
+                  <li><a href="#" class="user dropdown-toggle" data-toggle="dropdown"><span class="username"><?php echo $this->Html->image($path , array('class'=>'user-avatar','alt'=>'')); ?> Ciao <b><?php echo ucfirst($u); ?></b> <?php echo $uAssoc; ?></span></a>
+                    <ul class="dropdown-menu">
                       <?php if($this->Session->read('Auth.User.Persona.id')){ ?>
-                      <li><a href="<?php echo $this->Html->url('/persone/edit/'. $this->Session->read('Auth.User.Persona.id')); ?>"> Edita Profilo</a></li>                  
+                      <li><a href="<?php echo $this->Html->url('/persone/edit/'. $this->Session->read('Auth.User.Persona.id')); ?>"> Edita Profilo</a></li>
                       <?php } ?>
-                      <li><a href="<?php echo $this->Html->url('/users/cambiapwd/'. $uid); ?>"> Cambia Password</a></li>                    
-                      <li><a href="<?php echo $this->Html->url('/users/logout'); ?>" class="text-danger"><i class="fa fa-lock"></i> Logout</a></li>                                          
+                      <li><a href="<?php echo $this->Html->url('/users/cambiapwd/'. $uid); ?>"> Cambia Password</a></li>
+                      <li><a href="<?php echo $this->Html->url('/users/logout'); ?>" class="text-danger"><i class="fa fa-lock"></i> Logout</a></li>
                     </ul>
                   </li>
-                </ul>                
+                </ul>
             </div><!-- /.navbar-collapse -->
-          </nav> <!-- /.navbar -->        
+          </nav> <!-- /.navbar -->
 
     <!-- .box-holder -->
     <div class="box-holder">
@@ -127,16 +127,16 @@
                 <button class="btn  btn-nav-toggle text-primary"><i class="fa fa-angle-double-left toggle-left"></i> </button>
               </li>
 
-              <?php 
+              <?php
                   if($role == 1){
                     // If user role is admin
-                    echo $this->element('leftmenu',array(),array("cache" => "long_view")); 
+                    echo $this->element('leftmenu',array(),array("cache" => "long_view"));
                   } else if ($role == 2){
                     // If user role is pm
-                    echo $this->element('leftmenupm',array(),array("cache" => "long_view")); 
+                    echo $this->element('leftmenupm',array(),array("cache" => "long_view"));
                   } else if ($role == 3){
                     // If user role is impiegato
-                    echo $this->element('leftmenuimpiegato',array(),array("cache" => "long_view")); 
+                    echo $this->element('leftmenuimpiegato',array(),array("cache" => "long_view"));
                   }
               ?>
             </ul>
@@ -146,7 +146,7 @@
 
 
        <!-- .content -->
-       <div class="content"> 
+       <div class="content">
 		      <div class="row">
               <div class="col-mod-12">
 								<ul class="breadcrumb">
@@ -154,24 +154,24 @@
                 </ul>
               </div>
           </div>
-              
+
 		      <div class="row">
 					   <div class="col-md-12">
-					   <?php if($this->Session->check('Message.flash')) : ?>                
+					   <?php if($this->Session->check('Message.flash')) : ?>
                     <div id="message">
                         <div class="col-md-11 alert alert-info">
                            <?php echo $this->Flash->render(); ?>
-                           <?php echo $this->Flash->render('auth'); ?> 
+                           <?php echo $this->Flash->render('auth'); ?>
                         </div>
                     </div>
              <?php endif ?>
              </div>
 					</div>
-					
+
           <div class="row">
             <div class="col-md-12">
-                  <?php echo $content_for_layout; ?>   
-                  
+                  <?php echo $content_for_layout; ?>
+
                   <div class="modal hide" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
                           <div class="modal-header">
                               <h1>Processing...</h1>
@@ -184,20 +184,20 @@
                   </div>
             </div>
           </div>
-                    
+
         	<br/><br/>
           <div class="row">
-                      
+
           <div class="footer">
             <?php echo $this->element('footer',array(),array("cache" => "long_view")); ?>
-          </div>           
-          </div>         
-					
+          </div>
+          </div>
+
                 </div><!-- content -->
             </div> <!-- /.box-holder -->
         </div><!-- /.site-holder -->
-     
-        
+
+
 <!-- Latest compiled and minified JavaScript -->
 <?php //echo $this->Html->script("jQuery/1.10.2/jquery-1.10.2.min"); //LEGACY ?>
 <?php echo $this->Html->script("jQuery/3.3.1/jquery-3.3.1.min"); // DOPO LA JQUERY MIGRATION ?>

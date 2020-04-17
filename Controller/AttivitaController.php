@@ -5,12 +5,14 @@ class AttivitaController extends AppController {
     public $helpers = array('Number','Html');
     //public $uses = array('Fatturaemessa', 'Persona','Primanota');
     public $components = array('Paginator','Cookie','UploadFiles');
- 
-	function index() {
-		$this->Attivita->recursive = 0;        
-        $this->Cookie->name = 'igas_attivita_' . Configure::read('iGas.NomeAzienda');
 
-        $conditions = array();	                
+	function index() {
+		$this->Attivita->recursive = 0;
+        $this->Cookie->name = str_replace(  ' ',
+                                            '',
+                                            'igas_attivita_' . Configure::read('iGas.NomeAzienda')
+                                             );
+        $conditions = array();
 
         $q = $this->request->query('q');
         $anno = $this->request->query('anno');
@@ -18,7 +20,7 @@ class AttivitaController extends AppController {
         //Se non ci sono parametri prendo dal cookie, se ce n'è anche solo uno uso quello
         if (empty($q) && empty($anno) && empty($tipo))
         {
-            $cookieprep = $this->Cookie->read('Attivita.filtro');                        
+            $cookieprep = $this->Cookie->read('Attivita.filtro');
             if (isset($cookieprep['q']))
             {
                 $q = $cookieprep['q'];
@@ -34,13 +36,13 @@ class AttivitaController extends AppController {
         }
 
         if (!empty($q)) {
-            $conditions[]= array('OR'=>array('Persona.nome LIKE'=> "%$q%", 'Persona.cognome LIKE'=>"%$q%", 'Persona.DisplayName LIKE'=>"%$q%",'Attivita.name LIKE'=>"%$q%"));            
+            $conditions[]= array('OR'=>array('Persona.nome LIKE'=> "%$q%", 'Persona.cognome LIKE'=>"%$q%", 'Persona.DisplayName LIKE'=>"%$q%",'Attivita.name LIKE'=>"%$q%"));
             $cookieprep['q'] = $q;
-        }             
-        
+        }
+
         if (empty($anno)) {         //Se non specifichi l'anno filtro sull'anno corrente
-             $anno = date('Y');              
-        } 
+             $anno = date('Y');
+        }
         else
         {
             $cookieprep['anno']=$anno;
@@ -55,20 +57,20 @@ class AttivitaController extends AppController {
                         'YEAR(DataFinePrevista) >=' => $anno,
                         'YEAR(DataFinePrevista)' => null
                     )
-            );                        
+            );
         }
         if($anno==-1)
         {
             //Prendo tutte le attività che hanno anno di inizio o fine anomali
-            $conditions[]= array('OR'=> array(   
-                                        'YEAR(DataPresentazione)' => 0, 
-                                        'YEAR(DataPresentazione)' => null, 
+            $conditions[]= array('OR'=> array(
+                                        'YEAR(DataPresentazione)' => 0,
+                                        'YEAR(DataPresentazione)' => null,
                                         'YEAR(DataFinePrevista)'=>0,
                                         'YEAR(DataFinePrevista)'=>null
-            ));            
+            ));
         }
 
-        //filtra per tipo di commessa        
+        //filtra per tipo di commessa
         if (!empty($tipo)) {
             if ($tipo == 'offerte'){
                 $conditions['DataPresentazione !=']=NULL;
@@ -77,10 +79,10 @@ class AttivitaController extends AppController {
                 $conditions[] = array('chiusa'=>0);
             } elseif ($tipo == 'chiuse') {
                 $conditions[] = array('chiusa'=>1);
-            }            
+            }
             $cookieprep['tipo']=$tipo;
         }
-        
+
         //Salvo un cookie con il filtro impostato
         $this->Cookie->write('Attivita.filtro',$cookieprep , false, '365 days');
         //Lo passo alla view per poter impostare i default del filtro
@@ -93,7 +95,7 @@ class AttivitaController extends AppController {
             'maxLimit' => -1,
             'contain' => array('Area.name', 'Progetto.name','Persona.displayName','Progetto.id','Persona.id','Area.id'),
         );
-        
+
         //Conto quante attività ci sono in tutto
         //Mi serve per avvisare il client che ci sono attività nascoste
         $totale = $this->Attivita->find('count');
@@ -105,11 +107,11 @@ class AttivitaController extends AppController {
         {
             $attivita = Cache::read('attivita', 'short');
         }
-		if (!$attivita) {            
+		if (!$attivita) {
 			$attivita = $this->Paginator->paginate('Attivita');
 			Cache::write('attivita', $attivita, 'short');
         }
-        
+
         foreach ($attivita as $a)
         {
             $i = $a['Attivita']['id'];
@@ -136,32 +138,32 @@ class AttivitaController extends AppController {
         return 'commessa';
     }
 
-    
+
     //In caso di date anomale di inizio o fine della commessa le corregge
     //es: attività che non hanno data di presentazione, data di fine prevista, etc
     public function correggiDateInizioFine()
     {
         $this->Attivita->recursive=-1;
-        if (!empty($this->request->data)) {       
+        if (!empty($this->request->data)) {
 
-            //debug($this->request->data); 
+            //debug($this->request->data);
              if ($this->Attivita->saveMany($this->request->data['Attivita']))
              {
-                 $this->Session->setFlash(__('Salvataggio OK'));                 
+                 $this->Session->setFlash(__('Salvataggio OK'));
              }
              else
              {
                 $this->Session->setFlash(__('Errore durante il salvataggio'));
-             }  
+             }
         }
 
-        $conditions= Array('OR'=> array( 'YEAR(DataPresentazione)' => 0, 
-                                        'YEAR(DataPresentazione)' => null, 
+        $conditions= Array('OR'=> array( 'YEAR(DataPresentazione)' => 0,
+                                        'YEAR(DataPresentazione)' => null,
                                         'YEAR(DataFinePrevista)'=>0,
                                         'YEAR(DataFinePrevista)'=>null
-        ));         
+        ));
 
-        $this->data = $this->Attivita->find('all', array('conditions'=>$conditions, 'order'=>'id DESC'));        
+        $this->data = $this->Attivita->find('all', array('conditions'=>$conditions, 'order'=>'id DESC'));
 
         //Suggeritore: cerca la prima data di un'attività e l'ultima (tra fatture, prima nota, ore)
         $query = "select u.id, min(u.prima) as prima, max(u.ultima) as ultima from (
@@ -188,32 +190,32 @@ class AttivitaController extends AppController {
     public function chiudi_aperte()
     {
         $this->Attivita->recursive=-1;
-        if (!empty($this->request->data)) {       
+        if (!empty($this->request->data)) {
 
-            //debug($this->request->data); 
+            //debug($this->request->data);
              if ($this->Attivita->saveMany($this->request->data['Attivita']))
              {
-                 $this->Session->setFlash(__('Salvataggio OK'));                 
+                 $this->Session->setFlash(__('Salvataggio OK'));
              }
              else
              {
                 $this->Session->setFlash(__('Errore durante il salvataggio'));
-             }  
+             }
         }
 
-        $conditions= Array('AND'=> array( 'DataFine IS NOT NULL' , 
+        $conditions= Array('AND'=> array( 'DataFine IS NOT NULL' ,
                                             'chiusa'=>0
-        ));         
+        ));
 
-        $this->data = $this->Attivita->find('all', array('conditions'=>$conditions, 'order'=>'id DESC'));        
+        $this->data = $this->Attivita->find('all', array('conditions'=>$conditions, 'order'=>'id DESC'));
     }
 
-	function edit($id = null) {        
+	function edit($id = null) {
         if (!$id && !empty($this->request->data)) {
               $this->set('title_for_layout', 'Nuova Attività');
-              $this->Attivita->create();              
+              $this->Attivita->create();
         }
-		if (!empty($this->request->data)) {            
+		if (!empty($this->request->data)) {
                 //Se non c'è il DisplayName tolgo tutti i campi del fornitore
                 if (empty($this->request->data['Persona']['DisplayName2']))
                 {
@@ -224,7 +226,7 @@ class AttivitaController extends AppController {
                     unset($this->request->data['Attivita']['persona_id']);
                     $this->request->data['Persona']['DisplayName'] = $this->request->data['Persona']['DisplayName2'];
                     unset($this->request->data['Persona']['DisplayName2']);
-                }                                      
+                }
 
                 //Faccio save all per salvare anche i dettagli della persona
                 if ($this->Attivita->saveAll($this->request->data)) {
@@ -252,7 +254,7 @@ class AttivitaController extends AppController {
 		$progetti = $this->Attivita->Progetto->find('list',array('cache' => 'progetto', 'cacheConfig' => 'short'));
 		$persone = $this->Attivita->Persona->find('list',array('cache' => 'persona', 'cacheConfig' => 'short'));
 		$aree = $this->Attivita->Area->find('list',array('cache' => 'area', 'cacheConfig' => 'short'));
-        $oreUsate = $this->Attivita->oreUsate($id); 
+        $oreUsate = $this->Attivita->oreUsate($id);
         $offertaAlCliente = $this->Attivita->offertaAlCliente($id);
 		$this->set(compact('progetti','persone','aree','oreUsate','offertaAlCliente'));
 	}
@@ -273,7 +275,7 @@ class AttivitaController extends AppController {
 		$this->Session->setFlash(__('Attivita was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
-	
+
 	public function deleteDoc($id = null) {
         $fileExt=$this->UploadFiles->checkIfFileExists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'_preventivo.');
 		unlink(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'_preventivo.'.$fileExt);
@@ -316,7 +318,7 @@ class AttivitaController extends AppController {
     function getlist($recent=null){
 		$res = array();
         $data = $this->Attivita->getlist($recent);
-        
+
 		foreach ($data as $key=>$val)
 		{
 			$a = new StdClass();
@@ -356,22 +358,22 @@ class AttivitaController extends AppController {
     //Utile nel caso di importazione che ha generato un'attività fasulla
     function merge($source=null)
     {
-        $this->Attivita->recursive = -1;     
+        $this->Attivita->recursive = -1;
         $this->set('title_for_layout', "Merge | Attività");
         $this->set('attivita', $this->Attivita->find('list',array('cache' => 'attivita', 'cacheConfig' => 'short')));
-        
+
         if (isset($source))
-        {                 
+        {
             $this->set('source', $source);
         }
-        
+
         if (!empty($this->data)) {
             //$source = $this->_getFirstNumber(explode(',', $this->request->data['as_values_attivita-source']));
-            //$dest = $this->_getFirstNumber(explode(',', $this->request->data['as_values_attivita-dest']));           
-            
+            //$dest = $this->_getFirstNumber(explode(',', $this->request->data['as_values_attivita-dest']));
+
             $source= $this->data['Attivita']['source'];
             $dest= $this->data['Attivita']['dest'];
-            
+
         //TODO: Controlla che l'attività $source e $dest esistano davvero
 
         //I Passi:
@@ -381,8 +383,8 @@ class AttivitaController extends AppController {
         //4.Aggiungo il nome di $source agli alias di $dest
         //5.Elimino $source
         $ad = $this->Attivita->findById($dest);
-        $as = $this->Attivita->findById($source);        
-        
+        $as = $this->Attivita->findById($source);
+
         $this->Attivita->Ora->UpdateAll(array('Ora.eAttivita'=>$dest), array('Ora.eAttivita'=>$source));
         $m = "Spostate tutte le ore dall'attività $source all'attivita $dest";
         $this->log($m, 'debug');
@@ -410,7 +412,7 @@ class AttivitaController extends AppController {
         {
             $m= "Errore durante l'aggiunta di alias dall'attività $source all'attivita $dest" . '<BR/>';
             $this->log($m, 'debug');
-            $message .= $m . '<BR/>';        
+            $message .= $m . '<BR/>';
         }
         $m= "Aggiunto con succcesso alias dall'attività $source all'attivita $dest" . '<BR/>';
         $this->log($m, 'debug');
@@ -420,14 +422,14 @@ class AttivitaController extends AppController {
         $m= "Eliminata l'attività $source" . '<BR/>';
         $this->log($m, 'debug');
         $message .= $m . '<BR/>';
-        
+
         $this->Session->setFlash($message);
         $this->redirect(array('controller'=>'ore','action'=>'stats', '?' => array('as_values_attivita'=>$dest . ",")));
         }
-        
+
     }
-    
-    
+
+
     //Stampa un preventivo dell'attività con l'indicazione delle fasi e del totale
     function preventivo($id = null)
     {
@@ -435,16 +437,16 @@ class AttivitaController extends AppController {
 			$this->Session->setFlash(__('Invalid attivita'));
 			$this->redirect(array('action' => 'index'));
 		}
-        
+
         //Qui tiro su l'anagrafica dell'azienda che emette la fattura
-        $azienda =  $this->Attivita->Persona->findById(Configure::read('iGas.idAzienda'));        
+        $azienda =  $this->Attivita->Persona->findById(Configure::read('iGas.idAzienda'));
         $this->set('azienda', $azienda);
-        
-        $legendaCodiceiva = $this->Attivita->Faseattivita->LegendaCodiciIva->find('list',array('cache' => 'codiceiva', 'cacheConfig' => 'short'));        
+
+        $legendaCodiceiva = $this->Attivita->Faseattivita->LegendaCodiciIva->find('list',array('cache' => 'codiceiva', 'cacheConfig' => 'short'));
         $this->set('legendacodiciiva',$legendaCodiceiva);
 
         $this->Attivita->Faseattivita->LegendaCodiciIva->recursive= -1;
-        $ci = $this->Attivita->Faseattivita->LegendaCodiciIva->find('all');        
+        $ci = $this->Attivita->Faseattivita->LegendaCodiciIva->find('all');
         $percentiva = array();
         foreach ($ci as $c)
         {
@@ -455,24 +457,24 @@ class AttivitaController extends AppController {
         $attivita = $this->Attivita->findById($id);
         $this->set('percentiva', $percentiva);
 		$this->set('attivita', $attivita);
-        
-        $this->set('title_for_layout',"{$attivita['Attivita']['name']} | Offerta");      
+
+        $this->set('title_for_layout',"{$attivita['Attivita']['name']} | Offerta");
         //8 caratteri del cliente
-        $cli = str_replace(' ', '', substr($attivita['Persona']['DisplayName'], 0, 8));        
+        $cli = str_replace(' ', '', substr($attivita['Persona']['DisplayName'], 0, 8));
         //8 caratteri dell'attivita
         $att = str_replace(' ', '', substr($attivita['Attivita']['name'], 0, 8));
-        $this->set('name', "Offerta-" . Configure::read('iGas.NomeAzienda') . "-$cli-$att-$id.pdf" );      
+        $this->set('name', "Offerta-" . Configure::read('iGas.NomeAzienda') . "-$cli-$att-$id.pdf" );
     }
-    
+
     function stampa($id)
-    {           
+    {
         $this->layout ='stampa';
         $this->response->type('pdf');
-        $this->preventivo($id);        
+        $this->preventivo($id);
         $this->render('preventivo');
 		//$this->Attivita->contain('Attivita.Persona','Rigafattura','ProvenienzaSoldi','Rigafattura.Codiceiva');
         $a = $this->Attivita->findById($id);
-		
+
         $d = new DateTime($a['Attivita']['DataPresentazione']);
         $anno = $d->format('Y');
         $progressivo = $a['Attivita']['id'];
@@ -480,24 +482,24 @@ class AttivitaController extends AppController {
         $cli = str_replace(' ', '',substr($a['Persona']['DisplayName'], 0,8));
 		//8 caratteri dell'attivita
 		$att = str_replace(' ', '',substr($a['Attivita']['name'],0,8));
-		
-        $this->response->download("$anno-$progressivo-" . Configure::read('iGas.NomeAzienda')."Offerta-$cli-$att.pdf"); 
+
+        $this->response->download("$anno-$progressivo-" . Configure::read('iGas.NomeAzienda')."Offerta-$cli-$att.pdf");
     }
-	
+
     //Mostra l'avanzamento di una commessa, confrontando il preventivo con il consuntivo
     function avanzamento($id)
     {
         //Estraggo attività, ore, notespese e primanota dall'attivita
         $a = $this->Attivita->findById($id);
         $elencoCodici = array();
-       
+
         $this->set('title_for_layout', "Avanzamento Attivita  - $id - " .  $a['Attivita']['name']);
         $this->set('attivita',$a);
-        
+
         //=================== ORE =====================
         //Estraggo la ORE
-        $this->set('ore', $this->Attivita->oreUsate($id));              
-        $temp = $this->Attivita->Ora->find('all', array(            
+        $this->set('ore', $this->Attivita->oreUsate($id));
+        $temp = $this->Attivita->Ora->find('all', array(
                 'fields' => array('faseattivita_id', 'SUM(Ora.numOre) as S'),
                 'group' => array('faseattivita_id'),
                 'conditions' => array('Ora.eAttivita' => $id, 'Ora.pagato !=' => 1 ),
@@ -508,24 +510,24 @@ class AttivitaController extends AppController {
         {
                 if (isset($t['Ora']))
                 {
-                    $ore[$t['Ora']['faseattivita_id']] = $t[0]['S']; 
+                    $ore[$t['Ora']['faseattivita_id']] = $t[0]['S'];
                 }
                 else
                 {
                     $ore['']=$t[0]['S'];
                 }
-        }        
+        }
         $this->set('hh', $ore);
-        
+
         //=================== NOTA SPESE =====================
         //Estraggo la nota spese
         $this->set('notaspese', $this->Attivita->notespeseDaRimborsare($id));
-        
+
         //=================== PRIMA NOTA =====================
         //Estraggo le righe della prima nota
         $pn = array();
 
-        $temp = $this->Attivita->Primanota->find('all', array(                
+        $temp = $this->Attivita->Primanota->find('all', array(
                 'fields' => array('Faseattivita.id as id', 'Faseattivita.descrizione as descrizione', 'Primanota.importo'),
                 //'group' => array('Primanota.faseattivita_id'),                    CON QUESTO ESTRAGGO SOLO IL PRIMO VALORE RELATIVO A CIASCUNA FASE
                 'conditions' => array('Primanota.attivita_id' => $id),
@@ -539,10 +541,10 @@ class AttivitaController extends AppController {
         }
 
         foreach ($temp as $t)
-        {   
-            if($t['Primanota']['importo'] >= 0)        
+        {
+            if($t['Primanota']['importo'] >= 0)
                 $pn[$t['Faseattivita']['id']]['Entrate'] += $t['Primanota']['importo'];
-            else 
+            else
                 $pn[$t['Faseattivita']['id']]['Uscite'] += $t['Primanota']['importo'];
         }
 
@@ -557,21 +559,21 @@ class AttivitaController extends AppController {
         //MANDO ALLA VIEW UN ARRAY CHE ASSOCIA IL CODICE IVA ALLA PERCENTUALE, PER SEMPLIFICARE IL CALCOLO
 
         $this->set('LegendaCodiciIva',$elencoCodici);
-        $this->set('pn', $pn);              
+        $this->set('pn', $pn);
 
         //=================== DOCUMENTI RICEVUTI =====================
         //Estraggo le righe dei documenti ricevuti
 
         $dr = array();
-        $temp = $this->Attivita->Fatturaricevuta->find('all', array(                
+        $temp = $this->Attivita->Fatturaricevuta->find('all', array(
                 'fields' => array('Faseattivita.id as id', 'Faseattivita.descrizione as descrizione', 'SUM(Fatturaricevuta.importo) as S'),
                 'group' => array('Fatturaricevuta.faseattivita_id'),
                 'conditions' => array('Fatturaricevuta.attivita_id' => $id),
-            ));     
+            ));
         //Rigiro l'array in modo da renderla più facile da usare nella view
         foreach ($temp as $t)
-        {                
-                $dr[$t['Faseattivita']['id']] = $t[0]['S']; 
+        {
+                $dr[$t['Faseattivita']['id']] = $t[0]['S'];
         }
         $this->set('dr', $dr);
     }
@@ -585,39 +587,39 @@ class AttivitaController extends AppController {
         $conditionsFa = array();
         $conditionsNs = array();
         $tit = '';
-		
+
         if (!empty($this->request->named['nomeattivita']))
         {
             $conditions['Attivita.name LIKE'] = '%'. $this->request->named['nomeattivita'] .'%';
 			$tit = "attività che contengono: " . $this->request->named['nomeattivita'];
-        }   
-        
+        }
+
         if (!empty($this->request->named['progetto']))
         {
-            $conditions['Attivita.progetto_id'] = $this->request->named['progetto'];			
+            $conditions['Attivita.progetto_id'] = $this->request->named['progetto'];
 			$p = $this->Attivita->Progetto->findById($this->request->named['progetto']);
 			$tit = $p['Progetto']['name'];
-        }   
-        
+        }
+
 		if (!empty($this->request->named['area']))
         {
-            $conditions['Attivita.area_id'] = $this->request->named['area'];			
-        }  
+            $conditions['Attivita.area_id'] = $this->request->named['area'];
+        }
 
         if (!empty($this->request->named['anno']))
         {
             $conditions['YEAR(Attivita.DataInizio)'] = $this->request->named['anno'];
-        }  
-		
+        }
+
 		$this->set('title_for_layout', 'Avanzamento Generale');
 		$this->Attivita->recursive = -1;
 		$a = $this->Attivita->find('all', array(
 						'conditions' => $conditions,
 						'order' => array('Attivita.area_id', 'Attivita.name'),
 				));
-		
-        //Calcolo le entrate in prima nota        
-		$temp = $this->Attivita->Primanota->find('all', array(                
+
+        //Calcolo le entrate in prima nota
+		$temp = $this->Attivita->Primanota->find('all', array(
                 'fields' => array('Primanota.attivita_id as id', 'SUM(Primanota.importo) as S'),
                 'group' => array('Primanota.attivita_id'),
                 'conditions' => array('Primanota.importo >' => 0),
@@ -626,12 +628,12 @@ class AttivitaController extends AppController {
         //Rigiro l'array in modo da renderla più facile da usare nella view
         foreach ($temp as $t)
         {
-                $pne[$t['Primanota']['id']] = $t[0]['S']; 
+                $pne[$t['Primanota']['id']] = $t[0]['S'];
         }
-        
-        
-        //Calcolo le entrate in prima nota        
-        $temp = $this->Attivita->Primanota->find('all', array(                
+
+
+        //Calcolo le entrate in prima nota
+        $temp = $this->Attivita->Primanota->find('all', array(
                 'fields' => array('Primanota.attivita_id as id', 'SUM(Primanota.importo) as S'),
                 'group' => array('Primanota.attivita_id'),
                 'conditions' => array('Primanota.importo <' => 0),
@@ -640,58 +642,58 @@ class AttivitaController extends AppController {
 		//Rigiro l'array in modo da renderla più facile da usare nella view
 		foreach ($temp as $t)
 		{
-				$pnu[$t['Primanota']['id']] = $t[0]['S']; 
-		}		
+				$pnu[$t['Primanota']['id']] = $t[0]['S'];
+		}
 
        //Calcolo i documenti ricevuti
-        $temp = $this->Attivita->Fatturaricevuta->find('all', array(                
+        $temp = $this->Attivita->Fatturaricevuta->find('all', array(
                 'fields' => array('Fatturaricevuta.attivita_id as id', 'SUM(Fatturaricevuta.importo) as S'),
-                'group' => array('Fatturaricevuta.attivita_id'),      
-                'conditions' => array('Fatturaricevuta.pagato' => 0),        
+                'group' => array('Fatturaricevuta.attivita_id'),
+                'conditions' => array('Fatturaricevuta.pagato' => 0),
             ));
 
         //Rigiro l'array in modo da renderla più facile da usare nella view
         foreach ($temp as $t)
         {
-                $docric[$t['Fatturaricevuta']['id']] = $t[0]['S']; 
-        }       
+                $docric[$t['Fatturaricevuta']['id']] = $t[0]['S'];
+        }
 
         //Calcolo le fasi in entrata
-		$temp = $this->Attivita->Faseattivita->find('all', array(                
+		$temp = $this->Attivita->Faseattivita->find('all', array(
                 'fields' => array('Faseattivita.attivita_id', 'SUM(Faseattivita.qta * Faseattivita.costou) as S'),
                 'group' => array('Faseattivita.attivita_id'),
                 'conditions' => array('Faseattivita.entrata' => 1),
-            ));					
+            ));
 		//Rigiro l'array in modo da renderla più facile da usare nella view
 		foreach ($temp as $t)
 		{
-				$fentrate[$t['Faseattivita']['attivita_id']] = $t[0]['S']; 
+				$fentrate[$t['Faseattivita']['attivita_id']] = $t[0]['S'];
 		}
-		
-        //Calcolo le fasi in uscita        
-        $temp = $this->Attivita->Faseattivita->find('all', array(                
+
+        //Calcolo le fasi in uscita
+        $temp = $this->Attivita->Faseattivita->find('all', array(
                 'fields' => array('Faseattivita.attivita_id', 'SUM(Faseattivita.qta * Faseattivita.costou) as S'),
                 'group' => array('Faseattivita.attivita_id'),
                 'conditions' => array('Faseattivita.entrata' => 0),
-            ));                 
+            ));
         //Rigiro l'array in modo da renderla più facile da usare nella view
         foreach ($temp as $t)
         {
-                $fuscite[$t['Faseattivita']['attivita_id']] = $t[0]['S']; 
+                $fuscite[$t['Faseattivita']['attivita_id']] = $t[0]['S'];
         }
 
-		$temp = $this->Attivita->Notaspesa->find('all', array(           
+		$temp = $this->Attivita->Notaspesa->find('all', array(
                 'fields' => array('Attivita.id', 'SUM(Notaspesa.importo) as S'),
                 'group' => array('Notaspesa.eAttivita'),
                 'conditions' => array('Notaspesa.rimborsato' => 0),
-            ));			
+            ));
 		//Rigiro l'array in modo da renderla più facile da usare nella view
 		foreach ($temp as $t)
 		{
-				$ns[$t['Attivita']['id']] = $t[0]['S']; 
+				$ns[$t['Attivita']['id']] = $t[0]['S'];
 		}
-		
-        $temp = $this->Attivita->Ora->find('all', array(            
+
+        $temp = $this->Attivita->Ora->find('all', array(
                 'fields' => array('Attivita.id', 'SUM(Ora.numOre) as S'),
                 'group' => array('Ora.eAttivita'),
                 'conditions' => array('Ora.pagato' => 0),
@@ -699,9 +701,9 @@ class AttivitaController extends AppController {
 		//Rigiro l'array in modo da renderla più facile da usare nella view
 		foreach ($temp as $t)
 		{
-				$ore[$t['Attivita']['id']] = $t[0]['S']; 
+				$ore[$t['Attivita']['id']] = $t[0]['S'];
 		}
-		
+
 
 
 		$temp = $this->Attivita->Area->find('all', array(
@@ -709,17 +711,17 @@ class AttivitaController extends AppController {
 					));
 		foreach ($temp as $t)
 		{
-				$aree[$t['Area']['id']] = $t['Area']['name']; 
+				$aree[$t['Area']['id']] = $t['Area']['name'];
 		}
 		//Se c'è l'area, l'aggiungo al titolo
 		if (!empty($this->request->named['area']))
 		{
 			$tit .= 'Area: ' .  $aree[$this->request->named['area']];
 		}
-		
-		$this->set(compact('a','pnu','pne','fentrate','fuscite','ns','ore','aree','tit','docric'));		
+
+		$this->set(compact('a','pnu','pne','fentrate','fuscite','ns','ore','aree','tit','docric'));
 	}
-	
+
 	function attivita_fasi()
 	{
 		$this->set('title_for_layout', 'Avanzamento Generale');
@@ -727,7 +729,7 @@ class AttivitaController extends AppController {
 		$a = $this->Attivita->find('all', array(
 						'order' => array('Attivita.area_id', 'Attivita.name'),
 				));
-				
+
 		$this->set('attivita', $a);
 	}
 
@@ -741,7 +743,7 @@ class AttivitaController extends AppController {
                                                     'order' => array('Attivita.modified' => 'desc')));
 
         foreach ($res as $r) {
-            
+
             $lastmodified[$r['Attivita']['id']]['Nome'] = $r['Attivita']['name'];
             $lastmodified[$r['Attivita']['id']]['Modifica'] = $r['Attivita']['modified'];
         }
@@ -822,17 +824,17 @@ class AttivitaController extends AppController {
 			// a '' bisognerebbe scrivere UNCKNOWN
 			"nome" => $f['Attivita']['Persona']['Societa'], // OBBLIGATORIO (Nome o ragione sociale del cliente/fornitore)
 			"indirizzo_via" => $f['Attivita']['Persona']['Indirizzo'],
-			"indirizzo_cap" => $f['Attivita']['Persona']['CAP'], 
-			"indirizzo_citta" => $f['Attivita']['Persona']['Citta'], 
-			"indirizzo_provincia" => $f['Attivita']['Persona']['Provincia'], 
+			"indirizzo_cap" => $f['Attivita']['Persona']['CAP'],
+			"indirizzo_citta" => $f['Attivita']['Persona']['Citta'],
+			"indirizzo_provincia" => $f['Attivita']['Persona']['Provincia'],
 			"indirizzo_extra" => $f['Attivita']['Persona']['altroIndirizzo'], //Se presente per iGAS questa var contiene solo una via.. Forse sarebbe meglio lasciare vuoto "indirizzo_extra"
 			"paese" => "Italia", // Questo non c'è in $f, doveva essere il nome completo del paese, ad esempio Italia, valutare se lasciare vuoto "paese"
 			"paese_iso" => $f['Attivita']['Persona']['Nazione'], // Questo deve essere ad esempio IT
 			"lingua" => "it", // Questo non c'è in $f
-			"piva" => $f['Attivita']['Persona']['piva'], 
+			"piva" => $f['Attivita']['Persona']['piva'],
 			"cf" => $f['Attivita']['Persona']['cf'], // da "indirizzo_via" a "cf" sono dati di fornitori o clienti
-			"autocompila_anagrafica" => false, 
-			"salva_anagrafica" => false, 
+			"autocompila_anagrafica" => false,
+			"salva_anagrafica" => false,
 			"numero" => $f['Fatturaemessa']['Progressivo'],  // Qua bisogna mettere $f['Fatturaemessa']['Progressivo']."/".$f['Fatturaemessa']['AnnoFatturazione'] oppure altro?
 			"data" => implode('/',array_reverse(explode('-',explode(' ',$f['Fatturaemessa']['created'])[0]))), // $f['Fatturaemessa']['created']
 			"valuta" => "EUR", // Questo non c'è in $f
@@ -844,25 +846,25 @@ class AttivitaController extends AppController {
 			"imponibile_ritenuta" => 0, // Questo non c'è in $f
 			"rit_altra" => 0, // Questo non c'è in $f
 			"marca_bollo" => 0, // Questo non c'è in $f
-			"oggetto_visibile" => $f['Attivita']['name'], 
-			"oggetto_interno" => "", 
+			"oggetto_visibile" => $f['Attivita']['name'],
+			"oggetto_interno" => "",
 			"centro_ricavo" => $f['Attivita']['name'], // Non so cosa mettere, forse $f['Attivita']['name']
 			"centro_costo" => "", // Non so cosa mettere
-			"note" => "", 
-			"nascondi_scadenza" => false, 
-			"ddt" => false, 
-			"ftacc" => false, 
-			"id_template" => "0", 
-			"ddt_id_template" => "0", 
-			"ftacc_id_template" => "0", 
-			"mostra_info_pagamento" => false, 
+			"note" => "",
+			"nascondi_scadenza" => false,
+			"ddt" => false,
+			"ftacc" => false,
+			"id_template" => "0",
+			"ddt_id_template" => "0",
+			"ftacc_id_template" => "0",
+			"mostra_info_pagamento" => false,
 			"metodo_pagamento" => "Bonifico", // Questo non c'è in $f
 			"metodo_titoloN" => "IBAN", // Questo non c'è in $f
-			"metodo_descN" => $f['Attivita']['Persona']['iban'], 
-			"mostra_totali" => "tutti", 
-			"mostra_bottone_paypal" => false, 
-			"mostra_bottone_bonifico" => false, 
-			"mostra_bottone_notifica" => false, 
+			"metodo_descN" => $f['Attivita']['Persona']['iban'],
+			"mostra_totali" => "tutti",
+			"mostra_bottone_paypal" => false,
+			"mostra_bottone_bonifico" => false,
+			"mostra_bottone_notifica" => false,
 			"lista_articoli" => $listaArticoli,
 			"lista_pagamenti" => array(array(
 				"data_scadenza" => date_format(date_add(date_create(explode(' ',$f['Fatturaemessa']['created'])[0]),date_interval_create_from_date_string('30 days')),'d/m/Y'), // OBBLIGATORIO // in $f non c'è ma vedo che nel PDF della fattura di iGAS si vede 'Scadenza: 30 gg'. E' un dato fisso?
@@ -921,7 +923,7 @@ class AttivitaController extends AppController {
 		}
 		$this->redirect($this->referer());
     }
-    
+
     function fattureincloudelimina($id){
         if (!$id) {
             $this->Session->setFlash(__('Parametri non validi per cancellare fattura da FattureInCloud.it'));
@@ -954,7 +956,7 @@ class AttivitaController extends AppController {
             //$this->Session->setFlash(__(serialize($result)));
         }
         $this->redirect($this->referer());
-    } 
+    }
 
 }
 ?>
