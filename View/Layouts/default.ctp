@@ -13,6 +13,7 @@
   <?php //echo $this->Html->css('jQueryUI/1.10.3/jquery-ui.min'); //LEGACY ?>
   <?php echo $this->Html->css('jQueryUI/1.12.1/jquery-ui.min'); // DOPO LA JQUERY MIGRATION ?>
   <?php echo $this->Html->css('bootstrap.min'); ?>
+  
 
   <!-- Loading Stylesheets -->
   <?php echo $this->Html->css('font-awesome'); ?>
@@ -21,7 +22,7 @@
   <?php echo $this->Html->css('/DataTables/Responsive-2.2.0/css/responsive.bootstrap.min.css'); ?>
   <?php echo $this->Html->css('bootstrap-chosen'); ?>
   <?php echo $this->Html->css('style'); ?>
-
+  
 
   <!-- Loading Custom Stylesheets -->
   <?php echo $this->Html->css('custom'); ?>
