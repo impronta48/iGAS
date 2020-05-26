@@ -1,0 +1,27 @@
+{
+    "name": "iGAS - Caricamento Ore",
+    "short_name": "iGAS Ore",
+    "description": "Caricamento Ore su iGAS con posizione",
+    "icons": [{
+            "src": "img/favicon-igas-32",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+
+        {
+            "src": "img/favicon-igas-128",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+
+        {
+            "src": "img/favicon-igas",
+            "sizes": "206x206",
+            "type": "image/png"
+        },
+    ],
+    "start_url": "/lindbergh/ore/addMobile",
+    "display": "fullscreen",
+    "theme_color": "#B12A34",
+    "background_color": "#B12A34"
+}
