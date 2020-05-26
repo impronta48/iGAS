@@ -990,7 +990,7 @@ class OreController extends AppController
     }
 
 
-    
+
     public function addMobile()
     {
         $this->layout = 'nomenu-vue';
@@ -1021,6 +1021,8 @@ class OreController extends AppController
         $conditions['Ora.eRisorsa'] = $personaId;
         $conditions['YEAR(Ora.data)'] = date('Y');
         $conditions['MONTH(Ora.data)'] = date('m');
+        $conditions['start >'] = 0;
+
         if($giorno!=null){
             $conditions['DAY(Ora.data)'] = $giorno;
             $conditions['Ora.stop'] = null;
