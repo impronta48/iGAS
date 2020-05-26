@@ -166,7 +166,7 @@ class Faseattivita extends AppModel {
                             '{n}.Attivita.name'
                            );
 		$fa = Hash::merge($notset, $fa);
-		Cache::write('faseattivita_2level', $fa, 'long');
+		Cache::write("faseattivita_2level_{$attivita_id}_{$solo_entrata}_{$solo_aperte}", $fa, 'long');
         return $fa;
 	}
 	
