@@ -23,7 +23,7 @@
         
             <?php echo  $this->Form->input('id'); ?>
             <?php // echo  $this->Form->input('data', array('type'=>'date', 'class'=>false, 'dateFormat'=>'DMY')); ?>   
-            <?php echo $this->Form->input('data', array('type'=>'text', 'label' => 'Data', 'dateFormat' => 'DMY', 'class' => 'form-control')); ?>         
+            <?php echo $this->Form->input('data', array('type'=>'text', 'label' => 'Data', 'dateFormat' => 'DMY', 'class' => 'form-control datepicker')); ?>         
             <?php   
                 if (!isset($this->request->data['Primanota']['importo']))
                 {
@@ -115,7 +115,5 @@ $(function() {
 		});
   
 });
-
-$( "#PrimanotaData" ).datepicker( { dateFormat: 'yy-mm-dd' });
 
 <?php $this->Html->scriptEnd();

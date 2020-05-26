@@ -122,8 +122,8 @@
          <div class="panel-body">
              
            <?php
-            echo $this->Form->input('DataPresentazione', array('type'=>'text'));
-            echo $this->Form->input('DataApprovazione', array('type'=>'text'));
+            echo $this->Form->input('DataPresentazione', array('type'=>'text', 'class'=> 'datepicker form-control',));
+            echo $this->Form->input('DataApprovazione', array('type'=>'text', 'class'=> 'datepicker form-control',));
             ?>
              
             <div class="alert alert-warning ">Per il calcolo del costo dell'attività si dave 
@@ -164,9 +164,9 @@
         </div>
         <div class="panel-body">
             <?php
-                echo $this->Form->input('DataInizio', array('type'=>'text'));
-                echo $this->Form->input('DataFinePrevista', array('type'=>'text'));
-                echo $this->Form->input('DataFine', array('type'=>'text'));            
+                echo $this->Form->input('DataInizio', array('type'=>'text', 'class'=> 'datepicker form-control',));
+                echo $this->Form->input('DataFinePrevista', array('type'=>'text', 'class'=> 'datepicker form-control',));
+                echo $this->Form->input('DataFine', array('type'=>'text', 'class'=> 'datepicker form-control',));            
                 echo $this->Form->input('Utile');
             ?>            
             <div class="pull-right">Ore Usate: <span class="label label-primary"><?php echo $oreUsate ?></span>            
@@ -207,12 +207,6 @@ $(function() {
 	}).bind("blur",function(){
 			$( "#PersonaDisplayName" ).val($(this).data("uiItem"));
 		});
-
-	$( "#AttivitaDataPresentazione" ).datepicker( { dateFormat: 'yy-mm-dd' });
-	$( "#AttivitaDataApprovazione" ).datepicker( { dateFormat: 'yy-mm-dd' });
-	$( "#AttivitaDataInizio" ).datepicker( { dateFormat: 'yy-mm-dd' });
-	$( "#AttivitaDataFine" ).datepicker( { dateFormat: 'yy-mm-dd' });
-	$( "#AttivitaDataFinePrevista" ).datepicker( { dateFormat: 'yy-mm-dd' });
 
     $('#dettagli-cliente').hide('fast');
     $( "#add-cliente" ).click( function (e) { 

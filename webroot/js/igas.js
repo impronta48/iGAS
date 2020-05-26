@@ -100,8 +100,12 @@ $('document').ready(function() {
         handle_del_riga(e);
     });
 
-    $('.datepicker').datepicker({
-        dateFormat: 'yy-mm-dd',
+    var datepicker = $.fn.datepicker.noConflict();
+    $.fn.bootstrapDP = datepicker;
+    $('.datepicker').bootstrapDP({
+        format: 'yyyy-mm-dd',
+        language: 'it',
+        weekStart: 1
     });
 
     $('[data-toggle="tooltip"]').tooltip();

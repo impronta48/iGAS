@@ -40,7 +40,7 @@
 		echo $this->Form->input('progressivo');        
 		echo $this->Form->input('annoFatturazione');				
         // echo $this->Form->input('dataFattura', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>'','label'=>'Data Documento'));
-		echo $this->Form->input('dataFattura', array('type' => 'text', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY', 'label'=>'Data Documento'));
+		echo $this->Form->input('dataFattura', array('type' => 'text', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY', 'label'=>'Data Documento', 'class'=> 'datepicker form-control',));
 		echo $this->Form->input('motivazione');
 		echo $this->Form->input('provenienza', array('options'=> $provenienza));
 		echo $this->Form->input('attivita_id', array('class'=>'attivita chosen-select' . $baseformclass));  //array('class'=>'chosen-select')
@@ -51,10 +51,10 @@
 		echo $this->Form->input('iva');
 		echo $this->Form->input('fuoriIva');
 		// echo $this->Form->input('scadPagamento', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
-		echo $this->Form->input('scadPagamento', array('type' => 'text', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY'));
+		echo $this->Form->input('scadPagamento', array('type' => 'text', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY', 'class'=> 'datepicker form-control',));
 		echo $this->Form->input('ritenutaAcconto');		
 		// echo $this->Form->input('scadenzaRitenutaAcconto', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
-		echo $this->Form->input('scadenzaRitenutaAcconto', array('type' => 'text', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY'));
+		echo $this->Form->input('scadenzaRitenutaAcconto', array('type' => 'text', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY', 'class'=> 'datepicker form-control',));
 		// Ho notato che input type="file" non si prende gli inputDefaults settati in $this->Form->create() all'inizio del file
 		//echo $this->Form->file('uploadFile');
 		// Meglio usare questa sintassi per creare input type="file"
@@ -78,9 +78,5 @@
     $('#dettagli-fornitore').hide('fast');
 
     $( "#add-fornitore" ).click( function (e) { $("#dettagli-fornitore").toggle('fast'); $("#FatturaricevutaFornitoreId").parent().toggle('fast'); });
-
-	$( "#FatturaricevutaDataFattura" ).datepicker( { dateFormat: 'yy-mm-dd' });
-	$( "#FatturaricevutaScadPagamento" ).datepicker( { dateFormat: 'yy-mm-dd' });
-	$( "#FatturaricevutaScadenzaRitenutaAcconto" ).datepicker( { dateFormat: 'yy-mm-dd' });
 
 <?php $this->Html->scriptEnd();

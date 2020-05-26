@@ -25,7 +25,7 @@
         $def['selected'] = "$anno-$mese-$giorno";
     }    
     // echo $this->Form->input('data', $def);
-    echo $this->Form->input('data', array('type'=>'text', 'label' => 'Data', 'value' => "$anno-$mese-$giorno", 'dateFormat' => 'DMY', 'class' => 'form-control required'));
+    echo $this->Form->input('data', array('type'=>'text', 'label' => 'Data', 'value' => "$anno-$mese-$giorno", 'dateFormat' => 'DMY', 'class' => 'form-control required datepicker'));
     ?>
         
     <?php
@@ -81,7 +81,5 @@
             $("#filtroAttivita").parent().hide();
         });
     } )
-
-    $( "#OraData" ).datepicker( { dateFormat: 'yy-mm-dd' });
 
 <?php $this->Html->scriptEnd(); ?>

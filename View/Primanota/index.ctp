@@ -42,7 +42,7 @@
                     <div class="row">
                     <?php echo $this->Form->input('from', array(
                             'type' => 'text', 
-                            'class' => 'datepicker' . $baseformclass , 
+                            'class' => 'datepicker form-control' . $baseformclass , 
                             'label' => 'da',
                             'size' => 16,
                             'value' => $v_from,
@@ -52,7 +52,7 @@
                     )); ?>
                     <?php echo $this->Form->input('to', array(
                         'type' => 'text',
-                        'class' => 'datepicker' . $baseformclass,  
+                        'class' => 'datepicker form-control' . $baseformclass,  
                         'label' => 'a',
                         'size' => 16,
                         'value' => $v_to,
@@ -252,7 +252,7 @@
                     )); ?>
                     <div class="col col-md-12">
                     <?php // echo $this->Form->input('data', array('type'=>'date', 'class'=>false, 'dateFormat'=>'DMY')); ?>
-                    <?php echo $this->Form->input('data', array('type'=>'text', 'label' => 'Data', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY', 'class' => 'form-control')); ?>
+                    <?php echo $this->Form->input('data', array('type'=>'text', 'label' => 'Data', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY', 'class' => 'form-control datepicker')); ?>
 					<div id="entrataUscitaBox">
                     <div id="entrataUscitaBoxTest"></div>
 					<?php
@@ -449,8 +449,6 @@ $('document').ready(function() {
 	});
 	
 });
-
-$( "#PrimanotaData" ).datepicker( { dateFormat: 'yy-mm-dd' });
 
 <?php $this->Html->scriptEnd();
 

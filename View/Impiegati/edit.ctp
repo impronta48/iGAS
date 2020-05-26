@@ -45,7 +45,7 @@
 				</div>
 				<div class="form-group">
 					<?php // echo $this->Form->input('dataAssunzione', array('class' => 'null', 'placeholder' => 'DataAssunzione', 'dateFormat'=>'DMY', 'minYear'=>1970));?>
-					<?php echo $this->Form->input('dataAssunzione', array('type'=>'text', 'placeholder' => 'Clicca per impostare una data', 'dateFormat' => 'DMY', 'class' => 'form-control')); ?>
+					<?php echo $this->Form->input('dataAssunzione', array('type'=>'text', 'placeholder' => 'Clicca per impostare una data', 'dateFormat' => 'DMY', 'class' => 'form-control datepicker')); ?>
 				</div>
 				<div class="form-group">
 					<?php echo $this->Form->input('costoAziendale', array('class' => 'form-control', 'placeholder' => 'CostoAziendale'));?>
@@ -58,7 +58,7 @@
 				</div>
 				<div class="form-group">
 					<?php // echo $this->Form->input('dataValidita', array('class' => 'null', 'label' => 'Data inizio validità', 'dateFormat'=>'DMY', 'minYear'=>1970));?>
-					<?php echo $this->Form->input('dataValidita', array('type'=>'text', 'label' => 'Data inizio validità', 'placeholder' => 'Clicca per impostare una data', 'dateFormat' => 'DMY', 'class' => 'form-control')); ?>
+					<?php echo $this->Form->input('dataValidita', array('type'=>'text', 'label' => 'Data inizio validità', 'placeholder' => 'Clicca per impostare una data', 'dateFormat' => 'DMY', 'class' => 'form-control datepicker')); ?>
 				</div>
 				<div>
 					<h3>Ore a Contratto</h3>
@@ -90,10 +90,3 @@
 		</div><!-- end col md 12 -->
 	</div><!-- end row -->
 </div>
-
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
-
-    $( "#ImpiegatoDataAssunzione" ).datepicker( { dateFormat: 'yy-mm-dd' });
-	$( "#ImpiegatoDataValidita" ).datepicker( { dateFormat: 'yy-mm-dd' });
-
-<?php $this->Html->scriptEnd(); ?>

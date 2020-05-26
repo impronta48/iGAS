@@ -94,9 +94,9 @@
                                     )); ?> 
         <?php echo $this->Form->input('persone', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p)); ?>
         
-        <?php echo $this->Form->input('from', array('id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$f,
+        <?php echo $this->Form->input('from', array('id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$f, 'class'=> 'datepicker form-control',
                                     'default'=>date('Y-m-d', strtotime('first day of last month')))); ?>
-        <?php echo $this->Form->input('to', array('id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$t)); ?>
+        <?php echo $this->Form->input('to', array('id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$t, 'class'=> 'datepicker form-control')); ?>
         <?php
             $fat = $this->request->query('fatturato');
             $fatbile = $this->request->query('fatturabile');
@@ -253,20 +253,4 @@
             ]        
     
   });
-
-            $('#from').datepicker({
-                dateFormat: 'yy-mm-dd',
-                onSelect: function(dateText, inst) {
-                    $('#to').datepicker("option", "minDate", dateText); //no dates before selected 'from' allowed
-                }
-            });
-
-            $('#to').datepicker({
-                dateFormat: 'yy-mm-dd',
-                onSelect: function(dateText, inst) {
-                    $('#from').datepicker("option", "maxDate", dateText); //no dates after selected 'to' allowed
-                }
-            });
-        });
-
 <?php $this->Html->scriptEnd();

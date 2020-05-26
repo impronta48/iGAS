@@ -368,6 +368,4 @@
             }
         );
 
-        // $( "#NotaspesaData" ).datepicker( { dateFormat: 'yy-mm-dd' });
-
 <?php $this->Html->scriptEnd(); 

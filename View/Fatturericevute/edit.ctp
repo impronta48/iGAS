@@ -26,7 +26,7 @@
 		echo $this->Form->input('progressivo');        
 		echo $this->Form->input('annoFatturazione');		
         // echo $this->Form->input('dataFattura', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>'','label'=>'Data Documento'));
-		echo $this->Form->input('dataFattura', array('type'=>'text', 'label' => 'Data Documento', 'dateFormat' => 'DMY'));
+		echo $this->Form->input('dataFattura', array('type'=>'text', 'label' => 'Data Documento', 'dateFormat' => 'DMY', 'class'=> 'datepicker form-control',));
 		echo $this->Form->input('motivazione');
 		echo $this->Form->input('provenienza', array('options'=> $provenienza));
 		echo $this->Form->input('attivita_id', array('class'=>'attivita chosen-select' . $baseformclass));  //array('class'=>'chosen-select')
@@ -37,10 +37,10 @@
 		echo $this->Form->input('iva');
 		echo $this->Form->input('fuoriIva');
 		// echo $this->Form->input('scadPagamento', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
-		echo $this->Form->input('scadPagamento', array('type'=>'text', 'label' => 'Data Documento', 'dateFormat' => 'DMY'));
+		echo $this->Form->input('scadPagamento', array('type'=>'text', 'label' => 'Data Documento', 'dateFormat' => 'DMY', 'class'=> 'datepicker form-control',));
 		echo $this->Form->input('ritenutaAcconto');		
 		// echo $this->Form->input('scadenzaRitenutaAcconto', array('type' => 'date', 'dateFormat' => 'DMY', 'class'=>''));
-		echo $this->Form->input('scadenzaRitenutaAcconto', array('type'=>'text', 'label' => 'Data Documento', 'dateFormat' => 'DMY'));
+		echo $this->Form->input('scadenzaRitenutaAcconto', array('type'=>'text', 'label' => 'Data Documento', 'dateFormat' => 'DMY', 'class'=> 'datepicker form-control',));
 		//Questo è profondamente sbagliato ma l'alternativa è creare un metodo nel Controller che non sarà
 		//associato a nessuna View. Si potrebbe anche mettere nel Component UploadFilesComponent.php ma
 		//leggo in giro che è sbagliato perchè i Component dovrebbero essere fruibili solo dai Controller 
@@ -69,11 +69,3 @@
     
 </form>
 </div>
-
-<?php $this->Html->scriptStart(array('inline' => false)); ?>          
-    
-	$( "#FatturaricevutaDataFattura" ).datepicker( { dateFormat: 'yy-mm-dd' });
-	$( "#FatturaricevutaScadPagamento" ).datepicker( { dateFormat: 'yy-mm-dd' });
-	$( "#FatturaricevutaScadenzaRitenutaAcconto" ).datepicker( { dateFormat: 'yy-mm-dd' });
-
-<?php $this->Html->scriptEnd();

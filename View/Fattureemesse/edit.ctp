@@ -39,7 +39,7 @@
 		<?php echo $this->Form->input('AnnoFatturazione', array('default'=>date('Y'))); ?>
     
     <?php
-        echo $this->Form->input('data', array('type' => 'text', 'placeholder' => 'Clicca per impostare una data', 'class'=>'form-control'));
+        echo $this->Form->input('data', array('type' => 'text', 'placeholder' => 'Clicca per impostare una data', 'class'=>'form-control datepicker'));
         echo $this->Form->input('Competenza');
 		echo $this->Form->input('Motivazione');
 		
@@ -76,9 +76,3 @@
     
     <?php echo $this->Form->end();?>
 </div>
-
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
-
-    $( "#FatturaemessaData" ).datepicker( { dateFormat: 'yy-mm-dd' });
-
-<?php $this->Html->scriptEnd(); ?>

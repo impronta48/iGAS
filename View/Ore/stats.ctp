@@ -76,8 +76,11 @@
     ?>
     
     <?php echo $this->Form->input('from', array('id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>($f?$f:null),
-                                        'default'=>date('Y-m-d', strtotime('first day of last month')))); ?>
-    <?php echo $this->Form->input('to', array('id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$t)); ?>
+                                        'default'=>date('Y-m-d', strtotime('first day of last month')), 'class' => 'datepicker form-control')
+                                        ); ?>
+    <?php echo $this->Form->input('to', array('id' => 'to', 'type' => 'text', 
+                                        'date-format' => 'Y-m-d','value'=>$t, 'class' => 'datepicker form-control')
+                                        ); ?>
     <?php echo $this->Form->submit(__('Filter'), array('class'=>'col-md-offset-2 btn btn-primary')); ?>
     <?php echo $this->Form->end(); ?>
 
@@ -250,22 +253,3 @@
         </div>                
     <?php endif; ?>
 </div>
-
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
-        $(document).ready(function() {
-
-            $('#from').datepicker({
-                dateFormat: 'yy-mm-dd',
-                onSelect: function(dateText, inst) {
-                    $('#to').datepicker("option", "minDate", dateText); //no dates before selected 'from' allowed
-                }
-            });
-
-            $('#to').datepicker({
-                dateFormat: 'yy-mm-dd',
-                onSelect: function(dateText, inst) {
-                    $('#from').datepicker("option", "maxDate", dateText); //no dates after selected 'to' allowed
-                }
-            });
-        });
-<?php $this->Html->scriptEnd(); ?>
