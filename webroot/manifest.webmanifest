@@ -18,7 +18,7 @@
             "src": "img/favicon-igas",
             "sizes": "206x206",
             "type": "image/png"
-        },
+        }
     ],
     "start_url": "/lindbergh/ore/addMobile",
     "display": "fullscreen",
