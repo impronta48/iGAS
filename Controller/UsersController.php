@@ -34,14 +34,15 @@ class UsersController extends AppController
 					$this->request->data['User']['password'] = $this->Auth->password($this->request->data['User']['password']);
 
 					// write the cookie
+					// https://stackoverflow.com/questions/12447487/cakephp-remember-me-with-auth
 					$this->Cookie->write('remember_me_cookie', $this->request->data['User'], true, '2 weeks');
 				}
 				//debug(Configure::read('Role.impiegato'));
 				//die();
 				if (Auth::hasRole(Configure::read('Role.impiegato')))
 				{	        			
-							//return $this->redirect(array('controller'=>'pages', 'action'=>'home'));
-							return $this->redirect(array('controller'=>'attivita', 'action'=>'index'));
+					//return $this->redirect(array('controller'=>'pages', 'action'=>'home'));
+					return $this->redirect(array('controller'=>'attivita', 'action'=>'index'));
 				}
 				else
 				{
