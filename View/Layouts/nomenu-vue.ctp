@@ -24,7 +24,7 @@
 	<meta name="mobile-web-app-capable" content="yes">
 	<link rel="shortcut icon" sizes="196x196" href="/img/favicon-igas.png">
 	<link rel="shortcut icon" sizes="128x128" href="/img/favicon-igas-128.png">
-
+	<link rel="manifest" href="/igas.webmanifest">
 
 	<?php echo $this->Html->css('font-awesome'); ?>
 
