@@ -100,7 +100,7 @@ body {
                 </b-col>
             </b-row>
 
-            <b-row v-if="dateTimeStart==null & dataCaricamento==null && selecFase != null">
+            <b-row v-if="dateTimeStart==null && dataCaricamento==null && selecFase != null">
                 <b-col class="mt-3" cols="12">
                     <span class="text-secondary"> data e ora: <b> {{formatDatedMYhm(new Date())}}</b></span>
                     <b-form-textarea class="mt-3" id="textarea" v-model="dettagli" placeholder="Dettagli..." rows="3"
