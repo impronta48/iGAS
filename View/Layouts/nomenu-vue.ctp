@@ -14,6 +14,18 @@
 		array('type' => 'icon')
 	);
 	?>
+	
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<link rel="apple-touch-startup-image" href="/img/startup.png">
+	<link rel="apple-touch-icon" href="/img/favicon-igas.png"/>
+	<link rel="apple-touch-icon-precomposed" sizes="128x128" href="/img/favicon-igas-128.png">
+
+	<meta name="mobile-web-app-capable" content="yes">
+	<link rel="shortcut icon" sizes="196x196" href="/img/favicon-igas.png">
+	<link rel="shortcut icon" sizes="128x128" href="/img/favicon-igas-128.png">
+
+
 	<?php echo $this->Html->css('font-awesome'); ?>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
