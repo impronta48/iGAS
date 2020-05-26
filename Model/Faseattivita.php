@@ -131,7 +131,7 @@ class Faseattivita extends AppModel {
 	{
 		if (Configure::read('debug')==0)
         {
-			$fa = Cache::read('faseattivita_2level', 'short');
+			$fa = Cache::read("faseattivita_2level_{$attivita_id}_{$solo_entrata}_{$solo_aperte}", 'long');
 			return $fa;
         }
 		
@@ -166,7 +166,7 @@ class Faseattivita extends AppModel {
                             '{n}.Attivita.name'
                            );
 		$fa = Hash::merge($notset, $fa);
-		Cache::write('faseattivita_2level', $fa, 'short');
+		Cache::write('faseattivita_2level', $fa, 'long');
         return $fa;
 	}
 	
