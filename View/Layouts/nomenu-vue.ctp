@@ -7,13 +7,6 @@
 		<?php echo $title_for_layout; ?> |
 		<?php echo "iGas - " . Configure::read('iGas.NomeAzienda') ?>
 	</title>
-	<?php
-	echo $this->Html->meta(
-		'favicon.ico',
-		'favicon.ico',
-		array('type' => 'icon')
-	);
-	?>
 	
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -24,7 +17,7 @@
 	<meta name="mobile-web-app-capable" content="yes">
 	<link rel="shortcut icon" sizes="196x196" href="/img/favicon-igas.png">
 	<link rel="shortcut icon" sizes="128x128" href="/img/favicon-igas-128.png">
-	<link rel="manifest" href="/igas.webmanifest">
+	<link rel="manifest" href="/manifest.webmanifest">
 
 	<?php echo $this->Html->css('font-awesome'); ?>
 
