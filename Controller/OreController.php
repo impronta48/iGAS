@@ -988,6 +988,9 @@ class OreController extends AppController
         //$fa = $this->Ora->Faseattivita->getSimple(null,0,1);
         //$this->set('faseattivita', $fa);
     }
+
+
+    
     public function addMobile()
     {
         $this->layout = 'nomenu-vue';
@@ -999,7 +1002,6 @@ class OreController extends AppController
         $this->set('eAttivita', $this->Ora->Attivita->getlist($persona));
         $this->set('allAttivita', $allAttivita);
 
-
         $persona_ore = $this->Ora->Persona->findById($persona);
         $nomePersona = '';
         if (!empty($persona_ore)) {
@@ -1008,12 +1010,12 @@ class OreController extends AppController
         $this->set('nomePersona', $nomePersona);
         $this->set('eRisorsa', $persona);
 
-
-
         // $result = $this->getOreByPersona($persona);
         // $this->set('result', $result);
         $this->set('title_for_layout', date('d-m-Y')." | $nomePersona | Aggiungi Ore | Foglio Ore");
     }
+
+
     public function getOreByPersona($personaId, $giorno = null){
         $conditions = array();
         $conditions['Ora.eRisorsa'] = $personaId;
@@ -1036,6 +1038,9 @@ class OreController extends AppController
         );
         $this->set('res', $result);
     }
+
+
+
     public function saveOra()
     {
         if (!empty($this->request->data)) {

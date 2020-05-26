@@ -84,7 +84,8 @@ function utf8ize($d)
                               </b-card>
                         </b-col>
                   </b-row>
-                  <b-row v-if="dateTimeStart==null & selecFase != null">
+
+                  <b-row v-if="dateTimeStart==null & dataCaricamento==null & selecFase != null">
                         <b-col class="mt-3" cols="12">
                               <span class="text-secondary"> data e ora: <b> {{formatDatedMYhm(new Date())}}</b></span>
                               <b-form-textarea class="mt-3" id="textarea" v-model="dettagli" placeholder="Dettagli..." rows="3" max-rows="6"></b-form-textarea>
@@ -95,7 +96,8 @@ function utf8ize($d)
                               </b-button>
                         </b-col>
                   </b-row>
-                  <b-row v-if="dateTimeStart != null & dateTimeStop==null">
+
+                  <b-row v-if="dateTimeStart != null  && dateTimeStop==null">
                         <b-col cols="12" class="mt-5 text-center">
                               <b-button pill id="btnStop" @click="setStop()" variant="outline-danger" class="border-0 px-1 py-1">
                                     &nbsp;<i class="far fa-stop-circle" style="font-size:8rem"></i>&nbsp;</b-button>

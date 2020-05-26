@@ -24,7 +24,7 @@ var addVm = new Vue({
             ora: null,
             riepilogo: false,
             mesError: null,
-
+            dataCaricamento: null,
         }
     },
     created() {
@@ -92,7 +92,7 @@ var addVm = new Vue({
                     this.filteredFase = list;
                 })
                 .catch(e => {
-                    //console.log(e)
+                    console.log(e)
                 });
         },
         getPosition(options) {
@@ -197,6 +197,7 @@ var addVm = new Vue({
                         this.nOre = oraCaricata[0]['Ora']['numOre'];
                         this.mesError = null;
                         this.ora = oraCaricata[0];
+                        this.dataCaricamento = oraCaricata[0]['Ora']['data'];
                     } else {
                         this.oraId = null;
                         this.dateTimeStart = null;
@@ -209,7 +210,7 @@ var addVm = new Vue({
                         this.nOre = null;
                         this.ora = null;
                         this.mesError = null;
-
+                        this.dataCaricamento = null;
                     }
                 })
                 .catch(e => {
