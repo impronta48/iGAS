@@ -74,6 +74,7 @@ class OreController extends AppController
                 )
             )
         );
+        
         //result2: get total number of 'ore' according to search criteria grouped by attivita
         $result2 = $this->Ora->find(
             'all',
@@ -109,7 +110,7 @@ class OreController extends AppController
             )
         );
         //result4: get total number of 'ore' according to search criteria grouped by attivita, risorsa (persona)
-        $result4 = $this->Ora->find(
+         $result4 = $this->Ora->find(
             'all',
             array(
                 'conditions' => $conditions,
@@ -127,11 +128,11 @@ class OreController extends AppController
                 )
             )
         );
-
+ 
         $this->set('result1', $result1);
         $this->set('result2', $result2);
         $this->set('result3', $result3);
-        $this->set('result4', $result4);
+        $this->set('result4', $result4); 
 
         $attivita_list = $this->Ora->Attivita->getlist();
         $this->set('attivita_list', $attivita_list);
@@ -140,7 +141,7 @@ class OreController extends AppController
         $this->set('persona_list', $persona_list);
 
         $fa = $this->Ora->Faseattivita->getSimple();
-        $this->set('faseattivita', $fa);
+        $this->set('faseattivita', $fa); 
 
         //display 'attivita' select options
         //$progetti = $this->_getAttivitaListGroupedByProgetto();

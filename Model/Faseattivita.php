@@ -128,6 +128,7 @@ class Faseattivita extends AppModel {
 	//returns a list wich is good for a combobox
 	public function getSimple($attivita_id = null, $solo_entrata = 0,$solo_aperte=0)
 	{
+		$this->recursive = -1;
 		$conditions = array();
 		$notset = array('0'=> '-- Non definita --');   
 		
@@ -147,7 +148,11 @@ class Faseattivita extends AppModel {
 		}
 
 
-		$fase =$this->find('all', array('conditions' => $conditions));
+		$fase =$this->find('all', [
+				'fields'=> ['id','Descrizione','entrata'],
+				'conditions' => $conditions,
+				'contain' => ['Attivita.name']
+				]);
         $fa = Hash::combine($fase, 
                             '{n}.Faseattivita.id', 
                             array('%.100s','{n}.Faseattivita.Descrizione', '{n}.Faseattivita.entrata'),                            
