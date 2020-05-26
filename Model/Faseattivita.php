@@ -129,11 +129,11 @@ class Faseattivita extends AppModel {
 	//returns a list wich is good for a combobox
 	public function getSimple($attivita_id = null, $solo_entrata = 0,$solo_aperte=0)
 	{
-		if (Configure::read('debug')==0)
+/* 		if (Configure::read('debug')==0)
         {
 			$fa = Cache::read("faseattivita_2level_{$attivita_id}_{$solo_entrata}_{$solo_aperte}", 'long');
 			return $fa;
-        }
+        } */
 		
 		$this->recursive = -1;
 		$conditions = array();
@@ -166,7 +166,7 @@ class Faseattivita extends AppModel {
                             '{n}.Attivita.name'
                            );
 		$fa = Hash::merge($notset, $fa);
-		Cache::write("faseattivita_2level_{$attivita_id}_{$solo_entrata}_{$solo_aperte}", $fa, 'long');
+		//Cache::write("faseattivita_2level_{$attivita_id}_{$solo_entrata}_{$solo_aperte}", $fa, 'long');
         return $fa;
 	}
 	
