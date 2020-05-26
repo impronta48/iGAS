@@ -34,7 +34,7 @@
     <![endif]-->
   </head>
     	
-  <body>
+  <body id="no-menu">
 					<?php if($this->Session->check('Message.flash')) : ?>                
             <div id="message">
                 <div class="col-md-11 alert alert-info">
@@ -47,7 +47,7 @@
   
           <?php echo $content_for_layout; ?>   
                     
-        	<br/><br/>
+        
           <div class="footer">
               <?php echo $this->element('footer',array(),array("cache" => "long_view")); ?>
           </div>                    
