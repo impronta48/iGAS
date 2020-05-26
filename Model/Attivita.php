@@ -93,7 +93,8 @@ class Attivita extends AppModel {
                   $this->data['Attivita'][$f]=NULL;
               }
           }
-
+          
+          Cache::delete('faseattivita_2level');
           return true;
       }
 
