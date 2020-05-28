@@ -303,7 +303,7 @@ class AttivitaController extends AppController {
 		{
 			$a = new StdClass();
 			$a->value = $d['Attivita']['id'];
-			$a->name = $d['Attivita']['name'];
+			$a->name = utf8_encode($d['Attivita']['name']);
 			$res[] = $a;
 		}
         $this->set('res', $res);
