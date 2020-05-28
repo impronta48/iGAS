@@ -218,7 +218,7 @@ class Attivita extends AppModel {
       //altrimenti solo quelle recenti dell'utente
 	  function getlist($recenti = null)
 	  {
-          $attivita = Cache::read('attivita_list'.$recenti, 'short');
+          $attivita = Cache::read('attivita_list_'.$recenti, 'short');
 		  if (!$attivita) {
             if (!is_null($recenti))
 			{
@@ -240,7 +240,7 @@ class Attivita extends AppModel {
                 $attivita = $this->find('list');
                 //debug($attivita); die;
             }
-			Cache::write('attivita_list', $attivita, 'short');
+			Cache::write('attivita_list_'.$recenti, $attivita, 'short');
 		  }
 
 		  return $attivita;

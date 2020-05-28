@@ -306,12 +306,8 @@ class AttivitaController extends AppController {
 			$a->name = $d['Attivita']['name'];
 			$res[] = $a;
 		}
-		$this->layout = 'js';
-		$this->autoLayout = false;
-        $this->autoRender = false;
-
-		echo json_encode($res);
-		exit();
+        $this->set('res', $res);
+        $this->set('_serialize', 'res');
 	}
 
     //Prendo la lista delle attività in json
@@ -323,15 +319,11 @@ class AttivitaController extends AppController {
 		{
 			$a = new StdClass();
 			$a->value = $key;
-			$a->name = $val;
+			$a->name = utf8_encode($val);
 			$res[] = $a;
-		}
-		$this->layout = 'js';
-		$this->autoLayout = false;
-        $this->autoRender = false;
-
-		echo json_encode($res);
-		exit();
+		}		
+        $this->set('res', $res);
+        $this->set('_serialize', 'res');
     }
 
     //Mostra tutte le fatture di un'attività

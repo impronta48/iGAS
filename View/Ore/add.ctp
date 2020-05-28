@@ -16,7 +16,7 @@ ORE A CONTRATTO: <?= $oreContratto ?>
 	'class' => 'well form-horizontal'
     )); ?>
 
-    <?php echo  $this->Form->hidden('eRisorsa',array('type'=>'text','default' => $eRisorsa)); ?>
+    <?php echo  $this->Form->hidden('eRisorsa',array('default' => $eRisorsa)); ?>
     <?php
     if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)){
         echo $this->Form->input('persona_descr',
@@ -85,7 +85,10 @@ ORE A CONTRATTO: <?= $oreContratto ?>
         <div class="table-responsive">
         <table id="ore-attivita" class="display table table-condensed" cellspacing="1">
             <thead>
-                <?php echo $this->Html->tableHeaders(array('giorno', 'ore', 'Attivita', 'Dettagli', 'LuogoTrasferta','Action'), array('class' => "tablesorter")); ?>
+                <?php echo $this->Html->tableHeaders(
+                    array('giorno', 'ore', 'Attivita', 'Dettagli', 'LuogoTrasferta','Action'), 
+                    array('class' => "tablesorter")
+                ); ?>
             </thead>
             <tbody>
                 <?php $tot = 0; $day = 0;
@@ -127,9 +130,11 @@ ORE A CONTRATTO: <?= $oreContratto ?>
                         $r['Ora']['dettagliAttivita'],
                         $luogoDetail,
                         array(
-                            '<a  class="btn btn-primary btn-xs glow btn-edit-riga" href="'. $this->Html->url('/ore/edit/'. $r['Ora']['id']) . '">Edit</div>'.
-                            $this->Html->link('Del',array('action'=>'delete',$r['Ora']['id']),array('class'=>"btn btn-primary btn-xs glow" )),
-                            array('class'=>'actions'),
+                            '<a  class="btn btn-primary btn-xs glow btn-edit-riga" href="'. 
+                                $this->Html->url('/ore/edit/'. $r['Ora']['id']) . '">Edit</div> '.
+                                $this->Html->link('Del', array('action'=>'delete',$r['Ora']['id']),
+                                    array('class'=>"btn btn-primary btn-xs glow" )),
+                                    array('class'=>'actions'),
                             ),
                         ),
                         array('class' => 'darker')
