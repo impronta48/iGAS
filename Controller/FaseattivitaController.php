@@ -16,7 +16,7 @@ class FaseattivitaController extends AppController
    */
   public $components = array('Paginator', 'UploadFiles');
   public $helpers = array('Cache');
-  //public $cacheAction = "1 day";
+  //gpublic $cacheAction = "1 day";
 
   /**
    * index method
