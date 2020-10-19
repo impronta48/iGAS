@@ -86,7 +86,7 @@ class Faseattivita extends AppModel
       }
     }
 
-    Cache::delete('faseattivita_2level');
+    Cache::clear('long');
     //debug($this->data);
     //die();
   }
@@ -117,6 +117,7 @@ class Faseattivita extends AppModel
 
   public function beforeDelete($cascade = true)
   {
+    Cache::clear('long');
     //debug($this->data);
     //die();
   }

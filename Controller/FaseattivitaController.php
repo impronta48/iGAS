@@ -244,10 +244,10 @@ class FaseattivitaController extends AppController
     $this->layout = 'ajax';
     //$this->request->onlyAllow('ajax');
     $faseattivita = null;
-    //$faseattivita = Cache::read('faseattivita_' . $attivita_id, 'long');
+    $faseattivita = Cache::read('faseattivita_' . $attivita_id, 'long');
     if (!$faseattivita) {
       $faseattivita = $this->Faseattivita->getSimple($attivita_id, 0, 1);
-      //Cache::write('faseattivita_' . $attivita_id, $faseattivita, 'long');
+      Cache::write('faseattivita_' . $attivita_id, $faseattivita, 'long');
     }
     $this->set(compact('faseattivita'));
   }
