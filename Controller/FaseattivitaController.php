@@ -179,6 +179,7 @@ class FaseattivitaController extends AppController
       throw new NotFoundException(__('Invalid faseattivita'));
     }
     $this->request->data['Faseattivita']['attivita_id'] = $aid;
+    Cache::delete('faseattivita_' . $aid, 'long');
     $faQtaVenduto = $this->Faseattivita->read(['attivita_id', 'qta', 'vendutou'])['Faseattivita'];
     //$this->Attivita->id = $aid;
     //$nuovaOffertaAlCliente = $this->Attivita->read('Attivita.OffertaAlCliente')['Attivita']['OffertaAlCliente']-($faQtaVenduto['vendutou']*$faQtaVenduto['qta']); // SPOSTATO NEL MODEL Faseattivita.php
