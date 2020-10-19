@@ -65,6 +65,7 @@ class FaseattivitaController extends AppController
       if ($this->Faseattivita->save($this->request->data)) {
         $this->Session->setFlash('Fase salvata con successo');
         $aid = $this->request->data['Faseattivita']['attivita_id'];
+        Cache::delete('faseattivita_' . $aid, 'long');
         /*
 				// Aggiorno Attivita.OffertaAlCliente addizionando il venduto della fase attività aggiunta.
                 // SPOSTATO NEL MODEL Faseattivita.php
@@ -105,9 +106,12 @@ class FaseattivitaController extends AppController
       throw new NotFoundException(__('Invalid faseattivita'));
     }
     if ($this->request->is('post') || $this->request->is('put')) {
+
       if ($this->Faseattivita->save($this->request->data)) {
+
         $this->Session->setFlash(__('The faseattivita has been saved'));
         $id = $this->request->data['Faseattivita']['attivita_id'];
+        Cache::delete('faseattivita_' . $id, 'long');
         /*
 				// Aggiorno Attivita.OffertaAlCliente addizionando il venduto della fase attività aggiunta.
                 // SPOSTATO NEL MODEL Faseattivita.php
@@ -179,7 +183,7 @@ class FaseattivitaController extends AppController
       throw new NotFoundException(__('Invalid faseattivita'));
     }
     $this->request->data['Faseattivita']['attivita_id'] = $aid;
-    Cache::delete('faseattivita_' . $aid);
+    Cache::delete('faseattivita_' . $aid, 'long');
     $faQtaVenduto = $this->Faseattivita->read(['attivita_id', 'qta', 'vendutou'])['Faseattivita'];
     //$this->Attivita->id = $aid;
     //$nuovaOffertaAlCliente = $this->Attivita->read('Attivita.OffertaAlCliente')['Attivita']['OffertaAlCliente']-($faQtaVenduto['vendutou']*$faQtaVenduto['qta']); // SPOSTATO NEL MODEL Faseattivita.php
