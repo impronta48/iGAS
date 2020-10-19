@@ -1119,7 +1119,7 @@ class OreController extends AppController
     $persone = $this->Ora->find('all', array(
       'conditions' => $conditions,
       'fields' => array('DISTINCT Persona.id', 'Persona.Cognome', 'Persona.Nome'),
-      'order' => ['Persona.Congome']
+      'order' => ['Persona.Cognome']
     ));
 
     $this->set('eRisorsa', $this->Ora->Persona->find('list'));
