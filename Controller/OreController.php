@@ -1118,7 +1118,7 @@ class OreController extends AppController
 
     $persone = $this->Ora->find('all', array(
       'conditions' => $conditions,
-      'fields' => array('DISTINCT Persona.id', 'Persona.Cognome', 'Persona.Nome'),
+      'fields' => ['DISTINCT Persona.id', 'Persona.Cognome', 'Persona.Nome'],
       'order' => ['Persona.Cognome']
     ));
 
