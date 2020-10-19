@@ -86,7 +86,7 @@ class Faseattivita extends AppModel
       }
     }
     $attivita_id = $this->data['Faseattivita']['attivita_id'];
-    Cache::delete('faseattivita_' . $attivita_id, 'long');
+    Cache::delete('faseattivita_' . $attivita_id);
     Cache::delete('faseattivita_2level');
     //debug($this->data);
     //die();
