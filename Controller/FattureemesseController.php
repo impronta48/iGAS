@@ -1,16 +1,13 @@
 <?php
 class FattureemesseController extends AppController
 {
-
   public $name = 'Fattureemesse';
   public $helpers = array('Number');
   public $uses = array('Fatturaemessa', 'Persona', 'Primanota');
   public $components = array('RequestHandler');
 
-  function index($anno = null)
+  public function index($anno = null)
   {
-
-
     $conditions = array();
     if (!empty($this->request->named['attivita'])) {
       $conditions = array('Fatturaemessa.attivita_id' => $this->request->named['attivita']);
@@ -38,7 +35,7 @@ class FattureemesseController extends AppController
     $this->set('title_for_layout', 'Fatture Emesse ' . $anno);
   }
 
-  function scadenziario($anno = null)
+  public function scadenziario($anno = null)
   {
     $this->set('title_for_layout', 'Scadenziario Fatture Emesse ' . $anno);
     $this->Fatturaemessa->recursive = 1;
@@ -73,7 +70,7 @@ class FattureemesseController extends AppController
   //Segna una fattura come soddisfatta
   //In post ho la possibilità di ricevere un anticipo e non il totale
   //Se non passo nulla in post, viene soddisfatta completamente
-  function soddisfa($id)
+  public function soddisfa($id)
   {
     if (!$id) {
       $this->Session->setFlash(__('Invalid fatturaemessa'));
@@ -135,7 +132,7 @@ class FattureemesseController extends AppController
     $this->redirect($this->request->referer());
   }
 
-  function view($id = null)
+  public function view($id = null)
   {
     if (!$id) {
       $this->Session->setFlash(__('Invalid fatturaemessa'));
@@ -311,7 +308,7 @@ class FattureemesseController extends AppController
     $this->redirect($this->referer());
   }
 
-  function fattureincloudelimina($id)
+  public function fattureincloudelimina($id)
   {
     if (!$id) {
       $this->Session->setFlash(__('Parametri non validi per cancellare fattura da FattureInCloud.it'));
@@ -346,7 +343,7 @@ class FattureemesseController extends AppController
     $this->redirect($this->referer());
   }
 
-  function add($attivita_id = NULL)
+  public function add($attivita_id = null)
   {
     $this->set('title_for_layout', 'Fattura Emessa Nuova');
     //Todo: Permettere di scegliere l'attività e non rimandare al mittente
@@ -354,8 +351,11 @@ class FattureemesseController extends AppController
       $this->Session->setFlash(__('Devi associare una fattura ad un\'attività'));
       $this->redirect($this->referer());
     }
-    if (isset($this->request->query['serie'])) $serie = $this->request->query['serie'];
-    else $serie = null;
+    if (isset($this->request->query['serie'])) {
+      $serie = $this->request->query['serie'];
+    } else {
+      $serie = null;
+    }
     $progressivoLibero = $this->Fatturaemessa->progressivoLibero($serie);
     $this->set('progressivolibero', $progressivoLibero);
     $this->set('Serie', $serie);
@@ -364,7 +364,7 @@ class FattureemesseController extends AppController
     $this->render('edit');
   }
 
-  function edit($id = null)
+  public function edit($id = null)
   {
     if (!is_null($id)) {
       $this->set('title_for_layout', 'Modifica Fattura Emessa ' . $id);
@@ -400,7 +400,7 @@ class FattureemesseController extends AppController
     $this->set('codiciiva', $codiciiva);
   }
 
-  function delete($id = null)
+  public function delete($id = null)
   {
     if (!$id) {
       $this->Session->setFlash(__('Invalid id for fatturaemessa'));
@@ -419,7 +419,7 @@ class FattureemesseController extends AppController
   //Mostra la lista delle fatture emesse, normalemente solo quelle insoddisfatte
   //Posso filtrare su una sola attività o vedere anche quelle soddisfatte
   //Restituisce json
-  function lista($attivita_id = null, $insoddisfatte = TRUE)
+  public function lista($attivita_id = null, $insoddisfatte = true)
   {
     $conditions = array();
     if (!empty($attivita_id)) {
@@ -471,7 +471,7 @@ class FattureemesseController extends AppController
     $fe['Fatturaemessa']['AnnoFatturazione'] = date('Y');
     $fe['Fatturaemessa']['Progressivo'] = $this->Fatturaemessa->progressivoLibero('', date('Y'));
     $fe['Fatturaemessa']['data'] = date('Y-m-d');
-    $fe['Fatturaemessa']['id'] = NULL; //Devo svuotare ID se no modifico la fattura vecchia!
+    $fe['Fatturaemessa']['id'] = null; //Devo svuotare ID se no modifico la fattura vecchia!
     $this->Fatturaemessa->save($fe);
     $fattura_id = $this->Fatturaemessa->id;
     $fe['Fatturaemessa']['id'] = $fattura_id;
@@ -479,7 +479,7 @@ class FattureemesseController extends AppController
     //Devo anche cancellare l'id fattura da tutte le righefattura
     for ($i = 0; $i < count($fe['Rigafattura']); $i++) {
       $fe['Rigafattura'][$i]['fattura_id'] = $fattura_id;
-      $fe['Rigafattura'][$i]['id'] = NULL;
+      $fe['Rigafattura'][$i]['id'] = null;
     }
 
     //se contiene un mese metto il successivo (mi fermo a 11 perchè non gestisco lo scavalco d'anno
@@ -505,13 +505,14 @@ class FattureemesseController extends AppController
 
   public function fatturatoperanno()
   {
-
     $fatturato = array();
-
-    $res = $this->Fatturaemessa->find('all', array(
-      'fields' => array('SUM(Fatturaemessa.Soddisfatta) as S', 'Fatturaemessa.AnnoFatturazione'),
-      'group' => ['Fatturaemessa.AnnoFatturazione', 'Fatturaemessa.id']
-    ));
+    $this->Fatturaemessa->recurive = -1;
+    $res = $this->Fatturaemessa->query(
+      "SELECT SUM(Fatturaemessa.Soddisfatta) as S, Fatturaemessa.AnnoFatturazione 
+       FROM fattureemesse AS Fatturaemessa 
+       GROUP BY AnnoFatturazione 
+       ORDER BY AnnoFatturazione DESC"
+    );
 
     foreach ($res as $r) {
       $fatturato[$r['Fatturaemessa']['AnnoFatturazione']] = $r[0]['S'];
@@ -522,7 +523,6 @@ class FattureemesseController extends AppController
 
   public function ultimemodifiche()
   {
-
     $lastmodified = array();
 
     $res = $this->Fatturaemessa->find('all', array(
@@ -532,7 +532,6 @@ class FattureemesseController extends AppController
     ));
 
     foreach ($res as $r) {
-
       $lastmodified[$r['Fatturaemessa']['id']]['Nome'] = $r['Fatturaemessa']['Motivazione'];
       $lastmodified[$r['Fatturaemessa']['id']]['Modifica'] = $r['Fatturaemessa']['modified'];
     }
@@ -544,7 +543,6 @@ class FattureemesseController extends AppController
   //Chiamo il fatturato e poi lo visualizzo con una pivot table
   public function pivot($anno = null)
   {
-
     if (!isset($anno)) {
       $anno = date('Y');
     }
