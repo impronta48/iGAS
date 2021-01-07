@@ -528,6 +528,9 @@ class PersoneController extends AppController
                                         LEFT JOIN attivita as Attivita on  Attivita.id = Ora.eAttivita
                                         WHERE Persona.id = $personaId AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
                                         AND Impiegato.disattivo = 0
+                                        and Impiegato.id =(
+                                             select id from impiegati where persona_id = Persona.id limit 1
+                                          )
                                         ORDER BY Cognome, Attivita.name, data");
     } else {
       //Massimoi 6/9/13 - Non c'è speranza di usare il costruttore di query di cake per una query così!
@@ -538,6 +541,9 @@ class PersoneController extends AppController
                                         LEFT JOIN attivita as Attivita on  Attivita.id = Ora.eAttivita
                                         WHERE Ora.eRisorsa = Persona.id AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
                                         AND Impiegato.disattivo = 0
+                                        and Impiegato.id =(
+                                             select id from impiegati where persona_id = Persona.id limit 1
+                                          )
                                         ORDER BY Cognome, Attivita.name, data");
     }
 
@@ -579,6 +585,9 @@ class PersoneController extends AppController
   {
 
     $persone_list = $this->Persona->Impiegato->attivo();
+    //Devo correggere le ore e trasformare tutte le faseattivita_id == 0 in null
+    $this->Persona->query("UPDATE ore set faseattivita_id=0 where faseattivita_id is NULL");
+
     if ($personaId) {
       $ore = $this->Persona->query("SELECT Persona.id, DisplayName, Ora.data, Ora.numOre, eAttivita, faseattivita_id, Attivita.name, Faseattivita.Descrizione
                                         FROM impiegati as Impiegato
@@ -588,6 +597,9 @@ class PersoneController extends AppController
                                             LEFT JOIN faseattivita as Faseattivita on Ora.faseattivita_id = Faseattivita.id
                                         WHERE Persona.id = $personaId AND MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
                                         AND Impiegato.disattivo = 0
+                                        and Impiegato.id =(
+                                             select id from impiegati where persona_id = Persona.id limit 1
+                                          )
                                         ORDER BY Cognome, data, Attivita.name
                                         ");
     } else {
@@ -601,6 +613,9 @@ class PersoneController extends AppController
                                         LEFT JOIN faseattivita as Faseattivita on Ora.faseattivita_id = Faseattivita.id
                                     WHERE MONTH(Ora.data) = $mese AND YEAR (Ora.data)=$anno
                                     AND Impiegato.disattivo = 0
+                                    and Impiegato.id =(
+                                             select id from impiegati where persona_id = Persona.id limit 1
+                                          )
                                     ORDER BY Cognome, data, Attivita.name
                                     ");
     }
@@ -617,8 +632,8 @@ class PersoneController extends AppController
       $tabore[$riga['Persona']['DisplayName']][$riga['Ora']['eAttivita']]['somma'] = 0;
 
 
-      if ($riga['Ora']['faseattivita_id'] == null)
-        $tabore[$riga['Persona']['DisplayName']][$riga['Ora']['eAttivita']]['fase'][$riga['Ora']['faseattivita_id']]['nome'] = 'Undefinded';
+      if (empty($riga['Ora']['faseattivita_id']))
+        $tabore[$riga['Persona']['DisplayName']][$riga['Ora']['eAttivita']]['fase'][$riga['Ora']['faseattivita_id']]['nome'] = 'Non definita';
       else
         $tabore[$riga['Persona']['DisplayName']][$riga['Ora']['eAttivita']]['fase'][$riga['Ora']['faseattivita_id']]['nome'] =
           ' -' . $riga['Faseattivita']['Descrizione'];
