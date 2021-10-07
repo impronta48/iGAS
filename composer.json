@@ -7,12 +7,6 @@
             "email": "massimoi@impronta48.it"
         }
     ],
-    "repositories": [
-        {
-            "type": "pear",
-            "url": "https://pear.cakephp.org"
-        }
-    ],
     "require": {
         "google/apiclient": "^2.0",
         "cakedc/migrations": "2.4",

@@ -1,0 +1,26 @@
+  <h1>Elenco utenti che possono accedere al sistema</h1>
+  <table  class="tableindex">
+  <tr>
+  <th>User Name</th>
+  <th>Group id</th>
+  <th>Creato</th>
+  <th>Modificato</th>
+  <th>Azioni</th>
+  </tr>
+  <!-- Here is where we loop through our $users array, printing out user info -->
+  <?php foreach ($users as $user): ?>
+  <tr>
+	<td ><?php echo $user['User']['username']; ?></td>
+	<td ><?php echo $user['User']['group_id']; ?></td>
+	<td ><?php echo $user['User']['created']; ?></td>
+	<td ><?php echo $user['User']['modified']; ?></td>
+	<td><?php echo $html->link('Cambia Password', 'cambiapwd'. $user['User']['id'] ); ?> </td>
+  </tr>
+  <?php endforeach; ?>
+  </table>
+  
+ <h2>Comandi</h2>
+ <ul>
+  <li><?php echo $html->link('Ricrea Acl', 'ricreaacl'); ?> </li>
+ </ul>
+ <br/>

@@ -3,8 +3,8 @@
     <i>Stampa del: <?php echo date('d-m-Y  H:m'); ?> </i>
     <div class="row">
         <div class="actions">
-        <?php echo $this->Html->link('PDF', array('ext'=>'pdf', $this->request->pass[0],$this->request->pass[1]),array('class'=>'btn btn-info', 'escape'=>false)); ?>
-        <?php echo $this->Html->link('XLS', array('ext'=>'xls', $this->request->pass[0],$this->request->pass[1]),array('class'=>'btn btn-info', 'escape'=>false)); ?>
+        <?php echo $this->Html->link('PDF', array('ext'=>'pdf', $this->request->pass[0],$this->request->pass[1],$this->request->pass[2]),array('class'=>'btn btn-info', 'escape'=>false)); ?>
+        <?php echo $this->Html->link('XLS', array('ext'=>'xls', $this->request->pass[0],$this->request->pass[1], $this->request->pass[2]),array('class'=>'btn btn-info', 'escape'=>false)); ?>
         </div>
     </div>
         <?php

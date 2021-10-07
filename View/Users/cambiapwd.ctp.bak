@@ -1,0 +1,9 @@
+<h1>Cambio Password</h1>
+<?php echo $form->create('Users', array('controller' => 'user', 'action' => 'cambiapwd')); ?>
+<fieldset>
+<label>Utente:</label> 
+<?php echo $this->data['User']['username']; ?>
+<?php echo $form->input('User.password'); ?>
+<?php echo $form->hidden('User.id'); ?>
+</fieldset>
+<?php echo $form->end('CambiaPassword'); ?>
