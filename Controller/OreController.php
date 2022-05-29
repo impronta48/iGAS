@@ -837,9 +837,13 @@ class OreController extends AppController
   {
     if (!isset($this->request->data['Ora'])) {
       $ids = $this->Session->read('idore');
-      $this->log("ORE: Elenco id da stampare", implode(",",$ids),LOG_DEBUG);
+      $this->log("ORE: Elenco id da stampare", $this->Session->read('idore'),LOG_DEBUG);
     } else {
       $ids = array_keys($this->request->data['Ora']);
+    }
+    $conditions = [];
+    if (!empty($ids)){
+      $conditions = ['Ora.id IN' => $ids];
     }
 
     $righeore = $this->Ora->find('all', array(
@@ -849,7 +853,7 @@ class OreController extends AppController
         'Ora.start', 'Ora.stop', 'Ora.location_start', 'Ora.location_stop', 'Attivita.name',
         'Persona.DisplayName', 'Attivita.cliente_id'
       ),
-      'conditions' => array('Ora.id IN' => $ids),
+      'conditions' => $conditions,
       'order' => array('Ora.data'),
     ));
     $this->set('ore', $righeore);
