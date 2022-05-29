@@ -837,7 +837,7 @@ class OreController extends AppController
   {
     if (!isset($this->request->data['Ora'])) {
       $ids = $this->Session->read('idore');
-      $this->log("ORE: Elenco id da stampare", $this->Session->read('idore'),LOG_DEBUG);
+      $this->log("ORE: Elenco id da stampare", $this->Session->read('idore'));
     } else {
       $ids = array_keys($this->request->data['Ora']);
     }
