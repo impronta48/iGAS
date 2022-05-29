@@ -844,6 +844,9 @@ class OreController extends AppController
     $conditions = [];
     if (!empty($ids)){
       $conditions = ['Ora.id IN' => $ids];
+    } else {
+      $this->Flash->error("Nessuna ora da visualizzare in nota spese");
+      throw new Exception("Nessuna ora da visualizzare in nota spese", 1);
     }
 
     $righeore = $this->Ora->find('all', array(
