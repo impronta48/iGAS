@@ -534,23 +534,23 @@ class AttivitaController extends AppController
     $conditionsNs = array();
     $tit = '';
 
-    if (!empty($this->request->named['nomeattivita'])) {
-      $conditions['Attivita.name LIKE'] = '%' . $this->request->named['nomeattivita'] . '%';
-      $tit = "attività che contengono: " . $this->request->named['nomeattivita'];
+    if (!empty($this->request->query['nomeattivita'])) {
+      $conditions['Attivita.name LIKE'] = '%' . $this->request->query['nomeattivita'] . '%';
+      $tit = "attività che contengono: " . $this->request->query['nomeattivita'];
     }
 
-    if (!empty($this->request->named['progetto'])) {
-      $conditions['Attivita.progetto_id'] = $this->request->named['progetto'];
-      $p = $this->Attivita->Progetto->findById($this->request->named['progetto']);
+    if (!empty($this->request->query['progetto'])) {
+      $conditions['Attivita.progetto_id'] = $this->request->query['progetto'];
+      $p = $this->Attivita->Progetto->findById($this->request->query['progetto']);
       $tit = $p['Progetto']['name'];
     }
 
-    if (!empty($this->request->named['area'])) {
-      $conditions['Attivita.area_id'] = $this->request->named['area'];
+    if (!empty($this->request->query['area'])) {
+      $conditions['Attivita.area_id'] = $this->request->query['area'];
     }
 
-    if (!empty($this->request->named['anno'])) {
-      $conditions['YEAR(Attivita.DataInizio)'] = $this->request->named['anno'];
+    if (!empty($this->request->query['anno'])) {
+      $conditions['YEAR(Attivita.DataInizio)'] = $this->request->query['anno'];
     }
 
     $this->set('title_for_layout', 'Avanzamento Generale');
@@ -648,8 +648,8 @@ class AttivitaController extends AppController
       $aree[$t['Area']['id']] = $t['Area']['name'];
     }
     //Se c'è l'area, l'aggiungo al titolo
-    if (!empty($this->request->named['area'])) {
-      $tit .= 'Area: ' .  $aree[$this->request->named['area']];
+    if (!empty($this->request->query['area'])) {
+      $tit .= 'Area: ' .  $aree[$this->request->query['area']];
     }
 
     $this->set(compact('a', 'pnu', 'pne', 'fentrate', 'fuscite', 'ns', 'ore', 'aree', 'tit', 'docric'));
