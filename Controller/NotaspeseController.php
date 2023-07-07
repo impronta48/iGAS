@@ -198,8 +198,7 @@ class NotaspeseController extends AppController {
         }
         if (isset($this->request->params['named']['giorno']))
         {
-            $giorno= $this->request->params['named']['giorno'];
-            $conditions['DAY(Notaspesa.data)'] = $giorno;
+            $giorno= $this->request->params['named']['giorno'];      
         }
         if (isset($this->request->params['named']['attivita']))
         {
