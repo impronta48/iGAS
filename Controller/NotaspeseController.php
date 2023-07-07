@@ -261,7 +261,7 @@ class NotaspeseController extends AppController {
                 $destinazione = $this->data['Notaspesa']['destinazione'];
 
                 //Se la nota spese non è di tipo viaggio, tolgo l'origine
-                if ($this->data['Notaspesa']['eCatSpesa'] !== 1) //Spostamento {
+                if ($this->data['Notaspesa']['eCatSpesa'] !== 1) { //Spostamento 
                     $this->data['Notaspesa']['origine'] = null;
                     $this->data['Notaspesa']['destinazione'] = null;
                 }
