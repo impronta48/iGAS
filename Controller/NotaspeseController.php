@@ -276,13 +276,13 @@ class NotaspeseController extends AppController {
 					$id = $this->Notaspesa->getLastInsertID();
 				}
 				// Qua gestisco l'upload del documento su filesystem
-				$uploaded_file=$this->request->data['Notaspesa']['uploadFile'];
-				$uploadError=$this->UploadFiles->upload($id,$uploaded_file,strtolower($this->request->controller));
-				if(strlen($uploadError)>0){
-					$this->Flash->error(__($uploadError));
-				} else {
+				// $uploaded_file=$this->request->data['Notaspesa']['uploadFile'];
+				// $uploadError=$this->UploadFiles->upload($id,$uploaded_file,strtolower($this->request->controller));
+				//if(strlen($uploadError)>0){
+				//	$this->Flash->error(__($uploadError));
+				//} else {
 					//$this->setUploadToDrive($id);
-				}
+				//}
 
                 //A seconda del submit premuto vado nella direzione opportuna
                 if (isset($this->request->data['submit-ore'] ))
