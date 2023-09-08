@@ -1,6 +1,8 @@
 <?php
 class Impiegato extends AppModel {
 	
+    public $actsAs = ['Containable'];
+
 	var $belongsTo = array(
 		'Persona' => array(
             'className' => 'Persona',

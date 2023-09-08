@@ -320,7 +320,20 @@ class NotaspeseController extends AppController {
             }
             else
             {
-                $this->set('eRisorse', $this->Notaspesa->Persona->find('list',array('cache' => 'persona', 'CacheConfig' => 'short')));
+                //Devo usare questa versione ottimizzata altrimenti va in out of memory
+                $this->loadModel('Impiegato');
+                $erisorse = $this->Impiegato->find('list', [
+                    'cache' => 'persona', 
+                    'CacheConfig' => 'short',
+                    'fields' => ['Persona.id', 'Persona.DisplayName'],
+                    'contain' => [
+                        'Persona' => ['fields' => 'DisplayName'],
+                    ],
+                    'recursive' => -1,
+                    'order' => ['Persona.DisplayName'],
+                ]);
+                
+                $this->set('eRisorse', $erisorse);
             }
 
             $this->set('legenda_mezzi', $this->Notaspesa->LegendaMezzi->find('all',array('cache' => 'legendamezzi', 'cacheConfig' => 'long')));
@@ -1047,4 +1060,3 @@ class NotaspeseController extends AppController {
         $this->Session->setFlash('Le notespese selezionate sono considerate rimborsate');
     }
 }
-?>
