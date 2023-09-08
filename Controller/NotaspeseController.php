@@ -418,11 +418,24 @@ class NotaspeseController extends AppController {
             }
 
         }
+        $this->loadModel('Impiegato');
+        $erisorse = $this->Impiegato->find('list', [
+            'cache' => 'persona',
+            'CacheConfig' => 'short',
+            'fields' => ['Persona.id', 'Persona.DisplayName'],
+            'contain' => [
+                'Persona' => ['fields' => 'DisplayName'],
+            ],
+            'recursive' => -1,
+            'order' => ['Persona.DisplayName'],
+        ]);
+
+        $this->set('eRisorse', $erisorse);
+
 		$this->data = $this->Notaspesa->findById($id);
         $this->set('id', $id);
         $this->set('eAttivita', $this->Notaspesa->Attivita->getlist());
         $this->set('eRisorsa', $this->data['Notaspesa']['eRisorsa']);
-		$this->set('eRisorse', $this->Notaspesa->Persona->find('list',array('cache' => 'persona', 'cacheConfig' => 'short')));
 		$this->set('legenda_mezzi', $this->Notaspesa->LegendaMezzi->find('all',array('cache' => 'legendamezzi', 'cacheConfig' => 'short')));
 		$this->set('eCatSpesa', $this->Notaspesa->LegendaCatSpesa->find('list',array('cache' => 'legendacatspesa_notnull', 'cacheConfig' => 'short')));
         $this->set('eProvSoldi', $this->Notaspesa->Provenienzasoldi->find('list',array()));

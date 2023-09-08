@@ -309,16 +309,6 @@
                           '<li>'.$scontrinoToDrive.'</li>'.
                           '</ul>'.
                           '</div>',
-                          /*                  
-                          array(                            
-                            //'<div class="btn btn-primary btn-xs glow btn-edit-riga" id="'. $r['Notaspesa']['id'] . '">Edit</div>'.
-                            $this->Html->Link(__('Edit'),array('action'=>'edit',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga")).                        
-                            $this->Html->Link(__('Del'),array('action'=>'delete',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-del-riga"), sprintf('Sicuro di voler cancellare la nota # %s?', $r['Notaspesa']['id'])).
-                            $this->Html->Link(__('Duplicate'),array('action'=>'duplicate',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga-riga" )).    
-							$linkScontrino.
-							$scontrinoToDrive,
-                            array('class'=>'actions hidden-print')),
-                            */                            
                           ),
                     array('class' => 'darker'));
                     $tot +=  $r['Notaspesa']['importo'];                                        
