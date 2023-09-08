@@ -292,7 +292,7 @@ class NotaspeseController extends AppController {
                         error_log("\n\n\n#######################################################\n",3,$this->GoogleDrive::DEBUGFILE);
                         error_log("INIZIO UPLOAD SU DRIVE CHIAMANDO setUploadToDrive()\n",3,$this->GoogleDrive::DEBUGFILE);
                     }
-                    $this->setUploadToDrive($id,array('controller' => 'ore',  'action' => 'add','?'=>['persona'=>$persona,'attivita'=>$attivita,'anno'=>$anno,'mese'=>$mese,'giorno'=>$giorno]));
+                    //$this->setUploadToDrive($id,array('controller' => 'ore',  'action' => 'add','?'=>['persona'=>$persona,'attivita'=>$attivita,'anno'=>$anno,'mese'=>$mese,'giorno'=>$giorno]));
                 }
                 else
                 {
@@ -301,7 +301,7 @@ class NotaspeseController extends AppController {
                         error_log("\n\n\n#######################################################\n",3,$this->GoogleDrive::DEBUGFILE);
                         error_log("INIZIO UPLOAD SU DRIVE CHIAMANDO setUploadToDrive()\n",3,$this->GoogleDrive::DEBUGFILE);
                     }
-                    $this->setUploadToDrive($id,array('action' => 'add', '?'=>['persona'=>$persona,'attivita'=>$attivita,'anno'=>$anno,'mese'=>$mese,'giorno'=>$giorno,'dest'=>$destinazione]));
+                    //$this->setUploadToDrive($id,array('action' => 'add', '?'=>['persona'=>$persona,'attivita'=>$attivita,'anno'=>$anno,'mese'=>$mese,'giorno'=>$giorno,'dest'=>$destinazione]));
                     //$this->redirect(array('action' => 'add', 'persona'=>$persona,'anno'=>$anno,'mese'=>$mese));
                 }
 
