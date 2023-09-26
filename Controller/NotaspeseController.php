@@ -394,6 +394,7 @@ class NotaspeseController extends AppController
                     $this->Flash->error(__($uploadError));
                 }
                 */
+                $this->redirect(['action' => 'add', '?' => ['persona' => $this->request->data['Notaspesa']['eRisorsa'], 'anno' => $this->request->data['Notaspesa']['data']['year'], 'mese' => $this->request->data['Notaspesa']['data']['month']]]);
             } else {
                 $this->Session->setFlash('Impossibile salvare questa notaspese.');
                 debug($this->Notaspesa->validationErrors);
