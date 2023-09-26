@@ -1,4 +1,4 @@
-<?php echo $this->Html->script('//maps.google.com/maps/api/js?key=' . Configure::read('google.key') ,false);?>
+<?php echo $this->Html->script('//maps.google.com/maps/api/js?key=' . Configure::read('google.key') . '&callback=Function.prototype' ,false);?>
 <?php echo $this->Html->script('googleMaps/jquery.ui.map',false);?>		
 <?php echo $this->Html->script('googleMaps/jquery.ui.map.services',false);?>		
 <?php echo $this->Html->script('trasferte.js',false);?> 
@@ -345,8 +345,8 @@
 <?php $this->Html->scriptStart(array('inline' => false)); ?>
         $("#non-euro-zone").hide();        
         $("#co2-calc").hide();        
-        mostraViaggio();        
-        $( "#NotaspesaECatSpesa").change(function(e) {mostraViaggio();});
+        mostraPercorso();        
+        $( "#NotaspesaECatSpesa").change(function(e) {mostraPercorso();});
         $( "#NotaspesaRitorno").change(function(e) {mostraPercorso();});
         $( "#NotaspesaImportoVal").change(function(e) {convertiValuta();});
         $( "#NotaspesaTasso").change(function(e) {convertiValuta();});

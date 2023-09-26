@@ -15,7 +15,7 @@ Configure::write('iGas.IvaDefault', '6');  //Valore dell'IVA di default nelle ri
 Configure::write('iGas.Footer', "  ");
 Configure::write('iGas.theme', 'Yepp');
 Configure::write('iGas.progettiSpeciali', array('Ferie', 'Malattia', 'Permesso', 'Permesso 104', 'Festività'));
-Configure::write('google_key',  'YOUR KEY' );
+Configure::write('google.key',  'YOUR KEY' );
 
 /**
  * A random string used in security hashing methods.
