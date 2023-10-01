@@ -896,6 +896,7 @@ class NotaspeseController extends AppController
     //Genera la notaspese in un formato adatto alla stampa
     public function stampa()
     {
+        debug(CakeSession::read('idnotaspese'));
         if (!isset($this->request->data['Notaspesa'])) {
             $ids = $this->Session->read('idnotaspese');
         } else {
@@ -905,7 +906,7 @@ class NotaspeseController extends AppController
             $this->Session->setFlash(__('Nessuna nota spese selezionata'));
             $this->redirect($this->referer());
         }
-        
+
         $righens = $this->Notaspesa->find('all', array(
             'conditions' => array('Notaspesa.id IN' => $ids),
             'order' => array('Notaspesa.data'),
@@ -921,8 +922,7 @@ class NotaspeseController extends AppController
         $cliente = $this->Notaspesa->Persona->findById($cliente_id);
 
         $this->set('cliente', $cliente['Persona']);
-
-        $this->Session->write('idnotaspese', $ids);
+        CakeSession::write('idnotaspese', $ids);
         $this->set('legenda_mezzi', $this->Notaspesa->LegendaMezzi->find('all', array('cache' => 'legendamezzi', 'cacheConfig' => 'long')));
         $this->set('name', Configure::read('iGas.NomeAzienda') . "-NotaSpese");
     }
