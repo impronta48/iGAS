@@ -11,36 +11,36 @@
 <div class="ore form">
 <h2>Statistiche utilizzo cespiti</h2>
 
-<?php echo $this->Form->create('Cespite', array('id' => 'stats-form','type' => 'get',
-	'inputDefaults' => array(
+<?php echo $this->Form->create('Cespite', ['id' => 'stats-form','type' => 'get',
+	'inputDefaults' => [
 		'div' => 'form-group',
-		'label' => array(
+		'label' => [
 			'class' => 'col col-md-3 control-label'
-		),
+		],
 		'wrapInput' => 'col col-md-9',
 		'class' => 'form-control'
-	),
+	],
 	'class' => 'well form-horizontal row'
-    )); ?>
+    ]); ?>
 
-    <?php echo $this->Form->input('cespite_id', array('label'=>'Cespite', 'multiple'=>true,'class'=>'chosen-select'. $baseformclass, 'options'=>$cespiti_list, 'value'=>$c, 'data-placeholder'=>'Filtra per nome cespite')); ?>
-    <?php echo $this->Form->input('attivita', array('label'=>'Attività', 'multiple'=>true,'class'=>'chosen-select'. $baseformclass, 'options'=>$attivita_list, 'value'=>$a, 'data-placeholder'=>'Filtra per Attività')); ?>
-    <?php echo $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'multiple'=>true, 'options'=>$faseattivita,
+    <?php echo $this->Form->input('cespite_id', ['label'=>'Cespite', 'multiple'=>true,'class'=>'chosen-select'. $baseformclass, 'options'=>$cespiti_list, 'value'=>$c, 'data-placeholder'=>'Filtra per nome cespite']); ?>
+    <?php echo $this->Form->input('attivita', ['label'=>'Attività', 'multiple'=>true,'class'=>'chosen-select'. $baseformclass, 'options'=>$attivita_list, 'value'=>$a, 'data-placeholder'=>'Filtra per Attività']); ?>
+    <?php echo $this->Form->input('faseattivita_id', ['label'=>'Fase Attività', 'multiple'=>true, 'options'=>$faseattivita,
                                     'class'=>'fase chosen-select' . $baseformclass, 'value'=>$fa,
                                     'data-placeholder'=>'Filtra per Fasi Attività'
-                                )); ?> 
+                                ]); ?> 
 
     <?php //echo $this->Form->input('persone', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p)); ?>
     
-    <?php echo $this->Form->input('from', array('label' => 'Data inizio maggiore di', 'id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>($f?$f:null),
+    <?php echo $this->Form->input('from', ['label' => 'Data inizio maggiore di', 'id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>($f?$f:null),
                                         'default'=>date('Y-m-d', strtotime('first day of last month')),
                                         'class' => 'input-sm'. $baseformclass,
-                                        'data-toggle'=>'tooltip', 'data-placement'=>'top', 'title'=>'Mostra solo gli eventi che hanno data di inizio maggiore')); ?>
-    <?php echo $this->Form->input('to', array('label' => 'Data inizio minore di', 'id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>($t?$t:null),
+                                        'data-toggle'=>'tooltip', 'data-placement'=>'top', 'title'=>'Mostra solo gli eventi che hanno data di inizio maggiore']); ?>
+    <?php echo $this->Form->input('to', ['label' => 'Data inizio minore di', 'id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>($t?$t:null),
                                         'default'=>date('Y-m-d'),
-                                        'class' => 'input-sm'. $baseformclass)); ?>
+                                        'class' => 'input-sm'. $baseformclass]); ?>
 
-    <?php echo $this->Form->submit(__('Filtra i Risultati'), array('class'=>'col-md-offset-2 btn btn-primary')); ?>
+    <?php echo $this->Form->submit(__('Filtra i Risultati'), ['class'=>'col-md-offset-2 btn btn-primary']); ?>
     <?php echo $this->Form->end(); ?>
 
     <?php if(isset($searchResult)):?>
@@ -49,7 +49,7 @@
     <ul>
     <?php foreach ($finalReport as $cespiteId => $cespiteReport): ?>
         <li>
-        <?php echo $this->Html->link($cespiteReport['nomeCespite'], array('controller'=>'cespiti','action'=>'edit', $cespiteId)); ?>
+        <?php echo $this->Html->link($cespiteReport['nomeCespite'], ['controller'=>'cespiti','action'=>'edit', $cespiteId]); ?>
         usato in 
         <?php echo $cespiteReport['numeroEventi']; ?>
         eventi per un totale affitto di 
@@ -99,15 +99,15 @@
     <?php //debug($searchResult); ?>
     <?php endif; ?>
 
-    <?php echo $this->Html->link(__('Visualizza Calendario'), array('controller'=>'cespiti','action'=>'calendar'), array('class'=>'btn btn-primary')); ?>
+    <?php echo $this->Html->link(__('Visualizza Calendario'), ['controller'=>'cespiti','action'=>'calendar'], ['class'=>'btn btn-primary']); ?>
 
-    <?php echo $this->Html->link(__('Visualizza Lista Eventi'), array('controller'=>'cespiti','action'=>'eventlist'), array('class'=>'btn btn-primary')); ?>
+    <?php echo $this->Html->link(__('Visualizza Lista Eventi'), ['controller'=>'cespiti','action'=>'eventlist'], ['class'=>'btn btn-primary']); ?>
 
-    <?php echo $this->Html->link(__('Visualizza Lista Cespiti'), array('controller'=>'cespiti','action'=>'index'), array('class'=>'btn btn-primary')); ?>
+    <?php echo $this->Html->link(__('Visualizza Lista Cespiti'), ['controller'=>'cespiti','action'=>'index'], ['class'=>'btn btn-primary']); ?>
 
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
         $(document).ready(function() {
 
             var dataTablePagination = true;

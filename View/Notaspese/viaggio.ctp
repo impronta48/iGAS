@@ -4,8 +4,8 @@
 	<?php echo $this->Html->css('add-trasf-generico'); ?>
 
 	<h1>Modulo per gestione delle trasferte</h1>
-	<?php echo $this->Form->create('Trasferta', array('action'=>'add')) ?>
-	<?php echo $this->Form->input('trasferta_id', array('type'=>'hidden')) ?>
+	<?php echo $this->Form->create('Trasferta', ['action'=>'add']) ?>
+	<?php echo $this->Form->input('trasferta_id', ['type'=>'hidden']) ?>
 	<label for="TrasfertaPartenza">Origine Trasferta <input type="textbox" width="30" value="Asti" name="data[Trasferta][partenza]"  id="TrasfertaPartenza" />
 	<br/><small>Es: Torino o Villanova AT</small>
 	</label>

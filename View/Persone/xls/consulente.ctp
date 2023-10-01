@@ -1,34 +1,34 @@
 <?php
 $this->PhpSpreadsheet->createWorksheet();
-$styleArray = array(
-    'borders' => array(
-        'allBorders' => array(
+$styleArray = [
+    'borders' => [
+        'allBorders' => [
             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_HAIR,//BORDER_THICK
-        )
-    )
-);
+        ]
+    ]
+];
 
 foreach($ore as $pkey => $persona) {
     $this->PhpSpreadsheet->addSheet($pkey);        
-    $table = array();
-    $somma = array();
+    $table = [];
+    $somma = [];
 
-    $table[] = array('label' => '');
-    $table[] = array('label' => 'Giorno');
+    $table[] = ['label' => ''];
+    $table[] = ['label' => 'Giorno'];
     $somma[] = '';
     $somma[] = 'Totale';
 
     foreach ($persona as $nome => $attivita) {
-        $table[] = array('label' => $nome);
+        $table[] = ['label' => $nome];
         $somma[$nome] = 0;            
     }
-    $this->PhpSpreadsheet->addTableRow(array('', $pkey), true);
-    $this->PhpSpreadsheet->addTableHeader($table, array('name' => 'Cambria', 'bold' => true));
+    $this->PhpSpreadsheet->addTableRow(['', $pkey], true);
+    $this->PhpSpreadsheet->addTableHeader($table, ['name' => 'Cambria', 'bold' => true]);
             $this->PhpSpreadsheet->getActiveSheet()->getStyle("A1")->getFont()->setSize(14)->setBold(true);								
 
     for($i = 1; $i <= $days; $i++) {
 
-        $row = array();
+        $row = [];
         $row[] = "";
         $row[] = $i;
         

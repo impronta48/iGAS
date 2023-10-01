@@ -29,8 +29,8 @@ class LegendaCodiciIva extends AppModel {
  *
  * @var array
  */
-	public $hasMany = array(
-		'Faseattivita' => array(
+	public $hasMany = [
+		'Faseattivita' => [
 			'className' => 'Faseattivita',
 			'foreignKey' => 'legenda_codici_iva_id',
 			'dependent' => false,
@@ -42,7 +42,7 @@ class LegendaCodiciIva extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		)
-	);
+		]
+	];
 
 }

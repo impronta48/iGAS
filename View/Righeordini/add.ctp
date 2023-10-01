@@ -15,8 +15,8 @@
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 
-		<li><?php echo $this->Html->link(__('List Righeordini'), array('action' => 'index')); ?></li>
-		<li><?php echo $this->Html->link(__('List Ordini'), array('controller' => 'ordini', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Ordine'), array('controller' => 'ordini', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Righeordini'), ['action' => 'index']); ?></li>
+		<li><?php echo $this->Html->link(__('List Ordini'), ['controller' => 'ordini', 'action' => 'index']); ?> </li>
+		<li><?php echo $this->Html->link(__('New Ordine'), ['controller' => 'ordini', 'action' => 'add']); ?> </li>
 	</ul>
 </div>

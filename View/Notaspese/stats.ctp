@@ -49,31 +49,31 @@
 <div class="ore form">
 <h2>Statistiche nota spese</h2>
 
-<?php echo $this->Form->create('Notaspesa', array('id' => 'stats-form','type' => 'get',
-	'inputDefaults' => array(
+<?php echo $this->Form->create('Notaspesa', ['id' => 'stats-form','type' => 'get',
+	'inputDefaults' => [
 		'div' => 'form-group',
-		'label' => array(
+		'label' => [
 			'class' => 'col col-md-3 control-label'
-		),
+		],
 		'wrapInput' => 'col col-md-9',
 		'class' => 'form-control'
-	),
+	],
 	'class' => 'well form-horizontal row'
-    )); ?>
+    ]); ?>
 
 
-     <?php echo $this->Form->input('attivita', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$attivita_list, 'value'=>$a)); ?>
-    <?php echo $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'multiple'=>true, 'options'=>$faseattivita,
+     <?php echo $this->Form->input('attivita', ['multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$attivita_list, 'value'=>$a]); ?>
+    <?php echo $this->Form->input('faseattivita_id', ['label'=>'Fase Attività', 'multiple'=>true, 'options'=>$faseattivita,
                                     'class'=>'fase chosen-select' . $baseformclass, 'value'=>$fa
-                                )); ?> 
+                                ]); ?> 
 
-    <?php echo $this->Form->input('persone', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p)); ?>
+    <?php echo $this->Form->input('persone', ['multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p]); ?>
     
-    <?php echo $this->Form->input('from', array('id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>($f?$f:null), 'class'=> 'datepicker form-control',
-                                        'default'=>date('Y-m-d', strtotime('first day of last month')))); ?>
-    <?php echo $this->Form->input('to', array('id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$t, 'class'=> 'datepicker form-control',)); ?>
+    <?php echo $this->Form->input('from', ['id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>($f?$f:null), 'class'=> 'datepicker form-control',
+                                        'default'=>date('Y-m-d', strtotime('first day of last month'))]); ?>
+    <?php echo $this->Form->input('to', ['id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$t, 'class'=> 'datepicker form-control',]); ?>
 
-    <?php echo $this->Form->submit(__('Filtra i Risultati'), array('class'=>'col-md-offset-2')); ?>
+    <?php echo $this->Form->submit(__('Filtra i Risultati'), ['class'=>'col-md-offset-2']); ?>
     <?php echo $this->Form->end(); ?>
 
 
@@ -81,7 +81,7 @@
 
 	<h3>Importo Totale</h3>
 	<?php echo $this->Number->currency($result1[0][0]['importo'],'EUR');?>
-    <?php echo $this->Html->link('Dettaglio',array('action'=>'detail', '?'=>$this->request->query ),array('class'=>'btn btn-xs btn-primary')); ?>
+    <?php echo $this->Html->link('Dettaglio',['action'=>'detail', '?'=>$this->request->query ],['class'=>'btn btn-xs btn-primary']); ?>
 
 	<br><br>
 
@@ -108,7 +108,7 @@
             $q['attivita'] =$r['Notaspesa']['eAttivita'];
             ?>
             <td width="60%">
-                <?php echo $this->Html->link($r['Attivita']['name'],array('action'=>'detail', '?'=>$q));?>
+                <?php echo $this->Html->link($r['Attivita']['name'],['action'=>'detail', '?'=>$q]);?>
             </td>
             <td><?php echo $this->Number->currency($r[0]['importo'],'EUR');?></td>
         </tr>
@@ -141,7 +141,7 @@
             ?>
 
             <td width="60%">
-                <?php echo $this->Html->link($r['Persona']['DisplayName'],array('action'=>'detail', '?'=>$q));?>
+                <?php echo $this->Html->link($r['Persona']['DisplayName'],['action'=>'detail', '?'=>$q]);?>
             </td>
             <td><?php echo $this->Number->currency($r[0]['importo'],'EUR');?></td>
         </tr>
@@ -174,7 +174,7 @@
                 $q['persone'] =$r['Notaspesa']['eRisorsa'];
                 $q['attivita'] =$r['Notaspesa']['eAttivita'];                
             ?>
-            <td width="30%"><?php echo $this->Html->link($r['Attivita']['name'],array('action'=>'detail', '?'=>$q)) ;?></td>
+            <td width="30%"><?php echo $this->Html->link($r['Attivita']['name'],['action'=>'detail', '?'=>$q]) ;?></td>
             <td><?php echo $this->Number->currency($r[0]['importo'],'EUR');?></td></tr>
 	<?php endforeach;?>
 	</table>

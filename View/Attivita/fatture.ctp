@@ -1,5 +1,5 @@
 <?php $id = $this->request->params['pass'][0];
-      echo $this->element('secondary_attivita', array('aid'=>$id)); 
+      echo $this->element('secondary_attivita', ['aid'=>$id]); 
 ?>
 <?php $this->Html->addCrumb("Attività", "/attivita/"); ?>
 <?php $this->Html->addCrumb("Attività [$id]", "/attivita/edit/$id"); ?>
@@ -10,14 +10,14 @@
 <?php if (empty($fatture)):?>
 		Nessuna fattura emessa per questa attività
 		<div class="actions">
-			<a class="btn btn-primary btn-animate-demo" href="<?php echo $this->Html->url(array('controller'=>'fattureemesse', 'action'=>'add', $aid)) ?>">Nuova Fattura</a>
-			<a class="btn btn-primary btn-animate-demo" href="<?php echo $this->Html->url(array('controller'=>'fattureemesse', 'action'=>'add', $aid, '?' => array('serie' => 'pa'))) ?>">Nuova Fattura PA</a>
+			<a class="btn btn-primary btn-animate-demo" href="<?php echo $this->Html->url(['controller'=>'fattureemesse', 'action'=>'add', $aid]) ?>">Nuova Fattura</a>
+			<a class="btn btn-primary btn-animate-demo" href="<?php echo $this->Html->url(['controller'=>'fattureemesse', 'action'=>'add', $aid, '?' => ['serie' => 'pa']]) ?>">Nuova Fattura PA</a>
         </div>
 <?php else:?>
     
 	<div class="actions">
-        <a class="btn btn-primary btn-animate-demo" href="<?php echo $this->Html->url(array('controller'=>'fattureemesse', 'action'=>'add', $aid)) ?>">Nuova Fattura</a>
-		<a class="btn btn-primary btn-animate-demo" href="<?php echo $this->Html->url(array('controller'=>'fattureemesse', 'action'=>'add', $aid, '?' => array('serie' => 'pa'))) ?>">Nuova Fattura PA</a>
+        <a class="btn btn-primary btn-animate-demo" href="<?php echo $this->Html->url(['controller'=>'fattureemesse', 'action'=>'add', $aid]) ?>">Nuova Fattura</a>
+		<a class="btn btn-primary btn-animate-demo" href="<?php echo $this->Html->url(['controller'=>'fattureemesse', 'action'=>'add', $aid, '?' => ['serie' => 'pa']]) ?>">Nuova Fattura PA</a>
     </div>
 
    <div class="table-responsive">
@@ -57,7 +57,7 @@
 				echo $this->Html->link(
                     $progressivo,
                     //array( 'controller' => 'fattureemesse','action' => 'stampa', $f['Fatturaemessa']['id'] )
-                    array( 'controller' => 'fattureemesse','action' => 'edit', $f['Fatturaemessa']['id'] )
+                    [ 'controller' => 'fattureemesse','action' => 'edit', $f['Fatturaemessa']['id'] ]
                     );        
             ?>
             </td>    
@@ -66,7 +66,7 @@
             <td><?php echo $this->Number->currency(sommarighe($f),'EUR'); ?></td>            
             <td class="actions">
              <div class="btn-group settings">                 
-                 <?php $u = $this->Html->url(array('controller' => 'fattureemesse', 'action' => 'view', $f['Fatturaemessa']['id']));?>
+                 <?php $u = $this->Html->url(['controller' => 'fattureemesse', 'action' => 'view', $f['Fatturaemessa']['id']]);?>
                  <button class="btn btn-primary btn-xs glow" onclick="location.href='<?php echo $u ?>';">
                      <i class="fa fa-print"></i>                    
                  </button>
@@ -78,24 +78,24 @@
                  </button>
                  <ul class="dropdown-menu" role="menu">
                   <li>
-                    <?php echo $this->Html->link(__('Invia a Cloud'), array('action' => 'fattureincloud', $f['Fatturaemessa']['id'])); ?>
+                    <?php echo $this->Html->link(__('Invia a Cloud'), ['action' => 'fattureincloud', $f['Fatturaemessa']['id']]); ?>
                   </li>
                   <?php if($f['Fatturaemessa']['IdFattureInCloud']){ ?>
                   <li>
-                    <?php echo $this->Html->link(__('Elimina da Cloud'), array('action' => 'fattureincloudelimina', $f['Fatturaemessa']['id'])); ?>
+                    <?php echo $this->Html->link(__('Elimina da Cloud'), ['action' => 'fattureincloudelimina', $f['Fatturaemessa']['id']]); ?>
                   </li>
                   <?php } ?>
                   <li >
-                    <?php echo $this->Html->link(__('Print'),array('controller' => 'fattureemesse', 'action' => 'view', $f['Fatturaemessa']['id'])); ?>
+                    <?php echo $this->Html->link(__('Print'),['controller' => 'fattureemesse', 'action' => 'view', $f['Fatturaemessa']['id']]); ?>
                   </li>
                   <li>
-                    <?php echo $this->Html->link(__('Edit'), array('controller' => 'fattureemesse', 'action' => 'edit',  $f['Fatturaemessa']['id'])); ?>
+                    <?php echo $this->Html->link(__('Edit'), ['controller' => 'fattureemesse', 'action' => 'edit',  $f['Fatturaemessa']['id']]); ?>
                   </li>
                   <li>
-                    <?php echo $this->Html->link(__('Duplica'), array('controller' => 'fattureemesse', 'action' => 'dup',  $f['Fatturaemessa']['id'])); ?>
+                    <?php echo $this->Html->link(__('Duplica'), ['controller' => 'fattureemesse', 'action' => 'dup',  $f['Fatturaemessa']['id']]); ?>
                   </li> 
                   <li >
-                    <?php echo $this->Html->link(__('Delete'), array('controller' => 'fattureemesse', 'action' => 'delete',  $f['Fatturaemessa']['id']), null, sprintf(__('Are you sure you want to delete # %s?'),  $f['Fatturaemessa']['id'])); ?>
+                    <?php echo $this->Html->link(__('Delete'), ['controller' => 'fattureemesse', 'action' => 'delete',  $f['Fatturaemessa']['id']], null, sprintf(__('Are you sure you want to delete # %s?'),  $f['Fatturaemessa']['id'])); ?>
                   </li>                  
                 </ul>
               </div>

@@ -20,10 +20,10 @@
 		<td><?php echo h($ordine['Ordine']['id']); ?>&nbsp;</td>
 		<td><?php echo h($ordine['Ordine']['dataOrdine']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($ordine['Fornitore']['DisplayName'], array('controller' => 'persone', 'action' => 'edit', $ordine['Fornitore']['id'])); ?>
+			<?php echo $this->Html->link($ordine['Fornitore']['DisplayName'], ['controller' => 'persone', 'action' => 'edit', $ordine['Fornitore']['id']]); ?>
 		</td>
 		<td>
-			<?php echo $this->Html->link($ordine['Attivita']['name'], array('controller' => 'attivita', 'action' => 'edit', $ordine['Attivita']['id'])); ?>
+			<?php echo $this->Html->link($ordine['Attivita']['name'], ['controller' => 'attivita', 'action' => 'edit', $ordine['Attivita']['id']]); ?>
 		</td>
 		<td>
 			<?php 
@@ -51,9 +51,9 @@
 			?>
 		</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $ordine['Ordine']['id']), array('class'=>'btn btn-primary btn-xs')); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $ordine['Ordine']['id']), array('class'=>'btn btn-primary btn-xs')); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $ordine['Ordine']['id']), array('class'=>'btn btn-primary btn-xs btn-del-riga'), __('Are you sure you want to delete # %s?', $ordine['Ordine']['id'])); ?>
+			<?php echo $this->Html->link(__('View'), ['action' => 'view', $ordine['Ordine']['id']], ['class'=>'btn btn-primary btn-xs']); ?>
+			<?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $ordine['Ordine']['id']], ['class'=>'btn btn-primary btn-xs']); ?>
+			<?php echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $ordine['Ordine']['id']], ['class'=>'btn btn-primary btn-xs btn-del-riga'], __('Are you sure you want to delete # %s?', $ordine['Ordine']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>
@@ -62,7 +62,7 @@
     </div>
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>  
+<?php $this->Html->scriptStart(['inline' => false]); ?>  
   $('document').ready(function(){
 	//data table
 	$('.dataTable').dataTable({

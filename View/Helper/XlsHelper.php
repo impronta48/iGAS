@@ -7,7 +7,7 @@
  */
 class XlsHelper {
 
-    var $helpers = array();
+    var $helpers = [];
 	var $buffer;
 	
     /**

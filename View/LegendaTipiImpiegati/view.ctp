@@ -15,12 +15,12 @@
 					<div class="panel-heading"><?php echo __('Actions'); ?></div>
 						<div class="panel-body">
 							<ul class="nav nav-pills nav-stacked">
-									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Legenda Tipi Impiegati'), array('action' => 'edit', $legendaTipiImpiegati['LegendaTipiImpiegati']['id']), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Legenda Tipi Impiegati'), array('action' => 'delete', $legendaTipiImpiegati['LegendaTipiImpiegati']['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $legendaTipiImpiegati['LegendaTipiImpiegati']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Legenda Tipi Impiegatis'), array('action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Legenda Tipi Impiegati'), array('action' => 'add'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Impiegati'), array('controller' => 'impiegati', 'action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Impiegato'), array('controller' => 'impiegati', 'action' => 'add'), array('escape' => false)); ?> </li>
+									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Legenda Tipi Impiegati'), ['action' => 'edit', $legendaTipiImpiegati['LegendaTipiImpiegati']['id']], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Legenda Tipi Impiegati'), ['action' => 'delete', $legendaTipiImpiegati['LegendaTipiImpiegati']['id']], ['escape' => false], __('Are you sure you want to delete # %s?', $legendaTipiImpiegati['LegendaTipiImpiegati']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Legenda Tipi Impiegatis'), ['action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Legenda Tipi Impiegati'), ['action' => 'add'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Impiegati'), ['controller' => 'impiegati', 'action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Impiegato'), ['controller' => 'impiegati', 'action' => 'add'], ['escape' => false]); ?> </li>
 							</ul>
 						</div><!-- end body -->
 				</div><!-- end panel -->
@@ -96,9 +96,9 @@
 			<td><?php echo $impiegato['DataModifica']; ?></td>
 			<td><?php echo $impiegato['ModificatoDa']; ?></td>
 			<td class="actions">
-				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-search"></span>'), array('controller' => 'impiegati', 'action' => 'view', $impiegato['id']), array('escape' => false)); ?>
-				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>'), array('controller' => 'impiegati', 'action' => 'edit', $impiegato['id']), array('escape' => false)); ?>
-				<?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>'), array('controller' => 'impiegati', 'action' => 'delete', $impiegato['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $impiegato['id'])); ?>
+				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-search"></span>'), ['controller' => 'impiegati', 'action' => 'view', $impiegato['id']], ['escape' => false]); ?>
+				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>'), ['controller' => 'impiegati', 'action' => 'edit', $impiegato['id']], ['escape' => false]); ?>
+				<?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>'), ['controller' => 'impiegati', 'action' => 'delete', $impiegato['id']], ['escape' => false], __('Are you sure you want to delete # %s?', $impiegato['id'])); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -107,7 +107,7 @@
 <?php endif; ?>
 
 	<div class="actions">
-		<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;New Impiegato'), array('controller' => 'impiegati', 'action' => 'add'), array('escape' => false, 'class' => 'btn btn-default')); ?> 
+		<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;New Impiegato'), ['controller' => 'impiegati', 'action' => 'add'], ['escape' => false, 'class' => 'btn btn-default']); ?> 
 	</div>
 	</div><!-- end col md 12 -->
 </div>

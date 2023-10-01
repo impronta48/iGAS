@@ -4,8 +4,8 @@
     
     <div class="row">
         <div class="actions">
-        <?php echo $this->Html->link('PDF', array('ext' => 'pdf', $this->request->pass[0], $this->request->pass[1]), array('class' => 'btn btn-info', 'escape' => false)); ?>
-        <?php echo $this->Html->link('XLS', array('ext' => 'xls', $this->request->pass[0], $this->request->pass[1]), array('class' => 'btn btn-info', 'escape' => false)); ?>
+        <?php echo $this->Html->link('PDF', ['ext' => 'pdf', $this->request->pass[0], $this->request->pass[1]], ['class' => 'btn btn-info', 'escape' => false]); ?>
+        <?php echo $this->Html->link('XLS', ['ext' => 'xls', $this->request->pass[0], $this->request->pass[1]], ['class' => 'btn btn-info', 'escape' => false]); ?>
         </div>
     </div>
     
@@ -14,7 +14,7 @@
         echo "<h3>$key ($mese - $anno)</h3>".
              "<table class=\"ora-persona table table-bordered\" style=\"width:100%\"><thead>";
 
-        $sommaday[] = array();
+        $sommaday[] = [];
 
     ?>       
      <tr class="thead-inverse">

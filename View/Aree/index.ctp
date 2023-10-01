@@ -1,7 +1,7 @@
 <div class="aree index">
 	<h2><?php echo __('Aree');?></h2>
      <div class="actions">
-        <a class="btn btn-primary btn-animate-demo" href="<?php echo $this->Html->url(array('action' => 'add')) ?>">Nuova Area</a>
+        <a class="btn btn-primary btn-animate-demo" href="<?php echo $this->Html->url(['action' => 'add']) ?>">Nuova Area</a>
     </div> 
 	<table class="table table-bordered table-hover table-striped display">
 	<tr>
@@ -22,20 +22,20 @@
 		<td><?php echo $area['Area']['name']; ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('Avanzamento'), '/attivita/avanzamento_gen/area:' . $area['Area']['id']); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $area['Area']['id'])); ?>
-			<?php echo $this->Html->link(__('Delete'), array('action' => 'delete', $area['Area']['id']), null, sprintf(__('Are you sure you want to delete # %s?'), $area['Area']['id'])); ?>			
+			<?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $area['Area']['id']]); ?>
+			<?php echo $this->Html->link(__('Delete'), ['action' => 'delete', $area['Area']['id']], null, sprintf(__('Are you sure you want to delete # %s?'), $area['Area']['id'])); ?>			
 		</td>
 	</tr>
 <?php endforeach; ?>
 	</table>
 	<p>
 	<?php
-	echo $this->Paginator->counter(array(
+	echo $this->Paginator->counter([
 	'format' => __('Page %page% of %pages%, showing %current% records out of %count% total')
-	));
+	]);
 	?>	</p>
 
-	<?php echo $this->Paginator->pagination(array(
+	<?php echo $this->Paginator->pagination([
 	'ul' => 'pagination'
-)); ?>
+]); ?>
 </div>

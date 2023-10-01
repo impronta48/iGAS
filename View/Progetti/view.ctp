@@ -15,14 +15,14 @@
 					<div class="panel-heading"><?php echo __('Actions'); ?></div>
 						<div class="panel-body">
 							<ul class="nav nav-pills nav-stacked">
-									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Progetto'), array('action' => 'edit', $progetto['Progetto']['id']), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Progetto'), array('action' => 'delete', $progetto['Progetto']['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $progetto['Progetto']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Progetti'), array('action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Progetto'), array('action' => 'add'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Aree'), array('controller' => 'aree', 'action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Area'), array('controller' => 'aree', 'action' => 'add'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Attivita'), array('controller' => 'attivita', 'action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Attivita'), array('controller' => 'attivita', 'action' => 'add'), array('escape' => false)); ?> </li>
+									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Progetto'), ['action' => 'edit', $progetto['Progetto']['id']], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Progetto'), ['action' => 'delete', $progetto['Progetto']['id']], ['escape' => false], __('Are you sure you want to delete # %s?', $progetto['Progetto']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Progetti'), ['action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Progetto'), ['action' => 'add'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Aree'), ['controller' => 'aree', 'action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Area'), ['controller' => 'aree', 'action' => 'add'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Attivita'), ['controller' => 'attivita', 'action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Attivita'), ['controller' => 'attivita', 'action' => 'add'], ['escape' => false]); ?> </li>
 							</ul>
 						</div><!-- end body -->
 				</div><!-- end panel -->
@@ -56,7 +56,7 @@
 <tr>
 		<th><?php echo __('Area'); ?></th>
 		<td>
-			<?php echo $this->Html->link($progetto['Area']['name'], array('controller' => 'aree', 'action' => 'view', $progetto['Area']['id'])); ?>
+			<?php echo $this->Html->link($progetto['Area']['name'], ['controller' => 'aree', 'action' => 'view', $progetto['Area']['id']]); ?>
 			&nbsp;
 		</td>
 </tr>
@@ -140,9 +140,9 @@
 			<td><?php echo $attivita['chiusa']; ?></td>
 			<td><?php echo $attivita['alias']; ?></td>
 			<td class="actions">
-				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-search"></span>'), array('controller' => 'attivita', 'action' => 'view', $attivita['id']), array('escape' => false)); ?>
-				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>'), array('controller' => 'attivita', 'action' => 'edit', $attivita['id']), array('escape' => false)); ?>
-				<?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>'), array('controller' => 'attivita', 'action' => 'delete', $attivita['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $attivita['id'])); ?>
+				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-search"></span>'), ['controller' => 'attivita', 'action' => 'view', $attivita['id']], ['escape' => false]); ?>
+				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>'), ['controller' => 'attivita', 'action' => 'edit', $attivita['id']], ['escape' => false]); ?>
+				<?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>'), ['controller' => 'attivita', 'action' => 'delete', $attivita['id']], ['escape' => false], __('Are you sure you want to delete # %s?', $attivita['id'])); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -151,7 +151,7 @@
 <?php endif; ?>
 
 	<div class="actions">
-		<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;New Attivita'), array('controller' => 'attivita', 'action' => 'add'), array('escape' => false, 'class' => 'btn btn-default')); ?> 
+		<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;New Attivita'), ['controller' => 'attivita', 'action' => 'add'], ['escape' => false, 'class' => 'btn btn-default']); ?> 
 	</div>
 	</div><!-- end col md 12 -->
 </div>

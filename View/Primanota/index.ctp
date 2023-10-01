@@ -1,14 +1,14 @@
-<?php echo $this->Html->script("jquery.tagsinput.min",array('inline' => false)); ?>
-<?php echo $this->Html->script("tags",array('inline' => false)); ?>
+<?php echo $this->Html->script("jquery.tagsinput.min",['inline' => false]); ?>
+<?php echo $this->Html->script("tags",['inline' => false]); ?>
 <?php echo $this->Html->css('jquery.tagsinput.min'); ?>
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
-<?php echo $this->Html->script('faseattivita',array('inline' => false)); ?>
+<?php echo $this->Html->script('faseattivita',['inline' => false]); ?>
 <?php $baseformclass = ' form-control input-sm '; ?>
 
 <?php if (isset($this->request->params['pass'][0]))
     {
       $id = $this->request->params['pass'][0];
-      echo $this->element('secondary_attivita', array('aid'=>$id));
+      echo $this->element('secondary_attivita', ['aid'=>$id]);
       $this->Html->addCrumb("Attività", "/attivita/");
       if(isset($primanota[0])) {
         $this->Html->addCrumb("Attività  [" . $primanota[0]['Attivita']['id'] . "] - " . $primanota[0]['Attivita']['name'], "/attivita/edit/$id");
@@ -28,19 +28,19 @@
     <div class="well">                
                 <!-- Form di Ricerca -->
                     <?php
-                    echo $this->Form->create("Primanota",array(
-                            'url' => array('action' => 'index'),
+                    echo $this->Form->create("Primanota",[
+                            'url' => ['action' => 'index'],
                             'type' => 'get',
-                            'inputDefaults' => array(
+                            'inputDefaults' => [
                                 'div' => 'form-group ',
                                 'wrapInput' => true,
                                 'class' => $baseformclass
-                            ),
+                            ],
                             'class' => ' form-inline',
-                        ));
+                        ]);
                     ?>
                     <div class="row">
-                    <?php echo $this->Form->input('from', array(
+                    <?php echo $this->Form->input('from', [
                             'type' => 'text', 
                             'class' => 'datepicker form-control' . $baseformclass , 
                             'label' => 'da',
@@ -49,8 +49,8 @@
                             'beforeInput' => '<div class="input-group">',
                             'afterInput' => '<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>',
                             'div' => 'col col-md-3',
-                    )); ?>
-                    <?php echo $this->Form->input('to', array(
+                    ]); ?>
+                    <?php echo $this->Form->input('to', [
                         'type' => 'text',
                         'class' => 'datepicker form-control' . $baseformclass,  
                         'label' => 'a',
@@ -59,45 +59,45 @@
                         'beforeInput' => '<div class="input-group">',
                         'afterInput' => '<span class="input-group-addon"><i class="fa fa-calendar"></i></span></div>',
                         'div' => 'col col-md-3',
-                    )); ?>
+                    ]); ?>
                     </div>
                     <div class="row">
                         <?php echo $this->Form->input('progetto', 
-                            array('empty' => '---', 
+                            ['empty' => '---', 
                                 'label' => 'Progetto',
                                 'class' => 'chosen-select ' . $baseformclass, 
                                 'value' => $v_progetto,                                
                                 'div' => 'col col-md-3',
-                        )); ?>
+                        ]); ?>
                         <?php echo $this->Form->input('attivita', 
-                            array('empty'=>'---', 
+                            ['empty'=>'---', 
                                     'label'=>'Attivita',
                                     'class'=>'chosen-select ' . $baseformclass,
                                     'value'=>$v_attivita,
                                     'div' => 'col col-md-4',
-                        )); ?>                        
+                        ]); ?>                        
                         <?php echo $this->Form->input('persona', 
-                            array('empty' => '---', 
+                            ['empty' => '---', 
                                     'label' => 'Contatto',
                                     'class' => 'chosen-select ' . $baseformclass,
                                     'value' => $v_persona,
                                     'div' => 'col col-md-3',                                    
-                        )); ?>
+                        ]); ?>
                     </div>
                     <div class="row">
-                        <?php echo $this->Form->input('provenienzasoldi', array('empty'=>'---', 'class' => 'chosen-select' . $baseformclass, 'label'=>'Provenienza','value'=>$v_provenienzasoldi, 'div' => 'col col-md-3', )); ?>                   
-                        <?php echo $this->Form->input('legenda_cat_spesa', array('empty'=>'---', 'label'=>'Cat Spesa', 'class' => 'chosen-select' . $baseformclass, 'options'=>$legenda_cat_spesa, 'value'=> $v_legenda_cat_spesa, 'div' => 'col col-md-3', )); ?>
+                        <?php echo $this->Form->input('provenienzasoldi', ['empty'=>'---', 'class' => 'chosen-select' . $baseformclass, 'label'=>'Provenienza','value'=>$v_provenienzasoldi, 'div' => 'col col-md-3', ]); ?>                   
+                        <?php echo $this->Form->input('legenda_cat_spesa', ['empty'=>'---', 'label'=>'Cat Spesa', 'class' => 'chosen-select' . $baseformclass, 'options'=>$legenda_cat_spesa, 'value'=> $v_legenda_cat_spesa, 'div' => 'col col-md-3', ]); ?>
                     </div>
                     <div class="row">
                     <?php
-                        echo $this->Form->input("tag", array(                                    
+                        echo $this->Form->input("tag", [                                    
                             'default'=>$this->request->query('tag'),
                             'class'=>'chosen-select ' . $baseformclass,
                             'multiple' => true,
                             'options' => $taglist,
                             'value'=>$this->request->query('tag'),
                             'div' => 'col col-md-12',                             
-                            ));
+                            ]);
                     ?>
                     </div>
                     <button name="btnView" class="btn btn-success">Filtra</button>
@@ -107,7 +107,7 @@
     
 
 <div class="table-responsive">
-    <a href="<?php echo $this->Html->url(array('ext' => 'xls','?'=>$this->request->query)) ?>" 
+    <a href="<?php echo $this->Html->url(['ext' => 'xls','?'=>$this->request->query]) ?>" 
         name="btnXls" class="btn btn-primary"><i class="fa fa-file-excel-o"></i> Esporta in XLS
     </a>
 
@@ -149,16 +149,16 @@
             <?php 
             foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
                 if(file_exists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$p['Primanota']['id'].'.'.$ext)):
-                echo $this->Html->link('View Attachment', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$p['Primanota']['id'].'.'.$ext,array('class'=>'btn btn-primary btn-xs glow btn-edit-riga'));
+                echo $this->Html->link('View Attachment', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$p['Primanota']['id'].'.'.$ext,['class'=>'btn btn-primary btn-xs glow btn-edit-riga']);
                 endif;
             }
             ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $p['Primanota']['id']),array('class'=>"btn btn-primary btn-xs glow btn-edit-riga" )); ?>
+			<?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $p['Primanota']['id']],['class'=>"btn btn-primary btn-xs glow btn-edit-riga" ]); ?>
             <?php 
 			if (isset($id)){
-				echo $this->Html->link(__('Del'), array('action' => 'delete', $id), array('class'=>'btn btn-primary btn-xs glow btn-del-riga'), __('Are you sure you want to delete # %s?', $id));
+				echo $this->Html->link(__('Del'), ['action' => 'delete', $id], ['class'=>'btn btn-primary btn-xs glow btn-del-riga'], __('Are you sure you want to delete # %s?', $id));
 			} else {
-				echo $this->Html->link(__('Del'), array('action' => 'delete', $p['Primanota']['id']), array('class'=>'btn btn-primary btn-xs glow btn-del-riga'), __('Are you sure you want to delete # %s?', $p['Primanota']['id']));
+				echo $this->Html->link(__('Del'), ['action' => 'delete', $p['Primanota']['id']], ['class'=>'btn btn-primary btn-xs glow btn-del-riga'], __('Are you sure you want to delete # %s?', $p['Primanota']['id']));
 			}
             ?>
         </td>
@@ -174,8 +174,8 @@
                 $l .= ' - ' . $p['Fatturaricevuta']['progressivo'] . '/'. $p['Fatturaricevuta']['annoFatturazione'];
                 ?>
                 <small>Associato a documento ricevuto
-                    <?php echo $this->Html->link($l, array('controller'=>'fatturericevute','action' =>'index'),
-                        array('class'=>'label label-default')
+                    <?php echo $this->Html->link($l, ['controller'=>'fatturericevute','action' =>'index'],
+                        ['class'=>'label label-default']
                         ) ;?>
                 </small>
             <?php endif; ?>
@@ -238,49 +238,49 @@
                 <h4 class="modal-title">Aggiungi riga di Prima Nota</h4>
             </div>
             <div class="modal-body">
-                    <?php echo $this->Form->create('Primanota',array(
+                    <?php echo $this->Form->create('Primanota',[
 								'enctype' => 'multipart/form-data',
-                                'inputDefaults' => array(
+                                'inputDefaults' => [
                                     'div' => 'form-group',
-                                    'label' => array(
+                                    'label' => [
                                         'class' => 'col col-md-3 control-label'
-                                    ),
+                                    ],
                                     'wrapInput' => 'col col-md-9',
                                     'class' => 'form-control'
-                                ),
+                                ],
                                 'class' => 'well form-horizontal'
-                    )); ?>
+                    ]); ?>
                     <div class="col col-md-12">
                     <?php // echo $this->Form->input('data', array('type'=>'date', 'class'=>false, 'dateFormat'=>'DMY')); ?>
-                    <?php echo $this->Form->input('data', array('type'=>'text', 'label' => 'Data', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY', 'class' => 'form-control datepicker')); ?>
+                    <?php echo $this->Form->input('data', ['type'=>'text', 'label' => 'Data', 'value' => date('Y-m-d'), 'dateFormat' => 'DMY', 'class' => 'form-control datepicker']); ?>
 					<div id="entrataUscitaBox">
                     <div id="entrataUscitaBoxTest"></div>
 					<?php
                     if(!isset($this->request->data['Primanota']['importoUscita'])){
                         echo $this->Form->input('importoEntrata', 
-                                                array("class"=>"form-control", 
+                                                ["class"=>"form-control", 
                                                     'placeholder'=>'10.2', 
-                                                    'label'=>array('text'=>'Entrata',
+                                                    'label'=>['text'=>'Entrata',
                                                             'class'=>'col col-md-3 control-label entrata-label',
-                                                            'id'=>'entrataUscitaLabel'), 
+                                                            'id'=>'entrataUscitaLabel'], 
                                                     'wrapInput' => 'input-group input-group-md col-md-9', 
-                                                    'afterInput' => '<div class="input-group-btn"><button type="button" id="entratauscitaswitch" class="btn btn-md btn-default entrata-button" title="Calcola come uscita">Calcola come uscita</button></div>'));
+                                                    'afterInput' => '<div class="input-group-btn"><button type="button" id="entratauscitaswitch" class="btn btn-md btn-default entrata-button" title="Calcola come uscita">Calcola come uscita</button></div>']);
                         echo '<div id="imponibileIva">';
-                        echo $this->Form->input('imponibile', array('placeholder'=>'8.36', 'label'=>'Imponibile', 'wrapInput' => 'col col-md-9'));
-					    echo $this->Form->input('iva', array('placeholder'=>'1.84', 'label'=>'Iva', 'wrapInput' => 'col col-md-9'));
+                        echo $this->Form->input('imponibile', ['placeholder'=>'8.36', 'label'=>'Imponibile', 'wrapInput' => 'col col-md-9']);
+					    echo $this->Form->input('iva', ['placeholder'=>'1.84', 'label'=>'Iva', 'wrapInput' => 'col col-md-9']);
                         echo '</div>';
                     }else{
                         echo $this->Form->input('importoUscita', 
-                                                array("class"=>"form-control", 
+                                                ["class"=>"form-control", 
                                                     'placeholder'=>'10.2', 
-                                                    'label'=>array('text'=>'Uscita',
+                                                    'label'=>['text'=>'Uscita',
                                                             'class'=>'col col-md-3 control-label uscita-label',
-                                                            'id'=>'entrataUscitaLabel'), 
+                                                            'id'=>'entrataUscitaLabel'], 
                                                     'wrapInput' => 'input-group input-group-md col-md-9', 
-                                                    'afterInput' => '<div class="input-group-btn"><button type="button" id="entratauscitaswitch" class="btn btn-md btn-default uscita-button" title="Calcola come entrata">Calcola come entrata</button></div>'));
+                                                    'afterInput' => '<div class="input-group-btn"><button type="button" id="entratauscitaswitch" class="btn btn-md btn-default uscita-button" title="Calcola come entrata">Calcola come entrata</button></div>']);
                         echo '<div id="imponibileIva">';
-                        echo $this->Form->input('imponibileUscita', array('placeholder'=>'8.36', 'label'=>'Imponibile', 'wrapInput' => 'col col-md-9','default'=>-$this->request->data['Primanota']['imponibileUscita']));
-					    echo $this->Form->input('ivaUscita', array('placeholder'=>'1.84', 'label'=>'Iva', 'wrapInput' => 'col col-md-9','default'=>-$this->request->data['Primanota']['imponibileUscita']));
+                        echo $this->Form->input('imponibileUscita', ['placeholder'=>'8.36', 'label'=>'Imponibile', 'wrapInput' => 'col col-md-9','default'=>-$this->request->data['Primanota']['imponibileUscita']]);
+					    echo $this->Form->input('ivaUscita', ['placeholder'=>'1.84', 'label'=>'Iva', 'wrapInput' => 'col col-md-9','default'=>-$this->request->data['Primanota']['imponibileUscita']]);
                         echo '</div>';
                     }
 					?>
@@ -289,33 +289,33 @@
                     <?php
                         if (!empty($id))
                         {
-                            echo $this->Form->hidden('attivita_id', array('default'=>$id));
+                            echo $this->Form->hidden('attivita_id', ['default'=>$id]);
                         }
                         else
                         {
-                            echo $this->Form->input('attivita_id', array('class'=>'col col-md-8 attivita chosen-select ' . $baseformclass));
+                            echo $this->Form->input('attivita_id', ['class'=>'col col-md-8 attivita chosen-select ' . $baseformclass]);
                         }
                     ?>
 
-                    <?php echo $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'options'=>$faseattivita, 'class'=>'fase form-control' )); ?>
-                    <?php echo  $this->Form->input('legenda_cat_spesa_id', array('options'=>$legenda_cat_spesa)); ?>
+                    <?php echo $this->Form->input('faseattivita_id', ['label'=>'Fase Attività', 'options'=>$faseattivita, 'class'=>'fase form-control' ]); ?>
+                    <?php echo  $this->Form->input('legenda_cat_spesa_id', ['options'=>$legenda_cat_spesa]); ?>
                     <?php echo  $this->Form->input('provenienzasoldi_id'); ?>
-                    <?php echo  $this->Form->hidden('persona_id',array('type'=>'text')); ?>
-                    <?php echo  $this->Form->input('persona_descr',array('placeholder'=>'Inizia a scrivere per cercare la persona')); ?>
+                    <?php echo  $this->Form->hidden('persona_id',['type'=>'text']); ?>
+                    <?php echo  $this->Form->input('persona_descr',['placeholder'=>'Inizia a scrivere per cercare la persona']); ?>
                     <?php echo  $this->Form->input('descr'); ?>
-					<?php echo $this->Form->input('uploadFile', array('label'=>'Upload File', 'class'=>false, 'type'=>'file')); ?>
+					<?php echo $this->Form->input('uploadFile', ['label'=>'Upload File', 'class'=>false, 'type'=>'file']); ?>
 
                     <div class="clearfix"></div>
                     <div class="well well-sm col col-md-offset-3">
-                        <?php echo  $this->Html->link('Associa a Fattura Emessa','#', array('class'=>'btn btn-xs btn-default','id'=>'btn-fattura-emessa')); ?>
-                        <?php echo  $this->Html->link('Associa a Fattura Ricevuta','#', array('class'=>'btn btn-xs btn-default','id'=>'btn-fattura-ricevuta')); ?>
+                        <?php echo  $this->Html->link('Associa a Fattura Emessa','#', ['class'=>'btn btn-xs btn-default','id'=>'btn-fattura-emessa']); ?>
+                        <?php echo  $this->Html->link('Associa a Fattura Ricevuta','#', ['class'=>'btn btn-xs btn-default','id'=>'btn-fattura-ricevuta']); ?>
                     </div>
 
                     <div  id="aggiungi-fattura-emessa" class="scomparsa">
-                        <?php echo  $this->Form->input('fatturaemessa_id', array('label'=>'Fattura Emessa', 'options'=>$fatturaemessa)); ?>
+                        <?php echo  $this->Form->input('fatturaemessa_id', ['label'=>'Fattura Emessa', 'options'=>$fatturaemessa]); ?>
                     </div>
                     <div id="aggiungi-fattura-ricevuta" class="scomparsa">
-                        <?php echo  $this->Form->input('fatturaricevuta_id', array('label'=>'Fattura Ricevuta', 'options'=>$fatturaricevuta)); ?>
+                        <?php echo  $this->Form->input('fatturaricevuta_id', ['label'=>'Fattura Ricevuta', 'options'=>$fatturaricevuta]); ?>
                     </div>
 
                     
@@ -323,14 +323,14 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-                <?php echo  $this->Form->button('Aggiungi ',array('class'=>'btn btn-primary', )); ?>
+                <?php echo  $this->Form->button('Aggiungi ',['class'=>'btn btn-primary', ]); ?>
                 <?php echo  $this->Form->end(); ?>
             </div>
         </div>
     </div>
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
 $('document').ready(function() {
     $(".scomparsa").hide();
     $( "#btn-fattura-emessa" ).click( function (e) { $(".scomparsa").hide();  $("#aggiungi-fattura-emessa").toggle(); });
@@ -348,7 +348,7 @@ $('document').ready(function() {
      });
 
      $( "#PrimanotaPersonaDescr" ).autocomplete({
-        source: "<?php echo $this->Html->url(array('controller' => 'persone', 'action' => 'autocomplete')) ?>",
+        source: "<?php echo $this->Html->url(['controller' => 'persone', 'action' => 'autocomplete']) ?>",
         minLength: 2,
         mustMatch : true,
         select: function( event, ui ) {

@@ -35,9 +35,9 @@
 		<td><?php echo h($ddt['Ddt']['n_colli']); ?>&nbsp;</td>
 		<td><?php echo h($ddt['Vettore']['name']); ?>&nbsp;</td>		
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $ddt['Ddt']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $ddt['Ddt']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $ddt['Ddt']['id']), null, __('Are you sure you want to delete # %s?', $ddt['Ddt']['id'])); ?>
+			<?php echo $this->Html->link(__('View'), ['action' => 'view', $ddt['Ddt']['id']]); ?>
+			<?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $ddt['Ddt']['id']]); ?>
+			<?php echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $ddt['Ddt']['id']], null, __('Are you sure you want to delete # %s?', $ddt['Ddt']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

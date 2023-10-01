@@ -14,7 +14,7 @@ class RigheordiniController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'Session');
+	public $components = ['Paginator', 'Session'];
 
 /**
  * index method
@@ -37,7 +37,7 @@ class RigheordiniController extends AppController {
 		if (!$this->Rigaordine->exists($id)) {
 			throw new NotFoundException(__('Invalid rigaordine'));
 		}
-		$options = array('conditions' => array('Rigaordine.' . $this->Rigaordine->primaryKey => $id));
+		$options = ['conditions' => ['Rigaordine.' . $this->Rigaordine->primaryKey => $id]];
 		$this->set('rigaordine', $this->Rigaordine->find('first', $options));
 	}
 
@@ -51,7 +51,7 @@ class RigheordiniController extends AppController {
 			$this->Rigaordine->create();
 			if ($this->Rigaordine->save($this->request->data)) {
 				$this->Session->setFlash(__('The rigaordine has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The rigaordine could not be saved. Please, try again.'));
 			}
@@ -71,15 +71,15 @@ class RigheordiniController extends AppController {
 		if (!$this->Rigaordine->exists($id)) {
 			throw new NotFoundException(__('Invalid rigaordine'));
 		}
-		if ($this->request->is(array('post', 'put'))) {
+		if ($this->request->is(['post', 'put'])) {
 			if ($this->Rigaordine->save($this->request->data)) {
 				$this->Session->setFlash(__('The rigaordine has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The rigaordine could not be saved. Please, try again.'));
 			}
 		} else {
-			$options = array('conditions' => array('Rigaordine.' . $this->Rigaordine->primaryKey => $id));
+			$options = ['conditions' => ['Rigaordine.' . $this->Rigaordine->primaryKey => $id]];
 			$this->request->data = $this->Rigaordine->find('first', $options);
 		}
 		$ordini = $this->Rigaordine->Ordine->find('list');
@@ -103,6 +103,6 @@ class RigheordiniController extends AppController {
 		} else {
 			$this->Session->setFlash(__('The rigaordine could not be deleted. Please, try again.'));
 		}
-		return $this->redirect(array('action' => 'index'));
+		return $this->redirect(['action' => 'index']);
 	}
 }

@@ -1,8 +1,8 @@
 <?php
 class Alias extends AppModel {
 
-	var $belongsTo = array(
-		'Attivita' => array(
+	var $belongsTo = [
+		'Attivita' => [
 			'className' => 'Attivita',
 			'foreignKey' => 'attivita_id',
 			'dependent' => false,
@@ -14,8 +14,8 @@ class Alias extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		)
-	);
+		]
+	];
 
 }
 ?>

@@ -30,7 +30,7 @@ App::uses('Helper', 'View');
  * @package       app.View.Helper
  */
 class AppHelper extends Helper {
-    public function assetUrl($path, $options = array()) {
+    public function assetUrl($path, $options = []) {
         if (!empty($this->request->params['ext']) && $this->request->params['ext'] === 'pdf') {
             $options['fullBase'] = true;
         }

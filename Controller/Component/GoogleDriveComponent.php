@@ -37,15 +37,15 @@ class GoogleDriveComponent extends Component{
 		$parentFolderId=$folderParams[0];
 		$driveDestFolder=null;
 		for($i=1;$i<count($folderParams);$i++){
-			$fileList = Array();
+			$fileList = [];
 			$fileList = $this->checkIfIsInDrive($googleService,$folderParams[$i],$parentFolderId);
 			if(count($fileList)<=0){
-				$fileMetadata = new Google_Service_Drive_DriveFile(array(
-					'parents' => array($parentFolderId),
+				$fileMetadata = new Google_Service_Drive_DriveFile([
+					'parents' => [$parentFolderId],
 					'name' => $folderParams[$i],
-					'mimeType' => 'application/vnd.google-apps.folder'));
-				$driveDestFolder = $googleService->files->create($fileMetadata, array(
-					'fields' => 'id'));
+					'mimeType' => 'application/vnd.google-apps.folder']);
+				$driveDestFolder = $googleService->files->create($fileMetadata, [
+					'fields' => 'id']);
 				$parentFolderId=$driveDestFolder->id;
 			} else {
 				$parentFolderId=$fileList[0]->id;
@@ -65,19 +65,19 @@ class GoogleDriveComponent extends Component{
 	 * @version 1.0.0
 	 */
 	function checkIfIsInDrive($googleService,$entityName,$parentFolder=null){
-		$fileList = Array();
+		$fileList = [];
 		$pageToken = null;
 		do{
 			try{
-				$parameters = array();
+				$parameters = [];
 				if($pageToken){
 					$parameters['pageToken'] = $pageToken;
 				}
-				$parameters['q'] = array(
+				$parameters['q'] = [
 								"name = '$entityName'",
 								"trashed = false",
 								//"mimeType = 'application/vnd.google-apps.folder'",
-								"'$parentFolder' in parents");
+								"'$parentFolder' in parents"];
 				$files = $googleService->files->listFiles($parameters);
 				//debug($files->files);
 				//$file = $googleService->files->get($files[0]->id, array('fields' => 'parents'));
@@ -114,20 +114,20 @@ class GoogleDriveComponent extends Component{
 			try {
 				//Upload con metadata ed usando multipart (così invio metadata e file contemporaneamente)
 				//$file = new Google_Service_Drive_DriveFile();
-				$file = new Google_Service_Drive_DriveFile(array(
+				$file = new Google_Service_Drive_DriveFile([
 					'title' => basename($fileToUpload),
-					'parents' => array($folderId)
-				));
+					'parents' => [$folderId]
+				]);
 
 				$file->setName(Router::getRequest(true)->param('controller').$fileName[0]);
 				$file->setDescription(Router::getRequest(true)->param('controller').' - '.basename($fileToUpload));
 				$result = $googleService->files->create(
-					$file,array(
+					$file,[
 						'data' => file_get_contents($fileToUpload),
 						'mimeType' => mime_content_type($fileToUpload),
 						'uploadType' => 'multipart',
 						'fields' => 'id'
-						)
+						]
 				);
 				//debug($result);
 				//return 'File caricato con successo, l\'id del file su Google Drive è '.$result->id;
@@ -151,7 +151,7 @@ class GoogleDriveComponent extends Component{
 	 * @version 1.0.1
 	 */
 	function deleteFile($googleService,$scontrinoIdToDelete){
-		$fileList = Array();
+		$fileList = [];
 		$fileList=$this->checkIfIsInDrive($googleService,Router::getRequest(true)->param('controller').$scontrinoIdToDelete);
 		if(count($fileList)<=0){
 			return 'No file to erase from Google Drive';

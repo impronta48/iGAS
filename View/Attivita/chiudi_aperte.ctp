@@ -21,14 +21,14 @@
 <tbody>
 <?php $attivita = $this->data; $i=0; foreach($attivita as  $n) :  $i++?>
     <tr>
-        <td width="10%"><?php echo $n['Attivita']['id']; echo $this->Form->hidden("Attivita.$i.id", array('value'=>$n['Attivita']['id'] )); ?></td>
+        <td width="10%"><?php echo $n['Attivita']['id']; echo $this->Form->hidden("Attivita.$i.id", ['value'=>$n['Attivita']['id'] ]); ?></td>
         <td width="15%"><?php echo $n['Attivita']['name'] ?></td>
         <td width="10%" align="right">
             <?php
                 echo $this->Number->Precision($n['Attivita']['ImportoAcquisito'],0);
             ?>
         </td>        
-        <td><?php echo $this->Form->input("Attivita.$i.chiusa", array('checked'=>'checked')); ?></td>
+        <td><?php echo $this->Form->input("Attivita.$i.chiusa", ['checked'=>'checked']); ?></td>
         <td><?php echo $n['Attivita']['DataPresentazione'] ?></td>
         <td><?php echo $n['Attivita']['DataApprovazione'] ?></td>
         <td><?php echo $n['Attivita']['DataInizio'] ?></td>

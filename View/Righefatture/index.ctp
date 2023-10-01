@@ -26,30 +26,30 @@
 		<td><?php echo $rigafattura['Rigafattura']['Importo']; ?>&nbsp;</td>
 		<td><?php echo $rigafattura['Rigafattura']['codiceiva_id']; ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $rigafattura['Rigafattura']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $rigafattura['Rigafattura']['id'])); ?>
-			<?php echo $this->Html->link(__('Delete'), array('action' => 'delete', $rigafattura['Rigafattura']['id']), null, sprintf(__('Are you sure you want to delete # %s?'), $rigafattura['Rigafattura']['id'])); ?>
+			<?php echo $this->Html->link(__('View'), ['action' => 'view', $rigafattura['Rigafattura']['id']]); ?>
+			<?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $rigafattura['Rigafattura']['id']]); ?>
+			<?php echo $this->Html->link(__('Delete'), ['action' => 'delete', $rigafattura['Rigafattura']['id']], null, sprintf(__('Are you sure you want to delete # %s?'), $rigafattura['Rigafattura']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>
 	</table>
 	<p>
 	<?php
-	echo $this->Paginator->counter(array(
+	echo $this->Paginator->counter([
 	'format' => __('Page %page% of %pages%, showing %current% records out of %count% total, starting on record %start%, ending on %end%')
-	));
+	]);
 	?>	</p>
 
 	<div class="paging">
-		<?php echo $this->Paginator->prev('<< ' . __('previous'), array(), null, array('class'=>'disabled'));?>
+		<?php echo $this->Paginator->prev('<< ' . __('previous'), [], null, ['class'=>'disabled']);?>
 	 | 	<?php echo $this->Paginator->numbers();?>
  |
-		<?php echo $this->Paginator->next(__('next') . ' >>', array(), null, array('class' => 'disabled'));?>
+		<?php echo $this->Paginator->next(__('next') . ' >>', [], null, ['class' => 'disabled']);?>
 	</div>
 </div>
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('New Rigafattura'), array('action' => 'add')); ?></li>
+		<li><?php echo $this->Html->link(__('New Rigafattura'), ['action' => 'add']); ?></li>
 	</ul>
 </div>

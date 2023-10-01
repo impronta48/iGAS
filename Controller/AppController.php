@@ -33,27 +33,27 @@
  */
 class AppController extends Controller
 {
-  public $helpers = array(
+  public $helpers = [
     'Session',
     'Time',
     'Js',
-    'Html' => array('className' => 'BoostCake.BoostCakeHtml'),
-    'Form' => array('className' => 'BoostCake.BoostCakeForm'),
-    'Paginator' => array('className' => 'BoostCake.BoostCakePaginator'),
+    'Html' => ['className' => 'BoostCake.BoostCakeHtml'],
+    'Form' => ['className' => 'BoostCake.BoostCakeForm'],
+    'Paginator' => ['className' => 'BoostCake.BoostCakePaginator'],
     'Tools.Common',
-  );
+  ];
 
 
-  public $components = array(
+  public $components = [
     'Session',
     'RequestHandler',
     'Flash',
     'Auth',
     'Tools.Common',
     'Cookie',
-  );
+  ];
 
-  public $uses = array('User');
+  public $uses = ['User'];
 
   /**
    * AppController::constructClasses()
@@ -71,40 +71,38 @@ class AppController extends Controller
 
   public function beforeFilter()
   {
-
-    //Configure AuthComponent
-    //$this->theme = Configure::read('iGas.theme');
-    //$this->Auth->allow(); //Permetto tutto
-    //permetto il verbno display sulle pagine statiche
-    //$this->Auth->allow('display');
-
     // set cookie options
     $this->Cookie->key = 'tantovalagattaallardochecilascialozampino1234';
     $this->Cookie->httpOnly = true;
 
     if (!$this->Auth->loggedIn() && $this->Cookie->read('remember_me_cookie')) {
       $cookie = $this->Cookie->read('remember_me_cookie');
+      if (isset($cookie['username']) && isset($cookie['password'])) {
+        $user = $this->User->find('first', [
+          'conditions' => [
+            'User.username' => $cookie['username'],
+            'User.password' => $cookie['password']
+          ]
+        ]);
+      } else {
+        $this->Cookie->delete('remember_me_cookie');
+        $this->Auth->logout();
+      }
 
-      $user = $this->User->find('first', array(
-        'conditions' => array(
-          'User.username' => $cookie['username'],
-          'User.password' => $cookie['password']
-        )
-      ));
-
-      if ($user && !$this->Auth->login($user['User'])) {
-        $this->redirect('/users/logout'); // destroy session & cookie
+      if (isset($user) && !$this->Auth->login($user['User'])) {
+        $this->Cookie->delete('remember_me_cookie');
+        $this->Auth->logout();
       }
     }
 
     //Configuro Auth
-    $this->Auth->loginAction = array('controller' => 'users', 'action' => 'login');
-    $this->Auth->logoutRedirect = array('controller' => 'users', 'action' => 'login');
-    $this->Auth->loginRedirect = array('controller' => 'attivita', 'action' => 'index');
-    $this->Auth->flash = array('element' => 'alert', 'key' => 'auth', 'params' => array('class' => 'alert-error'));
-    $this->Auth->authenticate = array('Basic', 'Form' => array('passwordHasher' => 'Simple'),);
+    $this->Auth->loginAction = ['controller' => 'users', 'action' => 'login'];
+    $this->Auth->logoutRedirect = ['controller' => 'users', 'action' => 'login'];
+    $this->Auth->loginRedirect = ['controller' => 'attivita', 'action' => 'index'];
+    $this->Auth->flash = ['element' => 'alert', 'key' => 'auth', 'params' => ['class' => 'alert-error']];
+    $this->Auth->authenticate = ['Basic', 'Form' => ['passwordHasher' => 'Simple'],];
     $this->Auth->authError = "Non sei autorizzato ad accedere a questa sezione del sito";
-    $this->Auth->authorize = array('Tools.Tiny' => array('aclKey' => 'group_id'));
+    $this->Auth->authorize = ['Tools.Tiny' => ['aclKey' => 'group_id']];
 
     parent::beforeFilter();
   }

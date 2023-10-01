@@ -2,15 +2,15 @@
 class FattureemesseController extends AppController
 {
   public $name = 'Fattureemesse';
-  public $helpers = array('Number');
-  public $uses = array('Fatturaemessa', 'Persona', 'Primanota');
-  public $components = array('RequestHandler');
+  public $helpers = ['Number'];
+  public $uses = ['Fatturaemessa', 'Persona', 'Primanota'];
+  public $components = ['RequestHandler'];
 
   public function index($anno = null)
   {
-    $conditions = array();
+    $conditions = [];
     if (!empty($this->request->named['attivita'])) {
-      $conditions = array('Fatturaemessa.attivita_id' => $this->request->named['attivita']);
+      $conditions = ['Fatturaemessa.attivita_id' => $this->request->named['attivita']];
     }
     if (!empty($this->request->named['persona'])) {
       $conditions['Attivita.cliente_id'] = $this->request->named['persona'];
@@ -28,7 +28,7 @@ class FattureemesseController extends AppController
     }
 
     $this->Fatturaemessa->recursive = 1;
-    $this->paginate = array('limit' => 500, 'maxLimit' => 500);
+    $this->paginate = ['limit' => 500, 'maxLimit' => 500];
 
     $this->set('anno', $anno);
     $this->set('fattureemesse', $this->paginate('Fatturaemessa', $conditions));
@@ -39,18 +39,18 @@ class FattureemesseController extends AppController
   {
     $this->set('title_for_layout', 'Scadenziario Fatture Emesse ' . $anno);
     $this->Fatturaemessa->recursive = 1;
-    $this->paginate = array('limit' => -1);
+    $this->paginate = ['limit' => -1];
     $this->Fatturaemessa->Behaviors->load('Containable');
     $this->Fatturaemessa->contain('Attivita.Persona');
 
     if (empty($anno)) {
       $anno = date('Y');
     }
-    $cond = array('AnnoFatturazione' => $anno);
+    $cond = ['AnnoFatturazione' => $anno];
     $fatture = $this->paginate('Fatturaemessa', $cond);
 
     //Preparo l'array che restituirò, quello con tutte le scadenze
-    $scad = array();
+    $scad = [];
     foreach ($fatture as $f) {
       $d = new DateTime($f['Fatturaemessa']['data']);
       if (isset($f['Fatturaemessa']['ScadPagamento'])) {
@@ -90,7 +90,7 @@ class FattureemesseController extends AppController
 
     if ($acconto > $totLordo + 1 - $parziale) {
       $this->Session->setFlash('Impossibile che l\'acconto sia superiore al totale fattura');
-      $this->redirect(array('action' => 'index'));
+      $this->redirect(['action' => 'index']);
     }
 
     //Aggiungo una riga in prima nota
@@ -136,7 +136,7 @@ class FattureemesseController extends AppController
   {
     if (!$id) {
       $this->Session->setFlash(__('Invalid fatturaemessa'));
-      $this->redirect(array('action' => 'index'));
+      $this->redirect(['action' => 'index']);
     }
 
     //Questo mi serve per tirare su l'anagrafica dell'utente
@@ -167,7 +167,7 @@ class FattureemesseController extends AppController
   {
     if (!$id) {
       $this->Session->setFlash(__('Invalid fatturaemessa'));
-      $this->redirect(array('action' => 'index'));
+      $this->redirect(['action' => 'index']);
     }
     //Questo mi serve per tirare su l'anagrafica dell'utente
     $this->Fatturaemessa->Behaviors->load('Containable');
@@ -180,7 +180,7 @@ class FattureemesseController extends AppController
     //debug($azienda);//DEBUG
     //debug($f);//DEBUG
     $url = Configure::read('fattureInCloud.fatture.nuovo'); // dentro iGAS.php
-    $request = array(
+    $request = [
       // ATTENZIONE: LE DATE PER FATTUREINCLOUD DEVONO ESSERE NEL FORMATO DD/MM/YYYY ALTRIMENTI IL CARICAMENTO FALLISCE
       "api_uid" => Configure::read('fattureInCloud.uid'), // OBBLIGATORIO
       "api_key" => Configure::read('fattureInCloud.key'), // OBBLIGATORIO
@@ -232,7 +232,7 @@ class FattureemesseController extends AppController
       "mostra_bottone_paypal" => false,
       "mostra_bottone_bonifico" => false,
       "mostra_bottone_notifica" => false,
-      "lista_articoli" => array(array( // nell'array lista_articoli deve esserci PER FORZA almeno un articolo
+      "lista_articoli" => [[ // nell'array lista_articoli deve esserci PER FORZA almeno un articolo
         "id" => "0",
         "codice" => "",
         "nome" => "", // Sul DB non c'è e se metto $f['Rigafattura'][0]['DescrizioneVoci'] è ripetuto con il campo JSON descrizione
@@ -250,13 +250,13 @@ class FattureemesseController extends AppController
         "sconto_rosso" => 0,
         "in_ddt" => false,
         "magazzino" => true
-      )),
-      "lista_pagamenti" => array(array(
+      ]],
+      "lista_pagamenti" => [[
         "data_scadenza" => date_format(date_add(date_create(explode(' ', $f['Fatturaemessa']['created'])[0]), date_interval_create_from_date_string('30 days')), 'd/m/Y'), // OBBLIGATORIO // in $f non c'è ma vedo che nel PDF della fattura di iGAS si vede 'Scadenza: 30 gg'. E' un dato fisso?
         "importo" => $f['Fatturaemessa']['TotaleNetto'], // OBBLIGATORIO
         "metodo" => "not", // OBBLIGATORIO
         "data_saldo" => "" // In $f non c'è
-      )),
+      ]],
       "ddt_numero" => "",
       "ddt_data" => "",
       "ddt_colli" => "",
@@ -279,21 +279,21 @@ class FattureemesseController extends AppController
       "PA_istituto_credito" => "",
       "PA_iban" => "",
       "PA_beneficiario" => "",
-      "extra_anagrafica" => array(array(
+      "extra_anagrafica" => [[
         "mail" => "",
         "tel" => "",
         "fax" => ""
-      )),
+      ]],
       "split_payment" => true
-    );
+    ];
     //error_log(date('Ymd_H:i:s')."|".$this->here."|".serialize($request)."\n",3,'C:\xampp\php\debug.log');//DEBUG
-    $options = array(
-      "http" => array(
+    $options = [
+      "http" => [
         "header"  => "Content-type: text/json\r\n",
         "method"  => "POST",
         "content" => json_encode($request)
-      ),
-    );
+      ],
+    ];
     $context  = stream_context_create($options);
     $result = json_decode(file_get_contents($url, false, $context), true);
     if (array_key_exists("error", $result)) {
@@ -317,18 +317,18 @@ class FattureemesseController extends AppController
     }
     $f = $this->Fatturaemessa->findById($id);
     $url = Configure::read('fattureInCloud.fatture.elimina'); // dentro iGAS.php
-    $request = array(
+    $request = [
       "api_uid" => Configure::read('fattureInCloud.uid'), // OBBLIGATORIO
       "api_key" => Configure::read('fattureInCloud.key'), // OBBLIGATORIO
       "id" => $f['Fatturaemessa']['IdFattureInCloud']
-    );
-    $options = array(
-      "http" => array(
+    ];
+    $options = [
+      "http" => [
         "header"  => "Content-type: text/json\r\n",
         "method"  => "POST",
         "content" => json_encode($request)
-      ),
-    );
+      ],
+    ];
     $context  = stream_context_create($options);
     $result = json_decode(file_get_contents($url, false, $context), true);
     if (array_key_exists("error", $result)) {
@@ -376,7 +376,7 @@ class FattureemesseController extends AppController
         $attivita_id = $this->request->data['Fatturaemessa']['attivita_id'];
         //Todo: migliorare il redirect di questa attività: se arrivo dal report fatture emesse dovrei tornare lì,
         //Il problema è che non posso usare $this->referrer perchè ritorno sull'add quando aggiungo
-        $this->redirect(array('controller' => 'attivita', 'action' => 'fatture', $attivita_id));
+        $this->redirect(['controller' => 'attivita', 'action' => 'fatture', $attivita_id]);
       } else {
         $this->Session->setFlash(__('The fatturaemessa could not be saved. Please, try again.'));
       }
@@ -385,18 +385,18 @@ class FattureemesseController extends AppController
       $this->request->data = $this->Fatturaemessa->read(null, $id);
     }
 
-    $serieOptions = array();
+    $serieOptions = [];
     $serieOptions[''] = 'Nessuna Serie';
     $serieOptions['PA'] = 'Pubblica Amministrazione';
     $this->set('serieOptions', $serieOptions);
 
     $attivita = $this->Fatturaemessa->Attivita->getlist();
-    $provenienzesoldi = $this->Fatturaemessa->ProvenienzaSoldi->find('list', array('cache' => 'provenienzasoldi', 'cacheConfig' => 'short'));
+    $provenienzesoldi = $this->Fatturaemessa->ProvenienzaSoldi->find('list', ['cache' => 'provenienzasoldi', 'cacheConfig' => 'short']);
     $this->set(compact('attivita', 'provenienzesoldi'));
 
 
     $this->loadModel('LegendaCodiciIva');
-    $codiciiva = $this->LegendaCodiciIva->find('all', array('cache' => 'LegendaCodiciIva', 'cacheConfig' => 'short'));
+    $codiciiva = $this->LegendaCodiciIva->find('all', ['cache' => 'LegendaCodiciIva', 'cacheConfig' => 'short']);
     $this->set('codiciiva', $codiciiva);
   }
 
@@ -407,7 +407,7 @@ class FattureemesseController extends AppController
       $this->redirect($this->referer());
     }
     if ($this->Fatturaemessa->delete($id)) {
-      $this->Fatturaemessa->Rigafattura->deleteAll(array('fattura_id' => $id), false);
+      $this->Fatturaemessa->Rigafattura->deleteAll(['fattura_id' => $id], false);
       echo 'cancellate anche le righe fattura';
       $this->Session->setFlash(__('Fatturaemessa deleted'));
       $this->redirect($this->referer());
@@ -421,36 +421,36 @@ class FattureemesseController extends AppController
   //Restituisce json
   public function lista($attivita_id = null, $insoddisfatte = true)
   {
-    $conditions = array();
+    $conditions = [];
     if (!empty($attivita_id)) {
       $conditions['attivita_id'] = $attivita_id;
       $conditions['Soddisfatta'] = !$insoddisfatte;
     }
     $fe = $this->Primanota->Fatturaemessa->find(
       'all',
-      array(
-        'fields' => array('id', 'Progressivo', 'AnnoFatturazione', 'Motivazione', 'TotaleLordo', 'Attivita.name'),
-        'order' => array('AnnoFatturazione DESC', 'Progressivo'),
+      [
+        'fields' => ['id', 'Progressivo', 'AnnoFatturazione', 'Motivazione', 'TotaleLordo', 'Attivita.name'],
+        'order' => ['AnnoFatturazione DESC', 'Progressivo'],
         'conditions' => $conditions,
 
-      )
+      ]
     );
 
     $fattureemesse = Hash::combine(
       $fe,
       "{n}.Fatturaemessa.id",
-      array(
+      [
         '%s-%02d - %s - %s (%d€)',
         "{n}.Fatturaemessa.AnnoFatturazione",
         "{n}.Fatturaemessa.Progressivo",
         "{n}.Fatturaemessa.Motivazione",
         "{n}.Attivita.name",
         "{n}.Fatturaemessa.TotaleLordo"
-      )
+      ]
     );
 
     $this->set(compact('fattureemesse'));
-    $this->set('_serialize', array('fattureemesse'));
+    $this->set('_serialize', ['fattureemesse']);
   }
 
 
@@ -497,7 +497,7 @@ class FattureemesseController extends AppController
 
     if ($this->Fatturaemessa->saveAssociated($fe)) {
       $this->Session->setFlash('Fattura duplicata, ora si può modificare');
-      $this->redirect(array('controller' => 'fattureemesse',  'action' => 'edit', $fattura_id));
+      $this->redirect(['controller' => 'fattureemesse',  'action' => 'edit', $fattura_id]);
     } else {
       $this->Session->setFlash('Errore nel salvataggio della fattura');
     }
@@ -505,7 +505,7 @@ class FattureemesseController extends AppController
 
   public function fatturatoperanno()
   {
-    $fatturato = array();
+    $fatturato = [];
     $this->Fatturaemessa->recurive = -1;
     $res = $this->Fatturaemessa->query(
       "SELECT SUM(Fatturaemessa.Soddisfatta) as S, Fatturaemessa.AnnoFatturazione 
@@ -523,13 +523,13 @@ class FattureemesseController extends AppController
 
   public function ultimemodifiche()
   {
-    $lastmodified = array();
+    $lastmodified = [];
 
-    $res = $this->Fatturaemessa->find('all', array(
-      'fields' => array('Fatturaemessa.Motivazione', 'Fatturaemessa.modified'),
+    $res = $this->Fatturaemessa->find('all', [
+      'fields' => ['Fatturaemessa.Motivazione', 'Fatturaemessa.modified'],
       'limit' => '10',
-      'order' => array('Fatturaemessa.modified' => 'desc')
-    ));
+      'order' => ['Fatturaemessa.modified' => 'desc']
+    ]);
 
     foreach ($res as $r) {
       $lastmodified[$r['Fatturaemessa']['id']]['Nome'] = $r['Fatturaemessa']['Motivazione'];
@@ -547,21 +547,21 @@ class FattureemesseController extends AppController
       $anno = date('Y');
     }
 
-    $pn = $this->Fatturaemessa->find('all', array(
-      'fields' => array(
+    $pn = $this->Fatturaemessa->find('all', [
+      'fields' => [
         'Faseattivita.id as id', 'Faseattivita.descrizione as descrizione', '.data', 'Primanota.Descr', 'Primanota.importo',
         'IF(Primanota.importo>0,"Entrate","Uscite") as Importi',
         'Attivita.name', 'Persona.DisplayName', 'LegendaCatSpesa.name', 'Provenienzasoldi.name'
-      ),
-      'conditions' => array('Primanota.data >=' => "$anno-01-01", 'Primanota.data <=' =>  "$anno-12-31"),
-      'order' => array('Primanota.data'),
-    ));
+      ],
+      'conditions' => ['Primanota.data >=' => "$anno-01-01", 'Primanota.data <=' =>  "$anno-12-31"],
+      'order' => ['Primanota.data'],
+    ]);
 
     foreach ($pn as &$row) {
       $row = Set::flatten($row);
     }
 
     $this->set('r', $pn);
-    $this->set('_serialize', array('r'));
+    $this->set('_serialize', ['r']);
   }
 }

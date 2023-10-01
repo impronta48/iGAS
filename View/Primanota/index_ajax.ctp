@@ -1,15 +1,15 @@
-<?php echo $this->Html->script("jquery.tagsinput.min",array('inline' => false)); ?>
-<?php echo $this->Html->script("tags",array('inline' => false)); ?>
+<?php echo $this->Html->script("jquery.tagsinput.min",['inline' => false]); ?>
+<?php echo $this->Html->script("tags",['inline' => false]); ?>
 <?php echo $this->Html->css('jquery.tagsinput.min'); ?>
 
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
-<?php echo $this->Html->script('faseattivita',array('inline' => false)); ?>
+<?php echo $this->Html->script('faseattivita',['inline' => false]); ?>
 <?php $baseformclass = ' form-control form-cascade-control input-xs '; ?> 
 
 <?php if (isset($this->request->params['pass'][0]))
     {
       $id = $this->request->params['pass'][0];
-      echo $this->element('secondary_attivita', array('aid'=>$id)); 
+      echo $this->element('secondary_attivita', ['aid'=>$id]); 
       $this->Html->addCrumb("Attività", "/attivita/");
       if(isset($primanota[0])) {
 		$this->Html->addCrumb("Attività  [" . $primanota[0]['Attivita']['id'] . "] - " . $primanota[0]['Attivita']['name'], "/attivita/edit/$id");
@@ -49,7 +49,7 @@
  
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
 $('document').ready(function() {
     $('.dataTable').dataTable({  
 	        "aaSorting": [[ 0, 'desc' ]],

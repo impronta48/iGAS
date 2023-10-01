@@ -7,7 +7,7 @@
         <div class="panel-heading">
             <h3 class="panel-title">
             <i class="fa fa-file-text"></i> Documenti Ricevuti
-            <?php echo $this->Html->link('<i class="fa fa-plus"></i> Nuovo Documento Ricevuto', array('action' => 'add'), array('class'=>'btn btn-default','escape'=>false)); ?>
+            <?php echo $this->Html->link('<i class="fa fa-plus"></i> Nuovo Documento Ricevuto', ['action' => 'add'], ['class'=>'btn btn-default','escape'=>false]); ?>
 
             <span class="pull-right">
             Ricerca Avanzata <a href="#" class="panel-minimize col-md-4"><i class="fa fa-chevron-down"></i></a>
@@ -17,70 +17,70 @@
         <div class="panel-body">
                 <!-- Form di Ricerca -->
                 <?php
-                echo $this->Form->create("FatturaRicevuta",array(
-                        'url' => array('action' => 'index'),
+                echo $this->Form->create("FatturaRicevuta",[
+                        'url' => ['action' => 'index'],
                         'type' => 'get',
-                        'inputDefaults' => array(
+                        'inputDefaults' => [
                             'div' => 'form-group ',
                             'wrapInput' => true,
                             'class' => $baseformclass
-                        ),
+                        ],
                         'class' => ' form-inline',
-                    ));
+                    ]);
                 ?>        
                 
-                <?php echo $this->Form->input('attivita', array('label'=>'Attivita', 
+                <?php echo $this->Form->input('attivita', ['label'=>'Attivita', 
                                                                 'empty'=>'---', 
                                                                 'value'=>$this->request->query('attivita'),
                                                                 'multiple'=>true,
                                                                 'class' => $baseformclass . ' chosen-select'
-                                            )); ?>
-                <?php echo $this->Form->input('persona', array('label'=>'Fornitore', 
+                                            ]); ?>
+                <?php echo $this->Form->input('persona', ['label'=>'Fornitore', 
                                                                 'empty'=>'---', 
                                                                 'value'=>$this->request->query('persona') ,
                                                                 'multiple'=>true,
                                                                 'class' => $baseformclass . ' chosen-select'
-                                            )); ?>
-                <?php echo $this->Form->input('provenienzasoldi', array('label'=>'Provenienza', 'empty'=>'---', 'value'=>$this->request->query('provenienzasoldi') )); ?>
+                                            ]); ?>
+                <?php echo $this->Form->input('provenienzasoldi', ['label'=>'Provenienza', 'empty'=>'---', 'value'=>$this->request->query('provenienzasoldi') ]); ?>
                 <?php 
                         $anni = Configure::read('Fattureemesse.anni');	
-                        $options = array();
+                        $options = [];
                         for ($i=date('Y'); $i>=date('Y')-$anni; $i--)
                         {
                             $options[$i] = $i;			
                         }
                         $options['*'] = 'Tutti';
                 ?>
-                <?php echo $this->Form->input('anno', array('default'=>date('Y'), 'label'=>'Anno pagamento', 
+                <?php echo $this->Form->input('anno', ['default'=>date('Y'), 'label'=>'Anno pagamento', 
                                                         'value'=>$this->request->query('anno'),
                                                         'options'=>$options,
-                                        )); ?>
-                <?php echo $this->Form->input('annoF', array('default'=>'Tutti', 'label'=>'Anno fattura', 
+                                        ]); ?>
+                <?php echo $this->Form->input('annoF', ['default'=>'Tutti', 'label'=>'Anno fattura', 
                                                         'value'=>$this->request->query('annoF'),
                                                         'options'=>$options,
-                                        )); ?>                            
-                <?php echo $this->Form->input('pagato', array('label'=>'Pagato', 
+                                        ]); ?>                            
+                <?php echo $this->Form->input('pagato', ['label'=>'Pagato', 
                                                         'value'=>$this->request->query('pagato'),
                                                         'empty' => '---',
-                                                        'options'=>array(
+                                                        'options'=>[
                                                             1=> 'Pagato',
                                                             -1=> 'Da Pagare',
-                                                            )
-                                        )); ?>
-                <?php echo $this->Form->input('legendatipodocumento', array('label'=>'Tipo Documento', 
+                                                            ]
+                                        ]); ?>
+                <?php echo $this->Form->input('legendatipodocumento', ['label'=>'Tipo Documento', 
                                                                 'empty'=>'---', 
                                                                 'value'=>$this->request->query('legendatipodocumento') ,
                                                                 'multiple'=>true,
                                                                 'class' => $baseformclass . ' chosen-select',
                                                                 'options'=>$legendatipodocumento,
-                                            )); ?>
-                <?php echo $this->Form->input('legendacatspesa', array('label'=>'Tipo Spesa', 
+                                            ]); ?>
+                <?php echo $this->Form->input('legendacatspesa', ['label'=>'Tipo Spesa', 
                                                                 'empty'=>'---', 
                                                                 'value'=>$this->request->query('legendacatspesa') ,
                                                                 'multiple'=>true,
                                                                 'class' => $baseformclass . ' chosen-select',
                                                                 'options'=>$legendacatspesa
-                                            )); ?>
+                                            ]); ?>
 
                 <?php echo $this->Form->end('Filtra'); ?>
             </div>
@@ -113,16 +113,16 @@
             <?php 
             foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
                 if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$f['Fatturaricevuta']['id'].'.'.$ext)){
-                    echo $this->Html->link('View Doc', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$f['Fatturaricevuta']['id'].'.'.$ext, array('class'=>'btn btn-xs btn-primary','title'=>'View or Download this Document')); 
+                    echo $this->Html->link('View Doc', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$f['Fatturaricevuta']['id'].'.'.$ext, ['class'=>'btn btn-xs btn-primary','title'=>'View or Download this Document']); 
                 }
             }
 			?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $f['Fatturaricevuta']['id']), array('class'=>'btn btn-xs btn-primary')); ?>
-			<?php echo $this->Html->link(__('Del'), array('action' => 'delete', $f['Fatturaricevuta']['id']), array('class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete # %s?', $f['Fatturaricevuta']['id'])); ?>
+			<?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $f['Fatturaricevuta']['id']], ['class'=>'btn btn-xs btn-primary']); ?>
+			<?php echo $this->Html->link(__('Del'), ['action' => 'delete', $f['Fatturaricevuta']['id']], ['class'=>'btn btn-xs btn-primary'], __('Are you sure you want to delete # %s?', $f['Fatturaricevuta']['id'])); ?>
 		    <?php if ($f['Fatturaricevuta']['pagato'] || $f['Fatturaricevuta']['soddisfatta'] == $f['Fatturaricevuta']['importo'])
             {   //Se pagato vado alla riga di prima nota corrispondente
             ?>
-                <?php echo $this->Html->link(__('Pagato'), array('controller'=>'primanota', 'action' => 'viewfr', $f['Fatturaricevuta']['id']), array('class'=>'btn btn-xs btn-success') ); ?>
+                <?php echo $this->Html->link(__('Pagato'), ['controller'=>'primanota', 'action' => 'viewfr', $f['Fatturaricevuta']['id']], ['class'=>'btn btn-xs btn-success'] ); ?>
             <?php
             } else if(isset($f['Fatturaricevuta']['soddisfatta']) && $f['Fatturaricevuta']['soddisfatta'] > 0) {
            ?>
@@ -135,14 +135,14 @@
                     Paga <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                 </button>
         <ul class="dropdown-menu" role="menu">
-            <li><?php echo $this->Html->link('Paga Importo Totale', array('class' => "btn btn-default btn-sm", 'action' => 'add2primanota', $f['Fatturaricevuta']['id'])); ?></li>
+            <li><?php echo $this->Html->link('Paga Importo Totale', ['class' => "btn btn-default btn-sm", 'action' => 'add2primanota', $f['Fatturaricevuta']['id']]); ?></li>
             <li>
-    <form method="post" class="form-inline" action="<?php echo $this->Html->url(array('action'=>'add2primanota', $f['Fatturaricevuta']['id'])); ?>">  
+    <form method="post" class="form-inline" action="<?php echo $this->Html->url(['action'=>'add2primanota', $f['Fatturaricevuta']['id']]); ?>">  
         <input type="submit" class="btn btn-default btn-sm" value="Paga">
         <div class="col-xs-8"> 
         <?php 
         $dapagare = $f['Fatturaricevuta']['importo'] - $f['Fatturaricevuta']['soddisfatta'];
-        echo $this->Form->input('importo', array('label' => false, 'class' => 'form-control input-sm', 'default' => $dapagare)); ?>
+        echo $this->Form->input('importo', ['label' => false, 'class' => 'form-control input-sm', 'default' => $dapagare]); ?>
         </div> 
     </form></li>
         </ul>
@@ -155,14 +155,14 @@
                     Paga <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                 </button>
         <ul class="dropdown-menu" role="menu">
-            <li><?php echo $this->Html->link('Paga Importo Totale', array('class' => "btn btn-default btn-sm", 'action' => 'add2primanota', $f['Fatturaricevuta']['id'])); ?></li>
+            <li><?php echo $this->Html->link('Paga Importo Totale', ['class' => "btn btn-default btn-sm", 'action' => 'add2primanota', $f['Fatturaricevuta']['id']]); ?></li>
             <li>
-    <form method="post" class="form-inline" action="<?php echo $this->Html->url(array('action'=>'add2primanota', $f['Fatturaricevuta']['id'])); ?>">  
+    <form method="post" class="form-inline" action="<?php echo $this->Html->url(['action'=>'add2primanota', $f['Fatturaricevuta']['id']]); ?>">  
         <input type="submit" class="btn btn-default btn-sm" value="Paga">
         <div class="col-xs-8"> 
         <?php 
         $dapagare = $f['Fatturaricevuta']['importo'] - $f['Fatturaricevuta']['soddisfatta'];
-        echo $this->Form->input('importo', array('label' => false, 'class' => 'form-control input-sm', 'default' => $dapagare)); ?>
+        echo $this->Form->input('importo', ['label' => false, 'class' => 'form-control input-sm', 'default' => $dapagare]); ?>
         </div> 
     </form></li>
         </ul>
@@ -177,7 +177,7 @@
         	<br>        
 			<small>
 				<?php echo $this->Html->link($f['Attivita']['name'], 
-						array('controller' => 'attivita', 'action' => 'edit', $f['Attivita']['id'])); 
+						['controller' => 'attivita', 'action' => 'edit', $f['Attivita']['id']]); 
 				?>
 			</small>
 		</td>
@@ -208,7 +208,7 @@
         </td>
 		<td><?php echo h($f['Fatturaricevuta']['dataFattura']); ?></td>
 		<td> <small>
-			<?php echo $this->Html->link($f['Fornitore']['DisplayName'], array('controller' => 'persone', 'action' => 'edit', $f['Fornitore']['id'])); ?>
+			<?php echo $this->Html->link($f['Fornitore']['DisplayName'], ['controller' => 'persone', 'action' => 'edit', $f['Fornitore']['id']]); ?>
 			</small>
 		</td>
 		<td><?php echo h($f['LegendaCatSpesa']['name']); ?></td>
@@ -235,7 +235,7 @@
    </div>
  </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
   $('.dropdown-menu').find('form').click(function (e) {
     e.stopPropagation();
   });
@@ -243,7 +243,7 @@
 
 
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>  
+<?php $this->Html->scriptStart(['inline' => false]); ?>  
   $('document').ready(function(){
 
     $(".panel-body").hide();

@@ -1,4 +1,4 @@
-<h1 id="DisplayName"><?php echo $persona['DisplayName'] ?> <?php echo $this->Html->image($profilePath, array('class'=>'', 'style' => 'border-radius: 50%; border: 3px solid #ffffff; width:50px', 'alt'=>'')); ?></h1>
+<h1 id="DisplayName"><?php echo $persona['DisplayName'] ?> <?php echo $this->Html->image($profilePath, ['class'=>'', 'style' => 'border-radius: 50%; border: 3px solid #ffffff; width:50px', 'alt'=>'']); ?></h1>
 <hr>
 <?php //debug($persona); ?>
 <div class="row">

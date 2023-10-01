@@ -4,10 +4,10 @@ App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 
 class User extends AppModel{
 	var $name = 'User';
-	var $belongsTo = array('Persona');
+	var $belongsTo = ['Persona'];
 
 	//Hash della pwd prima di salvare
-	public function beforeSave($options = array()) {
+	public function beforeSave($options = []) {
 		if (isset($this->data[$this->alias]['password'])) {
 			$this->data[$this->alias]['password'] =  AuthComponent::password($this->data[$this->alias]['password']);                
 		}

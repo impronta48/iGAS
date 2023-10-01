@@ -11,7 +11,7 @@ class RighefattureController extends AppController {
 	function view($id = null) {
 		if (!$id) {
 			$this->Session->setFlash(__('Invalid rigafattura'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect(['action' => 'index']);
 		}
 		$this->set('rigafattura', $this->Rigafattura->read(null, $id));
 	}
@@ -20,7 +20,7 @@ class RighefattureController extends AppController {
         if (empty($fattura_id) && (empty($this->request->data)))
         {
             $this->Session->setFlash(__('Devi associare la riga ad una fattura'));
-            $this->redirect(array('controller' => 'attivita', 'action' => 'index'));
+            $this->redirect(['controller' => 'attivita', 'action' => 'index']);
         }
 		if (!empty($this->request->data)) {
 			$this->Rigafattura->create();
@@ -28,12 +28,12 @@ class RighefattureController extends AppController {
 			if ($this->Rigafattura->save($this->request->data)) {
                 $fid = $this->request->data['Rigafattura']['fattura_id'];
 				$this->Session->setFlash(__('The rigafattura has been saved'));
-				$this->redirect(array('controller'=>'fattureemesse', 'action'=>'edit', $fid ));
+				$this->redirect(['controller'=>'fattureemesse', 'action'=>'edit', $fid ]);
 			} else {
 				$this->Session->setFlash(__('The rigafattura could not be saved. Please, try again.'));
 			}
 		}
-        $codiciiva = $this->Rigafattura->LegendaCodiciIva->find('list',array('cache' => 'LegendaCodiciIva', 'cacheConfig' => 'short'));
+        $codiciiva = $this->Rigafattura->LegendaCodiciIva->find('list',['cache' => 'LegendaCodiciIva', 'cacheConfig' => 'short']);
         $this->set('fattura_id', $fattura_id);
         $this->set(compact('codiciiva'));
 	}
@@ -41,19 +41,19 @@ class RighefattureController extends AppController {
 	function edit($id = null) {
 		if (!$id && empty($this->request->data)) {
 			$this->Session->setFlash(__('Invalid rigafattura'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect(['action' => 'index']);
 		}
 		if (!empty($this->request->data)) {
 			if ($this->Rigafattura->save($this->request->data)) {
                 $fid = $this->request->data['Rigafattura']['fattura_id'];
 				$this->Session->setFlash(__('The rigafattura has been saved'));
-				$this->redirect(array('controller'=>'fattureemesse', 'action'=>'edit', $fid ));
+				$this->redirect(['controller'=>'fattureemesse', 'action'=>'edit', $fid ]);
 			} else {
 				$this->Session->setFlash(__('The rigafattura could not be saved. Please, try again.'));
 			}
 		}
 		if (empty($this->request->data)) {
-            $codiciiva = $this->Rigafattura->LegendaCodiciIva->find('list',array('cache' => 'LegendaCodiciIva', 'cacheConfig' => 'short'));
+            $codiciiva = $this->Rigafattura->LegendaCodiciIva->find('list',['cache' => 'LegendaCodiciIva', 'cacheConfig' => 'short']);
             $this->set(compact('codiciiva'));
 			$this->request->data = $this->Rigafattura->read(null, $id);
 		}
@@ -87,16 +87,16 @@ class RighefattureController extends AppController {
 
 			if (!$id) {
 				$this->Session->setFlash(__('Invalid id for rigafattura'));
-				$this->redirect(array('action'=>'index'));
+				$this->redirect(['action'=>'index']);
 			}
 		    $fatt = $this->Rigafattura->findById($id);
 		    $fid = $fatt['Rigafattura']['fattura_id'];
 			if ($this->Rigafattura->delete($id)) {
 				$this->Session->setFlash(__('Rigafattura deleted'));
-				$this->redirect(array('controller'=>'fattureemesse', 'action'=>'edit', $fid ));
+				$this->redirect(['controller'=>'fattureemesse', 'action'=>'edit', $fid ]);
 			}
 			$this->Session->setFlash(__('Rigafattura was not deleted'));
-			$this->redirect(array('action' => 'index'));
+			$this->redirect(['action' => 'index']);
 
 		}
 	}

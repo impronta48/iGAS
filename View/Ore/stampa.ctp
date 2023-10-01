@@ -29,8 +29,8 @@
 
 <div class="notaspese view">
     <div class="actions hidden-print">
-        <a href="<?php echo $this->Html->url(array('ext'=>'pdf'))?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Pdf</a>
-        <a href="<?php echo $this->Html->url(array('ext'=>'xls'))?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Xls</a>
+        <a href="<?php echo $this->Html->url(['ext'=>'pdf'])?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Pdf</a>
+        <a href="<?php echo $this->Html->url(['ext'=>'xls'])?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Xls</a>
     </div>
 
     <br>
@@ -40,7 +40,7 @@
             <td width="50%">
                 <div class="row">
                 <div class="clearfix col-md-4 col-md-offset-1">
-                    <?php echo $this->Html->image(Configure::read('iGas.Logo'), array('fullBase' => true,'style'=>'max-width:200px')); ?>
+                    <?php echo $this->Html->image(Configure::read('iGas.Logo'), ['fullBase' => true,'style'=>'max-width:200px']); ?>
                 </div>
                 </div>
                 <div class="row">

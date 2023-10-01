@@ -1,6 +1,6 @@
 <?php 
     // Questo blocco per creare le option dei mesi dovrebbe essere messo in un component
-	$mesi[] = array();
+	$mesi[] = [];
 	for($i = 1; $i <= 12; $i++) {
         switch($i) {
             case 1:
@@ -66,10 +66,10 @@
     ?>
     <h4>Seleziona il mese e poi clicca sul report voluto per vedere i riassunti caricamento fogli ore di tutti i dipendenti </h4>
     <?php
-    echo $this->Form->input('selectMonth', array('type'=>'select', 'label' => false, 'options' => $mesi, 'default' => date('m'), 'wrapInput' => 'col col-md-3', 'class' => 'form-control', 'autocomplete' => 'off'));
-    echo $this->Html->link('<i class="fa fa-download"></i> Foglio Presenze',array('controller'=>'persone','action'=>'consulente', $this->request->pass[0], $currentMonth),array('id' => 'foglioPresenzeTotale', 'class'=>'btn btn-primary', 'escape'=>false, 'title'=>$selectedMonth.' - Foglio presenze per il consulente del lavoro')) . ' ' .
-    $this->Html->link('<i class="fa fa-download"></i> Report Ore-Attivit&agrave;',array('controller'=>'persone','action'=>'report', $this->request->pass[0], $currentMonth),array('id' => 'reportOreAttivitaTotale', 'class'=>'btn btn-primary', 'escape'=>false, 'title'=>$selectedMonth.' - Scarica il Report Ore-Attivit&agrave')) . ' ' .
-    $this->Html->link('<i class="fa fa-download"></i> Report Ore-Fasi',array('controller'=>'persone','action'=>'report_fasi', $this->request->pass[0], $currentMonth),array('id' => 'reportOreFasiTotale', 'class'=>'btn btn-primary', 'escape'=>false, 'title'=>$selectedMonth.' - Scarica il Report Ore-Fasi'));
+    echo $this->Form->input('selectMonth', ['type'=>'select', 'label' => false, 'options' => $mesi, 'default' => date('m'), 'wrapInput' => 'col col-md-3', 'class' => 'form-control', 'autocomplete' => 'off']);
+    echo $this->Html->link('<i class="fa fa-download"></i> Foglio Presenze',['controller'=>'persone','action'=>'consulente', $this->request->pass[0], $currentMonth],['id' => 'foglioPresenzeTotale', 'class'=>'btn btn-primary', 'escape'=>false, 'title'=>$selectedMonth.' - Foglio presenze per il consulente del lavoro']) . ' ' .
+    $this->Html->link('<i class="fa fa-download"></i> Report Ore-Attivit&agrave;',['controller'=>'persone','action'=>'report', $this->request->pass[0], $currentMonth],['id' => 'reportOreAttivitaTotale', 'class'=>'btn btn-primary', 'escape'=>false, 'title'=>$selectedMonth.' - Scarica il Report Ore-Attivit&agrave']) . ' ' .
+    $this->Html->link('<i class="fa fa-download"></i> Report Ore-Fasi',['controller'=>'persone','action'=>'report_fasi', $this->request->pass[0], $currentMonth],['id' => 'reportOreFasiTotale', 'class'=>'btn btn-primary', 'escape'=>false, 'title'=>$selectedMonth.' - Scarica il Report Ore-Fasi']);
     ?>
     <br>
     <br>
@@ -77,20 +77,20 @@
 
 <h2>Filtra i fogli ore</h2>
 
-<?php echo $this->Form->create('RiassuntoCaricamenti', array('id' => 'stats-form','type' => 'get',
-	'inputDefaults' => array(
+<?php echo $this->Form->create('RiassuntoCaricamenti', ['id' => 'stats-form','type' => 'get',
+	'inputDefaults' => [
 		'div' => 'form-group',
-		'label' => array(
+		'label' => [
 			'class' => 'col col-md-3 control-label'
-		),
+		],
 		'wrapInput' => 'col col-md-9',
 		'class' => 'form-control'
-	),
+	],
 	'class' => 'well form-horizontal'
-    )); ?>
-<?php echo $this->Form->input('persone', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p)); ?>
-<?php echo $this->Form->input('attivita', array('label'=>'Attività', 'multiple'=>true,'class'=>'chosen-select'. $baseformclass, 'options'=>$attivita_list, 'value'=>$a, 'data-placeholder'=>'Filtra per Attività')); ?>
-<?php echo $this->Form->submit(__('Filtra i Risultati'), array('class'=>'col-md-offset-2 btn btn-primary')); ?>
+    ]); ?>
+<?php echo $this->Form->input('persone', ['multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p]); ?>
+<?php echo $this->Form->input('attivita', ['label'=>'Attività', 'multiple'=>true,'class'=>'chosen-select'. $baseformclass, 'options'=>$attivita_list, 'value'=>$a, 'data-placeholder'=>'Filtra per Attività']); ?>
+<?php echo $this->Form->submit(__('Filtra i Risultati'), ['class'=>'col-md-offset-2 btn btn-primary']); ?>
 <?php echo $this->Form->end(); ?>
 
 <?php 
@@ -109,25 +109,25 @@
 <h3>Dipendente <?php echo $key ?></h3>
 
 <table class="table table-striped">
-    <thead><?php echo $this->Html->tableHeaders( array('Mese', 'Ore', 'Media ore/gg', 'Azioni') ); ?></thead>
+    <thead><?php echo $this->Html->tableHeaders( ['Mese', 'Ore', 'Media ore/gg', 'Azioni'] ); ?></thead>
     <tbody>
         <?php for ($i = 1; $i<=12; $i++) { ?>
         <?php if (isset($p[$i])) { ?>
-            <tr><?php echo $this->Html->tableCells(array("<strong>$i</strong>", $p[$i],$p[$i] / 20, 
-                array(
-                    $this->Html->link('<i class="fa fa-upload"></i> Importa Xls',array('controller'=>'ore','action'=>'upload'), array('class'=>'btn btn-info', 'escape'=>false)) . ' ' .
-                    $this->Html->link('<i class="fa fa-download"></i> Foglio Presenze',array('controller'=>'persone','action'=>'consulente', $this->request->pass[0], $i, $p['Id']),array('class'=>'btn btn-primary', 'escape'=>false, 'title'=>$key.' - Foglio presenze per il consulente del lavoro')) . ' ' .
-                    $this->Html->link('<i class="fa fa-download"></i> Report Ore-Attivit&agrave;',array('controller'=>'persone','action'=>'report', $this->request->pass[0], $i, $p['Id']),array('class'=>'btn btn-primary', 'escape'=>false, 'title'=>'Scarica il Report Ore-Attivit&agrave; di '.$key)) . ' ' .
-					$this->Html->link('<i class="fa fa-download"></i> Report Ore-Fasi',array('controller'=>'persone','action'=>'report_fasi', $this->request->pass[0], $i, $p['Id']),array('class'=>'btn btn-primary', 'escape'=>false, 'title'=>'Scarica il Report Ore-Fasi di '.$key))
+            <tr><?php echo $this->Html->tableCells(["<strong>$i</strong>", $p[$i],$p[$i] / 20, 
+                [
+                    $this->Html->link('<i class="fa fa-upload"></i> Importa Xls',['controller'=>'ore','action'=>'upload'], ['class'=>'btn btn-info', 'escape'=>false]) . ' ' .
+                    $this->Html->link('<i class="fa fa-download"></i> Foglio Presenze',['controller'=>'persone','action'=>'consulente', $this->request->pass[0], $i, $p['Id']],['class'=>'btn btn-primary', 'escape'=>false, 'title'=>$key.' - Foglio presenze per il consulente del lavoro']) . ' ' .
+                    $this->Html->link('<i class="fa fa-download"></i> Report Ore-Attivit&agrave;',['controller'=>'persone','action'=>'report', $this->request->pass[0], $i, $p['Id']],['class'=>'btn btn-primary', 'escape'=>false, 'title'=>'Scarica il Report Ore-Attivit&agrave; di '.$key]) . ' ' .
+					$this->Html->link('<i class="fa fa-download"></i> Report Ore-Fasi',['controller'=>'persone','action'=>'report_fasi', $this->request->pass[0], $i, $p['Id']],['class'=>'btn btn-primary', 'escape'=>false, 'title'=>'Scarica il Report Ore-Fasi di '.$key])
 					, 
-                    array('class'=>'actions'))
-            )); ?></tr>
+                    ['class'=>'actions']]
+            ]); ?></tr>
         <?php } else { ?>
-            <tr><?php echo $this->Html->tableCells(array("<strong>$i</strong>", 'Manca','',
-                array(
-                    $this->Html->link('<i class="fa fa-upload"></i> Importa Xls',array('controller'=>'ore','action'=>'upload'), array('class'=>'btn btn-info', 'escape'=>false)),
-                    array('class'=>'actions'))
-                )); ?>
+            <tr><?php echo $this->Html->tableCells(["<strong>$i</strong>", 'Manca','',
+                [
+                    $this->Html->link('<i class="fa fa-upload"></i> Importa Xls',['controller'=>'ore','action'=>'upload'], ['class'=>'btn btn-info', 'escape'=>false]),
+                    ['class'=>'actions']]
+                ]); ?>
             </tr>
         <?php } ?>
         <?php } ?>
@@ -136,7 +136,7 @@
 <?php } ?>
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
 $(function() {
     $('#selectMonth').on('change', function(sel){
         $('#foglioPresenzeTotale').attr('title', sel.target[$(this).val()-1].text + ' - Foglio presenze per il consulente del lavoro');

@@ -13,8 +13,8 @@
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 
-		<li><?php echo $this->Html->link(__('List Provenienzesoldi'), array('action' => 'index')); ?></li>
-		<li><?php echo $this->Html->link(__('List Aziende'), array('controller' => 'aziende', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Azienda'), array('controller' => 'aziende', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Provenienzesoldi'), ['action' => 'index']); ?></li>
+		<li><?php echo $this->Html->link(__('List Aziende'), ['controller' => 'aziende', 'action' => 'index']); ?> </li>
+		<li><?php echo $this->Html->link(__('New Azienda'), ['controller' => 'aziende', 'action' => 'add']); ?> </li>
 	</ul>
 </div>

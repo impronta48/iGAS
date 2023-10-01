@@ -45,10 +45,10 @@ $this->Html->addCrumb('Cespiti', '/cespiti');
                  </button>
                  <ul class="dropdown-menu" role="menu">                  
                   <li >
-                    <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $cespite['Cespite']['id'])); ?>
+                    <?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $cespite['Cespite']['id']]); ?>
                   </li>
                   <li >
-                    <?php echo $this->Html->link(__('Delete'), array('action' => 'delete', $cespite['Cespite']['id']), null, sprintf(__('Are you sure you want to delete # %s?'), $cespite['Cespite']['id'])); ?>
+                    <?php echo $this->Html->link(__('Delete'), ['action' => 'delete', $cespite['Cespite']['id']], null, sprintf(__('Are you sure you want to delete # %s?'), $cespite['Cespite']['id'])); ?>
                   </li>                  
                 </ul>
             </div>

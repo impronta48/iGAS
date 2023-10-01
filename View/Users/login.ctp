@@ -14,27 +14,27 @@
 
             <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
 
-            <?php echo $this->Form->create('User', array(
-       			'url' => array('controller' => 'users', 'action' =>'login'),
-				    'inputDefaults' => array(									
+            <?php echo $this->Form->create('User', [
+       			'url' => ['controller' => 'users', 'action' =>'login'],
+				    'inputDefaults' => [									
 									'label' => false,
 									'class' => 'form-horizontal',
 									'id' => 'loginform',
 									'role' => 'form',
-						)));
+						]]);
        			?>
 
 
             <div style="margin-bottom: 25px" class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                 <?php echo $this->Form->input('User.username',
-          				array('type'=> 'text', 'placeholder'=>'Nome utente o mail')); ?>
+          				['type'=> 'text', 'placeholder'=>'Nome utente o mail']); ?>
             </div>
 
             <div style="margin-bottom: 25px" class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                 <?php echo $this->Form->input('User.password', 
-          				array('type'=> 'password', 'placeholder'=>'password') );?>
+          				['type'=> 'password', 'placeholder'=>'password'] );?>
 
             </div>
 
@@ -52,8 +52,8 @@
 
                 <div class="col-sm-12 controls">
                     <?php echo $this->Html->link(__('Login Facebook'), '../oauth2/fbLogin', 
-                    				array('class'=>'btn btn-info pull-right', 'id'=>"btn-fblogin")); ?>
-                    <?php echo $this->Form->submit('Login', array('class' => 'btn btn-success pull-right','id'=>"btn-login"));?>
+                    				['class'=>'btn btn-info pull-right', 'id'=>"btn-fblogin"]); ?>
+                    <?php echo $this->Form->submit('Login', ['class' => 'btn btn-success pull-right','id'=>"btn-login"]);?>
                 </div>
             </div>
 

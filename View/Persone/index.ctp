@@ -1,6 +1,6 @@
-<?php echo $this->Html->script("persona.js",array('inline' => false)); ?>
-<?php echo $this->Html->script("tags.js",array('inline' => false)); ?>
-<?php echo $this->Html->script("jquery.tagsinput.min",array('inline' => false)); ?>
+<?php echo $this->Html->script("persona.js",['inline' => false]); ?>
+<?php echo $this->Html->script("tags.js",['inline' => false]); ?>
+<?php echo $this->Html->script("jquery.tagsinput.min",['inline' => false]); ?>
 <?php echo $this->Html->css('jquery.tagsinput'); ?>
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
 <?php $this->Html->addCrumb('Contatti', ''); ?>
@@ -14,52 +14,52 @@
     </h2>
     
     <?php
-        echo $this->Form->create("Persona",array(
-               'url' => array('action' => 'index'),                
+        echo $this->Form->create("Persona",[
+               'url' => ['action' => 'index'],                
                'type' => 'get',
-               'inputDefaults' => array(
+               'inputDefaults' => [
                     'div' => 'form-group',
                     'wrapInput' => false,
                     'class' => 'form-control',
-                ),
-            ));
+                ],
+            ]);
     ?>  
     
     <div class="row">
 		<div class="col-md-12">
             <div class="input-group" id="adv-search">
-                <?php echo $this->Form->input('q', array(
+                <?php echo $this->Form->input('q', [
                     'label' => false,
                     'placeholder' => 'Cerca un contatto (nome, cognome, nome completo, azienda)',                    
                     'class' => 'form-control',
                     'default' => $this->request->query('q'),
-                )); ?>                                
+                ]); ?>                                
                 <div class="input-group-btn ">
                     <div class="btn-group parent-chosen" role="group">
                         <div class="dropdown dropdown-lg">
                             <button type="button" class="btn dropdown-toggle btn-warning animate bounce" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
                             <div class="dropdown-menu dropdown-menu-right " role="menu">
                                 <?php
-                                echo $this->Form->create("Persona", array(
-                                    'url' => array('action' => 'index'),
+                                echo $this->Form->create("Persona", [
+                                    'url' => ['action' => 'index'],
                                     'type' => 'get',
-                                    'inputDefaults' => array(
+                                    'inputDefaults' => [
                                         'div' => 'form-group',
                                         'wrapInput' => false,
                                         'class' => 'form-control',
-                                    ),
-                                ));
+                                    ],
+                                ]);
                                 ?>  
                                     <label>Filtra per categoria</label>
                                     <?php
-                                    echo $this->Form->input("cat", array(
+                                    echo $this->Form->input("cat", [
                                         'placeholder' => 'categoria',
                                         'value' => $this->request->query('cat'),
                                         'class' => 'small form-control',
                                         'multiple' => 1,
                                         'options' => $taglist,
                                         'label' => false
-                                    ));
+                                    ]);
                                     ?>
                                     <button type="submit" class="btn btn-primary">Cerca</span></button>
                                 </form>
@@ -78,10 +78,10 @@
                 <label label-for="paging"><small>Risultati per pagina</small></label>
             
                 <?php
-                    echo $this->Form->input("Form.paging", array('label'=>false, 
+                    echo $this->Form->input("Form.paging", ['label'=>false, 
 													'selected'=>$this->request->query('paging'),                                                    
-                                                    'options'=> array('50' => '50', '100' => '100', '-1' => 'Tutti'),
-                                                  ));
+                                                    'options'=> ['50' => '50', '100' => '100', '-1' => 'Tutti'],
+                                                  ]);
                 ?>
             </div>                   
             <?php
@@ -93,18 +93,18 @@
     
     
     <?php
-        echo $this->Form->create("Persona",array(
-               'url' => array('action' => 'index'),    
+        echo $this->Form->create("Persona",[
+               'url' => ['action' => 'index'],    
                'type' => 'post',
                'id' => 'multiriga',
-               'inputDefaults' => array(
+               'inputDefaults' => [
                     'div' => 'form-group',
                     'label' => false,
                     'wrapInput' => false,
                     'class' => 'form-control'
-                ),
+                ],
                 'class' => ' form-inline',
-            ));
+            ]);
     ?>  
     <div class="row">
         <div class="actions col-md-9">
@@ -116,7 +116,7 @@
 				<ul class="dropdown-menu" role="menu">
 					<li><a class="subscribe-mailchimp" href="#" id="mailchimp"><i class="fa fa-envelope"></i> Lista MailChimp</a></li>
 					<li><a class="export-email" href="#" id="export-email"><i class="fa fa-envelope"></i> Elenco mail</a></li>
-                    <li><a class="export-xls" href="<?php echo $this->Html->Url(array('action'=>'index','?'=>$this->request->query,'ext'=>'xls'))?>" 
+                    <li><a class="export-xls" href="<?php echo $this->Html->Url(['action'=>'index','?'=>$this->request->query,'ext'=>'xls'])?>" 
                         id="export-xls">
                         <i class="fa fa-table"></i> 
                         Excel
@@ -172,10 +172,10 @@
         <td>
             
             <?php
-                echo $this->Form->checkbox('Persona.'. $persona['Persona']['id'] .'.id', array(                                                                                                         
+                echo $this->Form->checkbox('Persona.'. $persona['Persona']['id'] .'.id', [                                                                                                         
                                                      'class' => 'select-persona',
                                                      'hiddenField' => false  //non mi serve passare tutti gli zero
-                                                  ));
+                                                  ]);
             ?>
         </td>
         <td><?php echo $persona['Persona']['DisplayName']; ?>&nbsp;</td>
@@ -198,13 +198,13 @@
                  </button>
                  <ul class="dropdown-menu" role="menu">
                   <li>
-                    <?php echo $this->Html->link(__('View'), array('action' => 'view', $persona['Persona']['id'])); ?>
+                    <?php echo $this->Html->link(__('View'), ['action' => 'view', $persona['Persona']['id']]); ?>
                   </li>             
                   <li>
-                    <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $persona['Persona']['id'])); ?>
+                    <?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $persona['Persona']['id']]); ?>
                   </li>
                   <li>
-                    <?php echo $this->Html->link(__('Delete'), array('action' => 'delete', $persona['Persona']['id']), null, sprintf(__('Are you sure you want to delete # %s?'), $persona['Persona']['id'])); ?>
+                    <?php echo $this->Html->link(__('Delete'), ['action' => 'delete', $persona['Persona']['id']], null, sprintf(__('Are you sure you want to delete # %s?'), $persona['Persona']['id'])); ?>
                   </li>                  
                 </ul>
             </div>
@@ -213,7 +213,7 @@
             echo $this->Html->link(
                 'Edit',
                 '/persone/edit/'.$persona['Persona']['id'],
-                array('class' => 'btn btn-xs btn-primary', 'title' => 'Modifica profilo di '.$persona['Persona']['DisplayName'])
+                ['class' => 'btn btn-xs btn-primary', 'title' => 'Modifica profilo di '.$persona['Persona']['DisplayName']]
             );
             ?>
             <?php else: ?>
@@ -221,7 +221,7 @@
             echo $this->Html->link(
                 'View',
                 '/persone/view/'.$persona['Persona']['id'],
-                array('class' => 'btn btn-xs btn-primary', 'title' => 'Guarda profilo di '.$persona['Persona']['DisplayName'])
+                ['class' => 'btn btn-xs btn-primary', 'title' => 'Guarda profilo di '.$persona['Persona']['DisplayName']]
             );
             ?>
             <?php endif; ?>
@@ -232,18 +232,18 @@
     <?php echo $this->Form->end(); ?>
 	<p>
 	<?php
-	echo $this->Paginator->counter(array(
+	echo $this->Paginator->counter([
 	'format' => __('Page %page% of %pages%, showing %current% records out of %count% total')
-	));
+	]);
 	?>	</p>
 
-	<?php echo $this->Paginator->pagination(array(
+	<?php echo $this->Paginator->pagination([
 	'ul' => 'pagination'
-)); ?>
+]); ?>
 </div>
 
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
 $('document').ready(function() {
     
     $('.parent-chosen').on('shown.bs.dropdown', function () {

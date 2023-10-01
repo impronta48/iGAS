@@ -15,8 +15,8 @@
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 
-		<li><?php echo $this->Html->link(__('List Righeddt'), array('action' => 'index')); ?></li>
-		<li><?php echo $this->Html->link(__('List Ddt'), array('controller' => 'ddt', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Ddt'), array('controller' => 'ddt', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Righeddt'), ['action' => 'index']); ?></li>
+		<li><?php echo $this->Html->link(__('List Ddt'), ['controller' => 'ddt', 'action' => 'index']); ?> </li>
+		<li><?php echo $this->Html->link(__('New Ddt'), ['controller' => 'ddt', 'action' => 'add']); ?> </li>
 	</ul>
 </div>

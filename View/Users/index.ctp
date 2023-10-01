@@ -1,5 +1,5 @@
   <h1>Elenco utenti che possono accedere al sistema</h1>
-<?php echo $this->Html->link('Aggiungi Utente', 'add', array('class' => 'btn btn-primary')); ?>
+<?php echo $this->Html->link('Aggiungi Utente', 'add', ['class' => 'btn btn-primary']); ?>
   <br>
   <table  class="table dataTable">
   <tr>
@@ -21,7 +21,7 @@
 	<td ><?php echo $user['User']['modified']; ?></td>
 	<td>
             <?php echo $this->Html->link('Edit', 'edit'. '/'. $user['User']['id'] ); ?>
-            <?php echo $this->Html->link('Del',array('controller'=>'users', 'action'=>'delete',$user['User']['id']), null, "Sei sicuro?", false);?>
+            <?php echo $this->Html->link('Del',['controller'=>'users', 'action'=>'delete',$user['User']['id']], null, "Sei sicuro?", false);?>
         </td>
   </tr>
   <?php endforeach; ?>

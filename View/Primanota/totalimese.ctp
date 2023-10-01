@@ -8,7 +8,7 @@
     for ($i=date('Y')-$anni; $i<=date('Y'); $i++)
     {
     ?>
-        <a class="btn btn-default btn-animate-demo btn-xs" href="<?php echo $this->Html->url(array('action' => 'totalimese', $i)) ?>"><?php echo $i ?></a>        
+        <a class="btn btn-default btn-animate-demo btn-xs" href="<?php echo $this->Html->url(['action' => 'totalimese', $i]) ?>"><?php echo $i ?></a>        
     <?php
         }
     ?>      
@@ -44,7 +44,7 @@
             <tr>
                 <td><?php echo $pm['Primanota']['data']; ?></td>
                 <td>
-                    <?php echo $this->Html->link($pm['Attivita']['name'], array('controller'=>'primanota', 'action' => 'index', $pm['Primanota']['attivita_id'])); ?>
+                    <?php echo $this->Html->link($pm['Attivita']['name'], ['controller'=>'primanota', 'action' => 'index', $pm['Primanota']['attivita_id']]); ?>
                     - <small> <?php echo $pm['Primanota']['descr']?></small>
                 </td>
                 <td>
@@ -54,11 +54,11 @@
                 <?php if($pm['Primanota']['importo']>=0): ?>
                 <td>&nbsp;</td>
                 <td style="text-align: right;">
-                    <span><?php $importo = $this->Number->precision($pm['Primanota']['importo'],2); echo $this->Number->currency($importo,'EUR', array('negative'=>'-')); ?></span>
+                    <span><?php $importo = $this->Number->precision($pm['Primanota']['importo'],2); echo $this->Number->currency($importo,'EUR', ['negative'=>'-']); ?></span>
                 </td>
                 <?php else : ?>
                 <td style="text-align: right;">
-                    <span><?php $importo = $this->Number->precision($pm['Primanota']['importo'],2); echo $this->Number->currency($importo,'EUR', array('negative'=>'-')); ?></span>
+                    <span><?php $importo = $this->Number->precision($pm['Primanota']['importo'],2); echo $this->Number->currency($importo,'EUR', ['negative'=>'-']); ?></span>
                 </td>
                 <td>&nbsp;</td>
                 <?php endif; ?>
@@ -82,17 +82,17 @@
             ?>
             <tr style="text-align: right; font-weight: bold" class="bg-primary">
                 <td colspan="3">Mese: <?php echo $m ?></td>
-                <td><?php echo $this->Number->currency($this->Number->precision(-$speso,2), 'EUR', array('negative'=>'-')) ?></td>
-                <td><?php echo $this->Number->currency($this->Number->precision($incassato,2), 'EUR', array('negative'=>'-'))?> </td>            
-                <td><?php echo $this->Number->currency($this->Number->precision($incassato-$speso,2), 'EUR', array('negative'=>'-')) ?> </td>            
+                <td><?php echo $this->Number->currency($this->Number->precision(-$speso,2), 'EUR', ['negative'=>'-']) ?></td>
+                <td><?php echo $this->Number->currency($this->Number->precision($incassato,2), 'EUR', ['negative'=>'-'])?> </td>            
+                <td><?php echo $this->Number->currency($this->Number->precision($incassato-$speso,2), 'EUR', ['negative'=>'-']) ?> </td>            
             </tr>
             <?php } //FOR MESE  ?>    
     </tbody>
     <tfoot class="bg-success-dark">
         <td colspan="3"><b>Totale Movimenti</b></td>
-        <td><b><?php echo $this->Number->currency($this->Number->precision(-$speso_tot,2), 'EUR', array('negative'=>'-')) ?></b></td>
-        <td><b><?php echo $this->Number->currency($this->Number->precision($incassato_tot,2), 'EUR', array('negative'=>'-')) ?></b></td>
-        <td><b><?php echo $this->Number->currency($this->Number->precision($incassato_tot-$speso_tot,2), 'EUR', array('negative'=>'-')) ?></b></td>
+        <td><b><?php echo $this->Number->currency($this->Number->precision(-$speso_tot,2), 'EUR', ['negative'=>'-']) ?></b></td>
+        <td><b><?php echo $this->Number->currency($this->Number->precision($incassato_tot,2), 'EUR', ['negative'=>'-']) ?></b></td>
+        <td><b><?php echo $this->Number->currency($this->Number->precision($incassato_tot-$speso_tot,2), 'EUR', ['negative'=>'-']) ?></b></td>
     </tfoot>
 	</table>
         <p>&nbsp;</p>
@@ -102,7 +102,7 @@
   <?php endif; ?>
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
   $('.dropdown-menu').find('form').click(function (e) {
     e.stopPropagation();
   });  

@@ -36,14 +36,14 @@
 </style>
 <div class="fattureemesse view">   
     <div class="actions hidden-print">
-        <a href="<?php echo $this->Html->url(array('action'=>'stampa', $ordine['Ordine']['id']))?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Pdf</a>        
+        <a href="<?php echo $this->Html->url(['action'=>'stampa', $ordine['Ordine']['id']])?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Pdf</a>        
     </div>
     
     <table width="100%">
         <tr>
             <td width="50%">
                 <div class="clearfix">
-                    <?php echo $this->Html->image(Configure::read('iGas.Logo'), array('class'=>'col-md-3', 'fullBase' => true)); ?>                        
+                    <?php echo $this->Html->image(Configure::read('iGas.Logo'), ['class'=>'col-md-3', 'fullBase' => true]); ?>                        
                 </div>
 
                 <div class="invoice-from">

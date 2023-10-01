@@ -64,7 +64,7 @@
     
 </table>
 </div>
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
   
   $('document').ready(function(){
 	//data table

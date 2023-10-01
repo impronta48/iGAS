@@ -23,8 +23,8 @@ class LegendaMezzi extends AppModel {
  *
  * @var array
  */
-	public $hasMany = array(
-		'Notaspesa' => array(
+	public $hasMany = [
+		'Notaspesa' => [
 			'className' => 'Notaspesa',
 			'foreignKey' => 'legenda_mezzi_id',
 			'dependent' => false,
@@ -36,7 +36,7 @@ class LegendaMezzi extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		)
-	);
+		]
+	];
 
 }

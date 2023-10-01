@@ -14,7 +14,7 @@ class RigheddtController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'Session');
+	public $components = ['Paginator', 'Session'];
 
 /**
  * index method
@@ -37,7 +37,7 @@ class RigheddtController extends AppController {
 		if (!$this->Rigaddt->exists($id)) {
 			throw new NotFoundException(__('Invalid rigaddt'));
 		}
-		$options = array('conditions' => array('Rigaddt.' . $this->Rigaddt->primaryKey => $id));
+		$options = ['conditions' => ['Rigaddt.' . $this->Rigaddt->primaryKey => $id]];
 		$this->set('rigaddt', $this->Rigaddt->find('first', $options));
 	}
 
@@ -51,7 +51,7 @@ class RigheddtController extends AppController {
 			$this->Rigaddt->create();
 			if ($this->Rigaddt->save($this->request->data)) {
 				$this->Session->setFlash(__('The rigaddt has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The rigaddt could not be saved. Please, try again.'));
 			}
@@ -71,15 +71,15 @@ class RigheddtController extends AppController {
 		if (!$this->Rigaddt->exists($id)) {
 			throw new NotFoundException(__('Invalid rigaddt'));
 		}
-		if ($this->request->is(array('post', 'put'))) {
+		if ($this->request->is(['post', 'put'])) {
 			if ($this->Rigaddt->save($this->request->data)) {
 				$this->Session->setFlash(__('The rigaddt has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The rigaddt could not be saved. Please, try again.'));
 			}
 		} else {
-			$options = array('conditions' => array('Rigaddt.' . $this->Rigaddt->primaryKey => $id));
+			$options = ['conditions' => ['Rigaddt.' . $this->Rigaddt->primaryKey => $id]];
 			$this->request->data = $this->Rigaddt->find('first', $options);
 		}
 		$ddt = $this->Rigaddt->Ddt->find('list');
@@ -104,6 +104,6 @@ class RigheddtController extends AppController {
 		} else {
 			$this->Session->setFlash(__('The rigaddt could not be deleted. Please, try again.'));
 		}
-		return $this->redirect(array('action' => 'index'));
+		return $this->redirect(['action' => 'index']);
 	}
 }

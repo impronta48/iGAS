@@ -3,7 +3,7 @@ App::uses('AppHelper', 'View/Helper');
 
 class TableHelper extends AppHelper {
 
-    public $helpers = array('Number');
+    public $helpers = ['Number'];
     
     //Genera una tabella per ogni input 
     public function create_table($notaspese, $titolo) { 
@@ -13,7 +13,7 @@ class TableHelper extends AppHelper {
 
         echo "<h2 class=\"text-center\">".$titolo."</h2>";
 
-        $array_rimborsi = array();
+        $array_rimborsi = [];
         $importo_return = 0;
 
         foreach ($notaspese as $ns) {
@@ -74,7 +74,7 @@ class TableHelper extends AppHelper {
                     echo       "</small></td> 
 
                                 <td align=\"right\">".$this->Number->precision($ns['Notaspesa']['km'],0)."</td>           
-                                <td align=\"right\">".$this->Number->currency($importo,'EUR', array('negative'=>'-'))."</td>           
+                                <td align=\"right\">".$this->Number->currency($importo,'EUR', ['negative'=>'-'])."</td>           
                                 <td align=\"right\"><small>".$ns['Notaspesa']['valuta']."";
 
                             if($tasso != 1) {
@@ -91,7 +91,7 @@ class TableHelper extends AppHelper {
                                 <tr class=\"totale\">            
                                     <td class=\"bg-gray\" colspan=\"2\">Totale</td>
                                     <td class=\"bg-gray\" align=\"right\">". $this->Number->precision($tot_km,0) ."</td>
-                                    <td class=\"bg-gray\" align=\"right\">".$this->Number->currency($importo_tot,'EUR', array('negative'=>'-'))."</td>
+                                    <td class=\"bg-gray\" align=\"right\">".$this->Number->currency($importo_tot,'EUR', ['negative'=>'-'])."</td>
                                     <td class=\"bg-gray\" colspan=\"2\">&nbsp;</td>
                                 </tr>
                             </tfoot>

@@ -17,9 +17,9 @@
 						<div class="panel-body">
 							<ul class="nav nav-pills nav-stacked">
 
-		<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;'.__('Legenda'), array('action' => 'index'), array('escape' => false)); ?></li>
-		<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;'.__('Fatture Ricevute'), array('controller' => 'fatturericevute', 'action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;'.__('Nuova Fattura Ricevuta'), array('controller' => 'fatturericevute', 'action' => 'add'), array('escape' => false)); ?> </li>
+		<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;'.__('Legenda'), ['action' => 'index'], ['escape' => false]); ?></li>
+		<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;'.__('Fatture Ricevute'), ['controller' => 'fatturericevute', 'action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;'.__('Nuova Fattura Ricevuta'), ['controller' => 'fatturericevute', 'action' => 'add'], ['escape' => false]); ?> </li>
 
 							</ul>
 						</div>
@@ -27,13 +27,13 @@
 				</div>			
 		</div><!-- end col md 3 -->
 		<div class="col-md-9">
-			<?php echo $this->Form->create('LegendaTipoDocumento', array('role' => 'form')); ?>
+			<?php echo $this->Form->create('LegendaTipoDocumento', ['role' => 'form']); ?>
 
 				<div class="form-group">
-					<?php echo $this->Form->input('title', array('class' => 'form-control', 'label' => 'Nome', 'placeholder' => 'Nome'));?>
+					<?php echo $this->Form->input('title', ['class' => 'form-control', 'label' => 'Nome', 'placeholder' => 'Nome']);?>
 				</div>
 				<div class="form-group">
-					<?php echo $this->Form->submit(__('Invia'), array('class' => 'btn btn-default')); ?>
+					<?php echo $this->Form->submit(__('Invia'), ['class' => 'btn btn-default']); ?>
 				</div>
 
 			<?php echo $this->Form->end() ?>

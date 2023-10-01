@@ -15,8 +15,8 @@
 	</tr>
 	<?php
 
-	$tot = array('acquisito' => 0, 'primanota' => 0, 'preventivoentrate' => 0, 'preventivouscite' => 0, 'pne' => 0, 'pnu' => 0, 'costoore' => 0, 'notespese' => 0, 'avanzo' => 0, 'docnonincassati' => 0, 'docnonpagati' => 0);
-	$totArea = array('acquisito' => 0, 'primanota' => 0, 'preventivoentrate' => 0, 'preventivouscite' => 0, 'pne' => 0, 'pnu' => 0, 'costoore' => 0, 'notespese' => 0, 'avanzo' => 0, 'docnonincassati' => 0, 'docnonpagati' => 0);
+	$tot = ['acquisito' => 0, 'primanota' => 0, 'preventivoentrate' => 0, 'preventivouscite' => 0, 'pne' => 0, 'pnu' => 0, 'costoore' => 0, 'notespese' => 0, 'avanzo' => 0, 'docnonincassati' => 0, 'docnonpagati' => 0];
+	$totArea = ['acquisito' => 0, 'primanota' => 0, 'preventivoentrate' => 0, 'preventivouscite' => 0, 'pne' => 0, 'pnu' => 0, 'costoore' => 0, 'notespese' => 0, 'avanzo' => 0, 'docnonincassati' => 0, 'docnonpagati' => 0];
 
 	$lastarea_id = '';
 	foreach ($a as $attivita) :
@@ -51,7 +51,7 @@
 					<td></td>
 				</tr>";
 
-				$totArea = array('acquisito' => 0, 'primanota' => 0, 'preventivoentrate' => 0, 'preventivouscite' => 0, 'pne' => 0, 'pnu' => 0, 'costoore' => 0, 'notespese' => 0, 'avanzo' => 0, 'docnonincassati' => 0, 'docnonpagati' => 0);
+				$totArea = ['acquisito' => 0, 'primanota' => 0, 'preventivoentrate' => 0, 'preventivouscite' => 0, 'pne' => 0, 'pnu' => 0, 'costoore' => 0, 'notespese' => 0, 'avanzo' => 0, 'docnonincassati' => 0, 'docnonpagati' => 0];
 			}
 
 			echo "<tr><td colspan=\"10\" class=\"bg-info text-white\"><b>";
@@ -75,16 +75,16 @@
 						</button>
 						<ul class="dropdown-menu" role="menu">
 							<li class="">
-								<?php echo $this->Html->link(__('Avanzamento'), array('controller' => 'attivita', 'action' => 'avanzamento', $attivita['Attivita']['id'])); ?>
+								<?php echo $this->Html->link(__('Avanzamento'), ['controller' => 'attivita', 'action' => 'avanzamento', $attivita['Attivita']['id']]); ?>
 							</li>
 							<li class="">
-								<?php echo $this->Html->link(__('Ore'), array('controller' => 'ore', 'action' => 'stats', '?' => array('as_values_attivita' => $attivita['Attivita']['id'] . ","))); ?>
+								<?php echo $this->Html->link(__('Ore'), ['controller' => 'ore', 'action' => 'stats', '?' => ['as_values_attivita' => $attivita['Attivita']['id'] . ","]]); ?>
 							</li>
 							<li class="">
-								<?php echo $this->Html->link(__('Fasi'), array('controller' => 'faseattivita', 'action' => 'index', $attivita['Attivita']['id'])); ?>
+								<?php echo $this->Html->link(__('Fasi'), ['controller' => 'faseattivita', 'action' => 'index', $attivita['Attivita']['id']]); ?>
 							</li>
 							<li class="">
-								<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $attivita['Attivita']['id'])); ?>
+								<?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $attivita['Attivita']['id']]); ?>
 							</li>
 						</ul>
 					</div>

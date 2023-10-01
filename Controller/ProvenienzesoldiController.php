@@ -14,7 +14,7 @@ class ProvenienzesoldiController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'Session');
+	public $components = ['Paginator', 'Session'];
 
 /**
  * index method
@@ -37,7 +37,7 @@ class ProvenienzesoldiController extends AppController {
 		if (!$this->Provenienzasoldi->exists($id)) {
 			throw new NotFoundException(__('Invalid provenienzasoldi'));
 		}
-		$options = array('conditions' => array('Provenienzasoldi.' . $this->Provenienzasoldi->primaryKey => $id));
+		$options = ['conditions' => ['Provenienzasoldi.' . $this->Provenienzasoldi->primaryKey => $id]];
 		$this->set('provenienzasoldi', $this->Provenienzasoldi->find('first', $options));
 	}
 
@@ -51,7 +51,7 @@ class ProvenienzesoldiController extends AppController {
 			$this->Provenienzasoldi->create();
 			if ($this->Provenienzasoldi->save($this->request->data)) {
 				$this->Session->setFlash(__('The provenienzasoldi has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The provenienzasoldi could not be saved. Please, try again.'));
 			}
@@ -69,15 +69,15 @@ class ProvenienzesoldiController extends AppController {
 		if (!$this->Provenienzasoldi->exists($id)) {
 			throw new NotFoundException(__('Invalid provenienzasoldi'));
 		}
-		if ($this->request->is(array('post', 'put'))) {
+		if ($this->request->is(['post', 'put'])) {
 			if ($this->Provenienzasoldi->save($this->request->data)) {
 				$this->Session->setFlash(__('The provenienzasoldi has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The provenienzasoldi could not be saved. Please, try again.'));
 			}
 		} else {
-			$options = array('conditions' => array('Provenienzasoldi.' . $this->Provenienzasoldi->primaryKey => $id));
+			$options = ['conditions' => ['Provenienzasoldi.' . $this->Provenienzasoldi->primaryKey => $id]];
 			$this->request->data = $this->Provenienzasoldi->find('first', $options);
 		}				
 	}
@@ -100,6 +100,6 @@ class ProvenienzesoldiController extends AppController {
 		} else {
 			$this->Session->setFlash(__('The provenienzasoldi could not be deleted. Please, try again.'));
 		}
-		return $this->redirect(array('action' => 'index'));
+		return $this->redirect(['action' => 'index']);
 	}
 }

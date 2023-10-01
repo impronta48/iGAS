@@ -1,32 +1,32 @@
-<?php echo $this->Html->script('fattura-righe-custom',array('inline' => false)); ?>
+<?php echo $this->Html->script('fattura-righe-custom',['inline' => false]); ?>
 
 <?php 
 	if (empty($righe))
 	{
-		$righe = array();
+		$righe = [];
 	}
 	
 	//build up select options with additional info about VAT percentage
 	foreach($codiciiva as $c) {
-		$codiciiva_options[$c['LegendaCodiciIva']['id']] = array(
+		$codiciiva_options[$c['LegendaCodiciIva']['id']] = [
 			'name' => $c['LegendaCodiciIva']['Descrizione'],
 			'value' => $c['LegendaCodiciIva']['id'],
 			'percentuale' => $c['LegendaCodiciIva']['Percentuale']
-		);
+		];
 	}
 
-	$field_id = $this->Form->input('id', array('type' => 'hidden', 'label' => false, 'div' => false, 'class' => 'id-field', 'value' => ''));
+	$field_id = $this->Form->input('id', ['type' => 'hidden', 'label' => false, 'div' => false, 'class' => 'id-field', 'value' => '']);
     //Todo: Togliere field_fattura_id
 	$field_fattura_id = '';//$this->Form->input('fattura_id', array('type' => 'hidden', 'label' => false, 'div' => false, 'class' => 'fattura_id-field', 'value' => $fattura_id));
-	$field_ordine = $this->Form->input('Ordine', array('label' => false, 'div' => false, 'class' => 'ordine-field'));
-	$field_descr = $this->Form->input('DescrizioneVoci', array('label' => false, 'div' => false, 'class' => 'descr-field'));	
-	$field_importo = $this->Form->input('Importo', array('label' => false, 'div' => false, 'class' => 'importo-field euro'));
-	$field_codiceiva = $this->Form->input('codiceiva_id', array('default'=> Configure::read('iGas.IvaDefault'), 'options' => $codiciiva_options, 'label' => false, 'div' => false, 'class' => 'codiceiva-field selectBox', 'showParents' => false));
+	$field_ordine = $this->Form->input('Ordine', ['label' => false, 'div' => false, 'class' => 'ordine-field']);
+	$field_descr = $this->Form->input('DescrizioneVoci', ['label' => false, 'div' => false, 'class' => 'descr-field']);	
+	$field_importo = $this->Form->input('Importo', ['label' => false, 'div' => false, 'class' => 'importo-field euro']);
+	$field_codiceiva = $this->Form->input('codiceiva_id', ['default'=> Configure::read('iGas.IvaDefault'), 'options' => $codiciiva_options, 'label' => false, 'div' => false, 'class' => 'codiceiva-field selectBox', 'showParents' => false]);
    	
 	$field_codiceiva = preg_replace( "/\r|\n/", "", $field_codiceiva );
 ?>	
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
 
 	function getRigaFatturaRow() {
 		return  [
@@ -39,7 +39,7 @@
 		];
 	}
 
-	ajaxDeleteURL = "<?php echo $this->Html->url(array('controller' => 'Righefatture', 'action' => 'delete'));?>";
+	ajaxDeleteURL = "<?php echo $this->Html->url(['controller' => 'Righefatture', 'action' => 'delete']);?>";
     
 <?php $this->Html->scriptEnd(); ?>
 
@@ -68,21 +68,21 @@
 		<?php foreach ($righe as $r):?>
         <tr>   
 			<td class="invisible"><?php 
-				echo $this->Form->input("Rigafattura.$counter.id", array('type' => 'hidden', 'label' => false, 'div' => false, 'value' => $r['id'], 'class' => 'id-field'));	
+				echo $this->Form->input("Rigafattura.$counter.id", ['type' => 'hidden', 'label' => false, 'div' => false, 'value' => $r['id'], 'class' => 'id-field']);	
 				//echo $this->Form->input("Rigafattura.$counter.fattura_id", array('type' => 'hidden', 'label' => false, 'div' => false, 'class' => 'fattura_id-field', 'value' => $fattura_id));           	
 			?></td> 		
 			<td><?php 
-				echo $this->Form->input("Rigafattura.$counter.Ordine", array('label' => false, 'div' => false, 'value' => $r['Ordine'], 'class' => 'ordine-field'));	
+				echo $this->Form->input("Rigafattura.$counter.Ordine", ['label' => false, 'div' => false, 'value' => $r['Ordine'], 'class' => 'ordine-field']);	
            	?></td>        
         	<td><?php 
-				echo $this->Form->input("Rigafattura.$counter.DescrizioneVoci", array('label' => false, 'div' => false, 'value' => $r['DescrizioneVoci'], 'class' => 'descr-field'));	
+				echo $this->Form->input("Rigafattura.$counter.DescrizioneVoci", ['label' => false, 'div' => false, 'value' => $r['DescrizioneVoci'], 'class' => 'descr-field']);	
            	?></td>
            	<td><?php 
-				echo $this->Form->input("Rigafattura.$counter.Importo", array('label' => false, 'div' => false, 'value' => CakeNumber::precision($r['Importo'], 2), 'class' => 'importo-field'));
+				echo $this->Form->input("Rigafattura.$counter.Importo", ['label' => false, 'div' => false, 'value' => CakeNumber::precision($r['Importo'], 2), 'class' => 'importo-field']);
 				?>
 			</td>
            	<td><?php
-					$field_codiceiva = $this->Form->input("Rigafattura.$counter.codiceiva_id", array('default'=> $r['codiceiva_id'], 'options' => $codiciiva_options, 'label' => false, 'div' => false, 'class' => 'codiceiva-field'));
+					$field_codiceiva = $this->Form->input("Rigafattura.$counter.codiceiva_id", ['default'=> $r['codiceiva_id'], 'options' => $codiciiva_options, 'label' => false, 'div' => false, 'class' => 'codiceiva-field']);
    					$field_codiceiva = preg_replace( "/\r|\n/", "", $field_codiceiva ); 
 					echo $field_codiceiva;
 				?>

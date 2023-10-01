@@ -3,8 +3,8 @@
     <i>Stampa del: <?php echo date('d-m-Y  H:m'); ?> </i>
     <div class="row">
         <div class="actions">
-        <?php echo $this->Html->link('Stampa', array('mode'=>'print', $this->request->pass[0],$this->request->pass[1]),array('class'=>'btn btn-info', 'escape'=>false)); ?>
-        <?php echo $this->Html->link('PDF', array('mode'=>'print', $this->request->pass[0],$this->request->pass[1], 'ext'=>'pdf', 0,'foglio_ore'), array('class'=>'btn btn-info', 'escape'=>false)); ?>
+        <?php echo $this->Html->link('Stampa', ['mode'=>'print', $this->request->pass[0],$this->request->pass[1]],['class'=>'btn btn-info', 'escape'=>false]); ?>
+        <?php echo $this->Html->link('PDF', ['mode'=>'print', $this->request->pass[0],$this->request->pass[1], 'ext'=>'pdf', 0,'foglio_ore'], ['class'=>'btn btn-info', 'escape'=>false]); ?>
         </div>
     </div>
     
@@ -25,7 +25,7 @@
        </thead>
 
     <?php 
-        $somma =array('Ferie'=>0,'Malattia'=>0,'Permesso'=>0,'Progetto'=>0);
+        $somma =['Ferie'=>0,'Malattia'=>0,'Permesso'=>0,'Progetto'=>0];
         for ($d = 1; $d<=31; $d++ )
         {
             echo "<TR><TD style=\"text-align:right\">$d</TD>";            

@@ -44,22 +44,22 @@
 	<td width="15%">
                 <?php     
                 echo $this->Form->input("Primanota.$i.attivita_id", 
-                array('options'=> $attivita, 
+                ['options'=> $attivita, 
                       'label' =>false,
                       'selected' => $n['Primanota']['attivita_id'],
                       'class' => 'chosen-select',
-                )); ?>
+                ]); ?>
 
     </td>
 	<td width="10%"><?php echo $n['Persona']['DisplayName'] ?></td>
 
 	<td width="10%"><?php 
-                echo $this->Form->hidden("Primanota.$i.id", array('value'=>$n['Primanota']['id'] ));
+                echo $this->Form->hidden("Primanota.$i.id", ['value'=>$n['Primanota']['id'] ]);
                 echo $this->Form->input("Primanota.$i.legenda_cat_spesa_id", 
-                array('options'=> $legenda_cat_spesa, 
+                ['options'=> $legenda_cat_spesa, 
                       'label' =>false,
                       'selected' => $n['Primanota']['legenda_cat_spesa_id'],
-                )); ?>
+                ]); ?>
     </td>
 	<td width="10%"><?php echo $n['Provenienzasoldi']['name'] ?></td>
 
@@ -78,8 +78,8 @@
 	</tr>
 </tfoot>
 </table>
-<?php echo $this->Paginator->pagination(array(
+<?php echo $this->Paginator->pagination([
     'ul' => 'pagination'
-)); ?>
+]); ?>
 <?php echo $this->Form->end('Salva') ?>
 

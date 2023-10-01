@@ -1,15 +1,15 @@
 <?php
 $this->PhpSpreadsheet->createWorksheet();
-$row = array();
+$row = [];
 foreach ($persone[0]['Persona'] as $k => $d) {
-    $row[] = array('label'=>$k);
+    $row[] = ['label'=>$k];
 }
 
-$this->PhpSpreadsheet->addTableHeader($row, array('name' => 'Cambria', 'bold' => true));
+$this->PhpSpreadsheet->addTableHeader($row, ['name' => 'Cambria', 'bold' => true]);
 $this->PhpSpreadsheet->getActiveSheet()->getStyle("A1")->getFont()->setSize(14)->setBold(true);
 
 foreach ($persone as $p) {
-    $row = array();    
+    $row = [];    
     foreach ($p['Persona'] as $d)
     {
         $row[] = $d;        

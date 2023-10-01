@@ -1,7 +1,7 @@
 <?php
 
-echo $this->Html->script('bootstrap-colorpicker', Array('inline'=>false));
-echo $this->Html->css('bootstrap-colorpicker', null, Array('inline'=>false)); 
+echo $this->Html->script('bootstrap-colorpicker', ['inline'=>false]);
+echo $this->Html->css('bootstrap-colorpicker', null, ['inline'=>false]); 
 
 ?>
 
@@ -24,8 +24,8 @@ echo $this->Html->css('bootstrap-colorpicker', null, Array('inline'=>false));
 						<div class="panel-body">
 							<ul class="nav nav-pills nav-stacked">
 
-		<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;'.__('Legenda'), array('action' => 'index'), array('escape' => false)); ?></li>
-		<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;'.__('Calendario Cespiti'), array('controller' => 'cespiti', 'action' => 'calendar'), array('escape' => false)); ?> </li>
+		<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;'.__('Legenda'), ['action' => 'index'], ['escape' => false]); ?></li>
+		<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;'.__('Calendario Cespiti'), ['controller' => 'cespiti', 'action' => 'calendar'], ['escape' => false]); ?> </li>
 
 							</ul>
 						</div>
@@ -33,19 +33,19 @@ echo $this->Html->css('bootstrap-colorpicker', null, Array('inline'=>false));
 				</div>			
 		</div><!-- end col md 3 -->
 		<div class="col-md-9">
-			<?php echo $this->Form->create('LegendaTipoAttivitaCalendario', array('role' => 'form')); ?>
+			<?php echo $this->Form->create('LegendaTipoAttivitaCalendario', ['role' => 'form']); ?>
 
 				<div class="form-group">
 					<?php 
-					echo $this->Form->input('title', array('class' => 'form-control', 'label' => 'Attività Calendario', 'placeholder' => 'Attività Calendario'));
-					echo $this->Form->input('color', Array('class' => 'form-control', 'label' => 'Colore BG Associato', 'placeholder' => 'Click to choose the BG Color'));
-					echo $this->Form->input('textColor', Array('class' => 'form-control', 'label' => 'Colore Testo Associato', 'placeholder' => 'Click to choose text Color'));
+					echo $this->Form->input('title', ['class' => 'form-control', 'label' => 'Attività Calendario', 'placeholder' => 'Attività Calendario']);
+					echo $this->Form->input('color', ['class' => 'form-control', 'label' => 'Colore BG Associato', 'placeholder' => 'Click to choose the BG Color']);
+					echo $this->Form->input('textColor', ['class' => 'form-control', 'label' => 'Colore Testo Associato', 'placeholder' => 'Click to choose text Color']);
 					?>
 					</div>
 				<div class="row">
-					<?php echo $this->Form->button(__('Invia'), array('class' => 'btn btn-sm btn-primary')); ?>
+					<?php echo $this->Form->button(__('Invia'), ['class' => 'btn btn-sm btn-primary']); ?>
 					
-					<?php echo $this->Form->reset(__('Reset'), Array('class' => 'btn btn-sm btn-danger')); ?>
+					<?php echo $this->Form->reset(__('Reset'), ['class' => 'btn btn-sm btn-danger']); ?>
 				</div>
 
 			<?php echo $this->Form->end() ?>
@@ -54,7 +54,7 @@ echo $this->Html->css('bootstrap-colorpicker', null, Array('inline'=>false));
 	</div><!-- end row -->
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
 
 $(function() {
 	$('#LegendaTipoAttivitaCalendarioColor').colorpicker();

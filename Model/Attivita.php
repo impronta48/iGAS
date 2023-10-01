@@ -4,12 +4,12 @@ class Attivita extends AppModel {
 	var $displayField = 'name';
   //var $order= 'Attivita.id DESC';
   var $order= 'Attivita.name';
-  var $actsAs = array('Containable');
+  var $actsAs = ['Containable'];
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
-	var $hasMany = array(
+	var $hasMany = [
         'Fatturaemessa',
-        'Notaspesa' => array(
+        'Notaspesa' => [
 			'className' => 'Notaspesa',
 			'foreignKey' => 'eAttivita',
 			'dependent' => false,
@@ -21,8 +21,8 @@ class Attivita extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-        'Alias' => array(
+		],
+        'Alias' => [
 			'className' => 'Alias',
 			'foreignKey' => 'attivita_id',
 			'dependent' => false,
@@ -34,8 +34,8 @@ class Attivita extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-        'Faseattivita' => array(
+		],
+        'Faseattivita' => [
 			'className' => 'Faseattivita',
 			'foreignKey' => 'attivita_id',
 			'dependent' => true,
@@ -47,8 +47,8 @@ class Attivita extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-        'Ora' => array(
+		],
+        'Ora' => [
 			'className' => 'Ora',
 			'foreignKey' => 'eAttivita',
 			'dependent' => true,
@@ -60,13 +60,13 @@ class Attivita extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
+		],
 		'Primanota',
 		'Fatturaricevuta'
-	);
+	];
 
-	var $belongsTo = array('Progetto','Area',
-        'Persona' => array(
+	var $belongsTo = ['Progetto','Area',
+        'Persona' => [
 			'className' => 'Persona',
 			'foreignKey' => 'cliente_id',
 			'dependent' => false,
@@ -78,11 +78,11 @@ class Attivita extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-      );
+		],
+      ];
 
       //Questa funzione svuota la data se è nulla, per evitare che diventi 0000-00-00
-      function beforeSave($options = array()) {
+      function beforeSave($options = []) {
           parent::beforeSave($options);
 
           $k = array_keys($this->data['Attivita']);
@@ -100,11 +100,11 @@ class Attivita extends AppModel {
 
       //Calcola il totale di ore usate da un'attività
       function oreUsate($id) {
-            $r = $this->Ora->find('all', array(
-                'conditions' => array('Ora.eAttivita' => $id),
-                'fields' => array('SUM(Ora.numOre) as S'),
-                'group' => array('Ora.eAttivita'),
-            ));
+            $r = $this->Ora->find('all', [
+                'conditions' => ['Ora.eAttivita' => $id],
+                'fields' => ['SUM(Ora.numOre) as S'],
+                'group' => ['Ora.eAttivita'],
+            ]);
             if (isset($r[0][0]['S']))
             {
                 return $r[0][0]['S'];
@@ -117,11 +117,11 @@ class Attivita extends AppModel {
 
       //Calcola il totale di ore da pagare in un'attivita
       function oreDaPagare($id) {
-            $r = $this->Ora->find('all', array(
-                'conditions' => array('Ora.eAttivita' => $id,  'Ora.pagato !=' => 1),
-                'fields' => array('SUM(Ora.numOre) as S'),
-                'group' => array('Ora.eAttivita'),
-            ));
+            $r = $this->Ora->find('all', [
+                'conditions' => ['Ora.eAttivita' => $id,  'Ora.pagato !=' => 1],
+                'fields' => ['SUM(Ora.numOre) as S'],
+                'group' => ['Ora.eAttivita'],
+            ]);
             if (isset($r[0][0]['S']))
             {
                 return $r[0][0]['S'];
@@ -134,11 +134,11 @@ class Attivita extends AppModel {
 
 	  //Calcola il totale di ore usate da un'attività
       function notespeseUsate($id) {
-            $r = $this->Notaspesa->find('all', array(
-                'conditions' => array('Notaspesa.eAttivita' => $id),
-                'fields' => array('SUM(Notaspesa.importo) as S'),
-                'group' => array('Notaspesa.eAttivita'),
-            ));
+            $r = $this->Notaspesa->find('all', [
+                'conditions' => ['Notaspesa.eAttivita' => $id],
+                'fields' => ['SUM(Notaspesa.importo) as S'],
+                'group' => ['Notaspesa.eAttivita'],
+            ]);
             if (isset($r[0][0]['S']))
             {
                 return $r[0][0]['S'];
@@ -150,9 +150,9 @@ class Attivita extends AppModel {
       }
 
       function notespeseDaRimborsare($id) {
-            $listaspese = array();
-            $res = $this->Notaspesa->find('all', array(
-                'conditions' => array('Notaspesa.eAttivita' => $id, 'Notaspesa.rimborsato !=' => 1 )));
+            $listaspese = [];
+            $res = $this->Notaspesa->find('all', [
+                'conditions' => ['Notaspesa.eAttivita' => $id, 'Notaspesa.rimborsato !=' => 1 ]]);
 
             foreach ($res as $r) {
              $listaspese[$r['Notaspesa']['faseattivita_id']] = 0;
@@ -167,11 +167,11 @@ class Attivita extends AppModel {
 
 	  //Calcola il totale di ore usate da un'attività
       function primanota($id) {
-            $r = $this->Primanota->find('all', array(
-                'conditions' => array('Primanota.attivita_id' => $id),
-                'fields' => array('SUM(Primanota.importo) as S'),
-                'group' => array('Primanota.attivita_id'),
-            ));
+            $r = $this->Primanota->find('all', [
+                'conditions' => ['Primanota.attivita_id' => $id],
+                'fields' => ['SUM(Primanota.importo) as S'],
+                'group' => ['Primanota.attivita_id'],
+            ]);
             if (isset($r[0][0]['S']))
             {
                 return $r[0][0]['S'];
@@ -183,11 +183,11 @@ class Attivita extends AppModel {
       }
 
         function preventivo($id) {
-            $r = $this->Faseattivita->find('all', array(
-                'conditions' => array('Faseattivita.attivita_id' => $id),
-                'fields' => array('SUM(Faseattivita.costou*Faseattivita.qta) as S'),
-                'group' => array('Faseattivita.attivita_id'),
-            ));
+            $r = $this->Faseattivita->find('all', [
+                'conditions' => ['Faseattivita.attivita_id' => $id],
+                'fields' => ['SUM(Faseattivita.costou*Faseattivita.qta) as S'],
+                'group' => ['Faseattivita.attivita_id'],
+            ]);
             if (isset($r[0][0]['S']))
             {
                 return $r[0][0]['S'];
@@ -199,11 +199,11 @@ class Attivita extends AppModel {
         }
 
         function offertaAlCliente($id) {
-            $r = $this->Faseattivita->find('all', array(
-                'conditions' => array('Faseattivita.attivita_id' => $id),
-                'fields' => array('SUM(Faseattivita.vendutou*Faseattivita.qta) as S'),
-                'group' => array('Faseattivita.attivita_id'),
-            ));
+            $r = $this->Faseattivita->find('all', [
+                'conditions' => ['Faseattivita.attivita_id' => $id],
+                'fields' => ['SUM(Faseattivita.vendutou*Faseattivita.qta) as S'],
+                'group' => ['Faseattivita.attivita_id'],
+            ]);
             if (isset($r[0][0]['S']))
             {
                 return $r[0][0]['S'];
@@ -222,16 +222,16 @@ class Attivita extends AppModel {
 		  if (!$attivita) {
             if (!is_null($recenti))
 			{
-                $attivita = $this->Ora->find('list',  array(
-                                'fields'=>Array('Attivita.id','Attivita.name'),
+                $attivita = $this->Ora->find('list',  [
+                                'fields'=>['Attivita.id','Attivita.name'],
                                 'order'=>'Attivita.name',
-                                'contain'=> array('Attivita'),
-                                'conditions' => array(
+                                'contain'=> ['Attivita'],
+                                'conditions' => [
                                     'Attivita.chiusa'=> 0,
                                     'Ora.eRisorsa'=> $recenti,
                                     'Ora.data >' => date('Y-m-d', strtotime('-3 month'))
-                                )
-                            ));
+                                ]
+                            ]);
             }
             if (is_null($recenti) || !$attivita)
             {
@@ -253,10 +253,10 @@ class Attivita extends AppModel {
         $this->recursive = -1;
 
         //Estraggo i progetti speciali
-        $a = $this->find('all', array(
-            'fields' => array('id', 'name'),
-            'conditions' => array('name' => $proj_speciali)
-        ));
+        $a = $this->find('all', [
+            'fields' => ['id', 'name'],
+            'conditions' => ['name' => $proj_speciali]
+        ]);
         //Li giro per ottenere una coppia id / nome semplice da usare
         foreach ($a as $aid) {
             $proj_speciali_id[$aid['Attivita']['id']] = $aid['Attivita']['name'];

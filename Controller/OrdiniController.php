@@ -14,8 +14,8 @@ class OrdiniController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'Session');
-	public $helpers = array('Html', 'Form','Text');
+	public $components = ['Paginator', 'Session'];
+	public $helpers = ['Html', 'Form','Text'];
 
 /**
  * index method
@@ -23,14 +23,14 @@ class OrdiniController extends AppController {
  * @return void
  */
 	public function index() {
-        $conditions = array();
+        $conditions = [];
         if (!empty($this->request->named['persona']))
         {
             $conditions['fornitore_id'] = $this->request->named['persona'];
         }
 
 		$this->Ordine->recursive = 1; // MarcoT. devo tirare su anche le righe ordine per lo stato
-        $this->Paginator->settings = array('conditions'=>$conditions);
+        $this->Paginator->settings = ['conditions'=>$conditions];
 		$this->set('ordini', $this->Paginator->paginate());
 	}
 
@@ -45,7 +45,7 @@ class OrdiniController extends AppController {
 		if (!$this->Ordine->exists($id)) {
 			throw new NotFoundException(__('Invalid ordine'));
 		}
-		$options = array('conditions' => array('Ordine.' . $this->Ordine->primaryKey => $id));
+		$options = ['conditions' => ['Ordine.' . $this->Ordine->primaryKey => $id]];
 		$this->set('ordine', $this->Ordine->find('first', $options));
         $azienda =  $this->Ordine->Fornitore->findById(Configure::read('iGas.idAzienda'));
         $this->set('azienda', $azienda);
@@ -64,7 +64,7 @@ class OrdiniController extends AppController {
 			$this->Ordine->create();
 			if ($this->Ordine->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The ordine has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The ordine could not be saved. Please, try again.'));
 			}
@@ -95,15 +95,15 @@ class OrdiniController extends AppController {
 		if (!$this->Ordine->exists($id)) {
 			throw new NotFoundException(__('Invalid ordine'));
 		}
-		if ($this->request->is(array('post', 'put'))) {
+		if ($this->request->is(['post', 'put'])) {
 			if ($this->Ordine->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The ordine has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The ordine could not be saved. Please, try again.'));
 			}
 		} else {
-			$options = array('conditions' => array('Ordine.' . $this->Ordine->primaryKey => $id));
+			$options = ['conditions' => ['Ordine.' . $this->Ordine->primaryKey => $id]];
 			$this->request->data = $this->Ordine->find('first', $options);
 		}
 		$attivita = $this->Ordine->Attivita->find('list');
@@ -129,7 +129,7 @@ class OrdiniController extends AppController {
 		} else {
 			$this->Session->setFlash(__('The ordine could not be deleted. Please, try again.'));
 		}
-		return $this->redirect(array('action' => 'index'));
+		return $this->redirect(['action' => 'index']);
 	}
 
 /*     function stampa($id)

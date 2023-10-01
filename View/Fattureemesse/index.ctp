@@ -3,7 +3,7 @@
 <div class="fattureemesse index">
     <h2>Fatture Emesse <?php echo $anno ?></h2>
     <div class="actions">
-    <a class="btn btn-primary btn-animate-demo" href="<?php echo $this->Html->url(array('controller' => 'fattureemesse','action' => 'add')) ?>">Nuova Fattura</a>
+    <a class="btn btn-primary btn-animate-demo" href="<?php echo $this->Html->url(['controller' => 'fattureemesse','action' => 'add']) ?>">Nuova Fattura</a>
     <?php
 	$anni = Configure::read('Fattureemesse.anni');
 	if (isset($persona))
@@ -25,7 +25,7 @@
     ?>
 
       <a class="btn btn-default btn-animate-demo btn-xs" href="<?php echo $this->Html->url($condition ) ?>">Tutti gli anni</a>
-      <a class="btn btn-default btn-animate-demo btn-xs" href="<?php echo $this->Html->url(array('controller' => 'fattureemesse','action' => 'scadenziario')) ?>">Scadenziario</a>
+      <a class="btn btn-default btn-animate-demo btn-xs" href="<?php echo $this->Html->url(['controller' => 'fattureemesse','action' => 'scadenziario']) ?>">Scadenziario</a>
     </div>
     <?php
     ////////// Disegno la tabella solo se ci sono fatture
@@ -117,10 +117,10 @@
 	?>
 	<tr <?php echo $class;?>>
 		<td>
-           <?php echo $this->Html->link($fatturaemessa['Attivita']['name'], array('controller'=>'attivita', 'action' => 'edit', $fatturaemessa['Fatturaemessa']['attivita_id'])); ?>
+           <?php echo $this->Html->link($fatturaemessa['Attivita']['name'], ['controller'=>'attivita', 'action' => 'edit', $fatturaemessa['Fatturaemessa']['attivita_id']]); ?>
 		</td>
 		<td>
-            <a href="<?php echo $this->Html->url(array('controller'=>'fattureemesse', 'action' => 'edit', $fatturaemessa['Fatturaemessa']['id'])); ?>">
+            <a href="<?php echo $this->Html->url(['controller'=>'fattureemesse', 'action' => 'edit', $fatturaemessa['Fatturaemessa']['id']]); ?>">
             <?php printf("%03d", $fatturaemessa['Fatturaemessa']['Progressivo']); ?> /<?php echo $fatturaemessa['Fatturaemessa']['AnnoFatturazione']; ?>
             </a>
         </td>
@@ -154,13 +154,13 @@
             ?>
         </td>
 		<td>
-			<?php echo $this->Html->link($fatturaemessa['ProvenienzaSoldi']['name'], array('controller' => 'provenienzesoldi', 'action' => 'view', $fatturaemessa['ProvenienzaSoldi']['id'])); ?>
+			<?php echo $this->Html->link($fatturaemessa['ProvenienzaSoldi']['name'], ['controller' => 'provenienzesoldi', 'action' => 'view', $fatturaemessa['ProvenienzaSoldi']['id']]); ?>
 		</td>
 		<td><?php echo $fatturaemessa['Fatturaemessa']['Competenza']; ?>&nbsp;</td>
 
         <td class="actions">
              <div class="btn-group ">
-                 <?php $u = $this->Html->url(array('action' => 'view', $fatturaemessa['Fatturaemessa']['id']));?>
+                 <?php $u = $this->Html->url(['action' => 'view', $fatturaemessa['Fatturaemessa']['id']]);?>
                  <button class="btn btn-primary btn-xs glow" onclick="location.href='<?php echo $u ?>';">
                      <i class="fa fa-print"></i>
                  </button>
@@ -172,29 +172,29 @@
                  </button>
                  <ul class="dropdown-menu" role="menu">
                   <li>
-                    <?php echo $this->Html->link(__('Print'),array('action' => 'view', $fatturaemessa['Fatturaemessa']['id'])); ?>
+                    <?php echo $this->Html->link(__('Print'),['action' => 'view', $fatturaemessa['Fatturaemessa']['id']]); ?>
                   </li>
                   <li>
-                    <?php echo $this->Html->link(__('Edit'), array('action' => 'edit',  $fatturaemessa['Fatturaemessa']['id'])); ?>
+                    <?php echo $this->Html->link(__('Edit'), ['action' => 'edit',  $fatturaemessa['Fatturaemessa']['id']]); ?>
                   </li>
 				  <li>
-                    <?php echo $this->Html->link(__('Invia a Cloud'), array('action' => 'fattureincloud',  $fatturaemessa['Fatturaemessa']['id'])); ?>
+                    <?php echo $this->Html->link(__('Invia a Cloud'), ['action' => 'fattureincloud',  $fatturaemessa['Fatturaemessa']['id']]); ?>
                   </li>
                   <?php if(isset($fatturaemessa['Fatturaemessa']['IdFattureInCloud'])){ ?>
                   <li>
-                    <?php echo $this->Html->link(__('Elimina da Cloud'), array('action' => 'fattureincloudelimina', $fatturaemessa['Fatturaemessa']['id'])); ?>
+                    <?php echo $this->Html->link(__('Elimina da Cloud'), ['action' => 'fattureincloudelimina', $fatturaemessa['Fatturaemessa']['id']]); ?>
                   </li>
                   <?php } ?>
                   <li>
-                    <?php echo $this->Html->link(__('Duplica'), array('action' => 'dup',  $fatturaemessa['Fatturaemessa']['id'])); ?>
+                    <?php echo $this->Html->link(__('Duplica'), ['action' => 'dup',  $fatturaemessa['Fatturaemessa']['id']]); ?>
                   </li>
                   <li>
-                      <?php echo $this->Html->link(__('<i class="fa fa-trash-o"></i> Delete'), array('action' => 'delete',  $fatturaemessa['Fatturaemessa']['id']), array('escape'=>false), sprintf(__('Are you sure you want to delete # %s?'),  $fatturaemessa['Fatturaemessa']['id'])); ?>
+                      <?php echo $this->Html->link(__('<i class="fa fa-trash-o"></i> Delete'), ['action' => 'delete',  $fatturaemessa['Fatturaemessa']['id']], ['escape'=>false], sprintf(__('Are you sure you want to delete # %s?'),  $fatturaemessa['Fatturaemessa']['id'])); ?>
                   </li>
 
                   <?php if (!$soddisfatta) : ?>
                   <li>
-                      <form method="post" class="form-inline" action="<?php echo $this->Html->url(array('action'=>'soddisfa', $fatturaemessa['Fatturaemessa']['id'])); ?>">
+                      <form method="post" class="form-inline" action="<?php echo $this->Html->url(['action'=>'soddisfa', $fatturaemessa['Fatturaemessa']['id']]); ?>">
                           <input type="input" class="form-control form-cascade-control input-sm" value="<?php echo $importo ?>" id="FatturaemessaAcconto" name="data[Fatturaemessa][Acconto]">
                           <input type="submit" class="btn btn-default btn-xs" value="Soddisfa">
                       </form>
@@ -236,16 +236,16 @@
 
 	</table>
 
-  <?php echo $this->Paginator->pagination(array(
+  <?php echo $this->Paginator->pagination([
   'ul' => 'pagination'
-  )); ?>
+  ]); ?>
 
   <?php else: ?>
         <p>Nessuna fattura emessa.</p>
   <?php endif; ?>
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
   $('.dropdown-menu').find('form').click(function (e) {
     e.stopPropagation();
   });

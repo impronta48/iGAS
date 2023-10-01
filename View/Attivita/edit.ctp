@@ -2,7 +2,7 @@
 <?php if (isset($this->request->params['pass'][0]))
     {
         $id = $this->request->params['pass'][0];
-        echo $this->element('secondary_attivita', array('aid'=>$id)); 
+        echo $this->element('secondary_attivita', ['aid'=>$id]); 
     }
     else
         $id=null;
@@ -22,18 +22,18 @@
 ?>
 <?php if (isset($id)) {$this->Html->addCrumb("Attività $an" , "/attivita/edit/$id");} ?>
 
-<?php echo $this->Form->create('Attivita', array(
+<?php echo $this->Form->create('Attivita', [
 		'enctype' => 'multipart/form-data',
-        'inputDefaults' => array(
+        'inputDefaults' => [
 		'div' => 'form-group',
-		'label' => array(
+		'label' => [
 			'class' => 'col col-md-4 control-label'
-		),
+		],
 		'wrapInput' => 'col col-md-8',
 		'class' => 'form-control'
-	),	
+	],	
 	'class' => 'well form-horizontal'       
-    )); ?>  
+    ]); ?>  
     
 	
  	<legend><?php echo __('Edit Attivita'); ?></legend>
@@ -53,26 +53,26 @@
                 $alias .= $a['name'] . ' ';
             }
         }
-        $alias .= '<span class="btn btn-info btn-xs">' . $this->Html->link('Aggiungi Alias', array('controller'=>'aliases','action'=>'add')) . '</span>';
+        $alias .= '<span class="btn btn-info btn-xs">' . $this->Html->link('Aggiungi Alias', ['controller'=>'aliases','action'=>'add']) . '</span>';
     ?>           
    
     <div class="row">
-        <div class="col col-md-8"><?php echo $this->Form->input('name', array('label' => array('class' => 'col col-md-2 control-label'))); ?> </div>
+        <div class="col col-md-8"><?php echo $this->Form->input('name', ['label' => ['class' => 'col col-md-2 control-label']]); ?> </div>
         <div class="col col-md-3"><?php echo $alias ?></div>
         <div class="col col-md-1">
-            <?php echo $this->Form->input('chiusa', array('class'=>false, 'wrapInput' => 'col col-md-9 col-md-offset-3', 'label'=> array('class'=>false))); ?>
+            <?php echo $this->Form->input('chiusa', ['class'=>false, 'wrapInput' => 'col col-md-9 col-md-offset-3', 'label'=> ['class'=>false]]); ?>
         </div>        
     </div>
     
     <?php	
-        echo $this->Form->input('Note', array('label' => array('class' => 'col col-md-1 control-label')));
+        echo $this->Form->input('Note', ['label' => ['class' => 'col col-md-1 control-label']]);
         echo $this->Form->hidden('azienda_id');
         echo $this->Form->hidden('cliente_id');
     ?>
 
     <div class="row">
         <div class="col col-md-8">
-        <?php echo $this->Form->input('Persona.DisplayName',array('type'=>'text', 'label' => array('class' => 'col col-md-2 control-label', 'text'=>'Cliente')));?>
+        <?php echo $this->Form->input('Persona.DisplayName',['type'=>'text', 'label' => ['class' => 'col col-md-2 control-label', 'text'=>'Cliente']]);?>
         </div>
         <div class="col col-md-2">
             <div id="add-cliente" class="btn btn-xs btn-default"><i class="fa fa-plus-square"></i> Aggiungi cliente</div>    
@@ -87,7 +87,7 @@
         <fieldset id="dettagli-cliente" class="well">
             <label>Cliente Non In Elenco</label>            
     <?php
-        echo $this->Form->input('Persona.DisplayName2', array('label' => 'Display Name'));
+        echo $this->Form->input('Persona.DisplayName2', ['label' => 'Display Name']);
         echo $this->Form->input('Persona.Cognome');
         echo $this->Form->input('Persona.Nome');
         echo $this->Form->input('Persona.piva');
@@ -104,8 +104,8 @@
     </div>
     <br/>
     <?php
-		echo $this->Form->input('progetto_id', array('class'=>'chosen-select', 'label' => array('class' => 'col col-md-1 control-label')));		
-        echo $this->Form->input('area_id', array('label' => array('class' => 'col col-md-1 control-label')));
+		echo $this->Form->input('progetto_id', ['class'=>'chosen-select', 'label' => ['class' => 'col col-md-1 control-label']]);		
+        echo $this->Form->input('area_id', ['label' => ['class' => 'col col-md-1 control-label']]);
         ?>
 
        
@@ -122,33 +122,33 @@
          <div class="panel-body">
              
            <?php
-            echo $this->Form->input('DataPresentazione', array('type'=>'text', 'class'=> 'datepicker form-control',));
-            echo $this->Form->input('DataApprovazione', array('type'=>'text', 'class'=> 'datepicker form-control',));
+            echo $this->Form->input('DataPresentazione', ['type'=>'text', 'class'=> 'datepicker form-control',]);
+            echo $this->Form->input('DataApprovazione', ['type'=>'text', 'class'=> 'datepicker form-control',]);
             ?>
              
             <div class="alert alert-warning ">Per il calcolo del costo dell'attività si dave 
-                <b><?php echo $this->Html->link('salvare', '#', array('id'=>'salva')); ?></b>  
+                <b><?php echo $this->Html->link('salvare', '#', ['id'=>'salva']); ?></b>  
                 l'attività corrente e 
-                utilizzare la scheda <?php echo $this->Html->link('Fasi/Prodotti', array('controller' => 'faseattivita', 'action'=>'index', $id), array('escape'=>false, )); ?>.
+                utilizzare la scheda <?php echo $this->Html->link('Fasi/Prodotti', ['controller' => 'faseattivita', 'action'=>'index', $id], ['escape'=>false, ]); ?>.
             </div>            
             
             <?php     
-                echo $this->Form->input('OffertaAlCliente', array('value' => $offertaAlCliente, 'disabled' => true));
+                echo $this->Form->input('OffertaAlCliente', ['value' => $offertaAlCliente, 'disabled' => true]);
                 echo $this->Form->input('ImportoAcquisito');
                 foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
                     if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$id.'_preventivo.'.$ext)){
                         echo '<div class="alert alert-warning">';
                         echo 'E\' già stato caricato un documento.<br />';
-                        echo $this->Html->link(__('View Attachment'), HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$id.'_preventivo.'.$ext, array('title'=>'View related Attachment','class'=>'btn btn-xs btn-primary'));
+                        echo $this->Html->link(__('View Attachment'), HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$id.'_preventivo.'.$ext, ['title'=>'View related Attachment','class'=>'btn btn-xs btn-primary']);
                         echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
-                        echo $this->Html->link(__('Delete Attachment'), array('action' => 'deleteDoc', $id), array('title'=>'Delete related Attachment','class'=>'btn btn-xs btn-primary'), __('Are you sure you want to delete %s_preventivo.%s?', $id, $ext));
+                        echo $this->Html->link(__('Delete Attachment'), ['action' => 'deleteDoc', $id], ['title'=>'Delete related Attachment','class'=>'btn btn-xs btn-primary'], __('Are you sure you want to delete %s_preventivo.%s?', $id, $ext));
                         echo '<br />Un nuovo upload sovrascriverà il vecchio allegato.';
                         echo '</div>';
                     }
                 }
-				echo $this->Form->input('uploadFile', array('label'=>'Upload File', 'class'=>false, 'type'=>'file'));
+				echo $this->Form->input('uploadFile', ['label'=>'Upload File', 'class'=>false, 'type'=>'file']);
             ?>
-            <?php echo $this->Form->submit('Salva', array('class'=>'col-md-offset-2  btn btn-primary')); ?>
+            <?php echo $this->Form->submit('Salva', ['class'=>'col-md-offset-2  btn btn-primary']); ?>
          </div>
         </div> <!-- / purple Panel -->
         </div>
@@ -164,9 +164,9 @@
         </div>
         <div class="panel-body">
             <?php
-                echo $this->Form->input('DataInizio', array('type'=>'text', 'class'=> 'datepicker form-control',));
-                echo $this->Form->input('DataFinePrevista', array('type'=>'text', 'class'=> 'datepicker form-control',));
-                echo $this->Form->input('DataFine', array('type'=>'text', 'class'=> 'datepicker form-control',));            
+                echo $this->Form->input('DataInizio', ['type'=>'text', 'class'=> 'datepicker form-control',]);
+                echo $this->Form->input('DataFinePrevista', ['type'=>'text', 'class'=> 'datepicker form-control',]);
+                echo $this->Form->input('DataFine', ['type'=>'text', 'class'=> 'datepicker form-control',]);            
                 echo $this->Form->input('Utile');
             ?>            
             <div class="pull-right">Ore Usate: <span class="label label-primary"><?php echo $oreUsate ?></span>            
@@ -181,7 +181,7 @@
             </div>
             <br/>
             <br/>
-            <?php echo $this->Form->submit('Salva', array('class'=>'col-md-offset-2 btn btn-primary')); ?>    
+            <?php echo $this->Form->submit('Salva', ['class'=>'col-md-offset-2 btn btn-primary']); ?>    
 
         </div>
         </div> <!-- / warning Panel -->
@@ -194,10 +194,10 @@
 </div>
 
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
 $(function() {
     $( "#PersonaDisplayName" ).autocomplete({
-		source: "<?php echo $this->Html->url(array('controller' => 'persone', 'action' => 'autocomplete')) ?>",
+		source: "<?php echo $this->Html->url(['controller' => 'persone', 'action' => 'autocomplete']) ?>",
 		minLength: 2,
 		mustMatch : true,
 		select: function( event, ui ) {
@@ -223,7 +223,7 @@ $(function() {
              data: $('form').serialize(), // serializes the form's elements.
              success: function(response,textStatus,xhr){                           
                            alert('Salvato con successo');
-                           window.location.replace("<?php echo $this->Html->url(array('controller' => 'faseattivita', 'action'=>'index', $id), array('escape'=>false, )); ?>");
+                           window.location.replace("<?php echo $this->Html->url(['controller' => 'faseattivita', 'action'=>'index', $id], ['escape'=>false, ]); ?>");
                       }, 
              error: function (xhr, ajaxOptions, thrownError) {
                 alert(xhr.status);

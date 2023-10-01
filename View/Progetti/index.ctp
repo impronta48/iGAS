@@ -27,7 +27,7 @@
 		<td><?php echo $progetto['Progetto']['DescrizioneProgetto']; ?>&nbsp;</td>
 		<td class="actions">
             <div class="btn-group settings">                 
-                 <?php $u = $this->Html->url(array('action' => 'edit', $progetto['Progetto']['id']));?>
+                 <?php $u = $this->Html->url(['action' => 'edit', $progetto['Progetto']['id']]);?>
                  <button class="btn btn-primary btn-xs glow" onclick="location.href='<?php echo $u ?>';">
                      <i class="fa fa-pencil"></i>                    
                  </button>
@@ -42,10 +42,10 @@
 					<?php echo $this->Html->link(__('Avanzamento'), '/attivita/avanzamento_gen/progetto:' . $progetto['Progetto']['id']); ?>                   
                   </li>
                   <li class="list-group-item">
-                    <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $progetto['Progetto']['id'])); ?>
+                    <?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $progetto['Progetto']['id']]); ?>
                   </li>
                   <li class="list-group-item">
-                    <?php echo $this->Html->link(__('Delete'), array('action' => 'delete', $progetto['Progetto']['id']), null, sprintf(__('Are you sure you want to delete # %s?'), $progetto['Progetto']['id'])); ?>
+                    <?php echo $this->Html->link(__('Delete'), ['action' => 'delete', $progetto['Progetto']['id']], null, sprintf(__('Are you sure you want to delete # %s?'), $progetto['Progetto']['id'])); ?>
                   </li>                  
                 </ul>
             </div>
@@ -55,12 +55,12 @@
 	</table>
 	<p>
 	<?php
-	echo $this->Paginator->counter(array(
+	echo $this->Paginator->counter([
 	'format' => __('Pagina %page% di %pages%, visualizzati %current% risultati su %count%')
-	));
+	]);
 	?>	</p>
 
-	<?php echo $this->Paginator->pagination(array(
+	<?php echo $this->Paginator->pagination([
 	'ul' => 'pagination'
-)); ?>
+]); ?>
 </div>

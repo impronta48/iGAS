@@ -1,7 +1,7 @@
 <?php if (isset($this->request->params['pass'][0]))
     {
       $id = $this->request->params['pass'][0];
-      echo $this->element('secondary_attivita', array('aid'=>$id)); 
+      echo $this->element('secondary_attivita', ['aid'=>$id]); 
       $this->Html->addCrumb("Attività", "/attivita/");
       if (!empty($faseattivita))
       {
@@ -21,8 +21,8 @@
     <div class="hidden-print">  
     <?php if (isset($this->request->params['pass'][0])): ?>
     <a href="#" class="btn btn-primary" id="aggiungi-fase"><i class="fa fa-plus-circle"></i> Aggiungi una fase/prodotto</a>
-    <a href="<?php echo $this->Html->url(array('controller'=>'attivita', 'action'=>'preventivo', $id)); ?>" class="btn btn-primary"><i class="fa fa-print"></i> Stampa Preventivo</a>   
-    <a href="<?php echo $this->Html->url(array('controller'=>'ddt', 'action'=>'add', $id)); ?>" class="btn btn-primary"><i class="fa fa-truck"></i> Crea DdT</a>   
+    <a href="<?php echo $this->Html->url(['controller'=>'attivita', 'action'=>'preventivo', $id]); ?>" class="btn btn-primary"><i class="fa fa-print"></i> Stampa Preventivo</a>   
+    <a href="<?php echo $this->Html->url(['controller'=>'ddt', 'action'=>'add', $id]); ?>" class="btn btn-primary"><i class="fa fa-truck"></i> Crea DdT</a>   
     <a href="#" class="btn btn-primary" id="genera-ordine"><i class="fa fa-eject"></i> Genera ordine da selezione</a>
     <a href="#" class="btn btn-primary"><i class="fa fa-rotate-right"></i> Cambia Stato</a>
     <?php endif; ?>
@@ -38,23 +38,23 @@
         
         
         <div id="aggiungi-attivita" class="panel-body collapse">
-            <?php echo $this->Form->create('Faseattivita',array(
+            <?php echo $this->Form->create('Faseattivita',[
                                 'enctype' => 'multipart/form-data',
-                                'inputDefaults' => array(
+                                'inputDefaults' => [
                                     'div' => 'form-group',
-                                    'label' => array(
+                                    'label' => [
                                         'class' => 'col col-md-3 control-label'
-                                    ),
+                                    ],
                                     'wrapInput' => 'col col-md-4',
                                     'class' => 'form-control form-cascade-control input-xs'
-                                ),	
+                                ],	
                                 'class' => 'well form-horizontal',
-                                'url' => array('controller' => 'faseattivita', 'action' => 'add'),
-                )); ?>  
+                                'url' => ['controller' => 'faseattivita', 'action' => 'add'],
+                ]); ?>  
             <?php 
                 if (!empty($id))
                 {
-                    echo $this->Form->hidden('attivita_id', array('default'=>$id)); 
+                    echo $this->Form->hidden('attivita_id', ['default'=>$id]); 
                 }
                 else
                 {
@@ -66,29 +66,29 @@
             <?php
 
              ?>
-            <?php echo $this->Form->input('entrata', array('options' => array(0 =>'Uscita', 1 => 'Entrata'), 'label'=> 'Tipo di fase') );?>
+            <?php echo $this->Form->input('entrata', ['options' => [0 =>'Uscita', 1 => 'Entrata'], 'label'=> 'Tipo di fase'] );?>
             <?php echo $this->Form->input('Descrizione');?>
-            <?php echo $this->Form->hidden('cespite_id',array('type'=>'text')); ?>
-            <?php echo $this->Form->input('Cespite.DisplayName', array('type'=>'text', 'label' => 'Cespite Associato', 'required' => false));?>
+            <?php echo $this->Form->hidden('cespite_id',['type'=>'text']); ?>
+            <?php echo $this->Form->input('Cespite.DisplayName', ['type'=>'text', 'label' => 'Cespite Associato', 'required' => false]);?>
             <?php echo $this->Form->input('qta');?>
             <?php echo $this->Form->input('um');?>
-            <?php echo $this->Form->hidden('persona_id', array('type'=>'text')); ?>
-            <?php echo $this->Form->input('Persona.DisplayName', array('type'=>'text', 'label' => 'Persona')); ?>
-            <?php echo $this->Form->input('costou', array('label'=> 'Costo Unità'));?>
-            <?php echo $this->Form->input('vendutou', array('label'=> 'Venduto Unità'));?>       
+            <?php echo $this->Form->hidden('persona_id', ['type'=>'text']); ?>
+            <?php echo $this->Form->input('Persona.DisplayName', ['type'=>'text', 'label' => 'Persona']); ?>
+            <?php echo $this->Form->input('costou', ['label'=> 'Costo Unità']);?>
+            <?php echo $this->Form->input('vendutou', ['label'=> 'Venduto Unità']);?>       
             <!--
             echo $this->Form->input('sc1');
             echo $this->Form->input('sc2');
             echo $this->Form->input('sc3');
             -->
-            <?php echo $this->Form->input('legenda_codici_iva_id', array('options'=>$legendaCodiceiva, 'default'=>Configure::read('iGas.IvaDefault')));?>
+            <?php echo $this->Form->input('legenda_codici_iva_id', ['options'=>$legendaCodiceiva, 'default'=>Configure::read('iGas.IvaDefault')]);?>
             
             <?php echo $this->Form->input('legenda_stato_attivita_id');?>
-            <?php echo $this->Form->input('note', array('type'=>'text'));?>
-            <?php echo $this->Form->input('uploadFile', array('label'=>'Upload File', 'class'=>false, 'type'=>'file'));?>
+            <?php echo $this->Form->input('note', ['type'=>'text']);?>
+            <?php echo $this->Form->input('uploadFile', ['label'=>'Upload File', 'class'=>false, 'type'=>'file']);?>
             
             <div class="col col-md-offset-3">
-                <?php echo  $this->Form->button('Aggiungi ', array('class'=>'btn btn-primary', )); ?>
+                <?php echo  $this->Form->button('Aggiungi ', ['class'=>'btn btn-primary', ]); ?>
             </div>
             <?php echo  $this->Form->end(); ?>
         </div>
@@ -164,20 +164,20 @@
         <td><?php echo $faseattivita['Persona']['DisplayName']; ?></td>
 		<td><?php echo $faseattivita['LegendaStatoAttivita']['name']; ?></td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $faseattivita['Faseattivita']['id'])); ?>
-			<?php echo $this->Html->link(__('Duplicate'), array('action' => 'duplicate', $faseattivita['Faseattivita']['id']), null, __('Are you sure you want duplicate fase attività # %s?', $faseattivita['Faseattivita']['id'])); ?>
-            <?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $faseattivita['Faseattivita']['id'],$faseattivita['Faseattivita']['attivita_id']), null, __('Are you sure you want to delete # %s?', $faseattivita['Faseattivita']['id'])); ?>
+			<?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $faseattivita['Faseattivita']['id']]); ?>
+			<?php echo $this->Html->link(__('Duplicate'), ['action' => 'duplicate', $faseattivita['Faseattivita']['id']], null, __('Are you sure you want duplicate fase attività # %s?', $faseattivita['Faseattivita']['id'])); ?>
+            <?php echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $faseattivita['Faseattivita']['id'],$faseattivita['Faseattivita']['attivita_id']], null, __('Are you sure you want to delete # %s?', $faseattivita['Faseattivita']['id'])); ?>
             <?php 
             foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
                 if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$faseattivita['Faseattivita']['attivita_id'].'_'.$faseattivita['Faseattivita']['id'].'.'.$ext)){
-                    echo $this->Html->link('FILE', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$faseattivita['Faseattivita']['attivita_id'].'_'.$faseattivita['Faseattivita']['id'].'.'.$ext, array('class'=>'btn btn-xs btn-primary','title'=>'View or Download attached File')); 
+                    echo $this->Html->link('FILE', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$faseattivita['Faseattivita']['attivita_id'].'_'.$faseattivita['Faseattivita']['id'].'.'.$ext, ['class'=>'btn btn-xs btn-primary','title'=>'View or Download attached File']); 
                 }
             }
 			?>
             <?php 
                 foreach($primenoteDiFasi as $primanota){
                     if($faseattivita['Faseattivita']['id'] == $primanota['Primanota']['faseattivita_id']){
-                        echo $this->Html->link('Prima Nota',array('controller' => 'primanota','action' => 'edit',$primanota['Primanota']['id']));
+                        echo $this->Html->link('Prima Nota',['controller' => 'primanota','action' => 'edit',$primanota['Primanota']['id']]);
                     }
                 }
             ?>
@@ -264,12 +264,12 @@
         <td><?php echo $faseattivita['Persona']['DisplayName']; ?></td>
         <td><?php echo $faseattivita['LegendaStatoAttivita']['name']; ?></td>
         <td class="actions">
-            <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $faseattivita['Faseattivita']['id'])); ?>
-            <?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $faseattivita['Faseattivita']['id'],$faseattivita['Faseattivita']['attivita_id']), null, __('Are you sure you want to delete # %s?', $faseattivita['Faseattivita']['id'])); ?>
+            <?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $faseattivita['Faseattivita']['id']]); ?>
+            <?php echo $this->Form->postLink(__('Delete'), ['action' => 'delete', $faseattivita['Faseattivita']['id'],$faseattivita['Faseattivita']['attivita_id']], null, __('Are you sure you want to delete # %s?', $faseattivita['Faseattivita']['id'])); ?>
             <?php 
             foreach(Configure::read('iGas.commonFiles') as $ext => $mimes){
                 if(file_exists(WWW_ROOT.'files'.DS.strtolower($this->request->controller).DS.$faseattivita['Faseattivita']['attivita_id'].'_'.$faseattivita['Faseattivita']['id'].'.'.$ext)){
-                    echo $this->Html->link('FILE', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$faseattivita['Faseattivita']['attivita_id'].'_'.$faseattivita['Faseattivita']['id'].'.'.$ext, array('class'=>'btn btn-xs btn-primary','title'=>'View or Download attached File')); 
+                    echo $this->Html->link('FILE', HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$faseattivita['Faseattivita']['attivita_id'].'_'.$faseattivita['Faseattivita']['id'].'.'.$ext, ['class'=>'btn btn-xs btn-primary','title'=>'View or Download attached File']); 
                 }
             }
 			?>
@@ -293,10 +293,10 @@
 <h2>Utile Commessa: <?php echo $totVenduto_uscite - $tot_uscite ?>&euro;</h2>
 <h2>Da incassare: <?php echo $totVenduto_uscite - $totVenduto_righe ?>&euro;</h2>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
 $(function() { 
     $("#PersonaDisplayName").autocomplete({
-		source: "<?php echo $this->Html->url(array('controller' => 'persone', 'action' => 'autocomplete')) ?>",
+		source: "<?php echo $this->Html->url(['controller' => 'persone', 'action' => 'autocomplete']) ?>",
 		minLength: 2,
 		mustMatch : true,
 		select: function( event, ui ) {
@@ -327,7 +327,7 @@ $(function() {
     // $("#CespiteDisplayName").rules("remove", "required"); // Not useful now
 
     $("#CespiteDisplayName").autocomplete({
-		source: "<?php echo $this->Html->url(array('controller' => 'cespiti', 'action' => 'autocomplete')) ?>",
+		source: "<?php echo $this->Html->url(['controller' => 'cespiti', 'action' => 'autocomplete']) ?>",
 		minLength: 2,
 		mustMatch : true,
 		select: function( event, ui ) {
@@ -350,7 +350,7 @@ $('#genera-ordine').click (function (e) {
               arrayOfValues.push($f);        
           }
       );
-      location.assign('<?php echo $this->Html->url(array('controller' => 'ordini', 'action' => 'add', '?'=>array('attivita_id'=> $id))) ?>' + '&fasi='+arrayOfValues);
+      location.assign('<?php echo $this->Html->url(['controller' => 'ordini', 'action' => 'add', '?'=>['attivita_id'=> $id]]) ?>' + '&fasi='+arrayOfValues);
   });          
 
 });

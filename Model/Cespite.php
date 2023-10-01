@@ -6,14 +6,14 @@ class Cespite extends AppModel {
 	//public $actsAs = array('Containable');
     var $order= 'Cespite.displayName';
 
-    var $validate = array(
-        'DisplayName' => array(
+    var $validate = [
+        'DisplayName' => [
             'rule' => 'notEmpty',
             'required' => true
-        )
-    );
+        ]
+    ];
     
-    var $belongsTo = array(
+    var $belongsTo = [
         /*
         'Cespite' => array(
             'className' => 'Cespite',
@@ -30,7 +30,7 @@ class Cespite extends AppModel {
         ),
         */
         
-        'Persona' => array(
+        'Persona' => [
             'className' => 'Persona',
             'foreignKey' => 'proprietario_interno',
             'dependent' => false,
@@ -42,11 +42,11 @@ class Cespite extends AppModel {
             'exclusive' => '',
             'finderQuery' => '',
             'counterQuery' => ''
-        )
+        ]
         
-    );
+    ];
     
-    public function beforeSave($options = Array()) {
+    public function beforeSave($options = []) {
         if($this->data['Cespite']['proprietario_interno']){
             $this->Persona->id = $this->data['Cespite']['proprietario_interno'];
             $personaDisplay = $this->Persona->read('Persona.DisplayName');
@@ -64,13 +64,13 @@ class Cespite extends AppModel {
     }
 
     public function getSimple($id = null){
-        $conditions = array();
+        $conditions = [];
         if(!$id){
-            $cespiti = $this->find('list',  array(
-                'fields'=>Array('Cespite.id','Cespite.DisplayName'),
+            $cespiti = $this->find('list',  [
+                'fields'=>['Cespite.id','Cespite.DisplayName'],
                 'order'=>'Cespite.DisplayName', 
                 'conditions' => $conditions
-            ));
+            ]);
             /*
             Questo blocco è per rendere la lista più parlante e formattata
             $notset = array('0'=> '-- Non definito --');   	
@@ -83,10 +83,10 @@ class Cespite extends AppModel {
             $cespiti = Hash::merge($notset, $cespiti);
             */
         } else {
-            $conditions = array('Cespite.id' => $id);
-            $cespiti = $this->find('first', array(
+            $conditions = ['Cespite.id' => $id];
+            $cespiti = $this->find('first', [
                 'conditions' => $conditions
-            ));
+            ]);
         }
         return $cespiti;
 	}

@@ -8,8 +8,8 @@ App::uses('AppController', 'Controller');
  */
 class FatturericevuteController extends AppController {
 	
-	public $components = array('Paginator', 'UploadFiles', 'GoogleDrive', 'GoogleMail');
-    public $uses = array('Fatturaricevuta', 'Primanota');
+	public $components = ['Paginator', 'UploadFiles', 'GoogleDrive', 'GoogleMail'];
+    public $uses = ['Fatturaricevuta', 'Primanota'];
 	
 /**
  * index method
@@ -18,11 +18,11 @@ class FatturericevuteController extends AppController {
  */
 	function index()
     {
-        $conditions=array();
+        $conditions=[];
         
         if ($this->request->query('attivita'))
         {
-            $conditions = array('Fatturaricevuta.attivita_id'=>$this->request->query('attivita'));
+            $conditions = ['Fatturaricevuta.attivita_id'=>$this->request->query('attivita')];
         }          
         if ($this->request->query('persona'))
         {
@@ -72,7 +72,7 @@ class FatturericevuteController extends AppController {
         }     
 		
         $this->set('title_for_layout', 'Documenti Ricevuti - '. $anno); 
-        $r = $this->Fatturaricevuta->find('all', array('conditions'=>$conditions, 'order'=>array('protocollo_ricezione'=>'desc') ));
+        $r = $this->Fatturaricevuta->find('all', ['conditions'=>$conditions, 'order'=>['protocollo_ricezione'=>'desc'] ]);
         $this->set('fatturericevute', $r);
         $this->set('provenienzesoldi', $this->Fatturaricevuta->Provenienzasoldi->find('list'));
         $this->set('persone', $this->Fatturaricevuta->Fornitore->find('list'));
@@ -115,7 +115,7 @@ class FatturericevuteController extends AppController {
                 {
                     $this->add2primanota($id);
                 }
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('Errore: Impossibile salvare la fattura ricevuta'));
 			}
@@ -125,7 +125,7 @@ class FatturericevuteController extends AppController {
         $legenda_tipo_documento = $this->Fatturaricevuta->LegendaTipoDocumento->find('list');
 		
         //Aggiungo il valore "nessuna fase associata", default
-		$notset = array('0'=> '-- Non definito --');    
+		$notset = ['0'=> '-- Non definito --'];    
 		$fase =$this->Fatturaricevuta->Faseattivita->find('all');
         $fa = Hash::combine($fase, 
                             '{n}.Faseattivita.id', 
@@ -170,12 +170,12 @@ class FatturericevuteController extends AppController {
                     $this->add2primanota($id);
                 }
 
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('Non è stato possibile salvare la fattura riceuvta. Errore'));
 			}
 		} else {
-			$options = array('conditions' => array('Fatturaricevuta.' . $this->Fatturaricevuta->primaryKey => $id));
+			$options = ['conditions' => ['Fatturaricevuta.' . $this->Fatturaricevuta->primaryKey => $id]];
 			$this->request->data = $this->Fatturaricevuta->find('first', $options);
 		}
         $attivita = $this->Fatturaricevuta->Attivita->find('list');
@@ -183,7 +183,7 @@ class FatturericevuteController extends AppController {
 		$legenda_tipo_documento = $this->Fatturaricevuta->LegendaTipoDocumento->find('list');
         
         //Aggiungo il valore "nessuna fase associata", default
-		$notset = array('0'=> '-- Non definito --');    
+		$notset = ['0'=> '-- Non definito --'];    
 		$fase =$this->Fatturaricevuta->Faseattivita->find('all');
         $fa = Hash::combine($fase, 
                             '{n}.Faseattivita.id', 
@@ -216,10 +216,10 @@ class FatturericevuteController extends AppController {
                 unlink(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.'.$fileExt);
             }
 			$this->Session->setFlash(__('Cancellata la fattura ricevuta'));
-			return $this->redirect(array('action' => 'index'));
+			return $this->redirect(['action' => 'index']);
 		}
 		$this->Session->setFlash(__('Fatturericevute was not deleted'));
-		return $this->redirect(array('action' => 'index'));
+		return $this->redirect(['action' => 'index']);
 	}
 	
 	public function deleteDoc($id = null) {
@@ -301,7 +301,7 @@ class FatturericevuteController extends AppController {
             }
             
             //TODO: inviare alla primanota giusta per eventuali modifiche
-			return $this->redirect(array('controller'=>'primanota', 'action' => 'index'));
+			return $this->redirect(['controller'=>'primanota', 'action' => 'index']);
         }
         else
         {

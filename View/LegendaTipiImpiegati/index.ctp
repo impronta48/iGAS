@@ -18,9 +18,9 @@
 					<div class="panel-heading"><?php echo __('Actions'); ?></div>
 						<div class="panel-body">
 							<ul class="nav nav-pills nav-stacked">
-								<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;'.__('New Legenda Tipi Impiegati'), array('action' => 'add'), array('escape' => false)); ?></li>
-								<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;List'.__('Impiegati'), array('controller' => 'impiegati', 'action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;New'.__('Impiegato'), array('controller' => 'impiegati', 'action' => 'add'), array('escape' => false)); ?> </li>
+								<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;'.__('New Legenda Tipi Impiegati'), ['action' => 'add'], ['escape' => false]); ?></li>
+								<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;List'.__('Impiegati'), ['controller' => 'impiegati', 'action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;New'.__('Impiegato'), ['controller' => 'impiegati', 'action' => 'add'], ['escape' => false]); ?> </li>
 							</ul>
 						</div><!-- end body -->
 				</div><!-- end panel -->
@@ -42,9 +42,9 @@
 						<td nowrap><?php echo h($legendaTipiImpiegati['LegendaTipoImpiegato']['TipoImpiegato']); ?>&nbsp;</td>
 						<td nowrap><?php echo h($legendaTipiImpiegati['LegendaTipoImpiegato']['id']); ?>&nbsp;</td>
 						<td class="actions">
-							<?php echo $this->Html->link('<span class="glyphicon glyphicon-search"></span>', array('action' => 'view', $legendaTipiImpiegati['LegendaTipoImpiegato']['id']), array('escape' => false)); ?>
-							<?php echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span>', array('action' => 'edit', $legendaTipiImpiegati['LegendaTipoImpiegato']['id']), array('escape' => false)); ?>
-							<?php echo $this->Form->postLink('<span class="glyphicon glyphicon-remove"></span>', array('action' => 'delete', $legendaTipiImpiegati['LegendaTipoImpiegato']['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $legendaTipiImpiegati['LegendaTipoImpiegato']['id'])); ?>
+							<?php echo $this->Html->link('<span class="glyphicon glyphicon-search"></span>', ['action' => 'view', $legendaTipiImpiegati['LegendaTipoImpiegato']['id']], ['escape' => false]); ?>
+							<?php echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span>', ['action' => 'edit', $legendaTipiImpiegati['LegendaTipoImpiegato']['id']], ['escape' => false]); ?>
+							<?php echo $this->Form->postLink('<span class="glyphicon glyphicon-remove"></span>', ['action' => 'delete', $legendaTipiImpiegati['LegendaTipoImpiegato']['id']], ['escape' => false], __('Are you sure you want to delete # %s?', $legendaTipiImpiegati['LegendaTipoImpiegato']['id'])); ?>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -52,7 +52,7 @@
 			</table>
 
 			<p>
-				<small><?php echo $this->Paginator->counter(array('format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')));?></small>
+				<small><?php echo $this->Paginator->counter(['format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')]);?></small>
 			</p>
 
 			<?php
@@ -61,9 +61,9 @@
 			?>
 			<ul class="pagination pagination-sm">
 				<?php
-					echo $this->Paginator->prev('&larr; Previous', array('class' => 'prev','tag' => 'li','escape' => false), '<a onclick="return false;">&larr; Previous</a>', array('class' => 'prev disabled','tag' => 'li','escape' => false));
-					echo $this->Paginator->numbers(array('separator' => '','tag' => 'li','currentClass' => 'active','currentTag' => 'a'));
-					echo $this->Paginator->next('Next &rarr;', array('class' => 'next','tag' => 'li','escape' => false), '<a onclick="return false;">Next &rarr;</a>', array('class' => 'next disabled','tag' => 'li','escape' => false));
+					echo $this->Paginator->prev('&larr; Previous', ['class' => 'prev','tag' => 'li','escape' => false], '<a onclick="return false;">&larr; Previous</a>', ['class' => 'prev disabled','tag' => 'li','escape' => false]);
+					echo $this->Paginator->numbers(['separator' => '','tag' => 'li','currentClass' => 'active','currentTag' => 'a']);
+					echo $this->Paginator->next('Next &rarr;', ['class' => 'next','tag' => 'li','escape' => false], '<a onclick="return false;">Next &rarr;</a>', ['class' => 'next disabled','tag' => 'li','escape' => false]);
 				?>
 			</ul>
 			<?php } ?>

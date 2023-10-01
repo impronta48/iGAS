@@ -18,54 +18,54 @@ class Fatturaricevuta extends AppModel {
  *
  * @var array
  */
-	public $belongsTo = array(
-		'Attivita' => array(
+	public $belongsTo = [
+		'Attivita' => [
 			'className' => 'Attivita',
 			'foreignKey' => 'attivita_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'Fornitore' => array(
+		],
+		'Fornitore' => [
 			'className' => 'Fornitore',
 			'foreignKey' => 'fornitore_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'Faseattivita' => array(
+		],
+		'Faseattivita' => [
 			'className' => 'Faseattivita',
 			'foreignKey' => 'faseattivita_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'Provenienzasoldi' => array(
+		],
+		'Provenienzasoldi' => [
 			'className' => 'Provenienzasoldi',
 			'foreignKey' => 'provenienza',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'LegendaTipoDocumento' => array(
+		],
+		'LegendaTipoDocumento' => [
 			'className' => 'LegendaTipoDocumento',
 			'foreignKey' => 'legenda_tipo_documento_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'LegendaCatSpesa' => array(
+		],
+		'LegendaCatSpesa' => [
 			'className' => 'LegendaCatSpesa',
 			'foreignKey' => 'legenda_cat_spesa_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		)
-	);
+		]
+	];
 
-	public $virtualFields = array(
+	public $virtualFields = [
 		'soddisfatta' => 'SELECT SUM(Primanota.Importo*-1) from primanota Primanota WHERE Primanota.fatturaricevuta_id = Fatturaricevuta.id' 
 
-		);
+		];
 
 }

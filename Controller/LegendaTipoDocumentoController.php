@@ -14,7 +14,7 @@ class LegendaTipoDocumentoController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'Session');
+	public $components = ['Paginator', 'Session'];
 
 /**
  * index method
@@ -37,7 +37,7 @@ class LegendaTipoDocumentoController extends AppController {
 		if (!$this->LegendaTipoDocumento->exists($id)) {
 			throw new NotFoundException(__('Invalid legenda tipo documento'));
 		}
-		$options = array('conditions' => array('LegendaTipoDocumento.' . $this->LegendaTipoDocumento->primaryKey => $id));
+		$options = ['conditions' => ['LegendaTipoDocumento.' . $this->LegendaTipoDocumento->primaryKey => $id]];
 		$this->set('legendaTipoDocumento', $this->LegendaTipoDocumento->find('first', $options));
 	}
 
@@ -51,7 +51,7 @@ class LegendaTipoDocumentoController extends AppController {
 			$this->LegendaTipoDocumento->create();
 			if ($this->LegendaTipoDocumento->save($this->request->data)) {
 				$this->Session->setFlash(__('The legenda tipo documento has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The legenda tipo documento could not be saved. Please, try again.'));
 			}
@@ -69,15 +69,15 @@ class LegendaTipoDocumentoController extends AppController {
 		if (!$this->LegendaTipoDocumento->exists($id)) {
 			throw new NotFoundException(__('Invalid legenda tipo documento'));
 		}
-		if ($this->request->is(array('post', 'put'))) {
+		if ($this->request->is(['post', 'put'])) {
 			if ($this->LegendaTipoDocumento->save($this->request->data)) {
 				$this->Session->setFlash(__('The legenda tipo documento has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The legenda tipo documento could not be saved. Please, try again.'));
 			}
 		} else {
-			$options = array('conditions' => array('LegendaTipoDocumento.' . $this->LegendaTipoDocumento->primaryKey => $id));
+			$options = ['conditions' => ['LegendaTipoDocumento.' . $this->LegendaTipoDocumento->primaryKey => $id]];
 			$this->request->data = $this->LegendaTipoDocumento->find('first', $options);
 		}
 	}
@@ -100,6 +100,6 @@ class LegendaTipoDocumentoController extends AppController {
 		} else {
 			$this->Session->setFlash(__('The legenda tipo documento could not be deleted. Please, try again.'));
 		}
-		return $this->redirect(array('action' => 'index'));
+		return $this->redirect(['action' => 'index']);
 	}
 }

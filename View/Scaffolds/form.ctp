@@ -41,20 +41,20 @@ $button_name = ($this->request->action === 'add') ? 'Add' : 'Save';
                         <?php if ($this->request->action !== 'add'): ?>
                             <li><?php
                                 echo $this->Form->postLink(
-                                        __d('cake', 'Delete'), array('action' => 'delete', $this->Form->value($modelClass . '.' . $primaryKey)), null, __d('cake', 'Are you sure you want to delete # %s?', $this->Form->value($modelClass . '.' . $primaryKey)));
+                                        __d('cake', 'Delete'), ['action' => 'delete', $this->Form->value($modelClass . '.' . $primaryKey)], null, __d('cake', 'Are you sure you want to delete # %s?', $this->Form->value($modelClass . '.' . $primaryKey)));
                                 ?></li>
                         <?php endif; ?>
-                        <li><?php echo $this->Html->link(__d('cake', 'List') . ' ' . $pluralHumanName, array('action' => 'index')); ?></li>
+                        <li><?php echo $this->Html->link(__d('cake', 'List') . ' ' . $pluralHumanName, ['action' => 'index']); ?></li>
                         <?php
-                        $done = array();
+                        $done = [];
                         foreach ($associations as $_type => $_data) {
                             foreach ($_data as $_alias => $_details) {
                                 if ($_details['controller'] != $this->name && !in_array($_details['controller'], $done)) {
                                     echo "\t\t<li>" . $this->Html->link(
-                                            __d('cake', 'List %s', Inflector::humanize($_details['controller'])), array('plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'index')
+                                            __d('cake', 'List %s', Inflector::humanize($_details['controller'])), ['plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'index']
                                     ) . "</li>\n";
                                     echo "\t\t<li>" . $this->Html->link(
-                                            __d('cake', 'New %s', Inflector::humanize(Inflector::underscore($_alias))), array('plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'add')
+                                            __d('cake', 'New %s', Inflector::humanize(Inflector::underscore($_alias))), ['plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'add']
                                     ) . "</li>\n";
                                     $done[] = $_details['controller'];
                                 }
@@ -67,46 +67,46 @@ $button_name = ($this->request->action === 'add') ? 'Add' : 'Save';
         </div>
         <div class="panel-body">
             <?php
-            echo $this->Form->create(array(
+            echo $this->Form->create([
                 'class' => 'form-horizontal',
                 'role' => 'form'
-            ));
+            ]);
             ?>
             <?php
             echo $this->Form->create();
             foreach ($scaffoldFields as $scaffoldField) {
                 if ($scaffoldField == $primaryKey) {
-                    echo $this->Form->input($scaffoldField, array
-                        (
+                    echo $this->Form->input($scaffoldField, 
+                        [
                         'label' => false,
                         'div' => false,
-                    ));
+                    ]);
                 } else {
-                    if (!$simple_view || ($simple_view && !in_array($scaffoldField, array('created', 'modified', 'updated', 'create_user_id', 'update_user_id')))) {
+                    if (!$simple_view || ($simple_view && !in_array($scaffoldField, ['created', 'modified', 'updated', 'create_user_id', 'update_user_id']))) {
                         $uid = uniqid('id');
-                        $_opt = array
-                            (
+                        $_opt = 
+                            [
                             'label' => false,
                             'div' => false,
                             'id' => $uid,
                             'class' => "form-control",
                             'empty' => ''
-                        );
+                        ];
                         if (!empty($this->request->query[$scaffoldField]))
                             $_opt['selected'] = $this->request->query[$scaffoldField];
 
                         $input = $this->Form->input($scaffoldField, $_opt);
 
                         if (!empty($field_type[$scaffoldField]))
-                            if (in_array($field_type[$scaffoldField], array('date', 'datetime'))) {
-                                $input = $this->Form->input($scaffoldField, array
-                                    (
+                            if (in_array($field_type[$scaffoldField], ['date', 'datetime'])) {
+                                $input = $this->Form->input($scaffoldField, 
+                                    [
                                     'label' => false,
                                     'type' => 'text',
                                     'div' => false,
                                     'id' => $uid,
                                     'class' => "form-control"
-                                ));
+                                ]);
                                 if ($field_type[$scaffoldField] == 'date')
                                     $input = str_replace('"text"', '"date"', $input);
                                // else

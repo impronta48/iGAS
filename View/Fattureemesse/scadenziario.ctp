@@ -8,7 +8,7 @@
     for ($i=date('Y')-$anni; $i<=date('Y'); $i++)
     {
     ?>
-        <a class="btn btn-default btn-animate-demo btn-xs" href="<?php echo $this->Html->url(array('controller' => 'fattureemesse','action' => 'scadenziario', $i)) ?>"><?php echo $i ?></a>        
+        <a class="btn btn-default btn-animate-demo btn-xs" href="<?php echo $this->Html->url(['controller' => 'fattureemesse','action' => 'scadenziario', $i]) ?>"><?php echo $i ?></a>        
     <?php
         }
     ?>      
@@ -64,13 +64,13 @@
         ?>
             <tr>
                 <td>
-                    <?php echo $this->Html->link($fatturaemessa['Attivita']['Persona']['DisplayName'], array('controller'=>'persone', 'action' => 'view', $fatturaemessa['Attivita']['cliente_id'])); ?>
+                    <?php echo $this->Html->link($fatturaemessa['Attivita']['Persona']['DisplayName'], ['controller'=>'persone', 'action' => 'view', $fatturaemessa['Attivita']['cliente_id']]); ?>
                 </td>                
                 <td>
-                    <?php echo $this->Html->link($fatturaemessa['Attivita']['name'], array('controller'=>'attivita', 'action' => 'edit', $fatturaemessa['Fatturaemessa']['attivita_id'])); ?>
+                    <?php echo $this->Html->link($fatturaemessa['Attivita']['name'], ['controller'=>'attivita', 'action' => 'edit', $fatturaemessa['Fatturaemessa']['attivita_id']]); ?>
                 </td>
                 <td>
-                    <a href="<?php echo $this->Html->url(array('controller'=>'fattureemesse', 'action' => 'edit', $fatturaemessa['Fatturaemessa']['id'])); ?>">
+                    <a href="<?php echo $this->Html->url(['controller'=>'fattureemesse', 'action' => 'edit', $fatturaemessa['Fatturaemessa']['id']]); ?>">
                     <?php echo $fatturaemessa['Fatturaemessa']['Progressivo']; ?>/<?php echo $fatturaemessa['Fatturaemessa']['AnnoFatturazione']; ?>
                     </a>
                 </td>		
@@ -112,7 +112,7 @@
   <?php endif; ?>
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
   $('.dropdown-menu').find('form').click(function (e) {
     e.stopPropagation();
   });

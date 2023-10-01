@@ -4,14 +4,14 @@ class PersoneController extends AppController
 {
 
   public $name = 'Persone';
-  public $components = array('RequestHandler', 'Paginator', 'PhpExcel.PhpSpreadsheet', 'UploadFiles');
-  public $helpers = array('PhpExcel.PhpSpreadsheet');
+  public $components = ['RequestHandler', 'Paginator', 'PhpExcel.PhpSpreadsheet', 'UploadFiles'];
+  public $helpers = ['PhpExcel.PhpSpreadsheet'];
 
   function index()
   {
 
     $this->Persona->recursive = 1;
-    $conditions = array();
+    $conditions = [];
 
     //Read querystring
     $q = $this->request->query('q');
@@ -24,39 +24,39 @@ class PersoneController extends AppController
     }
 
     if (!empty($q)) {
-      $conditions[] = array('OR' => array(
+      $conditions[] = ['OR' => [
         'Persona.nome LIKE' => "%$q%",
         'Persona.cognome LIKE' => "%$q%",
         'Persona.DisplayName LIKE' => "%$q%",
         'Persona.Societa LIKE' => "%$q%",
-      ));
+      ]];
     }
 
     if ($this->request->ext == 'xls') {
-      $this->set('persone', $this->Persona->find('all', array(
+      $this->set('persone', $this->Persona->find('all', [
         'conditions' => $conditions,
-        'contains' => array('Persona'),
+        'contains' => ['Persona'],
         'recursive' => -1,
-      )));
+      ]));
       $this->set('name', Configure::read('iGas.NomeAzienda') . "Contatti.xls");
       return;
     } elseif (!empty($cat)) {
-      $this->Paginator->settings['Tagged'] = array(
+      $this->Paginator->settings['Tagged'] = [
         'tagged',
         'model' => 'Persona',
         'by' => $cat,
         'conditions' => $conditions,
-        'contain' => array('Persona', 'Tag'),
+        'contain' => ['Persona', 'Tag'],
         'limit' => $paging,
-      );
+      ];
       $this->set('persone', $this->Paginator->paginate('Tagged'));
     } else {
-      $this->Paginator->settings = array(
+      $this->Paginator->settings = [
         'conditions' => $conditions,
-        'contain' => array('Tag'),
-        'order' => array('modified' => 'DESC', 'DisplayName'),
+        'contain' => ['Tag'],
+        'order' => ['modified' => 'DESC', 'DisplayName'],
         'limit' => $paging,
-      );
+      ];
       $this->set('persone', $this->Paginator->paginate());
     }
 
@@ -68,9 +68,9 @@ class PersoneController extends AppController
     }
 
     //Leggo tutti i tag e li porto alla view
-    $fields = array('name');
-    $t = $this->Persona->Tag->find('all', array('fields' => $fields, 'recursive' => -1));
-    $taglist = array();
+    $fields = ['name'];
+    $t = $this->Persona->Tag->find('all', ['fields' => $fields, 'recursive' => -1]);
+    $taglist = [];
     foreach ($t as $t1) {
       //the value of the select should be the same of the name
       $taglist[$t1['Tag']['name']] = $t1['Tag']['name'];
@@ -107,10 +107,10 @@ class PersoneController extends AppController
         $this->set('persona', $persona['Persona']);
         $this->set('profilePath', $this->setAvatarToDisplay($persona['Persona']));
       } else {
-        $this->redirect(array('action' => 'index'));
+        $this->redirect(['action' => 'index']);
       }
     } else {
-      $this->redirect(array('action' => 'index'));
+      $this->redirect(['action' => 'index']);
     }
   }
 
@@ -120,7 +120,7 @@ class PersoneController extends AppController
       // Si può continuare, altrimenti vieni reindirizzato, questo è brutto lo so ma è la tecnica che attualmente
       // assicura al 100% la profilazione in questo punto
     } else {
-      $this->redirect(array('action' => 'index'));
+      $this->redirect(['action' => 'index']);
     }
 
     if (!$id && !empty($this->request->data)) {
@@ -144,7 +144,7 @@ class PersoneController extends AppController
         if ($this->Session->read('Auth.User.persona_id') == $id) {
           $this->Session->write('Auth.User.Persona.Sex', $this->request->data['Persona']['Sex']);
         }
-        $this->redirect(array('action' => 'index'));
+        $this->redirect(['action' => 'index']);
       } else {
         $this->Session->setFlash(__('The persona could not be saved. Please, try again.'));
       }
@@ -156,12 +156,12 @@ class PersoneController extends AppController
       } else if (!$id) {
         $this->set('profilePath', null);
       } else {
-        $this->redirect(array('action' => 'index'));
+        $this->redirect(['action' => 'index']);
       }
       //Leggo tutti i tag e li porto alla view
-      $fields = array('name');
-      $t = $this->Persona->Tag->find('all', array('fields' => $fields, 'recursive' => -1));
-      $taglist = array();
+      $fields = ['name'];
+      $t = $this->Persona->Tag->find('all', ['fields' => $fields, 'recursive' => -1]);
+      $taglist = [];
       foreach ($t as $t1) {
         $taglist[] = $t1['Tag']['name'];
       }
@@ -173,31 +173,31 @@ class PersoneController extends AppController
   {
     if (!$id) {
       $this->Session->setFlash(__('Invalid id for persona'));
-      $this->redirect(array('action' => 'index'));
+      $this->redirect(['action' => 'index']);
     }
     if ($this->Persona->delete($id)) {
       $this->Session->setFlash(__('Persona deleted'));
       $this->deleteDoc($id, false);
-      $this->redirect(array('action' => 'index'));
+      $this->redirect(['action' => 'index']);
     }
     $this->Session->setFlash(__('Persona was not deleted'));
-    $this->redirect(array('action' => 'index'));
+    $this->redirect(['action' => 'index']);
   }
 
   function autocomplete()
   {
-    $data = array();
+    $data = [];
     if (isset($this->request->query['term'])) {
-      $data = $this->Persona->find('all', array(
-        'conditions' => array(
+      $data = $this->Persona->find('all', [
+        'conditions' => [
           'Persona.DisplayName LIKE' => '%' . $this->request->query['term'] . '%'
-        ),
+        ],
         'limit' => 50,
-        'fields' => array('id', 'DisplayName', 'Impiegato.costoAziendale', 'Impiegato.venduto'),
-      ));
+        'fields' => ['id', 'DisplayName', 'Impiegato.costoAziendale', 'Impiegato.venduto'],
+      ]);
     }
 
-    $res = array();
+    $res = [];
 
     foreach ($data as $d) {
       $a = new StdClass();
@@ -219,20 +219,20 @@ class PersoneController extends AppController
 
   function suggest()
   {
-    $data = array();
+    $data = [];
     if (isset($this->request->query['q'])) {
       $this->Persona->recursive = 1;
-      $data = $this->Persona->find('all', array(
-        'conditions' => array(
+      $data = $this->Persona->find('all', [
+        'conditions' => [
           'Persona.DisplayName LIKE' => '%' . $this->request->query['q'] . '%',
           //'Impiegato.TipoImpiegato > ' => 0,
-        ),
+        ],
         'limit' => 50,
-        'fields' => array('id', 'DisplayName'),
-      ));
+        'fields' => ['id', 'DisplayName'],
+      ]);
     }
 
-    $res = array();
+    $res = [];
 
     foreach ($data as $d) {
       $a = new StdClass();
@@ -318,7 +318,7 @@ class PersoneController extends AppController
       $email = $p['Persona']['EMail'];
       //$this->log($p);
       try {
-        $this->mc->lists->subscribe($listId, array('email' => $email));
+        $this->mc->lists->subscribe($listId, ['email' => $email]);
         $this->Session->setFlash("L'utente $email è stato iscritto alla lista $listId, deve confermare il proprio indirizzo!", 'flash_success');
         $this->log("User $email subscribed successfully!", 'success');
       } catch (Mailchimp_Error $e) {
@@ -427,7 +427,7 @@ class PersoneController extends AppController
     //5             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia |
     //...
     //31             | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia | Progetti, Ferie, Permessi, Malattia |
-    $tabore = array();
+    $tabore = [];
 
     //Inizializzo
     foreach ($persone_list as $p) {
@@ -492,16 +492,16 @@ class PersoneController extends AppController
   //Carico i valori da contratto per il mese come parametro
   private function _getContratto($pid, $anno, $mese)
   {
-    $giorniIta = array('1' => 'Lun', '2' => 'Mar', '3' => 'Mer', '4' => 'Gio', '5' => 'Ven', '6' => 'Sab', '7' => 'Dom');
+    $giorniIta = ['1' => 'Lun', '2' => 'Mar', '3' => 'Mer', '4' => 'Gio', '5' => 'Ven', '6' => 'Sab', '7' => 'Dom'];
     $days = cal_days_in_month(CAL_GREGORIAN, $mese, $anno);
-    $sett = $this->Persona->Impiegato->find('first', array(
-      'conditions' => array(
+    $sett = $this->Persona->Impiegato->find('first', [
+      'conditions' => [
         'persona_id' => $pid,
         'dataValidita <=' => "$anno-$mese-01"
-      ),
+      ],
       'order' => 'dataValidita DESC'
-    ));
-    $result = array();
+    ]);
+    $result = [];
 
     for ($d = 1; $d <= $days; $d++) {
       $n = date('N', strtotime("$anno-$mese-$d"));
@@ -547,7 +547,7 @@ class PersoneController extends AppController
                                         ORDER BY Cognome, Attivita.name, data");
     }
 
-    $tabore = array();
+    $tabore = [];
 
     foreach ($ore as $riga) {
 
@@ -621,7 +621,7 @@ class PersoneController extends AppController
     }
 
     //Creo una tabella con disposizione inversa rispetto a quella di consulente/report
-    $tabore = array();
+    $tabore = [];
 
     // Filippo 20/04/16 - Ho creato questo loop per 'pulire' l'estrazione dei dati e utilizzare una sola query SQL
     foreach ($ore as $riga) {
@@ -655,15 +655,15 @@ class PersoneController extends AppController
 
   function export_email($persone)
   {
-    $in = array();
+    $in = [];
     foreach ($persone as $key => $value) {
       $in[] = $key;
     }
     $this->Persona->recursive = -1;
-    $persone = $this->Persona->find('all', array(
-      'conditions' => array('id' => $in),
+    $persone = $this->Persona->find('all', [
+      'conditions' => ['id' => $in],
       'fields' => 'email',
-    ));
+    ]);
 
     $this->set('persone', $persone);
     $this->render('export_email');
@@ -672,13 +672,13 @@ class PersoneController extends AppController
   public function ultimemodifiche()
   {
 
-    $lastmodified = array();
+    $lastmodified = [];
 
-    $res = $this->Persona->find('all', array(
-      'fields' => array('Persona.DisplayName', 'Persona.modified'),
+    $res = $this->Persona->find('all', [
+      'fields' => ['Persona.DisplayName', 'Persona.modified'],
       'limit' => '10',
-      'order' => array('Persona.modified' => 'desc')
-    ));
+      'order' => ['Persona.modified' => 'desc']
+    ]);
 
     foreach ($res as $r) {
 
@@ -710,7 +710,7 @@ class PersoneController extends AppController
       // assicura al 100% la profilazione in questo punto
     } else {
       $this->Session->setFlash(__('Non è stato possibile cancellare immagine profilo'));
-      $this->redirect(array('action' => 'index'));
+      $this->redirect(['action' => 'index']);
     }
     $fileExt = $this->UploadFiles->checkIfFileExists(WWW_ROOT . 'img' . DS . 'profiles' . DS . $id . '.');
     if (unlink(WWW_ROOT . 'img' . DS . 'profiles' . DS . $id . '.' . $fileExt)) {
@@ -722,7 +722,7 @@ class PersoneController extends AppController
       if ($this->referer()) {
         $this->redirect($this->referer());
       } else {
-        $this->redirect(array('controller' => 'persone', 'action' => 'index'));
+        $this->redirect(['controller' => 'persone', 'action' => 'index']);
       }
     }
   }

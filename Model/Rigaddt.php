@@ -22,20 +22,20 @@ class Rigaddt extends AppModel {
  *
  * @var array
  */
-	public $belongsTo = array(
-		'Ddt' => array(
+	public $belongsTo = [
+		'Ddt' => [
 			'className' => 'Ddt',
 			'foreignKey' => 'ddt_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'Faseattivita' => array(
+		],
+		'Faseattivita' => [
 			'className' => 'Faseattivita',
 			'foreignKey' => 'faseattivita_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		), 
-	);
+		], 
+	];
 }

@@ -28,7 +28,7 @@
     $d= new DateTime($data['Notaspesa']['data']);
     
     echo $this->Html->tableCells(
-        array($d->format('D d'),
+        [$d->format('D d'),
               $data['Attivita']['name'] . '<small class="text-muted">/' . substr($data['Faseattivita']['Descrizione'],0,40) . '</small>',                         
               $data['Notaspesa']['origine'] ." > ". $data['Notaspesa']['destinazione'],                           
               $data['LegendaCatSpesa']['name'],            
@@ -36,11 +36,11 @@
               $data['Notaspesa']['descrizione'],              
               
               badge_fatturabile($data['Notaspesa']) . ' ' .  badge_rimborsabile($data['Notaspesa']) ,                           
-              array(
+              [
                            '<div class="btn btn-primary btn-xs glow btn-edit-riga" id="'. $data['Notaspesa']['id'] . '">Edit</div>'.                            
-                            $this->Html->link('Del',array('action'=>'delete',$data['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-del-riga" )),                        
-                            array('class'=>'actions'),
-                            ),
-          ));
+                            $this->Html->link('Del',['action'=>'delete',$data['Notaspesa']['id']],['class'=>"btn btn-primary btn-xs glow btn-del-riga" ]),                        
+                            ['class'=>'actions'],
+                            ],
+          ]);
     
     ?>

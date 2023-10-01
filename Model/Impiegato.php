@@ -3,24 +3,24 @@ class Impiegato extends AppModel {
 	
     public $actsAs = ['Containable'];
 
-	var $belongsTo = array(
-		'Persona' => array(
+	var $belongsTo = [
+		'Persona' => [
             'className' => 'Persona',
             'foreignKey' => 'persona_id',
-		),
-        'LegendaTipoImpiegato' => array(
+		],
+        'LegendaTipoImpiegato' => [
             'className' => 'LegendaTipoImpiegato',
             'foreignKey' => 'legendaTipoImpiegato_id',
-		),
-        'LegendaUnitaMisura' => array(
+		],
+        'LegendaUnitaMisura' => [
             'className' => 'LegendaUnitaMisura',
             'foreignKey' => 'legendaUnitaMisura_id',
-		),
-	); 
+		],
+	]; 
 
     public function attivo()
     {
-        return $this->find('all', array('conditions'=>array('disattivo'=>0),'fields'=>array('id','Persona.id','Persona.DisplayName'), 'order'=>'Persona.Cognome'));
+        return $this->find('all', ['conditions'=>['disattivo'=>0],'fields'=>['id','Persona.id','Persona.DisplayName'], 'order'=>'Persona.Cognome']);
     }
 
     public function oreContratto($id,$mese,$anno)
@@ -42,5 +42,25 @@ class Impiegato extends AppModel {
             $sommaOre+=@$impiegato['Impiegato'][$nomiColonne[$gSett]];
         }
         return $sommaOre;
+    }
+
+    //Restituisce una lista di impiegati utile per fare select o elenchi
+    //Se passo $show_disattivi mostro anche i disattivi, di default solo gli attivi
+    public function list($show_disattivi = false) {
+
+        $conditions['disattivo'] = $show_disattivi;
+        
+        $impiegati = $this->find('list', [
+            'cache' => 'impiegati',
+            'CacheConfig' => 'short',
+            'fields' => ['Persona.id', 'Persona.DisplayName'],
+            'contain' => [
+                'Persona' => ['fields' => 'DisplayName'],
+            ],
+            'recursive' => -1,
+            'order' => ['Persona.DisplayName'],
+            'conditions' => $conditions,
+        ]);
+        return $impiegati;
     }
 }

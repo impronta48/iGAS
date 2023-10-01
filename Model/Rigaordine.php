@@ -15,13 +15,13 @@ class Rigaordine extends AppModel {
  *
  * @var array
  */
-	public $belongsTo = array(
-		'Ordine' => array(
+	public $belongsTo = [
+		'Ordine' => [
 			'className' => 'Ordine',
 			'foreignKey' => 'ordine_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		)
-	);
+		]
+	];
 }

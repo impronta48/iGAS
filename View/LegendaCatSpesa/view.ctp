@@ -15,12 +15,12 @@
 					<div class="panel-heading"><?php echo __('Actions'); ?></div>
 						<div class="panel-body">
 							<ul class="nav nav-pills nav-stacked">
-									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Legenda Cat Spesa'), array('action' => 'edit', $legendaCatSpesa['LegendaCatSpesa']['id']), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Legenda Cat Spesa'), array('action' => 'delete', $legendaCatSpesa['LegendaCatSpesa']['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $legendaCatSpesa['LegendaCatSpesa']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Legenda Cat Spesas'), array('action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Legenda Cat Spesa'), array('action' => 'add'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Primanota'), array('controller' => 'primanota', 'action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Primanota'), array('controller' => 'primanota', 'action' => 'add'), array('escape' => false)); ?> </li>
+									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Legenda Cat Spesa'), ['action' => 'edit', $legendaCatSpesa['LegendaCatSpesa']['id']], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Legenda Cat Spesa'), ['action' => 'delete', $legendaCatSpesa['LegendaCatSpesa']['id']], ['escape' => false], __('Are you sure you want to delete # %s?', $legendaCatSpesa['LegendaCatSpesa']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Legenda Cat Spesas'), ['action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Legenda Cat Spesa'), ['action' => 'add'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Primanota'), ['controller' => 'primanota', 'action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Primanota'), ['controller' => 'primanota', 'action' => 'add'], ['escape' => false]); ?> </li>
 							</ul>
 						</div><!-- end body -->
 				</div><!-- end panel -->
@@ -102,9 +102,9 @@
 			<td><?php echo $primanota['imponibile']; ?></td>
 			<td><?php echo $primanota['iva']; ?></td>
 			<td class="actions">
-				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-search"></span>'), array('controller' => 'primanota', 'action' => 'view', $primanota['id']), array('escape' => false)); ?>
-				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>'), array('controller' => 'primanota', 'action' => 'edit', $primanota['id']), array('escape' => false)); ?>
-				<?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>'), array('controller' => 'primanota', 'action' => 'delete', $primanota['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $primanota['id'])); ?>
+				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-search"></span>'), ['controller' => 'primanota', 'action' => 'view', $primanota['id']], ['escape' => false]); ?>
+				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>'), ['controller' => 'primanota', 'action' => 'edit', $primanota['id']], ['escape' => false]); ?>
+				<?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>'), ['controller' => 'primanota', 'action' => 'delete', $primanota['id']], ['escape' => false], __('Are you sure you want to delete # %s?', $primanota['id'])); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -113,7 +113,7 @@
 <?php endif; ?>
 
 	<div class="actions">
-		<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;New Primanota'), array('controller' => 'primanota', 'action' => 'add'), array('escape' => false, 'class' => 'btn btn-default')); ?> 
+		<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;New Primanota'), ['controller' => 'primanota', 'action' => 'add'], ['escape' => false, 'class' => 'btn btn-default']); ?> 
 	</div>
 	</div><!-- end col md 12 -->
 </div>

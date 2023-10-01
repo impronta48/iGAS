@@ -43,7 +43,7 @@ if (count($conteggi)==0){
 
 <?php foreach ($conteggi as $key => $p) { ?>
 <tr>
-    <td><?php echo $this->Html->link($conteggi[$key]['Cognome'].' '.$conteggi[$key]['Nome'],array('controller'=>'persone','action'=>'edit',$key)); ?></td>
+    <td><?php echo $this->Html->link($conteggi[$key]['Cognome'].' '.$conteggi[$key]['Nome'],['controller'=>'persone','action'=>'edit',$key]); ?></td>
     <?php foreach($p['Mesi'] as $monthNumber => $monthCaricate){ ?>
         <?php $displayVal = $monthCaricate; ?>
         <?php 
@@ -57,12 +57,12 @@ if (count($conteggi)==0){
                     */
                     $displayMailBlock = $this->Html->link(
                                         '<i class="fa fa-mail-forward"></i> Mail',
-                                        array('controller' => 'ore', 'action' => 'inviaMailDiSollecito', $persona_id, $this->request->pass[0], $monthNumber),
-                                        array(
+                                        ['controller' => 'ore', 'action' => 'inviaMailDiSollecito', $persona_id, $this->request->pass[0], $monthNumber],
+                                        [
                                         'escape' => false,
                                         'class' => 'btn btn-xs btn-danger',
                                         'title' => 'Invia mail di sollecito a '.$conteggi[$key]['Cognome'].' '.$conteggi[$key]['Nome'],
-                                        'alt' => 'Invia mail di sollecito a '.$conteggi[$key]['Cognome'].' '.$conteggi[$key]['Nome'])
+                                        'alt' => 'Invia mail di sollecito a '.$conteggi[$key]['Cognome'].' '.$conteggi[$key]['Nome']]
                                         );                                         
                     $displayVal .= '/'.$impiegato['Mesi'][$monthNumber];
                     $thresold = $impiegato['Mesi'][$monthNumber] / (float)2;
@@ -94,7 +94,7 @@ if (count($conteggi)==0){
 <?php //debug($conteggi); ?>
 <?php //debug($conteggiImpiegati); ?>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
         $(document).ready(function() {
 
             var dataTablePagination = true;

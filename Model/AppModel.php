@@ -32,7 +32,7 @@ App::uses('Model', 'Model');
 class AppModel extends Model {
 
 
-    function find($conditions = null, $fields = array(), $order = null, $recursive = null) {
+    function find($conditions = null, $fields = [], $order = null, $recursive = null) {
         $doQuery = true;
         // check if we want the cache
         if (!empty($fields['cache'])) {

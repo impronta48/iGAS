@@ -1,12 +1,12 @@
 <?php
 class Ora extends AppModel {
 	var $name = 'Ora';
-    public $actsAs = array('Containable');
+    public $actsAs = ['Containable'];
     
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
-	var $belongsTo = array(
-		'Persona' => array(
+	var $belongsTo = [
+		'Persona' => [
 			'className' => 'Persona',
 			'foreignKey' => 'eRisorsa',
 			'dependent' => false,
@@ -18,8 +18,8 @@ class Ora extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-		'Impiegato' => array(
+		],
+		'Impiegato' => [
 			'className' => 'Impiegato',
 			'foreignKey' => 'eRisorsa',
 			'dependent' => false,
@@ -31,8 +31,8 @@ class Ora extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-		'Attivita' => array(
+		],
+		'Attivita' => [
 			'className' => 'Attivita',
 			'foreignKey' => 'eAttivita',
 			'dependent' => false,
@@ -44,8 +44,8 @@ class Ora extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-		'Faseattivita' => array(
+		],
+		'Faseattivita' => [
 			'className' => 'Faseattivita',
 			'foreignKey' => 'faseattivita_id',
 			'dependent' => false,
@@ -57,36 +57,36 @@ class Ora extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		)
-	); 
+		]
+	]; 
 
-    var $validate = array(
-	'numOre' => array(
-		'rule' => array('numeric'),
+    var $validate = [
+	'numOre' => [
+		'rule' => ['numeric'],
         'required' => FALSE,
 		'message' => 'Inserire il numero di ore lavorate'
-	),
-    'data' => array(
-		'rule' => array('date','ymd'),
+	],
+    'data' => [
+		'rule' => ['date','ymd'],
         'required' => TRUE,
 		'message' => 'Inserire una data valida'
 
-	),
-    'eRisorsa' => array(
-        'rule' => array('numeric'),
+	],
+    'eRisorsa' => [
+        'rule' => ['numeric'],
 		'required' => TRUE,
 		'message' => 'Campo Obbligatorio'
 
-	),
-    'eAttivita' => array(
-        'rule' => array('numeric'),
+	],
+    'eAttivita' => [
+        'rule' => ['numeric'],
 		'required' => TRUE,
 		'message' => 'Campo Obbligatorio'
 
-	),
-	);
+	],
+	];
 
-	public function beforeSave($options = Array()) {
+	public function beforeSave($options = []) {
 		// Se faseattivita_id non è settato o se faseattivita_id == 0 le ore caricate non sono legate a nessuna faseattività e non devo quindi modificare nulla in nessuna fase
 		if(isset($this->data['Ora']['faseattivita_id']) && $this->data['Ora']['faseattivita_id'] != 0){
 			$this->Faseattivita->id = $this->data['Ora']['faseattivita_id'];
@@ -111,7 +111,7 @@ class Ora extends AppModel {
 		return true;
 	}
  
-	public function afterSave($created, $options = Array()) {
+	public function afterSave($created, $options = []) {
 		// Se faseattivita_id non è settato o se faseattivita_id == 0 le ore caricate non sono legate a nessuna faseattività e non devo quindi modificare nulla in nessuna fase
 		if(isset($this->data['Ora']['faseattivita_id']) && $this->data['Ora']['faseattivita_id'] != 0){
 			$this->Faseattivita->id = $this->data['Ora']['faseattivita_id'];
@@ -160,10 +160,10 @@ class Ora extends AppModel {
     {
       $persone = Cache::read('persone_list', 'short');
       if (!$persone) {
-        $persone = $this->find('list', array(  'fields'=>array('Persona.id','Persona.DisplayName'),
-                                               'contain'=>array('Persona') ,
+        $persone = $this->find('list', [  'fields'=>['Persona.id','Persona.DisplayName'],
+                                               'contain'=>['Persona'] ,
                                                'order'=>'Persona.DisplayName'
-                                                ));
+                                                ]);
         Cache::write('persone_list', $persone, 'short');
       }
       

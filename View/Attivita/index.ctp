@@ -29,22 +29,22 @@
         <div class="well parent-chosen" id="ricerca-avanzata">
         <!-- Form di Ricerca -->
         <?php
-        echo $this->Form->create("Attivita",array(
-                'url' => array('action' => 'index'),
+        echo $this->Form->create("Attivita",[
+                'url' => ['action' => 'index'],
                 'type' => 'get',
-                'inputDefaults' => array(
+                'inputDefaults' => [
                     'div' => 'form-group ',
                     'wrapInput' => true,
                     'class' => $baseformclass
-                ),
+                ],
                 'class' => ' form-inline',
-            ));
+            ]);
         ?>        
         
-        <?php echo $this->Form->input('q', array('label'=>'Cliente o Titolo', 'value'=>$q )); ?>
-        <?php echo $this->Form->input('anno', array('default'=>'*', 'label'=>'Anno',                                                 
+        <?php echo $this->Form->input('q', ['label'=>'Cliente o Titolo', 'value'=>$q ]); ?>
+        <?php echo $this->Form->input('anno', ['default'=>'*', 'label'=>'Anno',                                                 
                                                 'selected'=>$anno,
-                                                'options'=>array(
+                                                'options'=>[
                                                     date('Y')=>'Anno Corrente', 
                                                     date('Y')-1 => date('Y')-1,
                                                     date('Y')-2 => date('Y')-2,
@@ -52,26 +52,26 @@
                                                     date('Y')+1 => 'Anno Prossimo',
                                                     '*' => 'Sempre',
                                                     '-1' => 'Date Anomale',
-                                                    )
-                                )); ?>
-        <?php echo $this->Form->input('tipo', array('label'=>'Tipo', 
+                                                    ]
+                                ]); ?>
+        <?php echo $this->Form->input('tipo', ['label'=>'Tipo', 
                                                 'value'=>$tipo,
                                                 'selected'=>$tipo,
-                                                'options'=>array(
+                                                'options'=>[
                                                     null=> 'Tutte',
                                                     'offerte'=> 'Offerte',
                                                     'aperte'=> 'Aperte',
                                                     'chiuse'=> 'Chiuse',
-                                                    )
-                                )); ?>
+                                                    ]
+                                ]); ?>
         <?php echo $this->Form->end('Filtra'); ?>
         <div class="alert alert-warning small">
             Ci sono <span class="label label-info"><?php echo $totale ?></span> attività su iGAS, usa i filtri per 
-            <?php echo $this->Html->link('vederle tutte', array(
+            <?php echo $this->Html->link('vederle tutte', [
                                                 'controller' => 'attivita',
                                                 'action' => 'index',
-                                                '?' => array('anno'=>'*')
-            )); ?>
+                                                '?' => ['anno'=>'*']
+            ]); ?>
         </div>
         </div>
     </div>
@@ -130,15 +130,15 @@
 		<td>
             <?php echo $attivita['Attivita']['name']; ?>
         </td>
-        <td><?php echo $this->Html->link(strtolower($attivita['Progetto']['name']), array('controller' => 'progetti', 'action' => 'view', $attivita['Progetto']['id'])); ?></td>
+        <td><?php echo $this->Html->link(strtolower($attivita['Progetto']['name']), ['controller' => 'progetti', 'action' => 'view', $attivita['Progetto']['id']]); ?></td>
 		<td>
-            <?php echo $this->Html->link($attivita['Area']['name'], array('controller' => 'aree','action' => 'view', $attivita['Area']['id'])); ?>       </td>
+            <?php echo $this->Html->link($attivita['Area']['name'], ['controller' => 'aree','action' => 'view', $attivita['Area']['id']]); ?>       </td>
 		<td>
-			<?php echo $this->Html->link($attivita['Persona']['displayName'], array('controller' => 'persone', 'action' => 'edit', $attivita['Persona']['id'])); ?>
+			<?php echo $this->Html->link($attivita['Persona']['displayName'], ['controller' => 'persone', 'action' => 'edit', $attivita['Persona']['id']]); ?>
 		</td>
 		<td class="actions">
              <div class="btn-group dropup settings">                 
-                 <?php $u = $this->Html->url(array('action' => 'edit', $attivita['Attivita']['id']));?>
+                 <?php $u = $this->Html->url(['action' => 'edit', $attivita['Attivita']['id']]);?>
                  <button class="btn btn-primary btn-xs glow" onclick="location.href='<?php echo $u ?>';">
                      <i class="fa fa-pencil"></i>                    
                  </button>
@@ -150,13 +150,13 @@
                  </button>
                  <ul class="dropdown-menu pull-right" role="menu">
                   <li class="">
-                    <?php echo $this->Html->link(__('Ore'), array('controller'=>'ore','action'=>'stats', '?' => array('as_values_attivita'=>$attivita['Attivita']['id']. ",") )); ?>
+                    <?php echo $this->Html->link(__('Ore'), ['controller'=>'ore','action'=>'stats', '?' => ['as_values_attivita'=>$attivita['Attivita']['id']. ","] ]); ?>
                   </li>
                   <li class="">
-                    <?php echo $this->Html->link(__('Fasi'), array('controller'=>'faseattivita', 'action' => 'index', $attivita['Attivita']['id'])); ?>
+                    <?php echo $this->Html->link(__('Fasi'), ['controller'=>'faseattivita', 'action' => 'index', $attivita['Attivita']['id']]); ?>
                   </li>
 				  <li class="">
-                    <?php echo $this->Html->link(__('Avanzamento'), array('controller'=>'attivita', 'action' => 'avanzamento', $attivita['Attivita']['id'])); ?>
+                    <?php echo $this->Html->link(__('Avanzamento'), ['controller'=>'attivita', 'action' => 'avanzamento', $attivita['Attivita']['id']]); ?>
                   </li>
                 <?php 
                   foreach(Configure::read('iGas.commonFiles') as $ext => $mimes): 
@@ -170,10 +170,10 @@
                   endforeach; 
                 ?>
                   <li class="">
-                    <?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $attivita['Attivita']['id'])); ?>
+                    <?php echo $this->Html->link(__('Edit'), ['action' => 'edit', $attivita['Attivita']['id']]); ?>
                   </li>
                   <li class="">
-                    <?php echo $this->Html->link(__('Delete'), array('action' => 'delete', $attivita['Attivita']['id']), null, sprintf(__('Are you sure you want to delete # %s?'), $attivita['Attivita']['id'])); ?>
+                    <?php echo $this->Html->link(__('Delete'), ['action' => 'delete', $attivita['Attivita']['id']], null, sprintf(__('Are you sure you want to delete # %s?'), $attivita['Attivita']['id'])); ?>
                   </li>                  
                 </ul>
               </div>
@@ -182,13 +182,13 @@
 <?php endforeach; ?>
     </tbody>
 	</table>
-  <?php echo $this->Paginator->pagination(array(
+  <?php echo $this->Paginator->pagination([
   'ul' => 'pagination'
-)); ?>
+]); ?>
 	</div>
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
   
   $('document').ready(function(){
 	//data table

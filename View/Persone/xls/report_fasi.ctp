@@ -8,27 +8,27 @@ $this->PhpSpreadsheet->setSheetName('Report '.$mese.'-'.$anno);
 foreach($ore as $pkey => $persona){
     $sheet = $this->PhpSpreadsheet->addSheet($pkey);    
 
-    $table = array();
-    $somma = array();
+    $table = [];
+    $somma = [];
 
-    $table[] = array('label' => '');
-    $table[] = array('label' => 'Giorno');
+    $table[] = ['label' => ''];
+    $table[] = ['label' => 'Giorno'];
     $somma[] = '';
     $somma[] = 'Totale';
 
     for($i = 1; $i <= $giorni; $i++) {
 
-        $table[] = array('label' => $i);
+        $table[] = ['label' => $i];
         $somma[] = 0;
     }
 
-    $table[] = array('label' => 'Totale');
+    $table[] = ['label' => 'Totale'];
 
-    $this->PhpSpreadsheet->addTableHeader($table, array('name' => 'Cambria', 'bold' => true));
+    $this->PhpSpreadsheet->addTableHeader($table, ['name' => 'Cambria', 'bold' => true]);
 
     foreach ($persona as $attivita) {
 
-        $row = array();
+        $row = [];
         $row[] = '';
         $row[] = $attivita['nome']; //array('text' => $attivita['nome'], 'font-style' => 'italic');
 
@@ -40,7 +40,7 @@ foreach($ore as $pkey => $persona){
         $this->PhpSpreadsheet->addTableRow($row, true);
 
         foreach ($attivita['fase'] as $fase) {
-            $row = array();
+            $row = [];
             $row[] = '';
             $row[] = $fase['nome'];
 

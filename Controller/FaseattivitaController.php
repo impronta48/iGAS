@@ -14,8 +14,8 @@ class FaseattivitaController extends AppController
    *
    * @var array
    */
-  public $components = array('Paginator', 'UploadFiles');
-  public $helpers = array('Cache');
+  public $components = ['Paginator', 'UploadFiles'];
+  public $helpers = ['Cache'];
   //gpublic $cacheAction = "1 day";
 
   /**
@@ -27,10 +27,10 @@ class FaseattivitaController extends AppController
   {
 
     $this->Faseattivita->recursive = 1; // MarcoT. devo tirare su i ddt associati a questo prodotto per calcolare i residui
-    $conditions = array();
+    $conditions = [];
     if (!is_null($attivita_id)) {
       $this->set('title_for_layout', "Fasi Attività [$attivita_id]");
-      $conditions = array('attivita_id' => $attivita_id);
+      $conditions = ['attivita_id' => $attivita_id];
     } else {
       $attivita = $this->Faseattivita->Attivita->getlist();
       $this->set(compact('attivita'));
@@ -38,17 +38,17 @@ class FaseattivitaController extends AppController
     }
     //Faccio una lista di attività positive
     $conditions['entrata'] = 1;
-    $faseattivitapositiva = $this->Faseattivita->find('all', array('conditions' => $conditions));
+    $faseattivitapositiva = $this->Faseattivita->find('all', ['conditions' => $conditions]);
 
     //Faccio una lista di attività negative
     $conditions['entrata'] = 0;
-    $faseattivitanegativa = $this->Faseattivita->find('all', array('conditions' => $conditions));
+    $faseattivitanegativa = $this->Faseattivita->find('all', ['conditions' => $conditions]);
 
     $this->loadModel('Primanota');
-    $primenoteDiFasi = $this->Primanota->find('all', array('fields' => array('Primanota.id', 'Primanota.faseattivita_id'), 'conditions' => array('Primanota.faseattivita_id <>' => 0)));
+    $primenoteDiFasi = $this->Primanota->find('all', ['fields' => ['Primanota.id', 'Primanota.faseattivita_id'], 'conditions' => ['Primanota.faseattivita_id <>' => 0]]);
 
-    $legendaStatoAttivita = $this->Faseattivita->LegendaStatoAttivita->find('list', array('cache' => 'legendastatoattivita', 'cacheConfig' => 'short'));
-    $legendaCodiceiva = $this->Faseattivita->LegendaCodiciIva->find('list', array('cache' => 'legendacodiceiva', 'cacheConfig' => 'short'));
+    $legendaStatoAttivita = $this->Faseattivita->LegendaStatoAttivita->find('list', ['cache' => 'legendastatoattivita', 'cacheConfig' => 'short']);
+    $legendaCodiceiva = $this->Faseattivita->LegendaCodiciIva->find('list', ['cache' => 'legendacodiceiva', 'cacheConfig' => 'short']);
     $this->set(compact('legendaStatoAttivita', 'legendaCodiceiva', 'faseattivitapositiva', 'faseattivitanegativa', 'primenoteDiFasi'));
   }
 
@@ -81,14 +81,14 @@ class FaseattivitaController extends AppController
         if (strlen($uploadError) > 0) {
           $this->Flash->error(__($uploadError));
         }
-        return $this->redirect(array('action' => 'index', $aid));
+        return $this->redirect(['action' => 'index', $aid]);
       } else {
         $this->Session->setFlash(__('Impossibile salvare la fase. Riprova!'));
       }
     }
     $attivita = $this->Faseattivita->Attivita->getlist();
-    $legendaStatoAttivita = $this->Faseattivita->LegendaStatoAttivita->find('list', array('cache' => 'legendastatoattivita', 'cacheConfig' => 'short'));
-    $legendaCodiceIva = $this->Faseattivita->LegendaCodiciIva->find('list', array('cache' => 'legendacodiceiva', 'cacheConfig' => 'short'));
+    $legendaStatoAttivita = $this->Faseattivita->LegendaStatoAttivita->find('list', ['cache' => 'legendastatoattivita', 'cacheConfig' => 'short']);
+    $legendaCodiceIva = $this->Faseattivita->LegendaCodiciIva->find('list', ['cache' => 'legendacodiceiva', 'cacheConfig' => 'short']);
     $this->set(compact('attivita', 'legendaStatoAttivita', 'legendaCodiceIva'));
   }
 
@@ -126,17 +126,17 @@ class FaseattivitaController extends AppController
         if (strlen($uploadError) > 0) {
           $this->Flash->error(__($uploadError));
         }
-        return $this->redirect(array('action' => 'index', $id));
+        return $this->redirect(['action' => 'index', $id]);
       } else {
         $this->Session->setFlash(__('The faseattivita could not be saved. Please, try again.'));
       }
     } else {
-      $options = array('conditions' => array('Faseattivita.' . $this->Faseattivita->primaryKey => $id));
+      $options = ['conditions' => ['Faseattivita.' . $this->Faseattivita->primaryKey => $id]];
       $this->request->data = $this->Faseattivita->find('first', $options);
     }
     $attivita = $this->Faseattivita->Attivita->getlist();
-    $legendaStatoAttivita = $this->Faseattivita->LegendaStatoAttivita->find('list', array('cache' => 'legendastatoattivita', 'cacheConfig' => 'short'));
-    $legendaCodiceiva = $this->Faseattivita->LegendaCodiciIva->find('list', array('cache' => 'legendacodiceiva', 'cacheConfig' => 'short'));
+    $legendaStatoAttivita = $this->Faseattivita->LegendaStatoAttivita->find('list', ['cache' => 'legendastatoattivita', 'cacheConfig' => 'short']);
+    $legendaCodiceiva = $this->Faseattivita->LegendaCodiciIva->find('list', ['cache' => 'legendacodiceiva', 'cacheConfig' => 'short']);
     $this->set(compact('attivita', 'legendaStatoAttivita', 'legendaCodiceiva'));
   }
 
@@ -165,7 +165,7 @@ class FaseattivitaController extends AppController
     } else {
       $this->Session->setFlash(__('The faseattivita could not be saved. Please, try again.'));
     }
-    return $this->redirect(array('action' => 'index', $aid));
+    return $this->redirect(['action' => 'index', $aid]);
   }
 
   /**
@@ -195,10 +195,10 @@ class FaseattivitaController extends AppController
       if (!empty($fileExt)) {
         unlink(WWW_ROOT . 'files' . DS . $this->request->controller . DS . $aid . '_' . $id . '.' . $fileExt);
       }
-      return $this->redirect(array('action' => 'index', $aid));
+      return $this->redirect(['action' => 'index', $aid]);
     }
     $this->Session->setFlash(__('Faseattivita was not deleted'));
-    return $this->redirect(array('action' => 'index', $aid));
+    return $this->redirect(['action' => 'index', $aid]);
   }
 
   public function deleteDoc($aid = null, $id = null)
@@ -211,18 +211,18 @@ class FaseattivitaController extends AppController
 
   function suggest()
   {
-    $data = array();
+    $data = [];
     if (isset($this->request->query['q'])) {
       $this->Faseattivita->recursive = 0;
-      $data = $this->Faseattivita->find('all', array(
-        'conditions' => array(
+      $data = $this->Faseattivita->find('all', [
+        'conditions' => [
           'Faseattivita.Descrizione LIKE' => '%' . $this->request->query['q'] . '%',
-        ),
+        ],
         'limit' => 50,
-        'fields' => array('id', 'Descrizione'),
-      ));
+        'fields' => ['id', 'Descrizione'],
+      ]);
     }
-    $res = array();
+    $res = [];
 
     foreach ($data as $d) {
       $a = new StdClass();

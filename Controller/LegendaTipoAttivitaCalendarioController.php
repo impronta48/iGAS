@@ -14,7 +14,7 @@ class LegendaTipoAttivitaCalendarioController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'Session');
+	public $components = ['Paginator', 'Session'];
 
 /**
  * index method
@@ -37,7 +37,7 @@ class LegendaTipoAttivitaCalendarioController extends AppController {
 		if (!$this->LegendaTipoAttivitaCalendario->exists($id)) {
 			throw new NotFoundException(__('Invalid legenda tipo attività calendario'));
 		}
-		$options = array('conditions' => array('LegendaTipoAttivitaCalendario.' . $this->LegendaTipoAttivitaCalendario->primaryKey => $id));
+		$options = ['conditions' => ['LegendaTipoAttivitaCalendario.' . $this->LegendaTipoAttivitaCalendario->primaryKey => $id]];
 		$this->set('LegendaTipoAttivitaCalendario', $this->LegendaTipoAttivitaCalendario->find('first', $options));
 	}
 
@@ -51,7 +51,7 @@ class LegendaTipoAttivitaCalendarioController extends AppController {
 			$this->LegendaTipoAttivitaCalendario->create();
 			if ($this->LegendaTipoAttivitaCalendario->save($this->request->data)) {
 				$this->Session->setFlash(__('The legenda tipo attività calendario has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The legenda tipo attività calendario could not be saved. Please, try again.'));
 			}
@@ -69,15 +69,15 @@ class LegendaTipoAttivitaCalendarioController extends AppController {
 		if (!$this->LegendaTipoAttivitaCalendario->exists($id)) {
 			throw new NotFoundException(__('Invalid legenda tipo attività calendario'));
 		}
-		if ($this->request->is(array('post', 'put'))) {
+		if ($this->request->is(['post', 'put'])) {
 			if ($this->LegendaTipoAttivitaCalendario->save($this->request->data)) {
 				$this->Session->setFlash(__('The legenda tipo attività calendario has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The legenda tipo attività calendario could not be saved. Please, try again.'));
 			}
 		} else {
-			$options = array('conditions' => array('LegendaTipoAttivitaCalendario.' . $this->LegendaTipoAttivitaCalendario->primaryKey => $id));
+			$options = ['conditions' => ['LegendaTipoAttivitaCalendario.' . $this->LegendaTipoAttivitaCalendario->primaryKey => $id]];
 			$this->request->data = $this->LegendaTipoAttivitaCalendario->find('first', $options);
 		}
 	}
@@ -92,14 +92,14 @@ class LegendaTipoAttivitaCalendarioController extends AppController {
 	public function delete($id = null) {
 		if(!$id){
             $this->Session->setFlash(__('Invalid legenda attività calendario'));
-            $this->redirect(array('action' => 'index'));
+            $this->redirect(['action' => 'index']);
         }
         if($this->LegendaTipoAttivitaCalendario->delete($id)){
             $this->Session->setFlash(__('The legenda attività calendario has been deleted.'));
-            $this->redirect(array('action' => 'index'));
+            $this->redirect(['action' => 'index']);
         }
         $this->Session->setFlash(__('The legenda attività calendario could not be deleted. Please, try again.'));
-        $this->redirect(array('action' => 'index'));
+        $this->redirect(['action' => 'index']);
 		/*
 		$this->LegendaTipoAttivitaCalendario->id = $id;
 		if (!$this->LegendaTipoAttivitaCalendario->exists()) {

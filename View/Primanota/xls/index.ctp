@@ -1,26 +1,26 @@
 <?php
 $this->PhpSpreadsheet->createWorksheet();
-$styleArray = array();
+$styleArray = [];
 $this->PhpSpreadsheet->getDefaultStyle()->applyFromArray($styleArray);  
-  $titoli = array(
-        array('label' => ''),
-        array('label' => 'Data'), 
-        array('label' => 'Descr'), 
-        array('label' => 'Protocollo'),
-        array('label' => 'Importo'),
-        array('label' => 'Attività'), 
-        array('label' => 'Progetto'), 
-        array('label' => 'Fase'), 
-        array('label' => 'Persona'), 
-        array('label' => 'Categoria Spesa'),
-        array('label' => 'Provenienza'),
-      );  
-  $this->PhpSpreadsheet->addTableHeader($titoli, array('name' => 'Cambria', 'bold' => true));
+  $titoli = [
+        ['label' => ''],
+        ['label' => 'Data'], 
+        ['label' => 'Descr'], 
+        ['label' => 'Protocollo'],
+        ['label' => 'Importo'],
+        ['label' => 'Attività'], 
+        ['label' => 'Progetto'], 
+        ['label' => 'Fase'], 
+        ['label' => 'Persona'], 
+        ['label' => 'Categoria Spesa'],
+        ['label' => 'Provenienza'],
+      ];  
+  $this->PhpSpreadsheet->addTableHeader($titoli, ['name' => 'Cambria', 'bold' => true]);
   $this->PhpSpreadsheet->getActiveSheet()->getStyle("A1:J1")->getFont()->setBold(true);
 
   foreach ($primanota as $p) {
 
-    $row = array();
+    $row = [];
     $row[] = '';
     $row[] = $p['Primanota']['data']; 
     $row[] = $p['Primanota']['descr']; 

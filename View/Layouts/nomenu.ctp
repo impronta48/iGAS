@@ -19,12 +19,12 @@
   
   <!-- Loading Custom Stylesheets -->    
   <?php echo $this->Html->css('custom'); ?>
-  <?php echo $this->Html->css('print', null, array('media'=>'print')); ?>
+  <?php echo $this->Html->css('print', null, ['media'=>'print']); ?>
   <?php
         echo $this->Html->meta(
             'favicon.ico',
             'favicon.ico',
-            array('type' => 'icon')
+            ['type' => 'icon']
         );			
   ?> 
  
@@ -49,7 +49,7 @@
                     
         
           <div class="footer">
-              <?php echo $this->element('footer',array(),array("cache" => "long_view")); ?>
+              <?php echo $this->element('footer',[],["cache" => "long_view"]); ?>
           </div>                    
 					          
 <!-- Load JS here for Faster site load ============================= -->

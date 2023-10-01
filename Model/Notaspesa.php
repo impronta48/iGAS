@@ -2,12 +2,12 @@
 class Notaspesa extends AppModel {
 	public $name = 'Notaspesa';
 	public $displayField = 'ID';
-	public $actsAs = array('Containable');
+	public $actsAs = ['Containable'];
 	
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
-	var $belongsTo = array(
-		'Persona' => array(
+	var $belongsTo = [
+		'Persona' => [
 			'className' => 'Persona',
 			'foreignKey' => 'eRisorsa',
 			'dependent' => false,
@@ -19,8 +19,8 @@ class Notaspesa extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-		'Attivita' => array(
+		],
+		'Attivita' => [
 			'className' => 'Attivita',
 			'foreignKey' => 'eAttivita',
 			'dependent' => false,
@@ -32,8 +32,8 @@ class Notaspesa extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-		'LegendaCatSpesa' => array(
+		],
+		'LegendaCatSpesa' => [
 			'className' => 'LegendaCatSpesa',
 			'foreignKey' => 'eCatSpesa',
 			'dependent' => false,
@@ -45,8 +45,8 @@ class Notaspesa extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-		'LegendaMezzi' => array(
+		],
+		'LegendaMezzi' => [
 			'className' => 'LegendaMezzi',
 			'foreignKey' => 'legenda_mezzi_id',
 			'dependent' => false,
@@ -58,8 +58,8 @@ class Notaspesa extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-		'Provenienzasoldi' => array(
+		],
+		'Provenienzasoldi' => [
 			'className' => 'Provenienzasoldi',
 			'foreignKey' => 'provenienzasoldi_id',
 			'dependent' => false,
@@ -71,17 +71,17 @@ class Notaspesa extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
+		],
 		'Faseattivita'
-	);
+	];
 	public function getPersone()
     {
       $persone = Cache::read('persone_list', 'short');
       if (!$persone) {
-        $persone = $this->find('list', array(  'fields'=>array('Persona.id','Persona.DisplayName'),
-                                               'contain'=>array('Persona') ,
+        $persone = $this->find('list', [  'fields'=>['Persona.id','Persona.DisplayName'],
+                                               'contain'=>['Persona'] ,
                                                'order'=>'Persona.DisplayName'
-                                                ));
+                                                ]);
         Cache::write('persone_list', $persone, 'short');
       }
       

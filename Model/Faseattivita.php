@@ -16,7 +16,7 @@ class Faseattivita extends AppModel
    */
   public $displayField = 'Descrizione';
   //public $cacheQueries = true;
-  var $actsAs = array('Containable');
+  var $actsAs = ['Containable'];
 
   //The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -25,22 +25,22 @@ class Faseattivita extends AppModel
    *
    * @var array
    */
-  public $belongsTo = array(
-    'Attivita' => array(
+  public $belongsTo = [
+    'Attivita' => [
       'className' => 'Attivita',
       'foreignKey' => 'attivita_id',
       'conditions' => '',
       'fields' => '',
       'order' => ''
-    ),
-    'Persona' => array(
+    ],
+    'Persona' => [
       'className' => 'Persona',
       'foreignKey' => 'persona_id',
       'conditions' => '',
       'fields' => '',
       'order' => ''
-    ),
-    'Cespite' => array(
+    ],
+    'Cespite' => [
       'className' => 'Cespite',
       'foreignKey' => 'cespite_id',
       //'dependent' => false,
@@ -48,37 +48,37 @@ class Faseattivita extends AppModel
       'fields' => '',
       'order' => '',
       'limit' => '',
-    ),
-    'LegendaStatoAttivita' => array(
+    ],
+    'LegendaStatoAttivita' => [
       'className' => 'LegendaStatoAttivita',
       'foreignKey' => 'legenda_stato_attivita_id',
       'conditions' => '',
       'fields' => '',
       'order' => ''
-    ),
-    'LegendaCodiciIva' => array(
+    ],
+    'LegendaCodiciIva' => [
       'className' => 'LegendaCodiciIva',
       'foreignKey' => 'legenda_codici_iva_id',
       'conditions' => '',
       'fields' => '',
       'order' => ''
-    ),
-  );
+    ],
+  ];
 
-  public $hasMany = array(
-    'Rigaddt' => array(
+  public $hasMany = [
+    'Rigaddt' => [
       'className' => 'Rigaddt',
       'foreignKey' => 'faseattivita_id',
       'conditions' => '',
       'fields' => '',
       'order' => ''
-    ),
+    ],
     'Notaspesa',
     'Ora'
 
-  );
+  ];
 
-  public function beforeSave($options = array())
+  public function beforeSave($options = [])
   {
     if (isset($this->data['Faseattivita']['cespite_id'])) {
       if ($this->data['Cespite']['DisplayName'] == '') {
@@ -91,7 +91,7 @@ class Faseattivita extends AppModel
     //die();
   }
 
-  public function afterSave($created, $options = array())
+  public function afterSave($created, $options = [])
   {
     /*
 		if($created) {
@@ -144,8 +144,8 @@ class Faseattivita extends AppModel
     } */
 
     $this->recursive = -1;
-    $conditions = array();
-    $notset = array('0' => '-- Non definita --');
+    $conditions = [];
+    $notset = ['0' => '-- Non definita --'];
 
 
     if (!is_null($attivita_id)) {
@@ -168,7 +168,7 @@ class Faseattivita extends AppModel
     $fa = Hash::combine(
       $fase,
       '{n}.Faseattivita.id',
-      array('%.100s', '{n}.Faseattivita.Descrizione', '{n}.Faseattivita.entrata'),
+      ['%.100s', '{n}.Faseattivita.Descrizione', '{n}.Faseattivita.entrata'],
       '{n}.Attivita.name'
     );
     $fa = Hash::merge($notset, $fa);

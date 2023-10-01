@@ -23,8 +23,8 @@ class LegendaTipoDocumento extends AppModel {
  *
  * @var array
  */
-	public $hasMany = array(
-		'Fatturaricevuta' => array(
+	public $hasMany = [
+		'Fatturaricevuta' => [
 			'className' => 'Fatturaricevuta',
 			'foreignKey' => 'legenda_tipo_documento_id',
 			'dependent' => false,
@@ -36,7 +36,7 @@ class LegendaTipoDocumento extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		)
-	);
+		]
+	];
 
 }

@@ -15,10 +15,10 @@
 					<div class="panel-heading"><?php echo __('Actions'); ?></div>
 						<div class="panel-body">
 							<ul class="nav nav-pills nav-stacked">
-									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Legenda Codici Iva'), array('action' => 'edit', $legendaCodiciIva['LegendaCodiciIva']['id']), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Legenda Codici Iva'), array('action' => 'delete', $legendaCodiciIva['LegendaCodiciIva']['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $legendaCodiciIva['LegendaCodiciIva']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Legenda Codici Ivas'), array('action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Legenda Codici Iva'), array('action' => 'add'), array('escape' => false)); ?> </li>		
+									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Legenda Codici Iva'), ['action' => 'edit', $legendaCodiciIva['LegendaCodiciIva']['id']], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Legenda Codici Iva'), ['action' => 'delete', $legendaCodiciIva['LegendaCodiciIva']['id']], ['escape' => false], __('Are you sure you want to delete # %s?', $legendaCodiciIva['LegendaCodiciIva']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Legenda Codici Ivas'), ['action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Legenda Codici Iva'), ['action' => 'add'], ['escape' => false]); ?> </li>		
 							</ul>
 						</div><!-- end body -->
 				</div><!-- end panel -->

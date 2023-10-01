@@ -23,8 +23,8 @@ class LegendaCatSpesa extends AppModel {
  *
  * @var array
  */
-	public $hasMany = array(
-		'Primanota' => array(
+	public $hasMany = [
+		'Primanota' => [
 			'className' => 'Primanota',
 			'foreignKey' => 'legenda_cat_spesa_id',
 			'dependent' => false,
@@ -36,7 +36,7 @@ class LegendaCatSpesa extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		)
-	);
+		]
+	];
 
 }

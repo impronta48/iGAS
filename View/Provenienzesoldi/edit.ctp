@@ -1,4 +1,4 @@
-<?php echo $this->Html->script("provenienzasoldi.js",array('inline' => false)); ?>
+<?php echo $this->Html->script("provenienzasoldi.js",['inline' => false]); ?>
 
 
 <div class="provenienzesoldi form">
@@ -7,7 +7,7 @@
 	<?php
 		echo $this->Form->input('id');
 		
-		echo $this->Form->input('name', array('label'=>'Nome Conto'));
+		echo $this->Form->input('name', ['label'=>'Nome Conto']);
 	?>
 	<br>
 	<label>Indicazioni da riportare in fattura</label>

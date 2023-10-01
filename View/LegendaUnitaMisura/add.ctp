@@ -17,20 +17,20 @@
 						<div class="panel-body">
 							<ul class="nav nav-pills nav-stacked">
 
-																<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;'.__('Legenda'), array('action' => 'index'), array('escape' => false)); ?></li>
+																<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;'.__('Legenda'), ['action' => 'index'], ['escape' => false]); ?></li>
 														</ul>
 						</div>
 					</div>
 				</div>			
 		</div><!-- end col md 3 -->
 		<div class="col-md-9">
-			<?php echo $this->Form->create('LegendaUnitaMisura', array('role' => 'form')); ?>
+			<?php echo $this->Form->create('LegendaUnitaMisura', ['role' => 'form']); ?>
 
 				<div class="form-group">
-					<?php echo $this->Form->input('name', array('class' => 'form-control', 'label' => 'Nome', 'placeholder' => 'Nome'));?>
+					<?php echo $this->Form->input('name', ['class' => 'form-control', 'label' => 'Nome', 'placeholder' => 'Nome']);?>
 				</div>
 				<div class="form-group">
-					<?php echo $this->Form->submit(__('Invia'), array('class' => 'btn btn-default')); ?>
+					<?php echo $this->Form->submit(__('Invia'), ['class' => 'btn btn-default']); ?>
 				</div>
 
 			<?php echo $this->Form->end() ?>

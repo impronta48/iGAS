@@ -92,7 +92,7 @@
 	</div>
 	<div class="row">
 		<div class="footer m-0 mt-1" style="font-size:0.8rem;position:relative">
-			<?php echo $this->element('footer', array(), array("cache" => "long_view")); ?>
+			<?php echo $this->element('footer', [], ["cache" => "long_view"]); ?>
 		</div>
 	</div>
 

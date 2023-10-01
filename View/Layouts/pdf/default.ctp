@@ -23,13 +23,13 @@
 
   <!-- Loading Custom Stylesheets -->
   <?php echo $this->Html->css('custom'); ?>
-  <?php echo $this->Html->css('print', array('media'=>'print','fullBase' => true)); ?>
+  <?php echo $this->Html->css('print', ['media'=>'print','fullBase' => true]); ?>
 
   <?php
         echo $this->Html->meta(
             'impronta.ico',
             'impronta.ico',
-            array('type' => 'icon')
+            ['type' => 'icon']
         );
   ?>
 </head>

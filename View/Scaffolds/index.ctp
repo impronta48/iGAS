@@ -30,7 +30,7 @@ if ($simple_view) {
      * hide
      */
     for ($i = count($table_fields) - 1; $i >= 0; $i--) {
-        if (in_array($table_fields[$i], array('id', 'created', 'create_user_id', 'update_user_id', 'updated')))
+        if (in_array($table_fields[$i], ['id', 'created', 'create_user_id', 'update_user_id', 'updated']))
             unset($table_fields[$i]);
     }
 }
@@ -50,10 +50,10 @@ if ($simple_view) {
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li>   
-                            <?php echo $this->Html->link(__d('cake', '<span class="glyphicon glyphicon-plus-sign"></span> Create %s', $singularHumanName), array('action' => 'add'), array('escape' => false)); ?>
+                            <?php echo $this->Html->link(__d('cake', '<span class="glyphicon glyphicon-plus-sign"></span> Create %s', $singularHumanName), ['action' => 'add'], ['escape' => false]); ?>
                         </li>
                         <?php
-                        $done = array();
+                        $done = [];
                         foreach ($associations as $_type => $_data) {
                             foreach ($_data as $_alias => $_details) {
                                 if ($_details['controller'] != $this->name && !in_array($_details['controller'], $done)) {
@@ -61,12 +61,12 @@ if ($simple_view) {
                                     echo '<li class="divider"></li>';
                                     echo '<li>';
                                     echo $this->Html->link(
-                                            __d('cake', '<span class="glyphicon glyphicon-list-alt"></span> List %s', Inflector::humanize($_details['controller'])), array('plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'index'), array('escape' => false)
+                                            __d('cake', '<span class="glyphicon glyphicon-list-alt"></span> List %s', Inflector::humanize($_details['controller'])), ['plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'index'], ['escape' => false]
                                     );
                                     echo '</li>';
                                     echo '<li>';
                                     echo $this->Html->link(
-                                            __d('cake', '<span class="glyphicon glyphicon-plus-sign"></span> Create %s', Inflector::humanize(Inflector::underscore($_alias))), array('plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'add'), array('escape' => false)
+                                            __d('cake', '<span class="glyphicon glyphicon-plus-sign"></span> Create %s', Inflector::humanize(Inflector::underscore($_alias))), ['plugin' => $_details['plugin'], 'controller' => $_details['controller'], 'action' => 'add'], ['escape' => false]
                                     );
                                     echo '</li>';
                                     $done[] = $_details['controller'];
@@ -101,7 +101,7 @@ if ($simple_view) {
                                 foreach ($associations['belongsTo'] as $_alias => $_details) {
                                     if ($_field === $_details['foreignKey']) {
                                         $isKey = true;
-                                        echo '<td>' . $this->Html->link(${$singularVar}[$_alias][$_details['displayField']], array('controller' => $_details['controller'], 'action' => 'view', ${$singularVar}[$_alias][$_details['primaryKey']])) . '</td>';
+                                        echo '<td>' . $this->Html->link(${$singularVar}[$_alias][$_details['displayField']], ['controller' => $_details['controller'], 'action' => 'view', ${$singularVar}[$_alias][$_details['primaryKey']]]) . '</td>';
                                         break;
                                     }
                                 }
@@ -142,10 +142,10 @@ if ($simple_view) {
                         } //field
 
                         echo '<td class="noactions"><nobr>';
-                        echo $this->Html->link('<span class="glyphicon glyphicon-eye-open"><span>', array('action' => 'view', ${$singularVar}[$modelClass][$primaryKey],), array('escape' => false, 'class' => 'btn btn-default btn-xs'));
-                        echo ' ' . $this->Html->link('<span class="glyphicon glyphicon-pencil"><span>', array('action' => 'edit', ${$singularVar}[$modelClass][$primaryKey]), array('escape' => false, 'class' => 'btn btn-default btn-xs'));
+                        echo $this->Html->link('<span class="glyphicon glyphicon-eye-open"><span>', ['action' => 'view', ${$singularVar}[$modelClass][$primaryKey],], ['escape' => false, 'class' => 'btn btn-default btn-xs']);
+                        echo ' ' . $this->Html->link('<span class="glyphicon glyphicon-pencil"><span>', ['action' => 'edit', ${$singularVar}[$modelClass][$primaryKey]], ['escape' => false, 'class' => 'btn btn-default btn-xs']);
                         echo ' ' . $this->Form->postLink(
-                                '<span class="glyphicon glyphicon glyphicon-remove"><span>', array('action' => 'delete', ${$singularVar}[$modelClass][$primaryKey]), array('escape' => false, 'class' => 'btn btn-default btn-xs'), __d('cake', 'Are you sure you want to delete # %s?', ${$singularVar}[$modelClass][$primaryKey])
+                                '<span class="glyphicon glyphicon glyphicon-remove"><span>', ['action' => 'delete', ${$singularVar}[$modelClass][$primaryKey]], ['escape' => false, 'class' => 'btn btn-default btn-xs'], __d('cake', 'Are you sure you want to delete # %s?', ${$singularVar}[$modelClass][$primaryKey])
                         );
                         echo '</nobr></td>';
                         echo '</tr>';
@@ -157,26 +157,26 @@ if ($simple_view) {
         </div>
         <div class="panel-footer">
             <p><?php
-                    echo $this->Paginator->counter(array(
+                    echo $this->Paginator->counter([
                         'format' => __d('cake', 'Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-                    ));
+                    ]);
                     ?></p>
             <ul class="pagination  pagination-sm">
 
-<?php echo $this->Paginator->first('<span class="glyphicon glyphicon-step-backward"></span>&nbsp;', array('tag' => 'li', 'title' => 'First', 'escape' => false)); ?>
+<?php echo $this->Paginator->first('<span class="glyphicon glyphicon-step-backward"></span>&nbsp;', ['tag' => 'li', 'title' => 'First', 'escape' => false]); ?>
                 <?php
-                echo $this->Paginator->prev('<span class="glyphicon glyphicon-backward"></span>&nbsp;', array(
+                echo $this->Paginator->prev('<span class="glyphicon glyphicon-backward"></span>&nbsp;', [
                     'tag' => 'li',
                     'escape' => false,
                     'title' => 'Prevous page',
                     'class' => 'prev',
-                        ), $this->Paginator->link('<span class="glyphicon glyphicon-backward"></span>&nbsp;', array(), array(
+                        ], $this->Paginator->link('<span class="glyphicon glyphicon-backward"></span>&nbsp;', [], [
                             'escape' => false,
-                        )), array(
+                        ]), [
                     'tag' => 'li',
                     'escape' => false,
                     'class' => 'prev disabled',
-                ));
+                ]);
                 ?>
                 <?php
                 // debug($model);
@@ -197,29 +197,29 @@ if ($simple_view) {
                     $start = $end - $modulus;
                 }
                 for ($i = $start; $i < $end; $i++) {
-                    $url = array('page' => $i);
+                    $url = ['page' => $i];
                     $class = null;
                     if ($i == $page) {
-                        $url = array();
+                        $url = [];
                         $class = 'active';
                     }
-                    echo $this->Html->tag('li', $this->Paginator->link($i, $url), array(
+                    echo $this->Html->tag('li', $this->Paginator->link($i, $url), [
                         'class' => $class,
-                    ));
+                    ]);
                 }
-                echo $this->Paginator->next('<span class="glyphicon glyphicon-forward"></span>&nbsp;', array(
+                echo $this->Paginator->next('<span class="glyphicon glyphicon-forward"></span>&nbsp;', [
                     'tag' => 'li',
                     'class' => 'next',
                     'escape' => false,
                     'title' => 'Next page',
-                        ), $this->Paginator->link('<span class="glyphicon glyphicon-forward"></span>&nbsp;', array(), array('escape' => false,)), array(
+                        ], $this->Paginator->link('<span class="glyphicon glyphicon-forward"></span>&nbsp;', [], ['escape' => false,]), [
                     'tag' => 'li',
                     'escape' => false,
                     'class' => 'next disabled',
-                ));
+                ]);
                 ?>
                 <?php
-                echo $this->Paginator->last('<span class="glyphicon glyphicon-step-forward"></span>&nbsp;', array('tag' => 'li', 'title' => 'Last', 'escape' => false,));
+                echo $this->Paginator->last('<span class="glyphicon glyphicon-step-forward"></span>&nbsp;', ['tag' => 'li', 'title' => 'Last', 'escape' => false,]);
                 ?>
 
             </ul>

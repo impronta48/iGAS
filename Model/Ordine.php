@@ -6,24 +6,24 @@ App::uses('AppModel', 'Model');
  */
 class Ordine extends AppModel {
 
-    public $belongsTo = array(
-		'Attivita' => array(
+    public $belongsTo = [
+		'Attivita' => [
 			'className' => 'Attivita',
 			'foreignKey' => 'attivita_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'Fornitore' => array(
+		],
+		'Fornitore' => [
 			'className' => 'Fornitore',
 			'foreignKey' => 'fornitore_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-    );
+		],
+    ];
     
-    public $hasMany = array(
+    public $hasMany = [
         'Rigaordine',
-    );
+    ];
 }

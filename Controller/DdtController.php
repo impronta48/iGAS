@@ -14,7 +14,7 @@ class DdtController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'Session');
+	public $components = ['Paginator', 'Session'];
 
 /**
  * index method
@@ -37,7 +37,7 @@ class DdtController extends AppController {
 		if (!$this->Ddt->exists($id)) {
 			throw new NotFoundException(__('Invalid ddt'));
 		}
-		$options = array('conditions' => array('Ddt.' . $this->Ddt->primaryKey => $id));
+		$options = ['conditions' => ['Ddt.' . $this->Ddt->primaryKey => $id]];
 		$this->set('ddt', $this->Ddt->find('first', $options));
         $azienda =  $this->Ddt->Attivita->Persona->findById(Configure::read('iGas.idAzienda'));
         $this->set('azienda', $azienda);
@@ -61,7 +61,7 @@ class DdtController extends AppController {
 			$this->Ddt->create();
 			if ($this->Ddt->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The ddt has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The ddt could not be saved. Please, try again.'));
 			}
@@ -84,15 +84,15 @@ class DdtController extends AppController {
 		if (!$this->Ddt->exists($id)) {
 			throw new NotFoundException(__('Invalid ddt'));
 		}
-		if ($this->request->is(array('post', 'put'))) {
+		if ($this->request->is(['post', 'put'])) {
 			if ($this->Ddt->save($this->request->data)) {
 				$this->Session->setFlash(__('The ddt has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The ddt could not be saved. Please, try again.'));
 			}
 		} else {
-			$options = array('conditions' => array('Ddt.' . $this->Ddt->primaryKey => $id));
+			$options = ['conditions' => ['Ddt.' . $this->Ddt->primaryKey => $id]];
 			$this->request->data = $this->Ddt->find('first', $options);
             $attivita_id = $this->request->data['Attivita']['id'];
             $attivita_full = $this->Ddt->Attivita->findById($attivita_id);
@@ -124,7 +124,7 @@ class DdtController extends AppController {
 		} else {
 			$this->Session->setFlash(__('The ddt could not be deleted. Please, try again.'));
 		}
-		return $this->redirect(array('action' => 'index'));
+		return $this->redirect(['action' => 'index']);
 	}
 
 

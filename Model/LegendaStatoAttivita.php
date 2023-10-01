@@ -14,5 +14,5 @@ class LegendaStatoAttivita extends AppModel {
 	public $displayField = 'name';
 	public $cacheQueries = true;
 
-    public $hasMany = array('Faseattivita');
+    public $hasMany = ['Faseattivita'];
 }

@@ -5,13 +5,13 @@ App::uses('CakeEmail', 'Network/Email'); // per inviare l'email di pwd dimentica
 class UsersController extends AppController
 {
 	var $name = 'Users';
-	var $components = array('RequestHandler','Auth');
-	var $uses = array('User');
+	var $components = ['RequestHandler','Auth'];
+	var $uses = ['User'];
     
 	// Aggiunto per poter fare il logout di utenti non administrators
 	function beforeFilter() {
 		 parent::beforeFilter(); 
-		 $this->Auth->allowedActions = array('logout','password_dimenticata'); 
+		 $this->Auth->allowedActions = ['logout','password_dimenticata']; 
 		 //$this->Auth->allow();		 
 	}
 
@@ -42,7 +42,7 @@ class UsersController extends AppController
 				if (Auth::hasRole(Configure::read('Role.impiegato')))
 				{	        			
 					//return $this->redirect(array('controller'=>'pages', 'action'=>'home'));
-					return $this->redirect(array('controller'=>'attivita', 'action'=>'index'));
+					return $this->redirect(['controller'=>'attivita', 'action'=>'index']);
 				}
 				else
 				{
@@ -71,7 +71,7 @@ class UsersController extends AppController
 			$this->request->data['User']['persona_id'] = ($this->request->data['User']['persona_id'] == 0) ? null : $this->request->data['User']['persona_id'];
 			if ($this->User->save($this->request->data)) {                                              
 				$this->Session->setFlash('User salvato con successo.');
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(['action' => 'index']);
 			}
 		} else {
 			$this->set('groups', array_flip(Configure::read('Role')));
@@ -93,7 +93,7 @@ class UsersController extends AppController
 		}
 		if(empty($uid)){
 			$this->Session->setFlash('E\' necessario selezionare un utente a cui cambiare le impostazioni'/*,'index'*/);
-			$this->redirect(array('action' => 'index'));
+			$this->redirect(['action' => 'index']);
 		} else {
 			$u = $this->User->findById($uid);
 			if (!empty($u) and is_numeric($uid)) {
@@ -102,7 +102,7 @@ class UsersController extends AppController
 				$this->request->data = $u;
 			} else {
 				$this->Session->setFlash('ID utente non valido');
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(['action' => 'index']);
 			}
 		}
 	}
@@ -111,7 +111,7 @@ class UsersController extends AppController
     {
         $this->User->delete($id);
         $this->Session->setFlash(html_entity_decode("L'utente &egrave; stato cancellato. Esiste ancora come socio, ma non pu&ograve; pi&ugrave; accedere all'applicazione"));
-        $this->redirect(array('action'=>'index'));
+        $this->redirect(['action'=>'index']);
     }
 
 
@@ -124,7 +124,7 @@ class UsersController extends AppController
 			}
 		} else {
 			$this->Session->setFlash('Id non valido');
-			$this->redirect(array('action'=>'cambiapwd', $this->Session->read('Auth.User.id'))); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
+			$this->redirect(['action'=>'cambiapwd', $this->Session->read('Auth.User.id')]); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
 		}
 		// Solo gli utenti nel gruppo admin sono in grado di modificare le password altrui.
 		// Gli utenti che non sono admin possono modificare solo la loro password.
@@ -149,7 +149,7 @@ class UsersController extends AppController
 					$this->request->data['User']['password'] = $this->request->data['Users']['nuova_password'];
 				} else {
 					$this->Session->setFlash('Le password non combaciano');
-					$this->redirect(array('action'=>'cambiapwd', $id)); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
+					$this->redirect(['action'=>'cambiapwd', $id]); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
 				}
 				if ($this->User->save($this->request->data)) {
 					$this->Session->setFlash('Password salvata con successo.');
@@ -157,13 +157,13 @@ class UsersController extends AppController
 			}
 			if (empty($u)){
 				$this->Session->setFlash('E\' necessario selezionare un utente a cui cambiare la password');
-				$this->redirect(array('action'=>'cambiapwd', $this->Session->read('Auth.User.id'))); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
+				$this->redirect(['action'=>'cambiapwd', $this->Session->read('Auth.User.id')]); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
 			} else {
 				$this->request->data = $u;
 			}
 		} else {
 			$this->Session->setFlash('Non sei autorizzato a svolgere questa azione');
-			$this->redirect(array('action'=>'cambiapwd', $this->Session->read('Auth.User.id'))); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
+			$this->redirect(['action'=>'cambiapwd', $this->Session->read('Auth.User.id')]); // Forzo il redirect a se stesso per non proseguire nel caricamento pagina e non usare die
 		}
 	}
 
@@ -214,17 +214,17 @@ class UsersController extends AppController
 					$this->Session->setFlash('Impossibile elaborare la richiesta.', 'flash_error');
 					// Se siamo entrati in questo blocco, qualcuno con un token personale funzionante, vuole tentare di modificare le password degli altri
 					// Allora lo redirigo in una pagina sbagliata che non porta a niente
-					$this->redirect(array('controller' => 'users', 'action' => 'password_dimenticata', '?' => 'eh=no&no=badthing'));
+					$this->redirect(['controller' => 'users', 'action' => 'password_dimenticata', '?' => 'eh=no&no=badthing']);
 					return; // Useless
 				}
 				if(($this->request->data['User']['password'] === $this->request->data['Conferma']['password']) and (strlen($this->request->data['User']['password']) >= 5)){
 					// debug('Le pass coincidono'); // DEBUG
-					$this->User->save(array('id' => $this->request->data['User']['id'], 'password' => $this->request->data['User']['password'], 'reset_pass_key' => NULL));
+					$this->User->save(['id' => $this->request->data['User']['id'], 'password' => $this->request->data['User']['password'], 'reset_pass_key' => NULL]);
 					$this->Session->setFlash('Password modificata con successo.');
 					$this->set('finalSuccess', true); 
 				} else {
 					$this->Session->setFlash('Le password inserite non combaciano', 'flash_error');
-					$this->redirect(array('controller' => 'users', 'action' => 'password_dimenticata', '?' => 'uid='.$this->request->data['User']['id'].'&token='.$urlToken));
+					$this->redirect(['controller' => 'users', 'action' => 'password_dimenticata', '?' => 'uid='.$this->request->data['User']['id'].'&token='.$urlToken]);
 				}
 			}
 			return;
@@ -255,18 +255,18 @@ class UsersController extends AppController
 			$urlToken = urlencode(openssl_encrypt(serialize($token), 'AES-128-ECB', $secureKey));
 			// debug($urlToken); //DEBUG
 			// debug(openssl_decrypt(urldecode($urlToken), 'AES-128-ECB', $secureKey)); // DEBUG
-			if($this->User->save(array('id' => $existing_user['User']['id'], 'reset_pass_key' => $secureKey))) {
+			if($this->User->save(['id' => $existing_user['User']['id'], 'reset_pass_key' => $secureKey])) {
 				$Email = new CakeEmail();
-				$Email->from(array('info@impronta48.it' => 'iGAS - iMpronta'));
+				$Email->from(['info@impronta48.it' => 'iGAS - iMpronta']);
 				$Email->to($existing_user['Persona']['EMail']);
 				$Email->subject('iGAS - Password dimenticata');
 				$Email->emailFormat('html');
 				$Email->template('password_dimenticata', 'default');
-				$Email->viewVars(array(
+				$Email->viewVars([
 					'urlToken' => $urlToken,
 					'userId' => $existing_user['User']['id'],
 					'user' => $existing_user['User']['username']
-				));
+				]);
 				$Email->send();
 				$this->Session->setFlash('Le istruzioni per il recupero password sono state inviate all\'indirizzo email dell\'utente inserito');
 				$this->set('sendSuccess', true);

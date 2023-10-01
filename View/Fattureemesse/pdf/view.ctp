@@ -31,7 +31,7 @@
             <td width="50%">
                 <div class="row">
                 <div class="clearfix col-md-4 col-md-offset-1">
-                    <?php echo $this->Html->image(Configure::read('iGas.Logo'), array('fullBase' => true,'style'=>'max-width:200px')); ?>                        
+                    <?php echo $this->Html->image(Configure::read('iGas.Logo'), ['fullBase' => true,'style'=>'max-width:200px']); ?>                        
                 </div>
                 </div>
                 <div class="row">
@@ -158,19 +158,19 @@
 		?>
 		<tr<?php echo $class;?>>            
 			<td><?php echo $rigafattura['DescrizioneVoci'];?></td>
-			<td align="right"><?php echo $this->Number->currency($importo,'EUR', array('negative'=>'-')); ?></td>
+			<td align="right"><?php echo $this->Number->currency($importo,'EUR', ['negative'=>'-']); ?></td>
 			<td align="right"><small class="gray"><?php echo $rigafattura['Codiceiva']['Percentuale']; ?>%</small></td>
             <td align="right"><?php echo $this->Number->currency($iva,'EUR');?> </td>
-			<td align="right" class="totale"><?php echo $this->Number->currency($iva+$importo,'EUR', array('negative'=>'-'));?></td>
+			<td align="right" class="totale"><?php echo $this->Number->currency($iva+$importo,'EUR', ['negative'=>'-']);?></td>
 		</tr>
     	<?php endforeach; ?>        
         
         <tfoot>
         <tr class="totale">            
             <td class="bg-gray">Totale</td>
-			<td class="bg-gray" align="right"><?php echo $this->Number->currency($importo_tot,'EUR', array('negative'=>'-')); ?> </td>
-			<td class="bg-gray" align="right" colspan="2"><?php echo $this->Number->currency($iva_tot,'EUR', array('negative'=>'-')); ?> </td>
-			<td class="bg-gray" align="right"><b><?php echo $this->Number->currency($importo_tot+$iva_tot,'EUR', array('negative'=>'-')); ?> </b></td>
+			<td class="bg-gray" align="right"><?php echo $this->Number->currency($importo_tot,'EUR', ['negative'=>'-']); ?> </td>
+			<td class="bg-gray" align="right" colspan="2"><?php echo $this->Number->currency($iva_tot,'EUR', ['negative'=>'-']); ?> </td>
+			<td class="bg-gray" align="right"><b><?php echo $this->Number->currency($importo_tot+$iva_tot,'EUR', ['negative'=>'-']); ?> </b></td>
 
         </tr>
         </tfoot>

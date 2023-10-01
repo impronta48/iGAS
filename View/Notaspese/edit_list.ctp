@@ -1,8 +1,8 @@
-<?php echo $this->Html->script("bootstrap-datepicker",array('inline' => false)); ?>
-<?php echo $this->Html->script("locales/bootstrap-datepicker.it",array('inline' => false)); ?>
-<?php echo $this->Html->script("notaspese",array('inline' => false)); ?>
-<?php echo $this->Html->script("bootstrap-modalmanager",array('inline' => false)); ?>
-<?php echo $this->Html->script("bootstrap-modal",array('inline' => false)); ?>
+<?php echo $this->Html->script("bootstrap-datepicker",['inline' => false]); ?>
+<?php echo $this->Html->script("locales/bootstrap-datepicker.it",['inline' => false]); ?>
+<?php echo $this->Html->script("notaspese",['inline' => false]); ?>
+<?php echo $this->Html->script("bootstrap-modalmanager",['inline' => false]); ?>
+<?php echo $this->Html->script("bootstrap-modal",['inline' => false]); ?>
 
 <?php echo $this->Html->script('http://maps.google.com/maps/api/js?sensor=true',false);?>		
 <?php echo $this->Html->script('googleMaps/jquery.ui.map',false);?>		
@@ -10,23 +10,23 @@
 <?php echo $this->Html->script('trasferte.js',false);?>		
 <?php echo $this->Html->script('jquery.pulsate.min.js',false);?>		
 
-<?php echo $this->Html->css("bootstrap-modal-bs3fix",array('inline' => false)); ?>
-<?php echo $this->Html->css("bootstrap-modals",array('inline' => false)); ?>
+<?php echo $this->Html->css("bootstrap-modal-bs3fix",['inline' => false]); ?>
+<?php echo $this->Html->css("bootstrap-modals",['inline' => false]); ?>
 
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
-<?php echo $this->Html->script('faseattivita',array('inline' => false)); ?>
+<?php echo $this->Html->script('faseattivita',['inline' => false]); ?>
 
 
 <?php
     //Converto la query dei mezzi in un select box complesso con tutti gli attributi che mi servono in js
 	foreach($legenda_mezzi as $c) {
-		$legenda_mezzi_options[$c['LegendaMezzi']['id']] = array(
+		$legenda_mezzi_options[$c['LegendaMezzi']['id']] = [
 			'name' => $c['LegendaMezzi']['name'],
 			'value' => $c['LegendaMezzi']['id'],
 			'costokm' => $c['LegendaMezzi']['costokm'],
 			'co2' => $c['LegendaMezzi']['co2'],
 			'biglietto' => $c['LegendaMezzi']['biglietto'],
-		);
+		];
 	}
 ?>
 
@@ -94,7 +94,7 @@
         <div id="btn-aggiungi-ricorrente" class="btn btn-default disabled">Aggiungi Spesa Ricorrente</div>  
         <div id="btn-riordina" class="btn btn-primary"><i class="fa-sort-alpha-asc fa"></i> Riordina Tabella</div>  
         <div id="btn-stampa" class="btn btn-primary disabled"><i class="fa-print fa"></i> Stampa Nota Spese</div>  
-        <a href="<?php echo $this->Html->url(array('action'=>'stampa', '#null'))?>" id="btn-pdf" class="btn btn-primary disabled"><i class="fa-file fa"></i> PDF</a>  
+        <a href="<?php echo $this->Html->url(['action'=>'stampa', '#null'])?>" id="btn-pdf" class="btn btn-primary disabled"><i class="fa-file fa"></i> PDF</a>  
     </div>
     <!-- legenda dei flag -->
     <div class="pull-right hidden-print">        
@@ -106,25 +106,25 @@
     <br>
     
     <!-- tabella e form -->
-        <?php echo $this->Form->create('Notaspesa', array('action'=>'edit_riga', 'inputDefaults' => array('class' => 'form-control'))); ?>
-            <?php echo $this->Form->hidden('eRisorsa', array('value'=>$eRisorsa)); //Memorizzo la risorsa per il salvataggio ?>
-            <?php echo $this->Form->hidden('Notaspesa.data.month', array('value'=>$mese)); //Memorizzo la risorsa per il salvataggio ?>
-            <?php echo $this->Form->hidden('Notaspesa.data.year', array('value'=>$anno)); //Memorizzo la risorsa per il salvataggio ?>
+        <?php echo $this->Form->create('Notaspesa', ['action'=>'edit_riga', 'inputDefaults' => ['class' => 'form-control']]); ?>
+            <?php echo $this->Form->hidden('eRisorsa', ['value'=>$eRisorsa]); //Memorizzo la risorsa per il salvataggio ?>
+            <?php echo $this->Form->hidden('Notaspesa.data.month', ['value'=>$mese]); //Memorizzo la risorsa per il salvataggio ?>
+            <?php echo $this->Form->hidden('Notaspesa.data.year', ['value'=>$anno]); //Memorizzo la risorsa per il salvataggio ?>
 		
 		<div class="table-responsive">
         <table id="notaspese-attivita" class="table table-bordered table-hover table-striped display" cellspacing="1">
         <thead>
             <?php echo $this->Html->tableHeaders( 
-                  array('Giorno', 
+                  ['Giorno', 
                         'Attività',
                         'Destinazione',
                         'Categoria',
                         'Importo €',
                         'Descrizione',
                         'Flag',
-                        array('Azioni' => array('class'=>'hidden-print')),
-                      ),
-                    array('class'=>"tablesorter")) ; ?>
+                        ['Azioni' => ['class'=>'hidden-print']],
+                      ],
+                    ['class'=>"tablesorter"]) ; ?>
         </thead>
         <tbody>
             
@@ -147,20 +147,20 @@
                 }
                 
                 echo $this->Html->tableCells(
-                    array($d->format('D d'),
+                    [$d->format('D d'),
                           $attivita_list[$r['Notaspesa']['eAttivita']] . '<small class="text-muted">/' . substr($r['Faseattivita']['Descrizione'],0,40) . '</small>',
                           $r['Notaspesa']['origine'] ." > ". $r['Notaspesa']['destinazione'],                           
                           $this->Text->truncate($r['LegendaCatSpesa']['name'],17), 
                           $this->Number->currency($r['Notaspesa']['importo'],'EUR'),                                
                           $r['Notaspesa']['descrizione'],                                                     
                           badge_fatturabile($r['Notaspesa']) . ' ' .  badge_rimborsabile($r['Notaspesa']) ,                           
-                          array(                            
+                          [                            
                             '<div class="btn btn-primary btn-xs glow btn-edit-riga" id="'. $r['Notaspesa']['id'] . '">Edit</div>'.                            
-                            $this->Html->Link('Del',array('action'=>'delete',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow btn-del-riga" ),
+                            $this->Html->Link('Del',['action'=>'delete',$r['Notaspesa']['id']],['class'=>"btn btn-primary btn-xs glow btn-del-riga" ],
                                         "Sicuro di voler cancellare questa riga?"),                        
-                            array('class'=>'actions hidden-print')),                            
-                          ),
-                    array('class' => 'darker'));
+                            ['class'=>'actions hidden-print']],                            
+                          ],
+                    ['class' => 'darker']);
                     $tot +=  $r['Notaspesa']['importo'];                                        
                     $totday +=  $r['Notaspesa']['importo'];                                        
                     $scrividay='';
@@ -174,7 +174,7 @@
         <tfoot>
               <?php
                 echo $this->Html->tableCells(
-                    array('Totale',
+                    ['Totale',
                           '',
                           '', 
                           '<b>' . $this->Number->currency($tot,'EUR') .'</b>',                                                     
@@ -182,8 +182,8 @@
                           '', 
                           '', 
                           '', 
-                      ),
-                    array('class' => 'bg-success'));                 
+                      ],
+                    ['class' => 'bg-success']);                 
                 ?>
         </tfoot>
         </table>
@@ -201,13 +201,13 @@
                         <div class="row">               
                             <div class="col col-md-5">
                                 <!-- Inserire origine del dipendente dalla sua anagrafica -->
-                                <?php echo $this->Form->input('Notaspesa.origine', array('placeholder'=>'Torino, IT')); ?>                                
+                                <?php echo $this->Form->input('Notaspesa.origine', ['placeholder'=>'Torino, IT']); ?>                                
                             </div>
 
                             <div class="col col-md-5">
                                 <!-- Inserire destinazione dall'attività dalla sua anagrafica -->                                    
                                 <!-- TODO: Inserisci via jquery lo stesso valore del campo destinazione -->
-                                <?php echo $this->Form->input('NSDest', array('placeholder'=>'La Spezia, IT', 'label'=> 'Destinazione')); ?>
+                                <?php echo $this->Form->input('NSDest', ['placeholder'=>'La Spezia, IT', 'label'=> 'Destinazione']); ?>
                             </div>                        
                             <div class="col col-md-1">
                                 <br/>
@@ -224,26 +224,26 @@
                         <div class="row"> 
                             <div class="col col-md-12">
                         <?php echo $this->Form->input('Notaspesa.km'); ?>
-                        <?php echo $this->Form->input('Notaspesa.ritorno',  array(
+                        <?php echo $this->Form->input('Notaspesa.ritorno',  [
                                           'type' => 'checkbox',
                                           'default' => 1,
                                           'class'=>false,
-                                          'label' => array('class' => null,'text'=>'Ritorno: <small>se selezionato moltiplica per 2 i km (A/R)</small>'),
+                                          'label' => ['class' => null,'text'=>'Ritorno: <small>se selezionato moltiplica per 2 i km (A/R)</small>'],
                                           'wrapInput' => 'col col-md-9',                          
-                            )); ?>
+                            ]); ?>
                             </div>
                         </div>
                         
                         <div class="row"> 
                             <div class="col col-md-8">                        
-                                <?php echo $this->Form->input('Notaspesa.legenda_mezzi_id', array('options'=>$legenda_mezzi_options, 
-                                                                                'label'=>'Il tuo mezzo')
+                                <?php echo $this->Form->input('Notaspesa.legenda_mezzi_id', ['options'=>$legenda_mezzi_options, 
+                                                                                'label'=>'Il tuo mezzo']
                                 ); ?>
                             </div>
                             <div class="col col-md-3">   
                                 <?php echo $this->Html->link('<i class="fa fa-plus-square"></i> Aggiungi un mezzo', 
-                                    array('controller'=>'legendamezzi','action'=>'index'),
-                                    array('class'=>'btn btn-xs btn-default', 'escape'=>false, 'target'=> 'blank','tabindex'=>-1));
+                                    ['controller'=>'legendamezzi','action'=>'index'],
+                                    ['class'=>'btn btn-xs btn-default', 'escape'=>false, 'target'=> 'blank','tabindex'=>-1]);
                                 ?>
                             </div>
                        </div>
@@ -263,34 +263,34 @@
                     
                         <div class="row"> 
                             <div class="col col-md-4">              
-                            <?php echo $this->Form->input('Notaspesa.importo_val', array(
+                            <?php echo $this->Form->input('Notaspesa.importo_val', [
                                     'label'=>'Importo in VALUTA',
                                     'placeholder'=>'10.4',
                                     'beforeInput' => '<div class="input-group">',
                                     'afterInput' => '<span id="euro-addon" class="input-group-addon">EUR</span></div>',
                                     'after' => '<span class="help-block">Questa spesa <a href="javascript:;" id="non-euro">non è in Euro?</a></span>'  
-                                    )); ?>
+                                    ]); ?>
                             </div>
                         
                             <div id="non-euro-zone" class="col col-md-8 small well" > 
                                 <div class="col col-md-4">
-                                <?php echo $this->Form->input('Notaspesa.valuta', array('default'=>'EUR',                                
-                                                    'class'=>'input-sm form-control')); 
+                                <?php echo $this->Form->input('Notaspesa.valuta', ['default'=>'EUR',                                
+                                                    'class'=>'input-sm form-control']); 
                                 ?>
                                 </div>
                                 <div class="col col-md-4">
                                 <?php 
                                        //TODO: Incorporare l'API di conversione valuta
                                        $url_convertitore= "https://www.google.com/finance/converter?a=1to=EUR";
-                                       echo $this->Form->input('Notaspesa.tasso', array('default'=>1,
+                                       echo $this->Form->input('Notaspesa.tasso', ['default'=>1,
                                                     'class'=>'input-sm form-control',
                                                     'after'=>'<span class="help-block">Visualizza il <a href="'. $url_convertitore. '" target="valuta">tasso di conversione odierno?</a><span>'
-                                                    )); 
+                                                    ]); 
                                 ?>
                                 </div>
                                 <div class="col col-md-4">  
-                                <?php echo $this->Form->input('Notaspesa.modalImporto', array('label'=>'importo in EUR',                                     
-                                                    'class'=>'input-sm form-control')); 
+                                <?php echo $this->Form->input('Notaspesa.modalImporto', ['label'=>'importo in EUR',                                     
+                                                    'class'=>'input-sm form-control']); 
                                 ?>
                                 </div>
                             </div>                            

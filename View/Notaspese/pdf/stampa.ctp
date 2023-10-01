@@ -29,7 +29,7 @@
 
 <div class="notaspese view">   
     <div class="actions hidden-print">
-        <a href="<?php echo $this->Html->url(array('action'=>'pdf'))?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Pdf</a>        
+        <a href="<?php echo $this->Html->url(['action'=>'pdf'])?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Pdf</a>        
     </div>
     
     <br>
@@ -39,7 +39,7 @@
             <td width="50%">
                 <div class="row">
                 <div class="clearfix col-md-4 col-md-offset-1">
-                    <?php echo $this->Html->image(Configure::read('iGas.Logo'), array('fullBase' => true,'style'=>'max-width:200px')); ?>                        
+                    <?php echo $this->Html->image(Configure::read('iGas.Logo'), ['fullBase' => true,'style'=>'max-width:200px']); ?>                        
                 </div>
                 </div>
                 <div class="row">
@@ -122,9 +122,9 @@
         //CICLO SULLE RIGHE FATTURA
         $importo_tot = 0;
 
-        $fatturabili_fatturati = array();
-        $fatturabili_daFatturare = array();
-        $nonFatturabili = array();
+        $fatturabili_fatturati = [];
+        $fatturabili_daFatturare = [];
+        $nonFatturabili = [];
 
         foreach ($notaspese as $ns) {
 
@@ -157,7 +157,7 @@
         <table>
             <tr class="totale">            
                 <td class="bg-gray" colspan="2" >Totale</td>
-			    <td class="bg-gray" align="right"><?php echo $this->Number->currency($importo_tot,'EUR', array('negative'=>'-')); ?> </td>
+			    <td class="bg-gray" align="right"><?php echo $this->Number->currency($importo_tot,'EUR', ['negative'=>'-']); ?> </td>
 			    <td class="bg-gray" colspan="2">&nbsp;</td>
             </tr>
         </table>

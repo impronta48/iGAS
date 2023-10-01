@@ -25,45 +25,45 @@ class Ddt extends AppModel {
  *
  * @var array
  */
-	public $belongsTo = array(
-		'Attivita' => array(
+	public $belongsTo = [
+		'Attivita' => [
 			'className' => 'Attivita',
 			'foreignKey' => 'attivita_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'LegendaCausaleTrasporto' => array(
+		],
+		'LegendaCausaleTrasporto' => [
 			'className' => 'LegendaCausaleTrasporto',
 			'foreignKey' => 'legenda_causale_trasporto_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'LegendaPorto' => array(
+		],
+		'LegendaPorto' => [
 			'className' => 'LegendaPorto',
 			'foreignKey' => 'legenda_porto_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'Vettore' => array(
+		],
+		'Vettore' => [
 			'className' => 'Vettore',
 			'foreignKey' => 'vettore_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		)
-	);
+		]
+	];
     
-    public $hasMany = array(
-		'Rigaddt' => array(
+    public $hasMany = [
+		'Rigaddt' => [
 			'className' => 'Rigaddt',
 			'foreignKey' => 'ddt_id',
 			'dependent' => true,
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-	);
+		],
+	];
 }

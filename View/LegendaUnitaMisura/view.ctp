@@ -15,10 +15,10 @@
 					<div class="panel-heading"><?php echo __('Actions'); ?></div>
 						<div class="panel-body">
 							<ul class="nav nav-pills nav-stacked">
-									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Legenda Unita Misura'), array('action' => 'edit', $legendaUnitaMisura['LegendaUnitaMisura']['id']), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Legenda Unita Misura'), array('action' => 'delete', $legendaUnitaMisura['LegendaUnitaMisura']['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $legendaUnitaMisura['LegendaUnitaMisura']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Legenda Unita Misuras'), array('action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Legenda Unita Misura'), array('action' => 'add'), array('escape' => false)); ?> </li>
+									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Legenda Unita Misura'), ['action' => 'edit', $legendaUnitaMisura['LegendaUnitaMisura']['id']], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Legenda Unita Misura'), ['action' => 'delete', $legendaUnitaMisura['LegendaUnitaMisura']['id']], ['escape' => false], __('Are you sure you want to delete # %s?', $legendaUnitaMisura['LegendaUnitaMisura']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Legenda Unita Misuras'), ['action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Legenda Unita Misura'), ['action' => 'add'], ['escape' => false]); ?> </li>
 							</ul>
 						</div><!-- end body -->
 				</div><!-- end panel -->

@@ -1,4 +1,4 @@
-<?php echo $this->Form->create('Group', array('action' => 'add')); ?>
+<?php echo $this->Form->create('Group', ['action' => 'add']); ?>
 <table class="tableIndexSmall"  border="0" cellpadding="0" cellspacing="0">
   <tbody>
     <tr>

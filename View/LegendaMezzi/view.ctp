@@ -15,12 +15,12 @@
 					<div class="panel-heading"><?php echo __('Actions'); ?></div>
 						<div class="panel-body">
 							<ul class="nav nav-pills nav-stacked">
-									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Legenda Mezzi'), array('action' => 'edit', $legendaMezzi['LegendaMezzi']['id']), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Legenda Mezzi'), array('action' => 'delete', $legendaMezzi['LegendaMezzi']['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $legendaMezzi['LegendaMezzi']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Legenda Mezzis'), array('action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Legenda Mezzi'), array('action' => 'add'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Notaspese'), array('controller' => 'notaspese', 'action' => 'index'), array('escape' => false)); ?> </li>
-		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Notaspesa'), array('controller' => 'notaspese', 'action' => 'add'), array('escape' => false)); ?> </li>
+									<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>&nbsp&nbsp;Edit Legenda Mezzi'), ['action' => 'edit', $legendaMezzi['LegendaMezzi']['id']], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>&nbsp;&nbsp;Delete Legenda Mezzi'), ['action' => 'delete', $legendaMezzi['LegendaMezzi']['id']], ['escape' => false], __('Are you sure you want to delete # %s?', $legendaMezzi['LegendaMezzi']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Legenda Mezzis'), ['action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Legenda Mezzi'), ['action' => 'add'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-list"></span>&nbsp&nbsp;List Notaspese'), ['controller' => 'notaspese', 'action' => 'index'], ['escape' => false]); ?> </li>
+		<li><?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp&nbsp;New Notaspesa'), ['controller' => 'notaspese', 'action' => 'add'], ['escape' => false]); ?> </li>
 							</ul>
 						</div><!-- end body -->
 				</div><!-- end panel -->
@@ -125,9 +125,9 @@
 			<td><?php echo $notaspesa['fatturato']; ?></td>
 			<td><?php echo $notaspesa['rimborsato']; ?></td>
 			<td class="actions">
-				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-search"></span>'), array('controller' => 'notaspese', 'action' => 'view', $notaspesa['id']), array('escape' => false)); ?>
-				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>'), array('controller' => 'notaspese', 'action' => 'edit', $notaspesa['id']), array('escape' => false)); ?>
-				<?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>'), array('controller' => 'notaspese', 'action' => 'delete', $notaspesa['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $notaspesa['id'])); ?>
+				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-search"></span>'), ['controller' => 'notaspese', 'action' => 'view', $notaspesa['id']], ['escape' => false]); ?>
+				<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-edit"></span>'), ['controller' => 'notaspese', 'action' => 'edit', $notaspesa['id']], ['escape' => false]); ?>
+				<?php echo $this->Form->postLink(__('<span class="glyphicon glyphicon-remove"></span>'), ['controller' => 'notaspese', 'action' => 'delete', $notaspesa['id']], ['escape' => false], __('Are you sure you want to delete # %s?', $notaspesa['id'])); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -136,7 +136,7 @@
 <?php endif; ?>
 
 	<div class="actions">
-		<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;New Notaspesa'), array('controller' => 'notaspese', 'action' => 'add'), array('escape' => false, 'class' => 'btn btn-default')); ?> 
+		<?php echo $this->Html->link(__('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;New Notaspesa'), ['controller' => 'notaspese', 'action' => 'add'], ['escape' => false, 'class' => 'btn btn-default']); ?> 
 	</div>
 	</div><!-- end col md 12 -->
 </div>

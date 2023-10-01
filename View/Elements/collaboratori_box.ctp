@@ -33,20 +33,20 @@
                   foreach($persone as $key => $p) {
                       $oretot += $p['Ore'];
                       $spesetot += $p['Spese'];
-                      echo $this->Html->tableCells(array(
+                      echo $this->Html->tableCells([
 
         $p['Nome'].' '.$p['Cognome'], 
 
-        '<a href="'.$this->Html->url(array('controller'=>'ore', 'action'=>'detail', '?'=>array('as_values_persone' => $key.",", 'from' => date('Y').'-'.date('m').'-01'.","))).'">'.$p['Ore'].'</a>', 
+        '<a href="'.$this->Html->url(['controller'=>'ore', 'action'=>'detail', '?'=>['as_values_persone' => $key.",", 'from' => date('Y').'-'.date('m').'-01'.","]]).'">'.$p['Ore'].'</a>', 
                         
-        '<a href="'.$this->Html->url(array('controller'=>'notaspese', 'action'=>'detail', '?'=>array('as_values_persone' => $key.",", 'from' => date('Y').'-'.date('m').'-01'.","))).'">'.$this->Number->currency($p['Spese']).'</a>',
+        '<a href="'.$this->Html->url(['controller'=>'notaspese', 'action'=>'detail', '?'=>['as_values_persone' => $key.",", 'from' => date('Y').'-'.date('m').'-01'.","]]).'">'.$this->Number->currency($p['Spese']).'</a>',
 
         '<div class="btn-group">
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Scegli <span class="caret"></span></button>
         <ul class="dropdown-menu" role="menu">
           <li><a href="notaspese/add/persona:'.$key.'/anno:'.date('Y').'/mese:'.date('m').'"><i class="fa fa-euro"></i> Aggiungi Spese</a></li>         
           <li><a href="ore/add/persona:'.$key.'/anno:'.date('Y').'/mese:'.date('m').'"><i class="fa fa-clock-o"></i> Aggiungi Ore</a></li>                 
-        </ul></div>'));} ?>
+        </ul></div>']);} ?>
   											
                       </tbody>
 

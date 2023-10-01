@@ -30,10 +30,10 @@ class DataTableComponent extends Component{
     
     private $model;
     private $controller;
-    private $times = array();
+    private $times = [];
     public $conditionsByValidate = 0;
     public $emptyElements = 0;
-    public $fields = array();
+    public $fields = [];
     public $mDataProp = false;
     
     public function __construct(){
@@ -90,7 +90,7 @@ class DataTableComponent extends Component{
         if(isset($httpGet) && isset($httpGet['iSortCol_0']) && $httpGet['sEcho'] != 1){
             $orderBy = $this->getOrderByStatements();
             if(!empty($orderBy)){
-                $this->controller->paginate = array_merge($this->controller->paginate, array('order'=>$orderBy));
+                $this->controller->paginate = array_merge($this->controller->paginate, ['order'=>$orderBy]);
             }
         }
         
@@ -99,10 +99,10 @@ class DataTableComponent extends Component{
             $conditions = $this->getWhereConditions();
 
             if( !empty($this->controller->paginate['contain']) ){
-                $this->controller->paginate = array_merge_recursive($this->controller->paginate, array('contain'=>$conditions));
+                $this->controller->paginate = array_merge_recursive($this->controller->paginate, ['contain'=>$conditions]);
             }
             else{
-                $this->controller->paginate = array_merge_recursive($this->controller->paginate, array('conditions'=>array('AND'=>$conditions)));
+                $this->controller->paginate = array_merge_recursive($this->controller->paginate, ['conditions'=>['AND'=>$conditions]]);
             }
             $isFiltered = true;
         }
@@ -137,12 +137,12 @@ class DataTableComponent extends Component{
         $this->setTimes('Find','stop');
         $this->setTimes('Response','start','Formatting of response');
         // dataTables compatible array
-        $response = array(
+        $response = [
             'sEcho' => isset($this->controller->request->query['sEcho']) ? intval($this->controller->request->query['sEcho']) : 1,
             'iTotalRecords' => $total,
             'iTotalDisplayRecords' => $isFiltered === true ? $filteredTotal : $total,
-            'aaData' => array()
-        );
+            'aaData' => []
+        ];
         
         // return data
         if(!$data){
@@ -214,7 +214,7 @@ class DataTableComponent extends Component{
             throw new Exception("Field list is not set. Please set the fields so I know how to build where statement.");
         }
         
-        $conditions = array();
+        $conditions = [];
         
 
         if($this->mDataProp == true){
@@ -234,9 +234,9 @@ class DataTableComponent extends Component{
             if( $this->controller->request->query['bSearchable_'.$x] == 'true' ){
                 
                 if($this->mDataProp == true){
-                    $conditions['OR'][] = array(
+                    $conditions['OR'][] = [
                         $this->controller->request->query['mDataProp_'.$x].' LIKE' => '%'.$this->controller->request->query['sSearch'].'%'
-                    );                  
+                    ];                  
                 }
                 else{
 
@@ -262,9 +262,9 @@ class DataTableComponent extends Component{
                             }
                         }
                         else{
-                            $conditions['OR'][] = array(
+                            $conditions['OR'][] = [
                                 $column.' LIKE' => '%'.$this->controller->request->query['sSearch'].'%'
-                            );
+                            ];
                         }
                     }
                 }
@@ -285,7 +285,7 @@ class DataTableComponent extends Component{
                 case 'boolean':
                 case 'numeric':
                 case 'naturalNumber':
-                    $condition = array($field => $this->controller->request->query['sSearch']);
+                    $condition = [$field => $this->controller->request->query['sSearch']];
                     break;
             }
         }
@@ -300,7 +300,7 @@ class DataTableComponent extends Component{
  * @return array
  */
     private function getDataRecursively($data,$key=null){
-        $fields = array();
+        $fields = [];
 
         // note: the chr() function is used to produce the arrays index to make sorting via ksort() easier.
         
@@ -351,11 +351,11 @@ class DataTableComponent extends Component{
  */    
     private function setTimes($key,$action,$desc=''){
         if(isset($this->settings) && isset($this->settings['timer']) && $this->settings['timer'] == true){
-            $this->times[$key][$action] = array(
+            $this->times[$key][$action] = [
                 'action' => $action,
                 'time' => microtime(true),
                 'description' => $desc
-            );
+            ];
         }
     }
     
@@ -364,7 +364,7 @@ class DataTableComponent extends Component{
  * @return type
  */    
     public function getTimes(){
-        $times = array();
+        $times = [];
         $componentStart = 0;
         foreach($this->times as $x => $i){
             $start = $end = $desc = $startLine = $endLine = 0;
@@ -380,18 +380,18 @@ class DataTableComponent extends Component{
                     $end = $j['time'];
                 }
                 if($start > 0 && $end > 0){
-                    $times[$x] = array(
+                    $times[$x] = [
                         'description' => $desc,
                         'time' => round(($end - $start),4),
-                    );
+                    ];
                 }
             }
         }
         
         if(isset($this->settings) && isset($this->settings['timer']) && $this->settings['timer'] == true){
-            $times['TOTAL'] = array(
+            $times['TOTAL'] = [
                 'time' => round(($end - $componentStart),4)
-            );
+            ];
         }
         
         return $times;

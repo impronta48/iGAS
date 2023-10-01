@@ -1,49 +1,49 @@
 <div class="ddt form">
-<?php echo $this->Form->create('Ddt', array(
-        'inputDefaults' => array(
+<?php echo $this->Form->create('Ddt', [
+        'inputDefaults' => [
 		'div' => 'form-group',
-		'label' => array(
+		'label' => [
 			'class' => 'col col-md-2 control-label'
-		),
+		],
 		'wrapInput' => 'col col-md-4',
 		'class' => 'form-control'
-	),	
+	],	
 	'class' => 'well form-horizontal'       
-    )); ?>  
+    ]); ?>  
     
 	<fieldset>
 		<legend>Crea DDT</legend>
 	<?php
-		echo $this->Form->input('attivita_id', array('default'=>$a['Attivita']['id'], 'readonly'=>true));
-		echo $this->Form->input('data_inizio_trasporto', array('dateFormat'=>'DMY', 'class'=>null));
+		echo $this->Form->input('attivita_id', ['default'=>$a['Attivita']['id'], 'readonly'=>true]);
+		echo $this->Form->input('data_inizio_trasporto', ['dateFormat'=>'DMY', 'class'=>null]);
         echo "<fieldset>";
         echo "<legend>Destinatario</legend>";
-		echo $this->Form->input('destinatario', array('default'=>$a['Persona']['DisplayName']));
-		echo $this->Form->input('destinatario_via', array('default'=>$a['Persona']['Indirizzo']));
-		echo $this->Form->input('destinatario_cap', array('default'=>$a['Persona']['CAP']));
-		echo $this->Form->input('destinatario_citta', array('default'=>$a['Persona']['Citta']));
-		echo $this->Form->input('destinatario_provincia', array('default'=>$a['Persona']['Provincia']));
+		echo $this->Form->input('destinatario', ['default'=>$a['Persona']['DisplayName']]);
+		echo $this->Form->input('destinatario_via', ['default'=>$a['Persona']['Indirizzo']]);
+		echo $this->Form->input('destinatario_cap', ['default'=>$a['Persona']['CAP']]);
+		echo $this->Form->input('destinatario_citta', ['default'=>$a['Persona']['Citta']]);
+		echo $this->Form->input('destinatario_provincia', ['default'=>$a['Persona']['Provincia']]);
         echo "</fieldset>";
         echo "<fieldset>";
         echo "<legend>Luogo di Consegna</legend>";    
-        echo $this->Form->input('stesso-indirizzo', array(			
+        echo $this->Form->input('stesso-indirizzo', [			
 			'wrapInput' => 'col col-md-9 col-md-offset-2',
             'class' => 'false',
             'type' => 'checkbox',
-            'label' => array(
+            'label' => [
             	'class' => 'col col-md-4 control-label',
                 'text' => 'Usa lo stesso indirizzo per la consegna',
-            ),
-            ));       
-		echo $this->Form->input('luogo_via', array('default'=>$a['Persona']['altroIndirizzo']));
-		echo $this->Form->input('luogo_cap', array('default'=>$a['Persona']['altroCap']));
-		echo $this->Form->input('luogo_citta', array('default'=>$a['Persona']['altraCitta']));
-		echo $this->Form->input('luogo_provincia', array('default'=>$a['Persona']['altraProv']));
+            ],
+            ]);       
+		echo $this->Form->input('luogo_via', ['default'=>$a['Persona']['altroIndirizzo']]);
+		echo $this->Form->input('luogo_cap', ['default'=>$a['Persona']['altroCap']]);
+		echo $this->Form->input('luogo_citta', ['default'=>$a['Persona']['altraCitta']]);
+		echo $this->Form->input('luogo_provincia', ['default'=>$a['Persona']['altraProv']]);
         echo "</fieldset>";
         
         echo "<hr>";
-		echo $this->Form->input('legenda_causale_trasporto_id', array('options'=>$legenda_causale_trasporto));
-		echo $this->Form->input('legenda_porto_id', array('options'=>$legenda_porto));		
+		echo $this->Form->input('legenda_causale_trasporto_id', ['options'=>$legenda_causale_trasporto]);
+		echo $this->Form->input('legenda_porto_id', ['options'=>$legenda_porto]);		
 		echo $this->Form->input('vettore_id');
 		echo $this->Form->input('note');
 	?>   
@@ -74,16 +74,16 @@
 		?>
         <tr>            
             <td>
-                <?php echo $this->Form->input("Rigaddt.$i.Descrizione", array('default'=>$f['Descrizione'], 'label'=>false, 'wrapInput'=>'col col-md-11', 'width'=>'80%')); ?>
+                <?php echo $this->Form->input("Rigaddt.$i.Descrizione", ['default'=>$f['Descrizione'], 'label'=>false, 'wrapInput'=>'col col-md-11', 'width'=>'80%']); ?>
             </td>
             <td>
-                <?php echo $this->Form->input("Rigaddt.$i.um", array('default'=>$f['um'], 'label'=>false, 'wrapInput'=>'col col-md-11')); ?>
+                <?php echo $this->Form->input("Rigaddt.$i.um", ['default'=>$f['um'], 'label'=>false, 'wrapInput'=>'col col-md-11']); ?>
             </td>
             <td>
-                <?php echo $this->Form->input("Rigaddt.$i.qta", array('default'=>$qta_ddt_max, 'label'=>false, 'wrapInput'=>'col col-md-11', 'class'=>'form-control add3')); ?>
+                <?php echo $this->Form->input("Rigaddt.$i.qta", ['default'=>$qta_ddt_max, 'label'=>false, 'wrapInput'=>'col col-md-11', 'class'=>'form-control add3']); ?>
             </td>
             <td>
-                <?php echo $this->Form->input("Rigaddt.$i.faseattivita_id", array('default'=>$f['id'], 'label'=>false, 'type' => 'hidden')); ?>
+                <?php echo $this->Form->input("Rigaddt.$i.faseattivita_id", ['default'=>$f['id'], 'label'=>false, 'type' => 'hidden']); ?>
             </td>
         </tr>
     <?php   
@@ -98,7 +98,7 @@
                 <td align="right" class="success"><b>N. colli</b></td>
                 <td align="right" class="success">
                     <?php  
-                        echo $this->Form->input('n_colli', array('label'=>false, 'wrapInput'=>'col col-md-11'));
+                        echo $this->Form->input('n_colli', ['label'=>false, 'wrapInput'=>'col col-md-11']);
                     ?>
                 </td>
             </tr>
@@ -110,7 +110,7 @@
 <?php echo $this->Form->end(__('Submit')); ?>
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
     $('#DdtStesso-indirizzo').click ( function (e) {
         if ($('#DdtStesso-indirizzo').is(':checked'))
         {

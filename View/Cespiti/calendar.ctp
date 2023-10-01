@@ -1,12 +1,12 @@
 <?php 
 echo $this->Html->css("bootstrap-timepicker");
 echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'
-echo $this->Html->script("cespite",array('inline' => false));
-echo $this->Html->script("validate1.19",array('inline' => false));
-echo $this->Html->script("bootstrap-timepicker",array('inline' => false));
-echo $this->Html->script('faseattivita',array('inline' => false));
+echo $this->Html->script("cespite",['inline' => false]);
+echo $this->Html->script("validate1.19",['inline' => false]);
+echo $this->Html->script("bootstrap-timepicker",['inline' => false]);
+echo $this->Html->script('faseattivita',['inline' => false]);
 $this->Html->addCrumb('Cespiti', '/cespiti');
-$this->Html->addCrumb('Gestione Calendario', array('controller' => 'cespiti', 'action' => 'calendar'));
+$this->Html->addCrumb('Gestione Calendario', ['controller' => 'cespiti', 'action' => 'calendar']);
 ?>
 
 <style>
@@ -25,18 +25,18 @@ $this->Html->addCrumb('Gestione Calendario', array('controller' => 'cespiti', 'a
 
 <?php 
 //echo $this->Html->script("fullcalendar/1.6.4/fullcalendar.min", Array('inline'=>false));//LEGACY
-echo $this->Html->script("fullcalendar/4.0.1/fullcalendar.min", Array('inline'=>false));
-echo $this->Html->script('fullcalendar/4.0.1/fullcalendar.daygrid.min', Array('inline'=>false));
-echo $this->Html->script('fullcalendar/4.0.1/fullcalendar.timegrid.min', Array('inline'=>false));
-echo $this->Html->script('fullcalendar/4.0.1/fullcalendar.interaction.min', Array('inline'=>false));
+echo $this->Html->script("fullcalendar/4.0.1/fullcalendar.min", ['inline'=>false]);
+echo $this->Html->script('fullcalendar/4.0.1/fullcalendar.daygrid.min', ['inline'=>false]);
+echo $this->Html->script('fullcalendar/4.0.1/fullcalendar.timegrid.min', ['inline'=>false]);
+echo $this->Html->script('fullcalendar/4.0.1/fullcalendar.interaction.min', ['inline'=>false]);
 
 //echo $this->Html->script("fullcalendar/1.6.4/cespiti", Array('inline'=>false));//LEGACY
-echo $this->Html->script("fullcalendar/4.0.1/cespiti", Array('inline'=>false));
+echo $this->Html->script("fullcalendar/4.0.1/cespiti", ['inline'=>false]);
 
 //echo $this->Html->css('fullcalendar/1.6.4/fullcalendar', null, Array('inline'=>false));//LEGACY
-echo $this->Html->css('fullcalendar/4.0.1/fullcalendar.min', null, Array('inline'=>false)); 
-echo $this->Html->css('fullcalendar/4.0.1/fullcalendar.daygrid.min', null, Array('inline'=>false)); 
-echo $this->Html->css('fullcalendar/4.0.1/fullcalendar.timegrid.min', null, Array('inline'=>false)); 
+echo $this->Html->css('fullcalendar/4.0.1/fullcalendar.min', null, ['inline'=>false]); 
+echo $this->Html->css('fullcalendar/4.0.1/fullcalendar.daygrid.min', null, ['inline'=>false]); 
+echo $this->Html->css('fullcalendar/4.0.1/fullcalendar.timegrid.min', null, ['inline'=>false]); 
 ?>
 
 <div id="calendar"></div>
@@ -45,52 +45,52 @@ echo $this->Html->css('fullcalendar/4.0.1/fullcalendar.timegrid.min', null, Arra
 
 <div id="divFormEventAdd" class="modal-dialog parent-chosen" style="display:none">
 <?php
-    echo $this->Form->create('Cespitecalendario', array(
+    echo $this->Form->create('Cespitecalendario', [
         'url' => 'eventadd',
-        'inputDefaults' => array(
+        'inputDefaults' => [
 		'div' => 'form-group',
-		'label' => array(
+		'label' => [
 			'class' => 'col col-md-2 control-label'
-		),
+		],
 		'wrapInput' => 'col col-md-10',
 		'class' => 'form-control'
-	),	
+	],	
 	'class' => 'form-horizontal'       
-    )); 
+    ]); 
     echo $this->Form->hidden('user_id');
 	echo $this->Form->hidden('cespite_id');
 	echo $this->Form->input('Persona.DisplayName', 
-		array("class"=>"form-control", 
-			'label'=>array('text'=>'Utilizzatore interno',
+		["class"=>"form-control", 
+			'label'=>['text'=>'Utilizzatore interno',
 					'class'=>'col col-md-2 control-label utilizzatore-label',
-					'id'=>'utilizzatoreLabel'), 
+					'id'=>'utilizzatoreLabel'], 
 			'wrapInput' => 'input-group col-md-10', 
-			'afterInput' => '<div class="input-group-btn"><button type="button" id="utilizzatoreswitch" class="btn btn-md btn-default esterno-button" title="Utilizzatore Esterno">Utilizzatore Esterno</button></div>'));
+			'afterInput' => '<div class="input-group-btn"><button type="button" id="utilizzatoreswitch" class="btn btn-md btn-default esterno-button" title="Utilizzatore Esterno">Utilizzatore Esterno</button></div>']);
     //echo $this->Form->input('Persona.DisplayName',array('type'=>'text', 'label' => array('class' => 'col col-md-2 control-label', 'text'=>'Utilizzatore')));
-    echo $this->Form->input('Cespite.DisplayName', array('type'=>'text', 'label' => 'Cespite', 'class' => 'form-control required'));
-	echo $this->Form->input('attivita_id', array('options' => $eAttivita, 
-		'label' => array('text'=>'Attività'), 
+    echo $this->Form->input('Cespite.DisplayName', ['type'=>'text', 'label' => 'Cespite', 'class' => 'form-control required']);
+	echo $this->Form->input('attivita_id', ['options' => $eAttivita, 
+		'label' => ['text'=>'Attività'], 
 		'class'=>'attivita chosen-select form-control input-xs',
 		'placeolder'=>'Associa ad Attività'
-	) 
+	] 
 	); 
-	echo  $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 
+	echo  $this->Form->input('faseattivita_id', ['label'=>'Fase Attività', 
 		'options'=>$faseattivita, 
-		'class'=>'fase form-control input-xs')); 
-	echo $this->Form->input('event_type_id', array('empty' => 'Scegli il tipo di evento', 'options'=>$legenda_tipo_attivita_calendario, 'label'=>'Tipo Attività', 'class' => 'form-control'));
+		'class'=>'fase form-control input-xs']); 
+	echo $this->Form->input('event_type_id', ['empty' => 'Scegli il tipo di evento', 'options'=>$legenda_tipo_attivita_calendario, 'label'=>'Tipo Attività', 'class' => 'form-control']);
 ?>
 
 <div class="form-group row">
 <div class="col col-md-2 control-label"><strong>Evento Ripetuto</strong></div>
 <div class="col col-md-10">
-<?php	echo $this->Form->input('repeated', array('label' => array('class' => '', 'text'=>'SI'), 'class' => 'form-check-input', 'div' => false, 'wrapInput' => false, 'data-toggle'=>'tooltip', 'data-placement'=>'top', 'title'=>'Seleziona questa opzione per creare un gruppo evento che sarà composto da tanti singoli eventi giornalieri che si terranno durante il periodo di tempo scelto nelle fasce orarie indicate')); ?>
+<?php	echo $this->Form->input('repeated', ['label' => ['class' => '', 'text'=>'SI'], 'class' => 'form-check-input', 'div' => false, 'wrapInput' => false, 'data-toggle'=>'tooltip', 'data-placement'=>'top', 'title'=>'Seleziona questa opzione per creare un gruppo evento che sarà composto da tanti singoli eventi giornalieri che si terranno durante il periodo di tempo scelto nelle fasce orarie indicate']); ?>
 </div>
 </div>
 <div class="form-group row" id="dateTimeNoRepeat">
 <div class="col col-md-12">
 <?php
-	echo $this->Form->input('start', array('type'=>'text', 'label' => 'Data Inizio Evento', 'class' => 'form-control required'));
-    echo $this->Form->input('end', array('type'=>'text', 'label' => 'Data Fine Evento'));
+	echo $this->Form->input('start', ['type'=>'text', 'label' => 'Data Inizio Evento', 'class' => 'form-control required']);
+    echo $this->Form->input('end', ['type'=>'text', 'label' => 'Data Fine Evento']);
 ?>
 </div>
 </div>
@@ -98,45 +98,45 @@ echo $this->Html->css('fullcalendar/4.0.1/fullcalendar.timegrid.min', null, Arra
 <div class="col col-md-2 control-label"><strong>Opzioni</strong></div>
 <div class="col col-md-10">
 	<label class="checkbox-inline" for="CespitecalendarioRepeatMon">
-	<?php echo $this->Form->checkbox('RepeatMon', array(/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false)); ?>Lun
+	<?php echo $this->Form->checkbox('RepeatMon', [/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false]); ?>Lun
 	</label>
 	<label class="checkbox-inline" for="CespitecalendarioRepeatTue">
-	<?php echo $this->Form->checkbox('RepeatTue', array(/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false)); ?>Mar
+	<?php echo $this->Form->checkbox('RepeatTue', [/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false]); ?>Mar
 	</label>
 	<label class="checkbox-inline" for="CespitecalendarioRepeatWed">
-	<?php echo $this->Form->checkbox('RepeatWed', array(/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false)); ?>Mer
+	<?php echo $this->Form->checkbox('RepeatWed', [/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false]); ?>Mer
 	</label>
 	<label class="checkbox-inline" for="CespitecalendarioRepeatThu">
-	<?php echo $this->Form->checkbox('RepeatThu', array(/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false)); ?>Gio
+	<?php echo $this->Form->checkbox('RepeatThu', [/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false]); ?>Gio
 	</label>
 	<label class="checkbox-inline" for="CespitecalendarioRepeatFri">
-	<?php echo $this->Form->checkbox('RepeatFri', array(/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false)); ?>Ven
+	<?php echo $this->Form->checkbox('RepeatFri', [/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false]); ?>Ven
 	</label>
 	<label class="checkbox-inline" for="CespitecalendarioRepeatSat">
-	<?php echo $this->Form->checkbox('RepeatSat', array(/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false)); ?>Sab
+	<?php echo $this->Form->checkbox('RepeatSat', [/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false]); ?>Sab
 	</label>
 	<label class="checkbox-inline" for="CespitecalendarioRepeatSun">
-	<?php echo $this->Form->checkbox('RepeatSun', array(/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false)); ?>Dom
+	<?php echo $this->Form->checkbox('RepeatSun', [/*'hiddenField' => false, */'class' => 'form-check-input', 'div' => false]); ?>Dom
 	</label>
 	<br /><br />
-	<?php echo $this->Form->input('repeatFrom', array('type'=>'text', 'label' => 'Dal', 'class' => 'form-control required', 'autocomplete' => 'off'/*, 'disabled' => true*/)); ?>
-	<?php echo $this->Form->input('repeatTo', array('type'=>'text', 'label' => 'Al', 'class' => 'form-control required', 'autocomplete' => 'off')); ?> 
+	<?php echo $this->Form->input('repeatFrom', ['type'=>'text', 'label' => 'Dal', 'class' => 'form-control required', 'autocomplete' => 'off'/*, 'disabled' => true*/]); ?>
+	<?php echo $this->Form->input('repeatTo', ['type'=>'text', 'label' => 'Al', 'class' => 'form-control required', 'autocomplete' => 'off']); ?> 
 	<div class="bootstrap-timepicker timepicker">
-	<?php echo $this->Form->input('startTime', array('type'=>'text', 'label' => 'Ora inizio', 'class' => 'form-control required', 'autocomplete' => 'off')); ?> 
-	<?php echo $this->Form->input('endTime', array('type'=>'text', 'label' => 'Ora fine', 'class' => 'form-control required', 'autocomplete' => 'off')); ?> 
+	<?php echo $this->Form->input('startTime', ['type'=>'text', 'label' => 'Ora inizio', 'class' => 'form-control required', 'autocomplete' => 'off']); ?> 
+	<?php echo $this->Form->input('endTime', ['type'=>'text', 'label' => 'Ora fine', 'class' => 'form-control required', 'autocomplete' => 'off']); ?> 
 	</div>
 </div>
 </div>
 
 <?php
-	echo $this->Form->input('prezzo_affitto', array('type'=>'text', 'label' => 'Prezzo Affitto Cespite', 'data-toggle'=>'tooltip', 'data-placement'=>'top', 'title'=>'Il prezzo affitto che avrà il cespite durante l\'evento, se l\'evento è impostato come ripetuto, questo valore è da intendersi come prezzo per singolo evento giornaliero e non come totale del gruppo evento che verrà generato'));
+	echo $this->Form->input('prezzo_affitto', ['type'=>'text', 'label' => 'Prezzo Affitto Cespite', 'data-toggle'=>'tooltip', 'data-placement'=>'top', 'title'=>'Il prezzo affitto che avrà il cespite durante l\'evento, se l\'evento è impostato come ripetuto, questo valore è da intendersi come prezzo per singolo evento giornaliero e non come totale del gruppo evento che verrà generato']);
 	echo $this->Form->input('note');
 ?>
 
 <div class="row">
-    <?php echo $this->Form->submit('Salva', array('class'=>'btn btn-primary', 'div' => false)); ?>
+    <?php echo $this->Form->submit('Salva', ['class'=>'btn btn-primary', 'div' => false]); ?>
 
-    <?php echo $this->Form->reset('Reset', array('class'=>'btn btn-danger', 'div' => false)); ?>
+    <?php echo $this->Form->reset('Reset', ['class'=>'btn btn-danger', 'div' => false]); ?>
     <button id="button-chiudi" type="reset" class="btn btn-default">Chiudi</button>
 </div>
 <?php echo $this->Form->end(); ?>
@@ -144,7 +144,7 @@ echo $this->Html->css('fullcalendar/4.0.1/fullcalendar.timegrid.min', null, Arra
 </div>
 
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
 $('document').ready(function() {
 
 	$("#CespitecalendarioPrezzoAffitto").val('0');
@@ -152,7 +152,7 @@ $('document').ready(function() {
 	$('#CespitecalendarioPrezzoAffitto').tooltip();
 
     $("#PersonaDisplayName").autocomplete({
-		source: "<?php echo $this->Html->url(array('controller' => 'persone', 'action' => 'autocomplete')) ?>",
+		source: "<?php echo $this->Html->url(['controller' => 'persone', 'action' => 'autocomplete']) ?>",
 		minLength: 2,
 		mustMatch : true,
 		select: function( event, ui ) {
@@ -164,7 +164,7 @@ $('document').ready(function() {
 	});
 
     $("#CespiteDisplayName").autocomplete({
-		source: "<?php echo $this->Html->url(array('controller' => 'cespiti', 'action' => 'autocomplete')) ?>",
+		source: "<?php echo $this->Html->url(['controller' => 'cespiti', 'action' => 'autocomplete']) ?>",
 		minLength: 2,
 		mustMatch : true,
 		select: function( event, ui ) {

@@ -69,7 +69,7 @@
 </tfoot>
 </table>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
 $('document').ready(function() {
 	$('.dataTable').dataTable({  
 	        "aaSorting": [[ 0, 'desc' ]],

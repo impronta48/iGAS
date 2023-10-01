@@ -43,7 +43,7 @@
        </thead>
 
     <?php 
-        $somma =array('Ferie'=>0,'Malattia'=>0,'Permesso'=>0,'Progetto'=>0);
+        $somma =['Ferie'=>0,'Malattia'=>0,'Permesso'=>0,'Progetto'=>0];
         for ($d = 1; $d<=31; $d++ )
         {
             echo "<TR><TD style=\"text-align:right\">$d</TD>";            

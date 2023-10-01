@@ -16,12 +16,12 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Edit Legenda Tipo Documento'), array('action' => 'edit', $legendaTipoDocumento['LegendaTipoDocumento']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Legenda Tipo Documento'), array('action' => 'delete', $legendaTipoDocumento['LegendaTipoDocumento']['id']), array(), __('Are you sure you want to delete # %s?', $legendaTipoDocumento['LegendaTipoDocumento']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Legenda Tipo Documentos'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Legenda Tipo Documento'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Fatturericevute'), array('controller' => 'fatturericevute', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Fatturaricevuta'), array('controller' => 'fatturericevute', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('Edit Legenda Tipo Documento'), ['action' => 'edit', $legendaTipoDocumento['LegendaTipoDocumento']['id']]); ?> </li>
+		<li><?php echo $this->Form->postLink(__('Delete Legenda Tipo Documento'), ['action' => 'delete', $legendaTipoDocumento['LegendaTipoDocumento']['id']], [], __('Are you sure you want to delete # %s?', $legendaTipoDocumento['LegendaTipoDocumento']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('List Legenda Tipo Documentos'), ['action' => 'index']); ?> </li>
+		<li><?php echo $this->Html->link(__('New Legenda Tipo Documento'), ['action' => 'add']); ?> </li>
+		<li><?php echo $this->Html->link(__('List Fatturericevute'), ['controller' => 'fatturericevute', 'action' => 'index']); ?> </li>
+		<li><?php echo $this->Html->link(__('New Fatturaricevuta'), ['controller' => 'fatturericevute', 'action' => 'add']); ?> </li>
 	</ul>
 </div>
 <div class="related">
@@ -76,9 +76,9 @@
 			<td><?php echo $fatturaricevuta['protocollo_ricezione']; ?></td>
 			<td><?php echo $fatturaricevuta['legenda_tipo_documento_id']; ?></td>
 			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'fatturericevute', 'action' => 'view', $fatturaricevuta['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'fatturericevute', 'action' => 'edit', $fatturaricevuta['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'fatturericevute', 'action' => 'delete', $fatturaricevuta['id']), array(), __('Are you sure you want to delete # %s?', $fatturaricevuta['id'])); ?>
+				<?php echo $this->Html->link(__('View'), ['controller' => 'fatturericevute', 'action' => 'view', $fatturaricevuta['id']]); ?>
+				<?php echo $this->Html->link(__('Edit'), ['controller' => 'fatturericevute', 'action' => 'edit', $fatturaricevuta['id']]); ?>
+				<?php echo $this->Form->postLink(__('Delete'), ['controller' => 'fatturericevute', 'action' => 'delete', $fatturaricevuta['id']], [], __('Are you sure you want to delete # %s?', $fatturaricevuta['id'])); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -87,7 +87,7 @@
 
 	<div class="actions">
 		<ul>
-			<li><?php echo $this->Html->link(__('New Fatturaricevuta'), array('controller' => 'fatturericevute', 'action' => 'add')); ?> </li>
+			<li><?php echo $this->Html->link(__('New Fatturaricevuta'), ['controller' => 'fatturericevute', 'action' => 'add']); ?> </li>
 		</ul>
 	</div>
 </div>

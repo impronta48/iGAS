@@ -1,11 +1,11 @@
-<?php echo $this->Html->script("notaspese",array('inline' => false)); ?>
+<?php echo $this->Html->script("notaspese",['inline' => false]); ?>
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
 <?php $baseformclass = ' form-control'; ?> 
 
 <?php if (isset($this->request->query['attivita']) && count($this->request->query['attivita'])==1 && !empty($this->request->query['attivita'][0]))
     {
       $id = $this->request->query['attivita'][0];
-      echo $this->element('secondary_attivita', array('aid'=>$id)); 
+      echo $this->element('secondary_attivita', ['aid'=>$id]); 
       $this->Html->addCrumb("Attività", "/attivita/");
       $this->Html->addCrumb("Attività [$id]" , "/attivita/edit/$id");
       $this->Html->addCrumb("Ore", "");
@@ -75,28 +75,28 @@
             
 ?>
 
-<?php echo $this->Form->create('Notaspesa', array('id' => 'stats-form','type' => 'get', 
-  'inputDefaults' => array(
+<?php echo $this->Form->create('Notaspesa', ['id' => 'stats-form','type' => 'get', 
+  'inputDefaults' => [
     'div' => 'form-group',
-    'label' => array(
+    'label' => [
       'class' => 'col-md-3 control-label'
-    ),
+    ],
     'wrapInput' => 'col-md-9',
     'class' => 'form-control'
-  ),  
+  ],  
   'class' => 'well form-horizontal row'        
-    )); ?>
+    ]); ?>
    
     <div class="col-md-6">
-        <?php echo $this->Form->input('attivita', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$attivita_list, 'value'=>$a)); ?>
-        <?php echo $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'multiple'=>true, 'options'=>$faseattivita_list,
+        <?php echo $this->Form->input('attivita', ['multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$attivita_list, 'value'=>$a]); ?>
+        <?php echo $this->Form->input('faseattivita_id', ['label'=>'Fase Attività', 'multiple'=>true, 'options'=>$faseattivita_list,
                                         'class'=>'fase chosen-select' . $baseformclass, 'value'=>$fa
-                                    )); ?> 
-        <?php echo $this->Form->input('persone', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p)); ?>
+                                    ]); ?> 
+        <?php echo $this->Form->input('persone', ['multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p]); ?>
         
-        <?php echo $this->Form->input('from', array('id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$f, 'class'=> 'datepicker form-control',
-                                    'default'=>date('Y-m-d', strtotime('first day of last month')))); ?>
-        <?php echo $this->Form->input('to', array('id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$t, 'class'=> 'datepicker form-control')); ?>
+        <?php echo $this->Form->input('from', ['id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$f, 'class'=> 'datepicker form-control',
+                                    'default'=>date('Y-m-d', strtotime('first day of last month'))]); ?>
+        <?php echo $this->Form->input('to', ['id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$t, 'class'=> 'datepicker form-control']); ?>
         <?php
             $fat = $this->request->query('fatturato');
             $fatbile = $this->request->query('fatturabile');
@@ -107,14 +107,14 @@
 
     <div class="col-md-6">
 
-      <?php echo $this->Form->input(__('fatturato'), array('options' => array('-1' => '',1 => 'Si',0 => 'No'), 'default' => $fat)); ?>
-      <?php echo $this->Form->input(__('rimborsato'), array('options' => array('-1' => '',1 => 'Si',0 => 'No'), 'default' => $rim)); ?>
-      <?php echo $this->Form->input(__('fatturabile'), array('options' => array('-1' => '',1 => 'Si',0 => 'No'), 'default' => $fatbile)); ?>
-      <?php echo $this->Form->input(__('rimborsabile'), array('options' => array('-1' => '',1 => 'Si',0 => 'No'), 'default' => $rimbile)); ?>
-      <?php echo $this->Form->input('eProvSoldi', array('options'=>$eProvSoldi, 'label'=>'Provenienza Soldi', 'empty' => '')); ?>
+      <?php echo $this->Form->input(__('fatturato'), ['options' => ['-1' => '',1 => 'Si',0 => 'No'], 'default' => $fat]); ?>
+      <?php echo $this->Form->input(__('rimborsato'), ['options' => ['-1' => '',1 => 'Si',0 => 'No'], 'default' => $rim]); ?>
+      <?php echo $this->Form->input(__('fatturabile'), ['options' => ['-1' => '',1 => 'Si',0 => 'No'], 'default' => $fatbile]); ?>
+      <?php echo $this->Form->input(__('rimborsabile'), ['options' => ['-1' => '',1 => 'Si',0 => 'No'], 'default' => $rimbile]); ?>
+      <?php echo $this->Form->input('eProvSoldi', ['options'=>$eProvSoldi, 'label'=>'Provenienza Soldi', 'empty' => '']); ?>
     </div>
 
-    <?php echo $this->Form->submit(__('Filtra Risultati'), array('class'=>'col-md-offset-2')); ?>
+    <?php echo $this->Form->submit(__('Filtra Risultati'), ['class'=>'col-md-offset-2']); ?>
 
     <?php echo $this->Form->end(); ?>
 
@@ -123,21 +123,21 @@
 
     <?php if (isset($result[0])): ?>        
         <?php
-            echo $this->Form->create("Ore",array('detail' => 'index',                
+            echo $this->Form->create("Ore",['detail' => 'index',                
                    'type' => 'post',
                    'id' => 'multiriga',
-                   'inputDefaults' => array(
+                   'inputDefaults' => [
                         'div' => 'form-group',
                         'label' => false,
                         'wrapInput' => false,
                         'class' => 'form-control'
-                    ),
+                    ],
                     'class' => ' form-inline',
-                ));
+                ]);
         ?>  
         <table id="notaspese-attivita" class="table table-bordered table-hover table-striped display dataTable" cellspacing="1">
         <thead>
-            <?php echo $this->Html->tableHeaders( array('<input type="checkbox" id="select-all"/>','Stato','Fatturabile', 'Attività', 'Fase','Risorsa', 'Data','Importo','Km','Descrizione','Origine', 'Destinazione','Categoria','Azioni'), array('class'=>"tablesorter")) ; ?>
+            <?php echo $this->Html->tableHeaders( ['<input type="checkbox" id="select-all"/>','Stato','Fatturabile', 'Attività', 'Fase','Risorsa', 'Data','Importo','Km','Descrizione','Origine', 'Destinazione','Categoria','Azioni'], ['class'=>"tablesorter"]) ; ?>
         </thead>
         <tbody>
             <?php 
@@ -184,11 +184,11 @@
                 }
                 
                 echo $this->Html->tableCells(
-                    array(
-                        $this->Form->checkbox('Notaspesa.'. $r['Notaspesa']['id'] .'.id', array(                                                                                                         
+                    [
+                        $this->Form->checkbox('Notaspesa.'. $r['Notaspesa']['id'] .'.id', [                                                                                                         
                                                      'class' => 'selectable',
                                                      'hiddenField' => false  //non mi serve passare tutti gli zero
-                                                  )),
+                                                  ]),
                           "<small>$rimborsato</small>",                        
                           "<small>$fatturato</small>",                        
                           $attivita_list[$r['Notaspesa']['eAttivita']],
@@ -201,14 +201,14 @@
                           $r['Notaspesa']['origine'], 
                           $r['Notaspesa']['destinazione'], 
                           $r['LegendaCatSpesa']['name'], 
-                          array(
-                            $this->Html->link('Edit',array('action'=>'edit',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow" )) .
-                            $this->Html->link('Del',array('action'=>'delete',$r['Notaspesa']['id']),array('class'=>"btn btn-primary btn-xs glow" )),                        
-                            array('class'=>'actions'),
-                          ),
-                      ),
-                    array('class' => $trOddBgClass.'darker'),
-                    array('class' => $trEvenBgClass));
+                          [
+                            $this->Html->link('Edit',['action'=>'edit',$r['Notaspesa']['id']],['class'=>"btn btn-primary btn-xs glow" ]) .
+                            $this->Html->link('Del',['action'=>'delete',$r['Notaspesa']['id']],['class'=>"btn btn-primary btn-xs glow" ]),                        
+                            ['class'=>'actions'],
+                          ],
+                      ],
+                    ['class' => $trOddBgClass.'darker'],
+                    ['class' => $trEvenBgClass]);
                     $tot +=  $r['Notaspesa']['importo'];
                     $totkm +=  $r['Notaspesa']['km'];
                 ?>
@@ -217,7 +217,7 @@
         <tfoot>
               <?php
                 echo $this->Html->tableCells(
-                    array('Totale',
+                    ['Totale',
                           '',
                           '',
                           '',
@@ -231,8 +231,8 @@
                           '', 
                           '', 
                           '', 
-                      ),
-                    array('class' => 'bg-success'));                 
+                      ],
+                    ['class' => 'bg-success']);                 
                 ?>
         </tfoot>
         </table>
@@ -241,7 +241,7 @@
 	
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
         $(document).ready(function() {
 
         var table = $('.dataTable').dataTable({

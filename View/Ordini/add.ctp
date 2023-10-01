@@ -1,23 +1,23 @@
 <div class="ordini form">
-<?php echo $this->Form->create('Ordine', array(
-        'inputDefaults' => array(
+<?php echo $this->Form->create('Ordine', [
+        'inputDefaults' => [
 		'div' => 'form-group',
-		'label' => array(
+		'label' => [
 			'class' => 'col col-md-2 control-label'
-		),
+		],
 		'wrapInput' => 'col col-md-4',
 		'class' => 'form-control'
-	),	
+	],	
 	'class' => 'well form-horizontal'       
-    )); ?>  
+    ]); ?>  
 	<fieldset>
 		<legend>Aggiungi Ordine</legend>
 	<?php
-		echo $this->Form->input('dataOrdine', array('dateFormat'=>'DMY', 'class'=>null));
-		echo $this->Form->input('fornitore_id', array('class'=>'chosen-select pulsate'));
-		echo $this->Form->input('attivita_id', array('class'=>'chosen-select', 'default'=>$a['Attivita']['id']));
+		echo $this->Form->input('dataOrdine', ['dateFormat'=>'DMY', 'class'=>null]);
+		echo $this->Form->input('fornitore_id', ['class'=>'chosen-select pulsate']);
+		echo $this->Form->input('attivita_id', ['class'=>'chosen-select', 'default'=>$a['Attivita']['id']]);
         echo $this->Form->input('note');
-        echo $this->Form->input('co', array('label'=>'Alla Cortese attenzione di'));        
+        echo $this->Form->input('co', ['label'=>'Alla Cortese attenzione di']);        
 	?>        
 	</fieldset>
     
@@ -39,13 +39,13 @@
     ?>
         <tr>            
             <td>
-                <?php echo $this->Form->input("Rigaordine.$i.Descrizione", array('default'=>$f['Descrizione'], 'label'=>false, 'wrapInput'=>'col col-md-11', 'width'=>'80%')); ?>
+                <?php echo $this->Form->input("Rigaordine.$i.Descrizione", ['default'=>$f['Descrizione'], 'label'=>false, 'wrapInput'=>'col col-md-11', 'width'=>'80%']); ?>
             </td>
             <td>
-                <?php echo $this->Form->input("Rigaordine.$i.um", array('default'=>$f['um'], 'label'=>false, 'wrapInput'=>'col col-md-11')); ?>
+                <?php echo $this->Form->input("Rigaordine.$i.um", ['default'=>$f['um'], 'label'=>false, 'wrapInput'=>'col col-md-11']); ?>
             </td>
             <td>
-                <?php echo $this->Form->input("Rigaordine.$i.qta", array('default'=>$f['qta'], 'label'=>false, 'wrapInput'=>'col col-md-11', 'class'=>'form-control add3')); ?>
+                <?php echo $this->Form->input("Rigaordine.$i.qta", ['default'=>$f['qta'], 'label'=>false, 'wrapInput'=>'col col-md-11', 'class'=>'form-control add3']); ?>
             </td>
             <td>
                 <span class="btn btn-primary btn-xs glow btn-del-riga">Del</span>

@@ -18,7 +18,7 @@
       if (!empty($this->request->data)) {
       if ($this->Group->save($this->request->data)) {
 		$this->Session->setFlash('Your group has been saved.');
-		$this->redirect(array('action' => 'index'));
+		$this->redirect(['action' => 'index']);
 	 }
 	}
    }

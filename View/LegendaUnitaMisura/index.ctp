@@ -18,7 +18,7 @@
 					<div class="panel-heading"><?php echo __('Azioni'); ?></div>
 						<div class="panel-body">
 							<ul class="nav nav-pills nav-stacked">
-								<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;'.__('Aggiungi Unit&agrave; di Misura'), array('action' => 'add'), array('escape' => false)); ?></li>
+								<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;'.__('Aggiungi Unit&agrave; di Misura'), ['action' => 'add'], ['escape' => false]); ?></li>
 													</ul>
 						</div><!-- end body -->
 				</div><!-- end panel -->
@@ -41,7 +41,7 @@
 						<td nowrap><?php echo h($legendaUnitaMisura['LegendaUnitaMisura']['name']); ?>&nbsp;</td>
 						<td class="actions">
 							<div class="btn-group settings">                 
-                 				<?php $u = $this->Html->url(array('action' => 'edit', $legendaUnitaMisura['LegendaUnitaMisura']['id']));?>
+                 				<?php $u = $this->Html->url(['action' => 'edit', $legendaUnitaMisura['LegendaUnitaMisura']['id']]);?>
                  			<button class="btn btn-primary btn-xs glow" onclick="location.href='<?php echo $u ?>';">
                      			<i class="fa fa-pencil"></i>                    
                  			</button>
@@ -53,10 +53,10 @@
                  			</button>
                  			<ul class="dropdown-menu" role="menu">
                   			<li class="">
-                    			<?php echo $this->Html->link('<i class="fa fa-pencil"></i> Modifica', array('action' => 'edit', $legendaUnitaMisura['LegendaUnitaMisura']['id']), array('escape' => false)); ?>
+                    			<?php echo $this->Html->link('<i class="fa fa-pencil"></i> Modifica', ['action' => 'edit', $legendaUnitaMisura['LegendaUnitaMisura']['id']], ['escape' => false]); ?>
                   			</li> 
                   			<li class="">
-                    			<?php echo $this->Form->postLink('<i class="fa fa-trash-o"></i> Elimina', array('action' => 'delete', $legendaUnitaMisura['LegendaUnitaMisura']['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $legendaUnitaMisura['LegendaUnitaMisura']['id'])); ?>
+                    			<?php echo $this->Form->postLink('<i class="fa fa-trash-o"></i> Elimina', ['action' => 'delete', $legendaUnitaMisura['LegendaUnitaMisura']['id']], ['escape' => false], __('Are you sure you want to delete # %s?', $legendaUnitaMisura['LegendaUnitaMisura']['id'])); ?>
                   			</li>                  
                 			</ul>
              			 </div>
@@ -76,9 +76,9 @@
 			?>
 			<ul class="pagination pagination-sm">
 				<?php
-					echo $this->Paginator->prev('&larr; Previous', array('class' => 'prev','tag' => 'li','escape' => false), '<a onclick="return false;">&larr; Previous</a>', array('class' => 'prev disabled','tag' => 'li','escape' => false));
-					echo $this->Paginator->numbers(array('separator' => '','tag' => 'li','currentClass' => 'active','currentTag' => 'a'));
-					echo $this->Paginator->next('Next &rarr;', array('class' => 'next','tag' => 'li','escape' => false), '<a onclick="return false;">Next &rarr;</a>', array('class' => 'next disabled','tag' => 'li','escape' => false));
+					echo $this->Paginator->prev('&larr; Previous', ['class' => 'prev','tag' => 'li','escape' => false], '<a onclick="return false;">&larr; Previous</a>', ['class' => 'prev disabled','tag' => 'li','escape' => false]);
+					echo $this->Paginator->numbers(['separator' => '','tag' => 'li','currentClass' => 'active','currentTag' => 'a']);
+					echo $this->Paginator->next('Next &rarr;', ['class' => 'next','tag' => 'li','escape' => false], '<a onclick="return false;">Next &rarr;</a>', ['class' => 'next disabled','tag' => 'li','escape' => false]);
 				?>
 			</ul>
 			<?php } ?>

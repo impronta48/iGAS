@@ -14,7 +14,7 @@ class LegendaMezziController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'Session');
+	public $components = ['Paginator', 'Session'];
 
 /**
  * index method
@@ -37,7 +37,7 @@ class LegendaMezziController extends AppController {
 		if (!$this->LegendaMezzi->exists($id)) {
 			throw new NotFoundException(__('Invalid legenda mezzi'));
 		}
-		$options = array('conditions' => array('LegendaMezzi.' . $this->LegendaMezzi->primaryKey => $id));
+		$options = ['conditions' => ['LegendaMezzi.' . $this->LegendaMezzi->primaryKey => $id]];
 		$this->set('legendaMezzi', $this->LegendaMezzi->find('first', $options));
 	}
 
@@ -50,10 +50,10 @@ class LegendaMezziController extends AppController {
 		if ($this->request->is('post')) {
 			$this->LegendaMezzi->create();
 			if ($this->LegendaMezzi->save($this->request->data)) {
-				$this->Session->setFlash(__('The legenda mezzi has been saved.'), 'default', array('class' => 'alert alert-success'));
-				return $this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('The legenda mezzi has been saved.'), 'default', ['class' => 'alert alert-success']);
+				return $this->redirect(['action' => 'index']);
 			} else {
-				$this->Session->setFlash(__('The legenda mezzi could not be saved. Please, try again.'), 'default', array('class' => 'alert alert-danger'));
+				$this->Session->setFlash(__('The legenda mezzi could not be saved. Please, try again.'), 'default', ['class' => 'alert alert-danger']);
 			}
 		}
 	}
@@ -69,15 +69,15 @@ class LegendaMezziController extends AppController {
 		if (!$this->LegendaMezzi->exists($id)) {
 			throw new NotFoundException(__('Invalid legenda mezzi'));
 		}
-		if ($this->request->is(array('post', 'put'))) {
+		if ($this->request->is(['post', 'put'])) {
 			if ($this->LegendaMezzi->save($this->request->data)) {
-				$this->Session->setFlash(__('The legenda mezzi has been saved.'), 'default', array('class' => 'alert alert-success'));
-				return $this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('The legenda mezzi has been saved.'), 'default', ['class' => 'alert alert-success']);
+				return $this->redirect(['action' => 'index']);
 			} else {
-				$this->Session->setFlash(__('The legenda mezzi could not be saved. Please, try again.'), 'default', array('class' => 'alert alert-danger'));
+				$this->Session->setFlash(__('The legenda mezzi could not be saved. Please, try again.'), 'default', ['class' => 'alert alert-danger']);
 			}
 		} else {
-			$options = array('conditions' => array('LegendaMezzi.' . $this->LegendaMezzi->primaryKey => $id));
+			$options = ['conditions' => ['LegendaMezzi.' . $this->LegendaMezzi->primaryKey => $id]];
 			$this->request->data = $this->LegendaMezzi->find('first', $options);
 		}
 	}
@@ -96,10 +96,10 @@ class LegendaMezziController extends AppController {
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->LegendaMezzi->delete()) {
-			$this->Session->setFlash(__('The legenda mezzi has been deleted.'), 'default', array('class' => 'alert alert-success'));
+			$this->Session->setFlash(__('The legenda mezzi has been deleted.'), 'default', ['class' => 'alert alert-success']);
 		} else {
-			$this->Session->setFlash(__('The legenda mezzi could not be deleted. Please, try again.'), 'default', array('class' => 'alert alert-danger'));
+			$this->Session->setFlash(__('The legenda mezzi could not be deleted. Please, try again.'), 'default', ['class' => 'alert alert-danger']);
 		}
-		return $this->redirect(array('action' => 'index'));
+		return $this->redirect(['action' => 'index']);
 	}
 }

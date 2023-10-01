@@ -118,7 +118,7 @@ class PhpExcelComponent extends Component {
      * @return the return value of the call
      */
     public function __call($name, $arguments) {
-        return call_user_func_array(array($this->_xls, $name), $arguments);
+        return call_user_func_array([$this->_xls, $name], $arguments);
     }
 
     /**
@@ -163,7 +163,7 @@ class PhpExcelComponent extends Component {
      *   italic  -   true for italic header text
      * @return $this for method chaining
      */
-    public function addTableHeader($data, $params = array()) {
+    public function addTableHeader($data, $params = []) {
         // offset
         $offset = 0;
         if (isset($params['offset']))
@@ -186,14 +186,14 @@ class PhpExcelComponent extends Component {
             $this->_xls->getActiveSheet()->getStyle($this->_row)->getFont()->setItalic($params['italic']);
 
         // set internal params that need to be processed after data are inserted
-        $this->_tableParams = array(
+        $this->_tableParams = [
             'header_row' => $this->_row,
             'offset' => $offset,
             'row_count' => 0,
-            'auto_width' => array(),
-            'filter' => array(),
-            'wrap' => array()
-        );
+            'auto_width' => [],
+            'filter' => [],
+            'wrap' => []
+        ];
 
         foreach ($data as $d) {
             // set label
@@ -300,7 +300,7 @@ class PhpExcelComponent extends Component {
         if ($this->_row > $this->_maxRow)
             return false;
 
-        $data = array();
+        $data = [];
 
         for ($col = 0; $col < $max; $col++)
             $data[] = $this->_xls->getActiveSheet()->getCellByColumnAndRow($col, $this->_row)->getValue();

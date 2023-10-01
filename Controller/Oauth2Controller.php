@@ -2,7 +2,7 @@
 
 class Oauth2Controller extends Controller {
 
-    var $components = array('Oauth2c','Auth','Session');
+    var $components = ['Oauth2c','Auth','Session'];
     
     function beforeFilter() 
     {

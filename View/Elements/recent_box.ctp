@@ -39,10 +39,10 @@
                         <?php 
 
                             foreach ($contatti as $key => $c) {
-                              echo $this->Html->tableCells(array(
-                                '<a href="'.$this->Html->url(array("controller" => "persone", "action" => "edit", $key)).'">'.$c['Nome'].'</a>', 
+                              echo $this->Html->tableCells([
+                                '<a href="'.$this->Html->url(["controller" => "persone", "action" => "edit", $key]).'">'.$c['Nome'].'</a>', 
                                 '<small class="text-muted">'.$this->Time->format($c['Modifica'], '%d-%m-%Y').'</small>',
-                                '<small class="text-muted">'.$this->Time->format($c['Modifica'], '%H:%M').'</small>'));
+                                '<small class="text-muted">'.$this->Time->format($c['Modifica'], '%H:%M').'</small>']);
                             }
 
                         ?>
@@ -67,10 +67,10 @@
                         <?php 
 
                             foreach ($contatti as $key => $c) {
-                              echo $this->Html->tableCells(array(
-                                '<a href="'.$this->Html->url(array("controller" => "attivita", "action" => "edit", $key)).'">'.$c['Nome'].'</a>', 
+                              echo $this->Html->tableCells([
+                                '<a href="'.$this->Html->url(["controller" => "attivita", "action" => "edit", $key]).'">'.$c['Nome'].'</a>', 
                                 '<small class="text-muted">'.$this->Time->format($c['Modifica'], '%d-%m-%Y').'</small>',
-                                '<small class="text-muted">'.$this->Time->format($c['Modifica'], '%H:%M').'</small>'));
+                                '<small class="text-muted">'.$this->Time->format($c['Modifica'], '%H:%M').'</small>']);
                             }
 
                         ?>
@@ -95,10 +95,10 @@
                         <?php 
 
                             foreach ($contatti as $key => $c) {
-                              echo $this->Html->tableCells(array(
-                                '<a href="'.$this->Html->url(array("controller" => "fattureemesse", "action" => "edit", $key)).'">'.$c['Nome'].'</a>', 
+                              echo $this->Html->tableCells([
+                                '<a href="'.$this->Html->url(["controller" => "fattureemesse", "action" => "edit", $key]).'">'.$c['Nome'].'</a>', 
                                 '<small class="text-muted">'.$this->Time->format($c['Modifica'], '%d-%m-%Y').'</small>',
-                                '<small class="text-muted">'.$this->Time->format($c['Modifica'], '%H:%M').'</small>'));
+                                '<small class="text-muted">'.$this->Time->format($c['Modifica'], '%H:%M').'</small>']);
                             }
 
                         ?>

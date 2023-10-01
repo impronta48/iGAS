@@ -49,39 +49,39 @@
 <div class="ore form">
     <h2>Statistiche ore</h2>
 
-    <?php echo $this->Form->create('Ora', array('id' => 'stats-form','type' => 'get', 
-	'inputDefaults' => array(
+    <?php echo $this->Form->create('Ora', ['id' => 'stats-form','type' => 'get', 
+	'inputDefaults' => [
 		'div' => 'form-group',
-		'label' => array(
+		'label' => [
 			'class' => 'col col-md-2 control-label'
-		),
+		],
 		'wrapInput' => 'col col-md-4',
 		'class' => 'form-control'
-	),	
+	],	
 	'class' => 'well form-horizontal'        
-    )); ?>
+    ]); ?>
     
-    <?php echo $this->Form->input('attivita', array('label' => 'Attività', 'multiple'=>true, 'class'=>'chosen-select'. $baseformclass,'options'=>$attivita_list, 'value'=>$a)); ?>
-    <?php echo $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'multiple'=>true, 'options'=>$faseattivita,
+    <?php echo $this->Form->input('attivita', ['label' => 'Attività', 'multiple'=>true, 'class'=>'chosen-select'. $baseformclass,'options'=>$attivita_list, 'value'=>$a]); ?>
+    <?php echo $this->Form->input('faseattivita_id', ['label'=>'Fase Attività', 'multiple'=>true, 'options'=>$faseattivita,
                                     'class'=>'fase chosen-select' . $baseformclass, 'value'=>$fa
-                                )); ?> 
+                                ]); ?> 
 
     <?php
         if(($this->Session->read('Auth.User.group_id') == 1) or ($this->Session->read('Auth.User.group_id') == 2)){ 
-            echo $this->Form->input('persone', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p));
+            echo $this->Form->input('persone', ['multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p]);
         } else {
-            echo $this->Form->hidden('persone', array('value' => $this->Session->read('Auth.User.persona_id')));
-            echo $this->Form->input('personaDisplay_dummy', array('label' => 'Persona', 'value' => $this->Session->read('Auth.User.Persona.DisplayName'), 'Disabled' => true));
+            echo $this->Form->hidden('persone', ['value' => $this->Session->read('Auth.User.persona_id')]);
+            echo $this->Form->input('personaDisplay_dummy', ['label' => 'Persona', 'value' => $this->Session->read('Auth.User.Persona.DisplayName'), 'Disabled' => true]);
         }
     ?>
     
-    <?php echo $this->Form->input('from', array('id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>($f?$f:null),
-                                        'default'=>date('Y-m-d', strtotime('first day of last month')), 'class' => 'datepicker form-control')
+    <?php echo $this->Form->input('from', ['id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>($f?$f:null),
+                                        'default'=>date('Y-m-d', strtotime('first day of last month')), 'class' => 'datepicker form-control']
                                         ); ?>
-    <?php echo $this->Form->input('to', array('id' => 'to', 'type' => 'text', 
-                                        'date-format' => 'Y-m-d','value'=>$t, 'class' => 'datepicker form-control')
+    <?php echo $this->Form->input('to', ['id' => 'to', 'type' => 'text', 
+                                        'date-format' => 'Y-m-d','value'=>$t, 'class' => 'datepicker form-control']
                                         ); ?>
-    <?php echo $this->Form->submit(__('Filter'), array('class'=>'col-md-offset-2 btn btn-primary')); ?>
+    <?php echo $this->Form->submit(__('Filter'), ['class'=>'col-md-offset-2 btn btn-primary']); ?>
     <?php echo $this->Form->end(); ?>
 
     <?php
@@ -93,7 +93,7 @@
         };
 
         $selected_list2array = explode(',', $selected_list);
-        $res = array();
+        $res = [];
 
         foreach ($selected_list2array as $p) {
             if ($p > 0) {
@@ -114,8 +114,8 @@
         <h3><i class="fa fa-arrow-circle-o-right"></i> Totale</h3>
         <i class="fa fa-clock-o"></i> Ore: <?php echo round($result1[0][0]['numOre'], 2); ?>
         <i class="fa fa-calendar-o"></i> Giornate: <?php echo round($result1[0][0]['numOre']/8, 2); ?>
-        <?php echo $this->Html->link('Dettaglio',array('action'=>'detail', '?'=>$this->request->query ),array('class'=>'btn btn-xs btn-primary')); ?>
-        <?php echo $this->Html->link('Tabella Pivot',array('action'=>'pivot' ),array('class'=>'btn btn-xs btn-primary')); ?>
+        <?php echo $this->Html->link('Dettaglio',['action'=>'detail', '?'=>$this->request->query ],['class'=>'btn btn-xs btn-primary']); ?>
+        <?php echo $this->Html->link('Tabella Pivot',['action'=>'pivot' ],['class'=>'btn btn-xs btn-primary']); ?>
 
         <!-- TODO: Aggiungere formattazione dei numeri
         http://book.cakephp.org/2.0/en/core-libraries/helpers/number.html
@@ -149,15 +149,15 @@
                         $q = $this->request->query;
                         $q['attivita'] =$r['Ora']['eAttivita'];
 
-                        echo $this->Html->tableCells(array(
-                            array(
-                                    $this->Html->link($r['Attivita']['name'],array('action'=>'detail', '?'=>$q)), 
+                        echo $this->Html->tableCells([
+                            [
+                                    $this->Html->link($r['Attivita']['name'],['action'=>'detail', '?'=>$q]), 
                                     round($r[0]['numOre'], 2), 
                                     round($r[0]['numOre']/8, 
                                     2
-                                ))
-                                ),
-                            array('class' => 'darker'));
+                                )]
+                                ],
+                            ['class' => 'darker']);
                     }
                     ?>
                 <?php endforeach; ?>
@@ -195,12 +195,12 @@
                         $q = $this->request->query;
                         $q['persone'] =$r['Ora']['eRisorsa'];
 
-                        echo $this->Html->tableCells(array(
-                            array(
-                                $this->Html->link($r['Persona']['DisplayName'],array('action'=>'detail', '?'=>$q)), 
-                                 round($r[0]['numOre'], 2), round($r[0]['numOre']/8, 2))
-                                ),
-                            array('class' => 'darker'));
+                        echo $this->Html->tableCells([
+                            [
+                                $this->Html->link($r['Persona']['DisplayName'],['action'=>'detail', '?'=>$q]), 
+                                 round($r[0]['numOre'], 2), round($r[0]['numOre']/8, 2)]
+                                ],
+                            ['class' => 'darker']);
                         ?>
                     <?php endforeach; ?>
                 </tbody>
@@ -239,11 +239,11 @@
                         $q['persone'] =$r['Ora']['eRisorsa'];
                         $q['attivita'] =$r['Ora']['eAttivita'];
                         
-                        echo $this->Html->tableCells(array(
-                        array($this->Html->link($r['Attivita']['name'],array('action'=>'detail', '?'=>$q)), 
-                             $r['Persona']['DisplayName'], round($r[0]['numOre'], 2), round($r[0]['numOre']/8, 2))
-                            ),
-                        array('class' => 'darker'));
+                        echo $this->Html->tableCells([
+                        [$this->Html->link($r['Attivita']['name'],['action'=>'detail', '?'=>$q]), 
+                             $r['Persona']['DisplayName'], round($r[0]['numOre'], 2), round($r[0]['numOre']/8, 2)]
+                            ],
+                        ['class' => 'darker']);
                     ?>
                  <?php endforeach; ?>
             </tbody>

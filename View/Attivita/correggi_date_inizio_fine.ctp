@@ -20,7 +20,7 @@
 <tbody>
 <?php $attivita = $this->data; $i=0; foreach($attivita as  $n) :  $i++?>
     <tr>
-        <td width="10%"><?php echo $n['Attivita']['id']; echo $this->Form->hidden("Attivita.$i.id", array('value'=>$n['Attivita']['id'] )); ?></td>
+        <td width="10%"><?php echo $n['Attivita']['id']; echo $this->Form->hidden("Attivita.$i.id", ['value'=>$n['Attivita']['id'] ]); ?></td>
         <td width="15%"><?php echo $n['Attivita']['name'] ?></td>
         <td width="10%" align="right">
             <?php
@@ -47,7 +47,7 @@
                 $c ='';
             }
         ?>        
-        <td width="15%"> <?php echo $this->Form->input("Attivita.$i.DataPresentazione", array('value'=>$v, 'type'=>'text', 'class'=>$c )); ?>        </td>        
+        <td width="15%"> <?php echo $this->Form->input("Attivita.$i.DataPresentazione", ['value'=>$v, 'type'=>'text', 'class'=>$c ]); ?>        </td>        
         
         <?php if( empty($n['Attivita']['DataApprovazione']) )
             {
@@ -68,7 +68,7 @@
                 $c ='';
             }
         ?>
-        <td width="15%"> <?php echo $this->Form->input("Attivita.$i.DataApprovazione", array('value'=>$v, 'type'=>'text', 'class'=>$c )); ?>        </td>
+        <td width="15%"> <?php echo $this->Form->input("Attivita.$i.DataApprovazione", ['value'=>$v, 'type'=>'text', 'class'=>$c ]); ?>        </td>
 
         <?php if( empty($n['Attivita']['DataInizio']) )
             {
@@ -89,7 +89,7 @@
                 $c ='';
             }
         ?>
-        <td width="15%"> <?php echo $this->Form->input("Attivita.$i.DataInizio", array('value'=>$v, 'type'=>'text', 'class'=>$c)); ?>        </td>
+        <td width="15%"> <?php echo $this->Form->input("Attivita.$i.DataInizio", ['value'=>$v, 'type'=>'text', 'class'=>$c]); ?>        </td>
         
         <?php if( empty($n['Attivita']['DataFinePrevista']) )
             {
@@ -110,7 +110,7 @@
                 $c ='';
             }
         ?>   
-        <td width="15%"> <?php echo $this->Form->input("Attivita.$i.DataFinePrevista", array('value'=>$v, 'type'=>'text', 'class'=>$c )); ?>        </td>
+        <td width="15%"> <?php echo $this->Form->input("Attivita.$i.DataFinePrevista", ['value'=>$v, 'type'=>'text', 'class'=>$c ]); ?>        </td>
         
         <?php if( empty($n['Attivita']['DataFine']) )
             {
@@ -131,7 +131,7 @@
                 $c ='';
             }
         ?>        
-        <td width="15%"> <?php echo $this->Form->input("Attivita.$i.DataFine", array('value'=>$v , 'type'=>'text', 'class'=>$c )); ?>        </td>
+        <td width="15%"> <?php echo $this->Form->input("Attivita.$i.DataFine", ['value'=>$v , 'type'=>'text', 'class'=>$c ]); ?>        </td>
 
     </tr>
 

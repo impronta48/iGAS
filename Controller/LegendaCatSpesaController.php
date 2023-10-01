@@ -14,7 +14,7 @@ class LegendaCatSpesaController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'Session');
+	public $components = ['Paginator', 'Session'];
 
 /**
  * index method
@@ -37,7 +37,7 @@ class LegendaCatSpesaController extends AppController {
 		if (!$this->LegendaCatSpesa->exists($id)) {
 			throw new NotFoundException(__('Invalid legenda cat spesa'));
 		}
-		$options = array('conditions' => array('LegendaCatSpesa.' . $this->LegendaCatSpesa->primaryKey => $id));
+		$options = ['conditions' => ['LegendaCatSpesa.' . $this->LegendaCatSpesa->primaryKey => $id]];
 		$this->set('legendaCatSpesa', $this->LegendaCatSpesa->find('first', $options));
 	}
 
@@ -69,15 +69,15 @@ class LegendaCatSpesaController extends AppController {
 		if (!$this->LegendaCatSpesa->exists($id)) {
 			throw new NotFoundException(__('Invalid legenda cat spesa'));
 		}
-		if ($this->request->is(array('post', 'put'))) {
+		if ($this->request->is(['post', 'put'])) {
 			if ($this->LegendaCatSpesa->save($this->request->data)) {
 				$this->Session->setFlash(__('The legenda cat spesa has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				return $this->redirect(['action' => 'index']);
 			} else {
 				$this->Session->setFlash(__('The legenda cat spesa could not be saved. Please, try again.'));
 			}
 		} else {
-			$options = array('conditions' => array('LegendaCatSpesa.' . $this->LegendaCatSpesa->primaryKey => $id));
+			$options = ['conditions' => ['LegendaCatSpesa.' . $this->LegendaCatSpesa->primaryKey => $id]];
 			$this->request->data = $this->LegendaCatSpesa->find('first', $options);
 		}
 	}
@@ -100,6 +100,6 @@ class LegendaCatSpesaController extends AppController {
 		} else {
 			$this->Session->setFlash(__('The legenda cat spesa could not be deleted. Please, try again.'));
 		}
-		return $this->redirect(array('action' => 'index'));
+		return $this->redirect(['action' => 'index']);
 	}
 }

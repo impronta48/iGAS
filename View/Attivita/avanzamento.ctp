@@ -48,7 +48,7 @@
 			<td><?php echo $f['Descrizione']?></td>
 			<td><?php $preventivo = $f['costou']*$f['qta']; echo $this->Number->currency($preventivo); $tot += $preventivo; ?></td>
 			<td><?php $preventivoIva = $f['costou']*$f['qta']*(1 + $LegendaCodiciIva[$f['legenda_codici_iva_id']]); echo $this->Number->currency($preventivoIva); $totIva += $preventivoIva; ?></td>
-			<td><a href="<?php echo $this->Html->url(array('controller'=>'primanota', 'action'=>'index', 'fase' => $f['id'], '?' => array('valore' => 'positivo'))) ?>">
+			<td><a href="<?php echo $this->Html->url(['controller'=>'primanota', 'action'=>'index', 'fase' => $f['id'], '?' => ['valore' => 'positivo']]) ?>">
 			<?php
 				if (isset($pn[$f['id']]['Entrate'])) {
 					$speseEntrate = $pn[$f['id']]['Entrate'];
@@ -78,7 +78,7 @@
 			<td><b>Non attribuito a nessuna fase</b></td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td><a href="<?php echo $this->Html->url(array('controller'=>'primanota', 'action'=>'index/' . $attivita['Attivita']['id'], 'fase' => '', '?' => array('valore' => 'positivo'))) ?>">
+			<td><a href="<?php echo $this->Html->url(['controller'=>'primanota', 'action'=>'index/' . $attivita['Attivita']['id'], 'fase' => '', '?' => ['valore' => 'positivo']]) ?>">
 		<?php   if (isset($pn['']['Entrate'])) {
 					$speseEntrate = $pn['']['Entrate'];
 				} else {
@@ -115,7 +115,7 @@
 			<td width="30%">Totale</td>
 			<td><?php echo  $this->Number->currency($tot); ?></td>
 			<td><?php echo  $this->Number->currency($totIva); ?></td>
-			<td><a href="<?php echo $this->Html->url(array('controller'=>'primanota', 'action'=>'index/' . $attivita['Attivita']['id'], '?' => array('valore' => 'positivo'))) ?>"><?php echo  $this->Number->currency($pnEntrate); ?></a></td>
+			<td><a href="<?php echo $this->Html->url(['controller'=>'primanota', 'action'=>'index/' . $attivita['Attivita']['id'], '?' => ['valore' => 'positivo']]) ?>"><?php echo  $this->Number->currency($pnEntrate); ?></a></td>
 			<td class="<?php echo $c ?>"><b><?php echo  $this->Number->currency($totavanzo); ?></b></td>
 		</tr>
 
@@ -167,7 +167,7 @@
 		<tr>
 			<td><?php echo $f['Descrizione']?></td>
 			<td><?php $preventivoIva = $f['costou']*$f['qta']*(1 + $LegendaCodiciIva[$f['legenda_codici_iva_id']]); echo $this->Number->currency($preventivoIva); $totIva += $preventivoIva; ?></td>
-			<td><a href="<?php echo $this->Html->url(array('controller'=>'primanota', 'action'=>'index', 'fase' => $f['id'], '?' => array('valore' => 'negativo'))) ?>">
+			<td><a href="<?php echo $this->Html->url(['controller'=>'primanota', 'action'=>'index', 'fase' => $f['id'], '?' => ['valore' => 'negativo']]) ?>">
 			<?php
 				if (isset($pn[$f['id']]['Uscite'])) {
 					$speseUscite = -1*$pn[$f['id']]['Uscite'];
@@ -177,7 +177,7 @@
 
 				echo $this->Number->currency($speseUscite);
 				$pnUscite += $speseUscite ;?></a></td>
-			<td><a href="<?php echo $this->Html->url(array('controller'=>'notaspese', 'action'=>'detail', '?'=>array('as_values_attivita' => $attivita['Attivita']['id'] .",", 'as_values_faseattivita' => $f['id'].","))) ?>">
+			<td><a href="<?php echo $this->Html->url(['controller'=>'notaspese', 'action'=>'detail', '?'=>['as_values_attivita' => $attivita['Attivita']['id'] .",", 'as_values_faseattivita' => $f['id'].","]]) ?>">
 			<?php 
 				if(isset($notaspese[$f['id']])) {
 						$ns = $notaspese[$f['id']];
@@ -187,7 +187,7 @@
 
 					$totnotaspese += $ns;
 					echo $this->Number->currency($ns);?></a></td>
-			<td><a href="<?php echo $this->Html->url(array('controller'=>'ore', 'action'=>'stats', '?'=>array('fase' => $f['id'] .","))) ?>"><?php 	
+			<td><a href="<?php echo $this->Html->url(['controller'=>'ore', 'action'=>'stats', '?'=>['fase' => $f['id'] .","]]) ?>"><?php 	
 				        //Estraggo le ore
 						if(isset($hh[$f['id']])) {
 							$numore = $hh[$f['id']];
@@ -229,7 +229,7 @@
 		<tr>
 			<td><b>Non attribuito a nessuna fase</b></td>
 			<td>&nbsp;</td>
-			<td><a href="<?php echo $this->Html->url(array('controller'=>'primanota', 'action'=>'index/' . $attivita['Attivita']['id'], 'fase' => '', '?' => array('valore' => 'negativo'))) ?>">
+			<td><a href="<?php echo $this->Html->url(['controller'=>'primanota', 'action'=>'index/' . $attivita['Attivita']['id'], 'fase' => '', '?' => ['valore' => 'negativo']]) ?>">
 		<?php   if (isset($pn['']['negativo'])) {
 					$speseEntrate = -1*$pn['']['negativo'];
 				} else {
@@ -239,7 +239,7 @@
 				echo $this->Number->currency($speseUscite);
 				$pnUscite += $speseUscite;
 		?></a></td>
-			<td><a href="<?php echo $this->Html->url(array('controller'=>'notaspese', 'action'=>'detail', '?'=>array('as_values_attivita' => $attivita['Attivita']['id'] .",", 'as_values_faseattivita' => ''.","))) ?>">
+			<td><a href="<?php echo $this->Html->url(['controller'=>'notaspese', 'action'=>'detail', '?'=>['as_values_attivita' => $attivita['Attivita']['id'] .",", 'as_values_faseattivita' => ''.","]]) ?>">
 			<?php if (isset($notaspese['']) && isset($notaspese[0])) {
 							$ns = $notaspese[''] + $notaspese[0];
 						} else if (isset($notaspese[''])){
@@ -250,7 +250,7 @@
 							$ns = 0;
 						}
 						echo  $this->Number->currency($ns); $totnotaspese += $ns;?></a></td>
-			<td><a href="<?php echo $this->Html->url(array('controller'=>'ore', 'action'=>'stats', '?'=>array('as_values_attivita' => $attivita['Attivita']['id'] .","))) ?>"><?php 	
+			<td><a href="<?php echo $this->Html->url(['controller'=>'ore', 'action'=>'stats', '?'=>['as_values_attivita' => $attivita['Attivita']['id'] .","]]) ?>"><?php 	
 				        //Estraggo le ore
 						if(isset($hh['']) && isset($hh[0])) {
 							$numore = $hh[''] + $hh[0];
@@ -292,9 +292,9 @@
 		<tr class="bg-success">
 			<td width="30%">Totale</td>
 			<td><?php echo  $this->Number->currency($totIva); ?></td>
-			<td><a href="<?php echo $this->Html->url(array('controller'=>'primanota', 'action'=>'index/' . $attivita['Attivita']['id'], '?' => array('valore' => 'negativo'))) ?>"><?php echo  $this->Number->currency($pnUscite); ?></a></td>
-			<td><a href="<?php echo $this->Html->url(array('controller'=>'notaspese', 'action'=>'detail', '?'=>array('as_values_attivita' => $attivita['Attivita']['id'] .","))) ?>"><?php echo  $this->Number->currency($totnotaspese); ?></a></td>
-			<td><a href="<?php echo $this->Html->url(array('controller'=>'ore', 'action'=>'stats', '?'=>array('as_values_attivita' => $attivita['Attivita']['id'] .","))) ?>"><?php echo $this->Number->currency($totcostoore); ?></a></td>
+			<td><a href="<?php echo $this->Html->url(['controller'=>'primanota', 'action'=>'index/' . $attivita['Attivita']['id'], '?' => ['valore' => 'negativo']]) ?>"><?php echo  $this->Number->currency($pnUscite); ?></a></td>
+			<td><a href="<?php echo $this->Html->url(['controller'=>'notaspese', 'action'=>'detail', '?'=>['as_values_attivita' => $attivita['Attivita']['id'] .","]]) ?>"><?php echo  $this->Number->currency($totnotaspese); ?></a></td>
+			<td><a href="<?php echo $this->Html->url(['controller'=>'ore', 'action'=>'stats', '?'=>['as_values_attivita' => $attivita['Attivita']['id'] .","]]) ?>"><?php echo $this->Number->currency($totcostoore); ?></a></td>
 			<td class="<?php echo $c ?>"><b><?php echo  $this->Number->currency($totavanzo); ?></b></td>
 		</tr>
 
@@ -348,7 +348,7 @@
 		<td><?php $preventivo = $f['costou']*$f['qta']*(1 + $LegendaCodiciIva[$f['legenda_codici_iva_id']]); echo $this->Number->currency($preventivo); $tot +=$preventivo; ?></td>
 		
 		<td>
-           <a href="<?php echo $this->Html->url(array('controller'=>'primanota', 'action'=>'index', 'fase' => $f['id'])) ?>">
+           <a href="<?php echo $this->Html->url(['controller'=>'primanota', 'action'=>'index', 'fase' => $f['id']]) ?>">
 		<?php
             
 			//Devo  estrarre le spese (prima nota) per questa fase e questa attività
@@ -379,9 +379,9 @@
 			}			
             if ($numore > 0)
             {
-                echo $this->Html->link("$numore (" . $numore/8 ."gg)", array('controller'=>'ore', 
+                echo $this->Html->link("$numore (" . $numore/8 ."gg)", ['controller'=>'ore', 
                                                       'action'=>'stats', 
-                                                      '?'=>array('fase' => $f['id'])));   
+                                                      '?'=>['fase' => $f['id']]]);   
             }
             else {
                 echo $numore;
@@ -479,13 +479,13 @@
 		<td class="bg-success"><?php echo  $this->Number->currency($tot); ?></td>
 		<td class="bg-success"> 
             
-            <a href="<?php echo $this->Html->url(array('controller'=>'fatturericevute', 'action'=>'index/attivita:' . $attivita['Attivita']['id'])) ?>">
+            <a href="<?php echo $this->Html->url(['controller'=>'fatturericevute', 'action'=>'index/attivita:' . $attivita['Attivita']['id']]) ?>">
                     <?php echo  $this->Number->currency($totspese); ?>
             </a>
         </td>   
 		<td class="bg-success">
             <small>
-            <a href="<?php echo $this->Html->url(array('controller'=>'ore', 'action'=>'stats', '?'=>array('as_values_attivita' => $attivita['Attivita']['id'] .","))) ?>">
+            <a href="<?php echo $this->Html->url(['controller'=>'ore', 'action'=>'stats', '?'=>['as_values_attivita' => $attivita['Attivita']['id'] .","]]) ?>">
                 <?php echo "$totnumore (" . $totnumore/8 ."gg)"; ?>
             </a>
             </small>
@@ -493,7 +493,7 @@
 		<td class="bg-success"></td>
 		<td class="bg-success"><?php echo  $this->Number->currency($totcostoore); ?></td>
 		<td class="bg-success">
-            <a href="<?php echo $this->Html->url(array('controller'=>'notaspese', 'action'=>'stats', '?'=>array('as_values_attivita' => $attivita['Attivita']['id'] .","))) ?>">
+            <a href="<?php echo $this->Html->url(['controller'=>'notaspese', 'action'=>'stats', '?'=>['as_values_attivita' => $attivita['Attivita']['id'] .","]]) ?>">
             <?php echo  $this->Number->currency($totnotaspese); ?>
             </a>
         </td>
@@ -545,7 +545,7 @@
 		<td><?php $preventivo = $f['costou']*$f['qta']*(1 + $LegendaCodiciIva[$f['legenda_codici_iva_id']]); echo $this->Number->currency($preventivo); $tot +=$preventivo; ?></td>
 		
 		<td>
-           <a href="<?php echo $this->Html->url(array('controller'=>'primanota', 'action'=>'index', 'fase' => $f['id'])) ?>">
+           <a href="<?php echo $this->Html->url(['controller'=>'primanota', 'action'=>'index', 'fase' => $f['id']]) ?>">
 		<?php
             
 			//Devo  estrarre le spese (prima nota) per questa fase e questa attività
@@ -576,9 +576,9 @@
 			}			
             if ($numore > 0)
             {
-                echo $this->Html->link("$numore (" . $numore/8 ."gg)", array('controller'=>'ore', 
+                echo $this->Html->link("$numore (" . $numore/8 ."gg)", ['controller'=>'ore', 
                                                       'action'=>'stats', 
-                                                      '?'=>array('fase' => $f['id'])));   
+                                                      '?'=>['fase' => $f['id']]]);   
             }
             else {
                 echo $numore;
@@ -659,7 +659,7 @@
 		<td>&nbsp;</td>
 		
 		<td>
-            <a href="<?php echo $this->Html->url(array('controller'=>'fatturericevute', 'action'=>'index/attivita:' . $attivita['Attivita']['id'], 'fase' => '')) ?>">
+            <a href="<?php echo $this->Html->url(['controller'=>'fatturericevute', 'action'=>'index/attivita:' . $attivita['Attivita']['id'], 'fase' => '']) ?>">
 		<?php
 			//Devo  estrarre le spese (documenti ricevuti) per questa fase e questa attività
 			if (isset($dr['']))
@@ -677,7 +677,7 @@
             </a>
 		</td>
 		<td><small>
-             <a href="<?php echo $this->Html->url(array('controller'=>'ore', 'action'=>'stats', '?'=>array('as_values_attivita' => $attivita['Attivita']['id'] . ",", 'fase'=> 0))) ?>">   
+             <a href="<?php echo $this->Html->url(['controller'=>'ore', 'action'=>'stats', '?'=>['as_values_attivita' => $attivita['Attivita']['id'] . ",", 'fase'=> 0]]) ?>">   
 		<?php		
 			//Devo  estrarre il numero di ore non associate a nessuna attivita
             $numore = 0;
@@ -759,13 +759,13 @@
 		<td class="bg-success"><?php echo  $this->Number->currency($tot); ?></td>
 		<td class="bg-success"> 
             
-            <a href="<?php echo $this->Html->url(array('controller'=>'fatturericevute', 'action'=>'index/attivita:' . $attivita['Attivita']['id'])) ?>">
+            <a href="<?php echo $this->Html->url(['controller'=>'fatturericevute', 'action'=>'index/attivita:' . $attivita['Attivita']['id']]) ?>">
                     <?php echo  $this->Number->currency($totspese); ?>
             </a>
         </td>   
 		<td class="bg-success">
             <small>
-            <a href="<?php echo $this->Html->url(array('controller'=>'ore', 'action'=>'stats', '?'=>array('as_values_attivita' => $attivita['Attivita']['id'] .","))) ?>">
+            <a href="<?php echo $this->Html->url(['controller'=>'ore', 'action'=>'stats', '?'=>['as_values_attivita' => $attivita['Attivita']['id'] .","]]) ?>">
                 <?php echo "$totnumore (" . $totnumore/8 ."gg)"; ?>
             </a>
             </small>
@@ -773,7 +773,7 @@
 		<td class="bg-success"></td>
 		<td class="bg-success"><?php echo  $this->Number->currency($totcostoore); ?></td>
 		<td class="bg-success">
-            <a href="<?php echo $this->Html->url(array('controller'=>'notaspese', 'action'=>'stats', '?'=>array('as_values_attivita' => $attivita['Attivita']['id'] .","))) ?>">
+            <a href="<?php echo $this->Html->url(['controller'=>'notaspese', 'action'=>'stats', '?'=>['as_values_attivita' => $attivita['Attivita']['id'] .","]]) ?>">
             <?php echo  $this->Number->currency($totnotaspese); ?>
             </a>
         </td>

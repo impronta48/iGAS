@@ -30,7 +30,7 @@ $this->Html->addCrumb('Cespiti', '/cespiti');
 ?>
     
 	<tr <?php echo $class;?> <?php echo 'style="background-color:'.$event['LegendaTipoAttivitaCalendario']['color'].'; color:'.$event['LegendaTipoAttivitaCalendario']['textColor'].'"'; ?>>
-        <td><a class="btn btn-primary btn-sm" href="<?php echo $this->Html->url(array('controller' => 'cespiti', "action" => "edit", $event['Cespite']['id'])); ?>">
+        <td><a class="btn btn-primary btn-sm" href="<?php echo $this->Html->url(['controller' => 'cespiti', "action" => "edit", $event['Cespite']['id']]); ?>">
                 <?php echo $event['Cespite']['displayName']; ?>              
             </a>&nbsp;</td>
         <td><?php echo ($event['Persona']['displayName'] !== NULL) ? $event['Persona']['displayName'] : $event['Cespitecalendario']['utilizzatore_esterno'] ; ?>&nbsp;</td>
@@ -50,10 +50,10 @@ $this->Html->addCrumb('Cespiti', '/cespiti');
                  </button>
                  <ul class="dropdown-menu" role="menu">                  
                   <li >
-                    <?php echo $this->Html->link(__('Edit'), array('action' => 'eventedit', $event['Cespitecalendario']['id'])); ?>
+                    <?php echo $this->Html->link(__('Edit'), ['action' => 'eventedit', $event['Cespitecalendario']['id']]); ?>
                   </li>
                   <li >
-                    <?php echo $this->Html->link(__('Delete'), array('action' => 'eventdelete', $event['Cespitecalendario']['id']), null, sprintf(__('Are you sure you want to delete # %s?'), $event['Cespitecalendario']['id'])); ?>
+                    <?php echo $this->Html->link(__('Delete'), ['action' => 'eventdelete', $event['Cespitecalendario']['id']], null, sprintf(__('Are you sure you want to delete # %s?'), $event['Cespitecalendario']['id'])); ?>
                   </li>                  
                 </ul>
             </div>
@@ -63,7 +63,7 @@ $this->Html->addCrumb('Cespiti', '/cespiti');
             </a>
             <?php } ?>
             <?php if($event['Cespitecalendario']['faseattivita_id']!==null){ ?>
-            <a class="btn btn-primary btn-xs" href="<?php echo $this->Html->url(array('controller' => 'faseattivita', "action" => "edit", $event['Cespitecalendario']['faseattivita_id'])); ?>" title="Questo evento è legato ad una fase attività, clicca per visionarla">
+            <a class="btn btn-primary btn-xs" href="<?php echo $this->Html->url(['controller' => 'faseattivita', "action" => "edit", $event['Cespitecalendario']['faseattivita_id']]); ?>" title="Questo evento è legato ad una fase attività, clicca per visionarla">
                 See Related Fase                
             </a>
             <?php } ?>

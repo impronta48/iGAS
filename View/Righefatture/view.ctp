@@ -36,9 +36,9 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Edit Rigafattura'), array('action' => 'edit', $rigafattura['Rigafattura']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Delete Rigafattura'), array('action' => 'delete', $rigafattura['Rigafattura']['id']), null, sprintf(__('Are you sure you want to delete # %s?'), $rigafattura['Rigafattura']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Righefatture'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Rigafattura'), array('action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('Edit Rigafattura'), ['action' => 'edit', $rigafattura['Rigafattura']['id']]); ?> </li>
+		<li><?php echo $this->Html->link(__('Delete Rigafattura'), ['action' => 'delete', $rigafattura['Rigafattura']['id']], null, sprintf(__('Are you sure you want to delete # %s?'), $rigafattura['Rigafattura']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('List Righefatture'), ['action' => 'index']); ?> </li>
+		<li><?php echo $this->Html->link(__('New Rigafattura'), ['action' => 'add']); ?> </li>
 	</ul>
 </div>

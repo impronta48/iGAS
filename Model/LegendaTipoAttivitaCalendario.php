@@ -7,12 +7,12 @@ App::uses('AppModel', 'Model');
  */
 class LegendaTipoAttivitaCalendario extends AppModel {
 
-	var $validate = array(
-        'title' => array(
+	var $validate = [
+        'title' => [
             'rule' => 'notEmpty',
             'required' => true
-        )
-    );
+        ]
+    ];
 
 /**
  * Display field
@@ -30,8 +30,8 @@ class LegendaTipoAttivitaCalendario extends AppModel {
  *
  * @var array
  */
-	public $hasMany = array(
-		'Cespite' => array(
+	public $hasMany = [
+		'Cespite' => [
 			'className' => 'Cespite',
 			'foreignKey' => 'id',
 			'dependent' => false,
@@ -43,7 +43,7 @@ class LegendaTipoAttivitaCalendario extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		)
-	);
+		]
+	];
 
 }

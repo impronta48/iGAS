@@ -7,13 +7,13 @@ App::uses('CakeTime', 'Utility');
 class OreController extends AppController
 {
 
-  public $components = array('RequestHandler', 'PhpExcel.PhpSpreadsheet');
-  public $helpers = array('Cache', 'PhpExcel.PhpSpreadsheet', 'Ore');
+  public $components = ['RequestHandler', 'PhpExcel.PhpSpreadsheet'];
+  public $helpers = ['Cache', 'PhpExcel.PhpSpreadsheet', 'Ore'];
   //public $cacheAction = "1 month";
 
   private function getConditionFromQueryString()
   {
-    $conditions = array();
+    $conditions = [];
     $attivita = "";
     $persone = "";
 
@@ -22,7 +22,7 @@ class OreController extends AppController
       //Se la stringa è vuota non devo mettere la condizione
       if (!empty($persone)) {
         if (is_numeric($persone)) {
-          $persone = array($persone);
+          $persone = [$persone];
         }
         $conditions['Ora.eRisorsa IN'] = $persone;
       }
@@ -32,7 +32,7 @@ class OreController extends AppController
       //Se la stringa è vuota non devo mettere la condizione
       if (!empty($attivita)) {
         if (is_numeric($attivita)) {
-          $attivita = array($attivita);
+          $attivita = [$attivita];
         }
         if (is_array($attivita)) $conditions['Ora.eAttivita IN'] = $attivita;
       }
@@ -61,72 +61,72 @@ class OreController extends AppController
     $conditions = $this->getConditionFromQueryString();
 
     if (($this->Session->read('Auth.User.group_id') != 1) and ($this->Session->read('Auth.User.group_id') != 2)) {
-      $conditions['Ora.eRisorsa IN'] = array($this->Session->read('Auth.User.persona_id'));
+      $conditions['Ora.eRisorsa IN'] = [$this->Session->read('Auth.User.persona_id')];
     }
 
     //result1: get total number of 'ore' according to search criteria
     $result1 = $this->Ora->find(
       'all',
-      array(
+      [
         'conditions' => $conditions,
-        'fields' => array(
+        'fields' => [
           'SUM(Ora.numOre) as numOre'
-        )
-      )
+        ]
+      ]
     );
 
     //result2: get total number of 'ore' according to search criteria grouped by attivita
     $result2 = $this->Ora->find(
       'all',
-      array(
+      [
         'conditions' => $conditions,
-        'contain' => array('Attivita.name'),
-        'fields' => array(
+        'contain' => ['Attivita.name'],
+        'fields' => [
           'Ora.eAttivita, Attivita.name, SUM(Ora.numOre) as numOre'
-        ),
-        'group' => array(
+        ],
+        'group' => [
           'Ora.eAttivita'
-        ),
-        'order' => array(
+        ],
+        'order' => [
           'Attivita.name'
-        ),
-      )
+        ],
+      ]
     );
     //result3: get total number of 'ore' according to search criteria grouped by risorsa (persona)
     $result3 = $this->Ora->find(
       'all',
-      array(
+      [
         'conditions' => $conditions,
-        'contain' => array('Persona.displayname'),
-        'fields' => array(
+        'contain' => ['Persona.displayname'],
+        'fields' => [
           'Ora.eRisorsa, Persona.DisplayName, SUM(Ora.numOre) as numOre'
-        ),
-        'group' => array(
+        ],
+        'group' => [
           'Ora.eRisorsa'
-        ),
-        'order' => array(
+        ],
+        'order' => [
           'Persona.DisplayName',
-        )
-      )
+        ]
+      ]
     );
     //result4: get total number of 'ore' according to search criteria grouped by attivita, risorsa (persona)
     $result4 = $this->Ora->find(
       'all',
-      array(
+      [
         'conditions' => $conditions,
-        'contain' => array('Persona.displayname', 'Attivita.name'),
-        'fields' => array(
+        'contain' => ['Persona.displayname', 'Attivita.name'],
+        'fields' => [
           'Ora.eAttivita, Ora.eRisorsa, Attivita.name, Persona.DisplayName, SUM(Ora.numOre) as numOre'
-        ),
-        'group' => array(
+        ],
+        'group' => [
           'Ora.eAttivita',
           'Ora.eRisorsa'
-        ),
-        'order' => array(
+        ],
+        'order' => [
           'Persona.DisplayName',
           'Attivita.name'
-        )
-      )
+        ]
+      ]
     );
 
     $this->set('result1', $result1);
@@ -162,15 +162,15 @@ class OreController extends AppController
 
     $result = $this->Ora->find(
       'all',
-      array(
+      [
         'conditions' => $conditions,
-        'fields' => array(
+        'fields' => [
           'Ora.id', 'Ora.eRisorsa', 'numOre', 'data', 'dettagliAttivita',
           'luogoTrasferta', 'eAttivita', 'pagato', 'fatturato', 'Faseattivita.Descrizione',
           'Ora.start', 'Ora.stop', 'Ora.location_start', 'Ora.location_stop',
-        ),
-        'order' => array('Ora.eRisorsa',  'data'),
-      )
+        ],
+        'order' => ['Ora.eRisorsa',  'data'],
+      ]
     );
     $this->set('result', $result);
     $this->set('faseattivita_selected', $faseattivita);
@@ -254,22 +254,22 @@ class OreController extends AppController
             //Elimino tutti i record di questo mese per questo utente prima di importare.
             //In questo modo non devo controllare prima di inserire
             if ($this->Ora->deleteAll(
-              array(
+              [
                 'Ora.eRisorsa' => $o['eRisorsa'],
                 'MONTH(Ora.data)' =>  $st->format('m'),
                 'YEAR(Ora.data)' =>  $st->format('Y'),
-              ),
+              ],
               false
             )) {
               $flashMessage .= 'Cancellata la vecchia versione del foglio ore di ' . $st->format('m-Y') . '<br/>';
             }
             //Stesso ragionamento per la nota spese
             if ($this->Notaspesa->deleteAll(
-              array(
+              [
                 'eRisorsa' => $o['eRisorsa'],
                 'MONTH(data)' =>  $st->format('m'),
                 'YEAR(data)' =>  $st->format('Y'),
-              ),
+              ],
               false
             )) {
               $flashMessage .= 'Cancellata la vecchia versione della nota spese di ' . $st->format('m-Y') . '<br/>';
@@ -335,7 +335,7 @@ class OreController extends AppController
   //Carica il foglio ore (deve avere l'etichetta Ore_iMpronta)
   function _getOre($fileurl)
   {
-    $result['data'] = array();
+    $result['data'] = [];
     $result['error'] = '';
     $result['info'] = '';
 
@@ -373,7 +373,7 @@ class OreController extends AppController
     for ($attivita_col = 2; $attivita_col < $cols; $attivita_col++) //for each attivita (last column is the total)
     {
 
-      $ore = array(); //reset at each iteration
+      $ore = []; //reset at each iteration
       $attivita_alias = $data->val($aliases_row, $attivita_col, $ore_impronta_sheet);
 
       //Massimoi: 5 Settembre 2013 - Se trovo la colonna totale esco subito = ho finito le colonne utili
@@ -398,14 +398,14 @@ class OreController extends AppController
         if (empty($attivita['Attivita']['id'])) {
           $this->log("Attivita $attivita_alias non trovata, creo un'attivita nuova", 'debug');
           //Massimoi 2/5/12 [ se non c'è l'attività nè l'alias, la creo vuota
-          $d = array(
-            'Attivita' => array(
+          $d = [
+            'Attivita' => [
               'name' => $attivita_alias,
               'area_id' => 1,                    //TODO: Leggere una variabile di configurazione: default_area
               'progetto_id' => 6,                //TODO: Leggere una variabile di configurazione: default_project
               'cliente_id' => 1,                //TODO: Leggere una variabile di configurazione: default_customer
-            ),
-          );
+            ],
+          ];
           $this->Attivita->create();
           $this->Attivita->save($d);
           //Leggo l'array completa dell'attività
@@ -427,7 +427,7 @@ class OreController extends AppController
               $luogoTrasferta = $data->val($row + 2, $attivita_col, $ore_impronta_sheet);
 
               //add 'ora' to the result
-              array_push($ore, array(
+              array_push($ore, [
                 'eRisorsa' => $risorsa_id,
                 'eAttivita' => $attivita['Attivita']['id'],
                 'data' => $details['anno'] . '-' . $this->_formatMese($details['mese']) . '-' . $this->_formatGiorno($data->val($row, 1, $ore_impronta_sheet)) . ' 00:00:00',
@@ -437,7 +437,7 @@ class OreController extends AppController
                 'Trasferta' => (empty($luogoTrasferta)) ? 0 : 1,
                 'Pernottamento' => 0, //???
                 'statoApprovazione' => 0 //???
-              ));
+              ]);
             }
           }
         }
@@ -472,7 +472,7 @@ class OreController extends AppController
   function _getNotaSpese($fileurl)
   {
 
-    $result['data'] = array();
+    $result['data'] = [];
     $result['error'] = '';
     $result['info'] = '';
 
@@ -531,7 +531,7 @@ class OreController extends AppController
         return $result;
       }
 
-      array_push($result['data'], array(
+      array_push($result['data'], [
         'eAttivita' => $attivita['Attivita']['id'],
         'eRisorsa' => $risorsa_id,
         'data' => $details['anno'] . '-' . $this->_formatMese($details['mese']) . '-01 00:00:00',
@@ -539,7 +539,7 @@ class OreController extends AppController
         'importo' => $importo,
         'fatturabile' => 0, //???
         'rimborsabile' => 0, //???
-      ));
+      ]);
     }
 
     return $result;
@@ -550,7 +550,7 @@ class OreController extends AppController
     //TODO: al momento individuo la risorsa sulla base della coppia (nome, cognome) ma il meccanismo non è efficiente in quanto ci possono
     //essere omonimi, persone con più nomi ecc...  --> bisognerebbe che i fogli ore riportassero l'id della risorsa!!!
     $this->loadModel('Persona');
-    $risorsa = $this->Persona->find('first', array('conditions' => array('Persona.Nome LIKE' => $nome, 'Persona.Cognome LIKE' => $cognome)));
+    $risorsa = $this->Persona->find('first', ['conditions' => ['Persona.Nome LIKE' => $nome, 'Persona.Cognome LIKE' => $cognome]]);
     return (empty($risorsa)) ? 0 : $risorsa['Persona']['id'];
   }
 
@@ -580,9 +580,9 @@ class OreController extends AppController
   {
     return true;
 
-    $allowedTypes = array(
+    $allowedTypes = [
       'application/vnd.ms-excel'
-    );
+    ];
 
     if (in_array($file['type'], $allowedTypes)) return true;
     return false;
@@ -606,15 +606,15 @@ class OreController extends AppController
     $this->loadModel('Attivita');
     $attivita = $this->Attivita->find(
       'all',
-      array(
-        'fields' => array('Attivita.id', 'Attivita.name', 'Progetto.name'),
-        'order' => array('Attivita.progetto_id', 'Attivita.name')
-      )
+      [
+        'fields' => ['Attivita.id', 'Attivita.name', 'Progetto.name'],
+        'order' => ['Attivita.progetto_id', 'Attivita.name']
+      ]
     );
 
-    $attivitaGrouped = array();
+    $attivitaGrouped = [];
     foreach ($attivita as $a) {
-      if (!isset($attivitaGrouped[$a['Progetto']['name']])) $attivitaGrouped[$a['Progetto']['name']] = array();
+      if (!isset($attivitaGrouped[$a['Progetto']['name']])) $attivitaGrouped[$a['Progetto']['name']] = [];
       array_push($attivitaGrouped[$a['Progetto']['name']], $a);
     }
 
@@ -632,18 +632,18 @@ class OreController extends AppController
     $conditions = [];
     $conditions = $this->getConditionFromQueryString();
     $conditions['YEAR(Ora.data)'] = $anno;
-    $conteggi = $this->Ora->find('all', array(
+    $conteggi = $this->Ora->find('all', [
       'conditions' => $conditions,
-      'group' => array('Persona.id', 'Persona.Cognome', 'MONTH(Ora.data)'),
-      'order' => array('Persona.id', 'Persona.Cognome', 'MONTH(Ora.data)'),
-      'fields' => array('Persona.id', 'Persona.Cognome', 'MONTH(Ora.data) as Mese', 'SUM(Ora.numOre) as OreTot')
-    ));
+      'group' => ['Persona.id', 'Persona.Cognome', 'MONTH(Ora.data)'],
+      'order' => ['Persona.id', 'Persona.Cognome', 'MONTH(Ora.data)'],
+      'fields' => ['Persona.id', 'Persona.Cognome', 'MONTH(Ora.data) as Mese', 'SUM(Ora.numOre) as OreTot']
+    ]);
 
     //Giro la tabella risultante in modo da avere questa struttura associativa (che mi facilita la view)
     //Persona => (Gennaio => ore, Feb => ore, ...)
     $p = '';
-    $risult = array();
-    $ore = array();
+    $risult = [];
+    $ore = [];
     $personaId = '';
     foreach ($conteggi as $c) {
       //Se cambia persona svuoto l'array
@@ -654,7 +654,7 @@ class OreController extends AppController
         }
         $p = $c['Persona']['Cognome'];
 
-        $ore = array();
+        $ore = [];
       }
       $ore[$c[0]['Mese']] = $c[0]['OreTot'];
       $personaId = $c['Persona']['id'];
@@ -678,27 +678,27 @@ class OreController extends AppController
   {
     if (empty($idPersona) or $idPersona == NULL) {
       $this->Session->setFlash('Id Persona non valido.');
-      $this->redirect(array('action' => 'check', date('Y')));
+      $this->redirect(['action' => 'check', date('Y')]);
     }
     $this->autoRender = false;
     $this->loadModel('Persona');
-    $conditions = array('Persona.id' => $idPersona);
-    $persona = $this->Persona->find('first', array(
+    $conditions = ['Persona.id' => $idPersona];
+    $persona = $this->Persona->find('first', [
       'conditions' => $conditions,
-      'fields' => array('Persona.id', 'Persona.DisplayName', 'Persona.EMail')
-    ));
+      'fields' => ['Persona.id', 'Persona.DisplayName', 'Persona.EMail']
+    ]);
     if (empty($persona['Persona']['EMail']) || $persona['Persona']['EMail'] == NULL) {
       $this->Session->setFlash('L\'impiegato selezionato non ha un indirizzo mail settato.');
-      $this->redirect(array('action' => 'check', date('Y')));
+      $this->redirect(['action' => 'check', date('Y')]);
     }
     $nomeAzienda = Configure::read('iGas.NomeAzienda');
     $emailObj = new CakeEmail();
-    $emailObj->viewVars(array(
+    $emailObj->viewVars([
       'personaDisplayName' => $persona['Persona']['DisplayName'],
       'personaId' => $persona['Persona']['id'],
       'mese' => $mese,
       'anno' => $anno
-    ));
+    ]);
     $emailObj->template('sollecitoore');
     $emailObj->from(Configure::read('iGas.emailSender'));
     $emailObj->to($persona['Persona']['EMail']);
@@ -706,32 +706,32 @@ class OreController extends AppController
     $emailObj->subject("iGAS $nomeAzienda -  Non hai caricato tutte le ore di $mese/$anno");
     $emailObj->send();
     $this->Session->setFlash('Mail di sollecito inviata correttamente.');
-    $this->redirect(array('action' => 'check', date('Y')));
+    $this->redirect(['action' => 'check', date('Y')]);
   }
 
   public function check($anno)
   {
-    $conditions = array('YEAR(Ora.data)' => $anno);
-    $conditionsImpiegati = array('YEAR(dataValidita)' => $anno);
-    $conteggi = $this->Ora->find('all', array(
+    $conditions = ['YEAR(Ora.data)' => $anno];
+    $conditionsImpiegati = ['YEAR(dataValidita)' => $anno];
+    $conteggi = $this->Ora->find('all', [
       'conditions' => $conditions,
-      'group' => array('Persona.Cognome', 'MONTH(Ora.data)'),
-      'order' => array('Persona.Cognome', 'MONTH(Ora.data)'),
-      'fields' => array('Persona.id', 'Persona.Cognome', 'Persona.Nome', 'MONTH(Ora.data) as Mese', 'SUM(Ora.numOre) as OreTot')
-    ));
+      'group' => ['Persona.Cognome', 'MONTH(Ora.data)'],
+      'order' => ['Persona.Cognome', 'MONTH(Ora.data)'],
+      'fields' => ['Persona.id', 'Persona.Cognome', 'Persona.Nome', 'MONTH(Ora.data) as Mese', 'SUM(Ora.numOre) as OreTot']
+    ]);
     $this->loadModel('Impiegato');
-    $conteggiImpiegati = $this->Impiegato->find('all', array(
+    $conteggiImpiegati = $this->Impiegato->find('all', [
       //'conditions' => $conditionsImpiegati,
-      'group' => array('Persona.Cognome', 'dataValidita'),
-      'order' => array('Persona.Cognome', 'dataValidita'),
-      'fields' => array('persona_id', 'oreLun', 'oreMar', 'oreMer', 'oreGio', 'oreVen', 'oreSab', 'oreDom', 'Persona.Cognome', 'Persona.Nome', 'dataValidita')
-    ));
+      'group' => ['Persona.Cognome', 'dataValidita'],
+      'order' => ['Persona.Cognome', 'dataValidita'],
+      'fields' => ['persona_id', 'oreLun', 'oreMar', 'oreMer', 'oreGio', 'oreVen', 'oreSab', 'oreDom', 'Persona.Cognome', 'Persona.Nome', 'dataValidita']
+    ]);
     $p = $pImp = '';
-    $risult = $risultImpiegati = array();
-    $ore = $oreDaCaricare = array('Mesi' => array(
+    $risult = $risultImpiegati = [];
+    $ore = $oreDaCaricare = ['Mesi' => [
       '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0,
       '7' => 0, '8' => 0, '9' => 0, '10' => 0, '11' => 0, '12' => 0
-    ));
+    ]];
     //$ore = $oreDaCaricare = array('1'=>0,'2'=>0,'3'=>0,'4'=>0,'5'=>0,'6'=>0,
     //'7'=>0,'8'=>0,'9'=>0,'10'=>0,'11'=>0,'12'=>0);
     foreach ($conteggi as $c) {
@@ -741,14 +741,14 @@ class OreController extends AppController
           $risult[$p] = $ore;
         }
         $p = $c['Persona']['id'];
-        $ore = array(
+        $ore = [
           'Cognome' => $c['Persona']['Cognome'],
           'Nome' => $c['Persona']['Nome'],
-          'Mesi' => array(
+          'Mesi' => [
             '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0,
             '7' => 0, '8' => 0, '9' => 0, '10' => 0, '11' => 0, '12' => 0
-          )
-        );
+          ]
+        ];
       }
 
       foreach (@$ore['Mesi'] as $keyMonth => $val) {
@@ -764,14 +764,14 @@ class OreController extends AppController
           $risultImpiegati[$pImp] = $oreDaCaricare;
         }
         $pImp = $c['Impiegato']['persona_id'];
-        $oreDaCaricare = array(
+        $oreDaCaricare = [
           'Cognome' => $c['Persona']['Cognome'],
           'Nome' => $c['Persona']['Nome'],
-          'Mesi' => array(
+          'Mesi' => [
             '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0,
             '7' => 0, '8' => 0, '9' => 0, '10' => 0, '11' => 0, '12' => 0
-          )
-        );
+          ]
+        ];
       }
       foreach ($oreDaCaricare['Mesi'] as $keyMonth => $val) {
         if (date('Y', strtotime($c['Impiegato']['dataValidita'])) == $anno) {
@@ -813,18 +813,18 @@ class OreController extends AppController
       $risult[$p] = $ore;
       foreach ($risultImpiegati as $keyPersona => $impiegatoData) {
         if (!array_key_exists($keyPersona, $risult)) {
-          $risult[$keyPersona] = array(
+          $risult[$keyPersona] = [
             'Cognome' => $impiegatoData['Cognome'],
             'Nome' => $impiegatoData['Nome'],
-            'Mesi' => array(
+            'Mesi' => [
               '1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0, '6' => 0,
               '7' => 0, '8' => 0, '9' => 0, '10' => 0, '11' => 0, '12' => 0
-            )
-          );
+            ]
+          ];
         }
       }
     } else {
-      $risult = array();
+      $risult = [];
     }
     //debug($risult);
     //debug($risultImpiegati);
@@ -842,23 +842,23 @@ class OreController extends AppController
       $ids = array_keys($this->request->data['Ora']);
     }
     $conditions = [];
-    if (!empty($ids)){
+    if (!empty($ids)) {
       $conditions = ['Ora.id IN' => $ids];
     } else {
       $this->Flash->error("Nessuna ora da visualizzare in nota spese");
       throw new Exception("Nessuna ora da visualizzare in nota spese", 1);
     }
 
-    $righeore = $this->Ora->find('all', array(
-      'fields' => array(
+    $righeore = $this->Ora->find('all', [
+      'fields' => [
         'Ora.id', 'Ora.eRisorsa', 'numOre', 'data', 'dettagliAttivita',
         'luogoTrasferta', 'eAttivita', 'pagato', 'fatturato', 'Faseattivita.Descrizione',
         'Ora.start', 'Ora.stop', 'Ora.location_start', 'Ora.location_stop', 'Attivita.name',
         'Persona.DisplayName', 'Attivita.cliente_id'
-      ),
+      ],
       'conditions' => $conditions,
-      'order' => array('Ora.data'),
-    ));
+      'order' => ['Ora.data'],
+    ]);
     $this->set('ore', $righeore);
 
     //Qui tiro su l'anagrafica dell'azienda che emette la fattura
@@ -883,63 +883,73 @@ class OreController extends AppController
   //Aggiunta delle ore manualmente (senza foglio ore)
   public function add()
   {
-    $persona = $this->Auth->user('persona_id');
+    $persona = AuthComponent::user('persona_id');
     $anno = date('Y');
     $mese = date('m');
     $giorno = date('d');
     $attivita = 1;
+    $rdata = $this->request->data;
 
-    //  if ($persona != $this->Session->read('Auth.User.persona_id') &&
-    //          Auth::hasRole(Configure::read('Role.impiegato')) )
-    // {
-    //      $this->Session->setFlash('Non sei autorizzato ad accedere al foglio ore di altri');
-    //      return $this->redirect(array('action' => 'scegli_mese',$this->Session->read('Auth.User.persona_id') ));
-    // }
-
-    if (isset($this->request->params['named']['persona'])) {
-      $persona = $this->request->params['named']['persona'];
+    if ($this->request->query('persona')) {
+      $persona = $this->request->query('persona');
     }
-
-    if (isset($this->request->params['named']['anno'])) {
-      $anno = $this->request->params['named']['anno'];
+    if ($this->request->query('anno')) {
+      $anno = $this->request->query('anno');
     }
-    if (isset($this->request->params['named']['mese'])) {
-      $mese = $this->request->params['named']['mese'];
+    if ($this->request->query('mese')) {
+      $mese = $this->request->query('mese');
     }
-    if (isset($this->request->params['named']['giorno'])) {
-      $giorno = $this->request->params['named']['giorno'];
+    if ($this->request->query('giorno')) {
+      $giorno = $this->request->query('giorno');
       //In realtà non voglio filtrare per il giorno, ma solo portarmelo dietro
     }
-    if (isset($this->request->params['named']['attivita'])) {
-      $attivita = $this->request->params['named']['attivita'];
+    if ($this->request->query('attivita')) {
+      $attivita = $this->request->query('attivita');
+    }
+    
+    if (
+      $persona != AuthComponent::user('persona_id')  &&
+      Auth::hasRole(Configure::read('Role.impiegato'))
+    ) {
+      $this->Session->setFlash('Non sei autorizzato ad accedere al foglio ore di altri');
+      return $this->redirect(['action' => 'scegli_mese', AuthComponent::user('persona_id')]);
     }
 
     if ($this->request->is('post')) {
 
       $this->Ora->create();
-      if ($this->Ora->save($this->request->data)) {
+      if ($this->Ora->save($rdata)) {
         $this->Session->setFlash('Ora Aggiunta correttamente.');
+        
+        //Convert the $rdata['Ora']['data'] to a DateTime object and take day, month, year
+        $dt = new DateTime($rdata['Ora']['data']);
+        $mese = $dt->format('m');
+        $giorno = $dt->format('d');
+        $anno = $dt->format('Y');
 
-        $dataArray = explode('-', $this->request->data['Ora']['data']);
         //A Seconda del submit gestisco un'operazione diversa
-        if (isset($this->request->data['submit-ns'])) {
-          return $this->redirect(array(
+        if (isset($rdata['submit-ns'])) {
+          return $this->redirect([
             'controller' => 'notaspese', 'action' => 'add',
-            'persona' => $this->request->data['Ora']['eRisorsa'],
-            'attivita' => $this->request->data['Ora']['eAttivita'],
-            'anno' => $dataArray[0], // $this->request->data['Ora']['data']['year']
-            'mese' => $dataArray[1], // $this->request->data['Ora']['data']['month']
-            'giorno' => $dataArray[2], // this->request->data['Ora']['data']['day']
-            'dest' => $this->request->data['Ora']['LuogoTrasferta'],
-          ));
+            '?' => [
+              'persona' => $rdata['Ora']['eRisorsa'],
+              'attivita' => $rdata['Ora']['eAttivita'],
+              'anno' => $anno,
+              'mese' => $mese,
+              'giorno' => $giorno,
+              'dest' => $rdata['Ora']['LuogoTrasferta'],
+            ]
+          ]);
         } else {
-          return $this->redirect(array(
-            'action' => 'add',
-            'persona' => $this->request->data['Ora']['eRisorsa'],
-            'anno' => $dataArray[0], // $this->request->data['Ora']['data']['year']
-            'mese' => $dataArray[1], // $this->request->data['Ora']['data']['month']
-            'giorno' => $dataArray[2], // $this->request->data['Ora']['data']['day']
-          ));
+          return $this->redirect([
+            'action' => 'add',            
+            '?' => [
+              'persona' => $rdata['Ora']['eRisorsa'],
+              'anno' => $anno,
+              'mese' => $mese,
+              'giorno' => $giorno,
+            ]
+          ]);
         }
       }
       $this->Session->setFlash($this->Ora->error);
@@ -960,41 +970,34 @@ class OreController extends AppController
     $this->set('anno', $anno);
     $this->set('mese', $mese);
     $this->set('giorno', $giorno);
-
-    //TODO: Davide fai la chiamata a $this->Impiegato->oreContratto($persona, $mese, $anno);
+    
     $this->loadModel('Impiegato');
     $oreContratto = $this->Impiegato->oreContratto($persona, $mese, $anno);
     $this->set('oreContratto', $oreContratto);
 
 
     //Preparo il filtro per il riepilogo delle ore
-    $conditions = array();
+    $conditions = [];
     //Applico il filtro alle condizioni del report ore mostrato in basso
     //(di default o passate come parametro)
     $conditions['Ora.eRisorsa'] = $persona;
     $conditions['YEAR(Ora.data)'] = $anno;
     $conditions['MONTH(Ora.data)'] = $mese;
-    //Non filtro su giorno e attività perchè voglio vedere il report mensile della persona
-    //$conditions['DAY(data)'] = $giorno;
-    //$conditions['Ora.eAttivita'] = $attivita;
 
     $result = $this->Ora->find(
       'all',
-      array(
+      [
         'conditions' => $conditions,
-        'fields' => array(
+        'fields' => [
           'id', 'Ora.eRisorsa', 'numOre', 'data', 'dettagliAttivita', 'luogoTrasferta', 'eAttivita', 'Faseattivita.Descrizione',
           'Ora.start', 'Ora.stop', 'location_start', 'location_stop'
-        ),
+        ],
         'order' => 'data'
-      )
+      ]
     );
 
     $this->set('result', $result);
-    $this->set('title_for_layout', "$anno-$mese-$giorno | $nomePersona | Aggiungi Ore | Foglio Ore");
-
-    //$fa = $this->Ora->Faseattivita->getSimple(null,0,1);
-    //$this->set('faseattivita', $fa);
+    $this->set('title_for_layout', "$anno-$mese-$giorno | $nomePersona | Aggiungi Ore | Foglio Ore");    
   }
 
 
@@ -1026,7 +1029,7 @@ class OreController extends AppController
 
   public function getOreByPersona($personaId, $giorno = null)
   {
-    $conditions = array();
+    $conditions = [];
     $conditions['Ora.eRisorsa'] = $personaId;
     $conditions['YEAR(Ora.data)'] = date('Y');
     $conditions['MONTH(Ora.data)'] = date('m');
@@ -1039,13 +1042,13 @@ class OreController extends AppController
     // debug($conditions);die;
     $result = $this->Ora->find(
       'all',
-      array(
+      [
         'conditions' => $conditions,
-        'fields' => array(
+        'fields' => [
           'id', 'Ora.eRisorsa', 'numOre', 'data', 'start', 'stop', 'location_start', 'location_stop', 'dettagliAttivita', 'eAttivita', 'faseattivita_id', 'Faseattivita.Descrizione'
-        ),
+        ],
         'order' => 'start'
-      )
+      ]
     );
     $this->set('res', $result);
   }
@@ -1080,13 +1083,13 @@ class OreController extends AppController
       if ($this->Ora->save($this->request->data)) {
         $this->Session->setFlash('Ora Modificata correttamente.');
         $dataArray = explode('-', $this->request->data['Ora']['data']);
-        return $this->redirect(array(
+        return $this->redirect([
           'action' => 'add',
           'persona' => $this->request->data['Ora']['eRisorsa'],
           'anno' => $dataArray[0], // $this->request->data['Ora']['data']['year']
           'mese' => $dataArray[1], // $this->request->data['Ora']['data']['month']
           'giorno' => $dataArray[2], // $this->request->data['Ora']['data']['day']
-        ));
+        ]);
       }
       $this->Session->setFlash($this->Ora->error);
       $this->Session->setFlash('Impossibile salvare questa ora.');
@@ -1115,34 +1118,25 @@ class OreController extends AppController
 
   public function scegli_persona()
   {
-    $conditions = array();
+    $conditions = [];
 
     //Se sono impiegato voglio vedere solo me stesso
     if (Auth::hasRole(Configure::read('Role.impiegato'))) {
-      return $this->redirect(array('action' => 'scegli_mese', $this->Session->read('Auth.User.persona_id')));
+      return $this->redirect(['action' => 'scegli_mese', $this->Session->read('Auth.User.persona_id')]);
     } else {
       $conditions['YEAR(Ora.data)'] = date('Y');
     }
 
-    $persone = $this->Ora->find('all', array(
-      'conditions' => $conditions,
-      'fields' => ['DISTINCT Persona.id', 'Persona.Cognome', 'Persona.Nome'],
-      'order' => ['Persona.Cognome']
-    ));
-
-    $this->set('eRisorsa', $this->Ora->Persona->find('list'));
+    $this->loadModel("Impiegato");
+    $persone = $this->Impiegato->list();    
     $this->set('persone', $persone);
     $this->set('title_for_layout', 'Scegli Persona | Foglio Ore ');
-    if ($this->request->is('post')) {
-      return $this->redirect(array('action' => 'scegli_mese', $this->request->data['Ora']['eRisorsa']));
-    }
   }
 
   public function scegli_mese($persona = null)
   {
-
     if (is_null($persona)) {
-      return $this->redirect(array('action' => 'add'));
+      return $this->redirect(['action' => 'add']);
     }
 
     if (
@@ -1150,9 +1144,9 @@ class OreController extends AppController
       Auth::hasRole(Configure::read('Role.impiegato'))
     ) {
       $this->Session->setFlash('Non sei autorizzato ad accedere al foglio ore di altri');
-      return $this->redirect(array('action' => 'scegli_mese', $this->Session->read('Auth.User.persona_id')));
+      return $this->redirect(['action' => 'scegli_mese', $this->Session->read('Auth.User.persona_id')]);
     }
-
+    
     $this->set('persona', $this->Ora->Persona->findById($persona));
     $this->set('title_for_layout', 'Scegli Mese | Foglio Ore ' . $persona);
   }
@@ -1161,7 +1155,7 @@ class OreController extends AppController
   {
     if (!$id) {
       $this->Session->setFlash(__('Invalid id for Ore'));
-      $this->redirect(array('action' => 'index'));
+      $this->redirect(['action' => 'index']);
     }
     $this->Ora->id = $id;
     $varToPassToModel = $this->Ora->read(['numOre', 'faseattivita_id'])['Ora'];
@@ -1170,23 +1164,23 @@ class OreController extends AppController
       $this->redirect($this->referer());
     }
     $this->Session->setFlash(__('Ore was not deleted'));
-    $this->redirect(array('action' => 'index'));
+    $this->redirect(['action' => 'index']);
   }
 
 
   //Mostra un report delle ore spese per ogni attività
   public function attivita($anno = null)
   {
-    $conditions = array();
+    $conditions = [];
     if (!empty($anno)) {
       $conditions['YEAR(Attivita.DataInizio)'] = $anno;
     }
 
-    $r = $this->Ora->find('all', array(
-      'group' => array('eAttivita'),
-      'fields' => array('Attivita.name', 'eAttivita', 'SUM(Ora.numOre) as S', 'Attivita.ImportoAcquisito'),
+    $r = $this->Ora->find('all', [
+      'group' => ['eAttivita'],
+      'fields' => ['Attivita.name', 'eAttivita', 'SUM(Ora.numOre) as S', 'Attivita.ImportoAcquisito'],
       'conditions' => $conditions,
-    ));
+    ]);
 
     $this->set('r', $r);
   }
@@ -1195,17 +1189,17 @@ class OreController extends AppController
   public function pivot()
   {
     //Query che riporta tutte le ore lavorate aggregate per anno, attività, persona
-    $r = $this->Ora->find('all', array(
-      'group' => array('YEAR(Ora.data)',  'eAttivita', 'eRisorsa', 'faseattivita_id'),
-      'fields' => array('YEAR(Ora.data) as Anno', 'MONTH(Ora.data) as Mese', 'Attivita.name', 'Attivita.id', 'SUM(Ora.numOre) as Ore', 'Attivita.ImportoAcquisito', 'Persona.DisplayName', 'Faseattivita.Descrizione'),
-    ));
+    $r = $this->Ora->find('all', [
+      'group' => ['YEAR(Ora.data)',  'eAttivita', 'eRisorsa', 'faseattivita_id'],
+      'fields' => ['YEAR(Ora.data) as Anno', 'MONTH(Ora.data) as Mese', 'Attivita.name', 'Attivita.id', 'SUM(Ora.numOre) as Ore', 'Attivita.ImportoAcquisito', 'Persona.DisplayName', 'Faseattivita.Descrizione'],
+    ]);
 
     foreach ($r as &$row) {
       $row = Set::flatten($row);
     }
 
     $this->set('r', $r);
-    $this->set('_serialize', array('r'));
+    $this->set('_serialize', ['r']);
   }
 
   //Considera pagate una serie di ore, e quindi le toglie dal calcolo dell'avanzamento
@@ -1227,9 +1221,9 @@ class OreController extends AppController
 
     //Faccio un aggiornamento unico
     $this->Ora->updateAll(
-      array('Ora.pagato' => $val),
+      ['Ora.pagato' => $val],
       // conditions
-      array('Ora.id' => $ids)
+      ['Ora.id' => $ids]
     );
 
     $this->Session->setFlash('Le ore selezionate sono considerate pagate');
@@ -1238,31 +1232,31 @@ class OreController extends AppController
   public function box()
   {
 
-    $res = array();
+    $res = [];
     $anno = date('Y');
     $mese = date('m');
 
-    $persone = $this->Ora->find('all', array(
-      'fields' => array('DISTINCT Persona.id', 'Persona.Cognome', 'Persona.Nome'),
-      'joins' => array(array(
+    $persone = $this->Ora->find('all', [
+      'fields' => ['DISTINCT Persona.id', 'Persona.Cognome', 'Persona.Nome'],
+      'joins' => [[
         'table' => 'notaspese',
         'alias' => 'Notaspesa',
         'type' => 'INNER'
-      ))
-    ));
+      ]]
+    ]);
 
-    $ore = $this->Ora->find('all', array(
-      'fields' => array('SUM(Ora.numOre) as S', 'eRisorsa', 'data'),
+    $ore = $this->Ora->find('all', [
+      'fields' => ['SUM(Ora.numOre) as S', 'eRisorsa', 'data'],
       'group' => 'Ora.eRisorsa',
-      'conditions' => array('Ora.data >=' => "$anno-$mese-01")
-    ));
+      'conditions' => ['Ora.data >=' => "$anno-$mese-01"]
+    ]);
     $this->loadModel('Notaspesa');
 
-    $spese = $this->Notaspesa->find('all', array(
-      'fields' => array('SUM(Notaspesa.importo) as S', 'Notaspesa.eRisorsa'),
+    $spese = $this->Notaspesa->find('all', [
+      'fields' => ['SUM(Notaspesa.importo) as S', 'Notaspesa.eRisorsa'],
       'group' => 'Notaspesa.eRisorsa',
-      'conditions' => array('Notaspesa.data >=' => "$anno-$mese-01")
-    ));
+      'conditions' => ['Notaspesa.data >=' => "$anno-$mese-01"]
+    ]);
 
     foreach ($persone as $p) {
       $res[$p['Persona']['id']]['Nome'] = $p['Persona']['Nome'];
@@ -1289,20 +1283,20 @@ class OreController extends AppController
   public function totali()
   {
 
-    $totale = array();
+    $totale = [];
     $anno = date('Y');
 
-    $totale['Ore'] = $this->Ora->find('all', array(
-      'fields' => array('SUM(Ora.numOre) as S'),
-      'conditions' => array('Ora.data >=' => "$anno-01-01")
-    ));
+    $totale['Ore'] = $this->Ora->find('all', [
+      'fields' => ['SUM(Ora.numOre) as S'],
+      'conditions' => ['Ora.data >=' => "$anno-01-01"]
+    ]);
 
     $this->loadModel('Notaspesa');
 
-    $totale['Spese'] = $this->Notaspesa->find('all', array(
-      'fields' => array('SUM(Notaspesa.importo) as S'),
-      'conditions' => array('Notaspesa.data >=' => "$anno-01-01")
-    ));
+    $totale['Spese'] = $this->Notaspesa->find('all', [
+      'fields' => ['SUM(Notaspesa.importo) as S'],
+      'conditions' => ['Notaspesa.data >=' => "$anno-01-01"]
+    ]);
 
     return $totale;
   }

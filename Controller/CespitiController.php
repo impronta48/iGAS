@@ -3,12 +3,12 @@
 class CespitiController extends AppController {
 
     //public $name = 'Cespiti';
-    public $helpers = array('Html');
-    public $components = array('Paginator');
+    public $helpers = ['Html'];
+    public $components = ['Paginator'];
 
     public function index(){
         $this->Cespite->recursive = 0;
-        $conditions = array();
+        $conditions = [];
         //$paging = $this->request->query('paging');
         //Value querystring ancora da implementare
         /*
@@ -16,11 +16,11 @@ class CespitiController extends AppController {
             $paging = 4;
         }
         */
-        $this->set('cespiti', $this->Cespite->find('all', array(
+        $this->set('cespiti', $this->Cespite->find('all', [
             'conditions' => $conditions,
-            'contains' => array('Cespite'),
+            'contains' => ['Cespite'],
             'recursive' => -1,
-        )));
+        ]));
         $this->set('cespiti', $this->Paginator->paginate());
     }
 
@@ -29,7 +29,7 @@ class CespitiController extends AppController {
             $this->Cespite->create();
             if ($this->Cespite->save($this->request->data)) {
                 $this->Session->setFlash(__('Asset has been saved'));
-                $this->redirect(array('action' => 'index'));
+                $this->redirect(['action' => 'index']);
             } else {
                 debug($this->request->data);
                 $this->Session->setFlash(__('Asset could not be saved. Please, try again.'));
@@ -40,7 +40,7 @@ class CespitiController extends AppController {
     public function edit($id = null){
         if(!$id or !is_numeric($id)){
             $this->Session->setFlash(__('Invalid asset id'));
-            $this->redirect(array('action' => 'index'));
+            $this->redirect(['action' => 'index']);
         } else {
             if($this->request->is('post') || $this->request->is('put')){  
                 if($this->Cespite->Save($this->request->data)){
@@ -48,7 +48,7 @@ class CespitiController extends AppController {
                 } else {
                     $this->Session->setFlash('Problemi ad aggiornare asset, riprova');
                 }
-                $this->redirect(array('action' => 'index'));
+                $this->redirect(['action' => 'index']);
             } else {
                 $this->request->data = $this->Cespite->findById($id);
                 if($this->request->data['Persona']['DisplayName'] == null){
@@ -63,35 +63,35 @@ class CespitiController extends AppController {
         $this->loadModel('Cespitecalendario');
         if(!$id){
             $this->Session->setFlash(__('Invalid asset id'));
-            $this->redirect(array('action' => 'index'));
+            $this->redirect(['action' => 'index']);
         }
-        $conditions = array('Cespitecalendario.cespite_id'=>$id);
-        $calendar = $this->Cespitecalendario->find('all', array(
+        $conditions = ['Cespitecalendario.cespite_id'=>$id];
+        $calendar = $this->Cespitecalendario->find('all', [
             'conditions' => $conditions,
-            'contains' => array('Cespitecalendario'),
+            'contains' => ['Cespitecalendario'],
             'recursive' => -1,
-            'contain' => array('Cespite.displayName','Cespite.id',
+            'contain' => ['Cespite.displayName','Cespite.id',
                             'Persona.displayName','Persona.id',
-                            'LegendaTipoAttivitaCalendario.color','LegendaTipoAttivitaCalendario.textColor','LegendaTipoAttivitaCalendario.id'),
-        ));
+                            'LegendaTipoAttivitaCalendario.color','LegendaTipoAttivitaCalendario.textColor','LegendaTipoAttivitaCalendario.id'],
+        ]);
         if(count($calendar)===0){
             if($this->Cespite->delete($id)){
                 $this->Session->setFlash(__('Asset deleted'));
-                $this->redirect(array('action' => 'index'));
+                $this->redirect(['action' => 'index']);
             }
         } else {
             $this->Session->setFlash(__('Asset was not deleted because there are '.count($calendar).' events related to this Asset'));
-            $this->redirect(array('action' => 'index'));
+            $this->redirect(['action' => 'index']);
         }
         $this->Session->setFlash(__('Asset was not deleted'));
-        $this->redirect(array('action' => 'index'));
+        $this->redirect(['action' => 'index']);
     }
 
     public function calendar() {
         // To Do
         $this->loadModel('Cespitecalendario');
         $listaAttivita = $this->Cespitecalendario->Attivita->getlist();
-        $listaAttivita = array(0 => 'Associa ad Attività') + $listaAttivita; //Questo si può fare perchè listaattività parte da 1 e quindi 0 non sarà duplicato
+        $listaAttivita = [0 => 'Associa ad Attività'] + $listaAttivita; //Questo si può fare perchè listaattività parte da 1 e quindi 0 non sarà duplicato
         $this->set('eAttivita', $listaAttivita);
         $this->set('faseattivita', $this->Cespitecalendario->Faseattivita->getSimple());
         $legenda_tipo_attivita_calendario = $this->Cespitecalendario->LegendaTipoAttivitaCalendario->find('list');
@@ -101,15 +101,15 @@ class CespitiController extends AppController {
     public function events() {
         $this->loadModel('Cespitecalendario');
         $this->Cespitecalendario->recursive = 1;
-        $conditions = array();
-        $calendar=$this->Cespitecalendario->find('all', array(
+        $conditions = [];
+        $calendar=$this->Cespitecalendario->find('all', [
             'conditions' => $conditions,
-            'contains' => array('Cespitecalendario'),
+            'contains' => ['Cespitecalendario'],
             'recursive' => -1,
-            'contain' => array('Cespite.displayName','Cespite.id',
+            'contain' => ['Cespite.displayName','Cespite.id',
                             'Persona.displayName','Persona.id',
-                            'LegendaTipoAttivitaCalendario.color','LegendaTipoAttivitaCalendario.textColor','LegendaTipoAttivitaCalendario.id'),
-        ));
+                            'LegendaTipoAttivitaCalendario.color','LegendaTipoAttivitaCalendario.textColor','LegendaTipoAttivitaCalendario.id'],
+        ]);
         foreach($calendar as $key => $value){
             $sep = ' - ';
             $note = '';
@@ -157,21 +157,21 @@ class CespitiController extends AppController {
         }
         */
         if(!$groupId){
-            $conditions = array();
-            $this->set('events', $this->Cespitecalendario->find('all', array(
+            $conditions = [];
+            $this->set('events', $this->Cespitecalendario->find('all', [
                 'conditions' => $conditions,
-                'contains' => array('Cespitecalendario'),
+                'contains' => ['Cespitecalendario'],
                 'recursive' => -1,
-                'contain' => array('Cespite.displayName','Cespite.id','Persona.displayName','Persona.id','LegendaTipoAttivitaCalendario.color','LegendaTipoAttivitaCalendario.textColor','LegendaTipoAttivitaCalendario.id'),
-            )));
+                'contain' => ['Cespite.displayName','Cespite.id','Persona.displayName','Persona.id','LegendaTipoAttivitaCalendario.color','LegendaTipoAttivitaCalendario.textColor','LegendaTipoAttivitaCalendario.id'],
+            ]));
         } else {
-            $conditions = array('Cespitecalendario.eventGroup' => $groupId);
-            $this->set('events', $this->Cespitecalendario->find('all', array(
+            $conditions = ['Cespitecalendario.eventGroup' => $groupId];
+            $this->set('events', $this->Cespitecalendario->find('all', [
                 'conditions' => $conditions,
-                'contains' => array('Cespitecalendario'),
+                'contains' => ['Cespitecalendario'],
                 'recursive' => -1,
-                'contain' => array('Cespite.displayName','Cespite.id','Persona.displayName','Persona.id','LegendaTipoAttivitaCalendario.color','LegendaTipoAttivitaCalendario.textColor','LegendaTipoAttivitaCalendario.id'),
-            )));
+                'contain' => ['Cespite.displayName','Cespite.id','Persona.displayName','Persona.id','LegendaTipoAttivitaCalendario.color','LegendaTipoAttivitaCalendario.textColor','LegendaTipoAttivitaCalendario.id'],
+            ]));
         }
         //$this->set('events', $this->Paginator->paginate());
     }
@@ -179,22 +179,22 @@ class CespitiController extends AppController {
     public function _checkEventDate($edit = false){
         //debug($this->request->data);
         if($edit){
-            $conditions = array('AND' => array(
+            $conditions = ['AND' => [
                                         'Cespitecalendario.cespite_id'=>$this->request->data['Cespitecalendario']['cespite_id'],
-                                        'NOT' => array('Cespitecalendario.id'=>$this->request->data['Cespitecalendario']['id'])
-                                        )
-                            );
+                                        'NOT' => ['Cespitecalendario.id'=>$this->request->data['Cespitecalendario']['id']]
+                                        ]
+                            ];
         } else {
-            $conditions = array('Cespitecalendario.cespite_id'=>$this->request->data['Cespitecalendario']['cespite_id']);
+            $conditions = ['Cespitecalendario.cespite_id'=>$this->request->data['Cespitecalendario']['cespite_id']];
         }
-        $relatedEvents = $this->Cespitecalendario->find('all', array(
+        $relatedEvents = $this->Cespitecalendario->find('all', [
             'conditions' => $conditions,
-            'contains' => array('Cespitecalendario'),
+            'contains' => ['Cespitecalendario'],
             'recursive' => -1,
-            'contain' => array('Cespite.displayName','Cespite.id',
+            'contain' => ['Cespite.displayName','Cespite.id',
                             'Persona.displayName','Persona.id',
-                            'LegendaTipoAttivitaCalendario.color','LegendaTipoAttivitaCalendario.textColor','LegendaTipoAttivitaCalendario.id'),
-        ));
+                            'LegendaTipoAttivitaCalendario.color','LegendaTipoAttivitaCalendario.textColor','LegendaTipoAttivitaCalendario.id'],
+        ]);
         //debug($relatedEvents);
         //die();
         $newEventUnixtimeStart = strtotime($this->request->data['Cespitecalendario']['start']);
@@ -293,7 +293,7 @@ class CespitiController extends AppController {
     public function eventadd() {
         $this->loadModel('Cespitecalendario');
         $listaAttivita = $this->Cespitecalendario->Attivita->getlist();
-        $listaAttivita = array(0 => 'Associa ad Attività') + $listaAttivita; //Questo si può fare perchè listaattività parte da 1 e quindi 0 non sarà duplicato
+        $listaAttivita = [0 => 'Associa ad Attività'] + $listaAttivita; //Questo si può fare perchè listaattività parte da 1 e quindi 0 non sarà duplicato
         $this->set('eAttivita', $listaAttivita);
         $this->set('faseattivita', $this->Cespitecalendario->Faseattivita->getSimple());
         if(!empty($this->request->data)){
@@ -386,31 +386,31 @@ class CespitiController extends AppController {
                         //debug($s->format("D"));
                         if($s->format("D") == 'Mon' and $this->request->data['Cespitecalendario']['RepeatMon'] == '1' ){
                             if($alreadyBooked !== null){
-                                $this->Session->setFlash(__($alreadyBookedMex),'default',array('class' => 'text-danger'));
+                                $this->Session->setFlash(__($alreadyBookedMex),'default',['class' => 'text-danger']);
                                 break 1;}else{$repeatedEvents[] = $this->request->data;}
                         } else if($s->format("D") == 'Tue' and $this->request->data['Cespitecalendario']['RepeatTue'] == '1' ){
                             if($alreadyBooked !== null){
-                                $this->Session->setFlash(__($alreadyBookedMex),'default',array('class' => 'text-danger'));
+                                $this->Session->setFlash(__($alreadyBookedMex),'default',['class' => 'text-danger']);
                                 break 1;}else{$repeatedEvents[] = $this->request->data;}
                         } else if($s->format("D") == 'Wed' and $this->request->data['Cespitecalendario']['RepeatWed'] == '1' ){
                             if($alreadyBooked !== null){
-                                $this->Session->setFlash(__($alreadyBookedMex),'default',array('class' => 'text-danger'));
+                                $this->Session->setFlash(__($alreadyBookedMex),'default',['class' => 'text-danger']);
                                 break 1;}else{$repeatedEvents[] = $this->request->data;}
                         } else if($s->format("D") == 'Thu' and $this->request->data['Cespitecalendario']['RepeatThu'] == '1' ){
                             if($alreadyBooked !== null){
-                                $this->Session->setFlash(__($alreadyBookedMex),'default',array('class' => 'text-danger'));
+                                $this->Session->setFlash(__($alreadyBookedMex),'default',['class' => 'text-danger']);
                                 break 1;}else{$repeatedEvents[] = $this->request->data;}
                         } else if($s->format("D") == 'Fri' and $this->request->data['Cespitecalendario']['RepeatFri'] == '1' ){
                             if($alreadyBooked !== null){
-                                $this->Session->setFlash(__($alreadyBookedMex),'default',array('class' => 'text-danger'));
+                                $this->Session->setFlash(__($alreadyBookedMex),'default',['class' => 'text-danger']);
                                 break 1;}else{$repeatedEvents[] = $this->request->data;}
                         } else if($s->format("D") == 'Sat' and $this->request->data['Cespitecalendario']['RepeatSat'] == '1' ){
                             if($alreadyBooked !== null){
-                                $this->Session->setFlash(__($alreadyBookedMex),'default',array('class' => 'text-danger'));
+                                $this->Session->setFlash(__($alreadyBookedMex),'default',['class' => 'text-danger']);
                                 break 1;}else{$repeatedEvents[] = $this->request->data;}
                         } else if($s->format("D") == 'Sun' and $this->request->data['Cespitecalendario']['RepeatSun'] == '1' ){
                             if($alreadyBooked !== null){
-                                $this->Session->setFlash(__($alreadyBookedMex),'default',array('class' => 'text-danger'));
+                                $this->Session->setFlash(__($alreadyBookedMex),'default',['class' => 'text-danger']);
                                 break 1;}else{$repeatedEvents[] = $this->request->data;}
                         }
                         //debug($this->request->data);
@@ -444,10 +444,10 @@ class CespitiController extends AppController {
                             $this->Session->delete('refererPage');
                             if($refPage == 'calendar'){
                                 debug('Codice eseguito redirect verso calendar');
-                                $this->redirect(array('action' => 'calendar'));
+                                $this->redirect(['action' => 'calendar']);
                             } else {
                                 debug('Codice eseguito redirect verso eventlist');
-                                $this->redirect(array('action' => 'eventlist'));
+                                $this->redirect(['action' => 'eventlist']);
                             }
                         } else {
                             $this->Session->setFlash(__('Asset Event could not be saved. Please, try again.'));
@@ -455,11 +455,11 @@ class CespitiController extends AppController {
                     }
                     } else {
                         $this->Session->setFlash(__('La durata di un evento ripetuto non può durare più di un giorno.'), 
-                                            'default', array('class' => 'text-danger'));
+                                            'default', ['class' => 'text-danger']);
                     }
                 } else {
                     $this->Session->setFlash(__('La data iniziale deve essere minore della data finale'), 
-                                            'default', array('class' => 'text-danger'));
+                                            'default', ['class' => 'text-danger']);
                 }
             } else {
                 // Questo è il codice per aggiungere eventi non ripetuti
@@ -472,7 +472,7 @@ class CespitiController extends AppController {
                                                 .'" ('.$alreadyBooked['Cespitecalendario']['start'].' - '.$alreadyBooked['Cespitecalendario']['end'].')'
                                                 ), 
                                             'default', 
-                                            array('class' => 'text-danger'));
+                                            ['class' => 'text-danger']);
                     //echo 'Il cespite indicato è già occupato dall\'evento '.$alreadyBooked['Cespitecalendario']['id'];
                 } else {
                     if($startIsMinorEnd){
@@ -482,16 +482,16 @@ class CespitiController extends AppController {
                             $refPage = $this->Session->read('refererPage');
                             $this->Session->delete('refererPage');
                             if($refPage == 'calendar'){
-                                $this->redirect(array('action' => 'calendar'));
+                                $this->redirect(['action' => 'calendar']);
                             } else {
-                                $this->redirect(array('action' => 'eventlist'));
+                                $this->redirect(['action' => 'eventlist']);
                             }
                         } else {
                             $this->Session->setFlash(__('Asset Event could not be saved. Please, try again.'));
                         }
                     } else {
                         $this->Session->setFlash(__('La data iniziale deve essere minore della data finale'), 
-                                            'default', array('class' => 'text-danger'));
+                                            'default', ['class' => 'text-danger']);
                     }
                 }
             }
@@ -505,7 +505,7 @@ class CespitiController extends AppController {
         $this->loadModel('Cespitecalendario');
         if(!$id or !is_numeric($id)){
             $this->Session->setFlash(__('Invalid Asset Event id'));
-            $this->redirect(array('action' => 'eventlist'));
+            $this->redirect(['action' => 'eventlist']);
         } else {
             if($this->request->is('post') || $this->request->is('put')){
                 unset($this->request->data['delta']);// For future uses
@@ -539,12 +539,12 @@ class CespitiController extends AppController {
         //debug((strtotime('2019-06-06 23:59:59') - strtotime('2019-06-06 00:00:00')) +1 );
         $this->loadModel('Cespitecalendario');
         $listaAttivita = $this->Cespitecalendario->Attivita->getlist();
-        $listaAttivita = array(0 => 'Associa ad Attività') + $listaAttivita; //Questo si può fare perchè listaattività parte da 1 e quindi 0 non sarà duplicato
+        $listaAttivita = [0 => 'Associa ad Attività'] + $listaAttivita; //Questo si può fare perchè listaattività parte da 1 e quindi 0 non sarà duplicato
         $this->set('eAttivita', $listaAttivita);
         $this->set('faseattivita', $this->Cespitecalendario->Faseattivita->getSimple());
         if(!$id or !is_numeric($id)){
             $this->Session->setFlash(__('Invalid Asset Event id'));
-            $this->redirect(array('action' => 'eventlist'));
+            $this->redirect(['action' => 'eventlist']);
         } else {
             if(!$this->Session->check('refererPage')){
                 $this->Session->write('refererPage',basename($this->request->referer()));
@@ -564,7 +564,7 @@ class CespitiController extends AppController {
                                                 .'" ('.$alreadyBooked['Cespitecalendario']['start'].' - '.$alreadyBooked['Cespitecalendario']['end'].')'
                                                 ), 
                                                 'default', 
-                                                array('class' => 'text-danger'));
+                                                ['class' => 'text-danger']);
                     //echo 'Il cespite indicato è già occupato dall\'evento '.$alreadyBooked['Cespitecalendario']['id'];
                 } else {
                     if($startIsMinorEnd){
@@ -577,14 +577,14 @@ class CespitiController extends AppController {
                         $refPage = $this->Session->read('refererPage');
                         $this->Session->delete('refererPage');
                         if($refPage == 'calendar'){
-                            $this->redirect(array('action' => 'calendar'));
+                            $this->redirect(['action' => 'calendar']);
                         } else {
-                            $this->redirect(array('action' => 'eventlist'));
+                            $this->redirect(['action' => 'eventlist']);
                         }
                     } else {
                         $this->Session->setFlash(__('La data iniziale deve essere minore della data finale'), 
                                             'default', 
-                                            array('class' => 'text-danger'));
+                                            ['class' => 'text-danger']);
                     }
                 }
             } else {
@@ -599,25 +599,25 @@ class CespitiController extends AppController {
         $this->loadModel('Cespitecalendario');
         if(!$id){
             $this->Session->setFlash(__('Invalid Asset Event id'));
-            $this->redirect(array('action' => 'eventlist'));
+            $this->redirect(['action' => 'eventlist']);
         }
         if($this->Cespitecalendario->delete($id)){
             $this->Session->setFlash(__('Asset Event deleted'));
-            $this->redirect(array('action' => 'eventlist'));
+            $this->redirect(['action' => 'eventlist']);
         }
         $this->Session->setFlash(__('Asset Event was not deleted'));
-        $this->redirect(array('action' => 'eventlist'));
+        $this->redirect(['action' => 'eventlist']);
     }
 
     public function eventgroupdelete($id = null){
         if(!$id){
             $this->Session->setFlash(__('Invalid Asset Event id'));
-            $this->redirect(array('action' => 'eventlist'));
+            $this->redirect(['action' => 'eventlist']);
         }
         $this->loadModel('Cespitecalendario');
-        $groupEvents = $this->Cespitecalendario->find('all', array(
-            'conditions' => array('Cespitecalendario.eventGroup' => $id)
-        ));
+        $groupEvents = $this->Cespitecalendario->find('all', [
+            'conditions' => ['Cespitecalendario.eventGroup' => $id]
+        ]);
         $almostOneOk = false;
         foreach($groupEvents as $event){
             if($this->Cespitecalendario->delete($event['Cespitecalendario']['id'])){
@@ -629,22 +629,22 @@ class CespitiController extends AppController {
         if($almostOneOk){
             $this->Session->setFlash(__('Event group deleted'));
         }
-        $this->redirect(array('action' => 'eventlist'));
+        $this->redirect(['action' => 'eventlist']);
     }
 
     function autocomplete() {
-        $data = array();
+        $data = [];
         if (isset($this->request->query['term'])) {
-            $data = $this->Cespite->find('all', array(
-                'conditions' => array(
+            $data = $this->Cespite->find('all', [
+                'conditions' => [
                     'Cespite.DisplayName LIKE' => '%' . $this->request->query['term'] . '%'
-                ),
+                ],
                 'limit' => 50,
-                'fields' => array('id', 'displayName', 'costo_affitto'),
-            ));
+                'fields' => ['id', 'displayName', 'costo_affitto'],
+            ]);
         }
 
-        $res = array();
+        $res = [];
 
         foreach ($data as $d) {
             $a = new StdClass();
@@ -703,10 +703,10 @@ class CespitiController extends AppController {
 
         $searchResult = $this->Cespitecalendario->find(
             'all',
-            array(
+            [
                 'conditions' => $conditions,
                 //'fields' => array()
-            )
+            ]
         );
         //debug($searchResult);
 
@@ -744,14 +744,14 @@ class CespitiController extends AppController {
 
     private function getConditionFromQueryString(){
         //debug($this->request->query);
-        $conditions = array();
+        $conditions = [];
         $attivita='';
         //$persone='';
         if(!empty($this->request->query['cespite_id'])){
             $cespiti = $this->request->query['cespite_id'];
             if(!empty($cespiti)){
                 if(is_numeric($cespiti)){
-                    $cespiti = array($cespiti);               
+                    $cespiti = [$cespiti];               
                 }
             }
             if(is_array($cespiti)) $conditions['Cespitecalendario.cespite_id IN'] = $cespiti;
@@ -773,7 +773,7 @@ class CespitiController extends AppController {
             //Se la stringa è vuota non devo mettere la condizione
             if(!empty($attivita)){
                 if(is_numeric($attivita)){
-                    $attivita = array($attivita);                
+                    $attivita = [$attivita];                
                 }
                 if (is_array($attivita)) $conditions['Cespitecalendario.attivita_id IN'] = $attivita;                
             }

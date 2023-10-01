@@ -27,12 +27,12 @@
 
     <!-- Loading Custom Stylesheets -->
     <?php echo $this->Html->css('custom'); ?>
-    <?php echo $this->Html->css('print', null, array('media'=>'print')); ?>
+    <?php echo $this->Html->css('print', null, ['media'=>'print']); ?>
 
     <?php
         echo $this->Html->meta(
         'favicon.ico',
-        array('type' => 'icon')
+        ['type' => 'icon']
         );
   ?>
 
@@ -106,7 +106,7 @@
                         }
                    ?>
                     <li><a href="#" class="user dropdown-toggle" data-toggle="dropdown"><span
-                                class="username"><?php echo $this->Html->image($path , array('class'=>'user-avatar','alt'=>'')); ?>
+                                class="username"><?php echo $this->Html->image($path , ['class'=>'user-avatar','alt'=>'']); ?>
                                 Ciao <b><?php echo ucfirst($u); ?></b> <?php echo $uAssoc; ?></span></a>
                         <ul class="dropdown-menu">
                             <?php if($this->Session->read('Auth.User.Persona.id')){ ?>
@@ -140,13 +140,13 @@
                         <?php
                   if($role == 1){
                     // If user role is admin
-                    echo $this->element('leftmenu',array(),array("cache" => "long_view"));
+                    echo $this->element('leftmenu',[],["cache" => "long_view"]);
                   } else if ($role == 2){
                     // If user role is pm
-                    echo $this->element('leftmenupm',array(),array("cache" => "long_view"));
+                    echo $this->element('leftmenupm',[],["cache" => "long_view"]);
                   } else if ($role == 3){
                     // If user role is impiegato
-                    echo $this->element('leftmenuimpiegato',array(),array("cache" => "long_view"));
+                    echo $this->element('leftmenuimpiegato',[],["cache" => "long_view"]);
                   }
               ?>
                     </ul>
@@ -199,7 +199,7 @@
 
                 <div class="row">
                     <div class="footer">
-                        <?php echo $this->element('footer',array(),array("cache" => "long_view")); ?>
+                        <?php echo $this->element('footer',[],["cache" => "long_view"]); ?>
                     </div>
                 </div>
 

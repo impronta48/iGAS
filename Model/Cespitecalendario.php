@@ -5,17 +5,17 @@ class Cespitecalendario extends AppModel {
 	public $name = 'Cespitecalendario';
     public $displayField = 'ID';
     var $order= 'Cespitecalendario.start';
-    var $actsAs = array('Containable');
+    var $actsAs = ['Containable'];
     
-    var $validate = array(
-        'start' => array(
+    var $validate = [
+        'start' => [
             'rule' => 'notBlank',
             'required' => true
-        ),
-    );
+        ],
+    ];
     
-    var $belongsTo = array(
-        'Cespite' => array(
+    var $belongsTo = [
+        'Cespite' => [
             'className' => 'Cespite',
             'foreignKey' => 'cespite_id',
             'dependent' => false,
@@ -27,8 +27,8 @@ class Cespitecalendario extends AppModel {
             'exclusive' => '',
             'finderQuery' => '',
             'counterQuery' => ''
-        ),
-        'Persona' => array(
+        ],
+        'Persona' => [
             'className' => 'Persona',
             'foreignKey' => 'user_id',
             'dependent' => false,
@@ -40,8 +40,8 @@ class Cespitecalendario extends AppModel {
             'exclusive' => '',
             'finderQuery' => '',
             'counterQuery' => ''
-        ),
-        'LegendaTipoAttivitaCalendario' => array(
+        ],
+        'LegendaTipoAttivitaCalendario' => [
             'className' => 'LegendaTipoAttivitaCalendario',
             'foreignKey' => 'event_type_id',
             'dependent' => false,
@@ -53,8 +53,8 @@ class Cespitecalendario extends AppModel {
             'exclusive' => '',
             'finderQuery' => '',
             'counterQuery' => ''
-        ),
-        'Attivita' => array(
+        ],
+        'Attivita' => [
 			'className' => 'Attivita',
 			'foreignKey' => 'attivita_id',
 			'dependent' => false,
@@ -66,8 +66,8 @@ class Cespitecalendario extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-		'Faseattivita' => array(
+		],
+		'Faseattivita' => [
 			'className' => 'Faseattivita',
 			'foreignKey' => 'faseattivita_id',
 			'dependent' => false,
@@ -79,10 +79,10 @@ class Cespitecalendario extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		)
-    );  
+		]
+    ];  
 
-    public function beforeSave($options = Array()) {
+    public function beforeSave($options = []) {
         //debug($this->data);die();//DEBUG
     }
     

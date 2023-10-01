@@ -41,7 +41,7 @@
         echo "<h3>$key ($mese - $anno)</h3>".
         "<table class=\"ora-persona table table-bordered\"><thead>";
 
-        $sommaday[] = array();
+        $sommaday[] = [];
 
     ?>       
      <tr class="thead-inverse">

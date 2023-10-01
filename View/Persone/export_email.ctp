@@ -3,7 +3,7 @@
 
 <div class="well">
 <?php
-	$elenco = array();
+	$elenco = [];
 	foreach ($persone as $p)
 	{
 		if (!empty($p['Persona']['email']))

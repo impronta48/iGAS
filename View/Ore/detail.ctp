@@ -1,11 +1,11 @@
-<?php echo $this->Html->script("ora",array('inline' => false)); ?>
+<?php echo $this->Html->script("ora",['inline' => false]); ?>
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
 
 <?php $baseformclass = ' form-control'; ?>
 <?php if (isset($this->request->query['attivita']) && count($this->request->query['attivita'])==1 && !empty($this->request->query['attivita'][0]))
     {
       $id = $this->request->query['attivita'][0];
-      echo $this->element('secondary_attivita', array('aid'=>$id));
+      echo $this->element('secondary_attivita', ['aid'=>$id]);
       $this->Html->addCrumb("Attività", "/attivita/");
       $this->Html->addCrumb("Attività [$id]" , "/attivita/edit/$id");
       $this->Html->addCrumb("Ore", "");
@@ -74,29 +74,29 @@
             }
 
 ?>
-<?php echo $this->Form->create('Ora', array('id' => 'stats-form','type' => 'get',
-  'inputDefaults' => array(
+<?php echo $this->Form->create('Ora', ['id' => 'stats-form','type' => 'get',
+  'inputDefaults' => [
     'div' => 'form-group',
-    'label' => array(
+    'label' => [
       'class' => 'col col-md-2 control-label'
-    ),
+    ],
     'wrapInput' => 'col col-md-4',
     'class' => 'form-control'
-  ),
+  ],
   'class' => 'well form-horizontal'
-    )); ?>
+    ]); ?>
 
-    <?php echo $this->Form->input('attivita', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$attivita_list, 'value'=>$a)); ?>
-    <?php echo $this->Form->input('faseattivita_id', array('label'=>'Fase Attività', 'multiple'=>true, 'options'=>$faseattivita,
+    <?php echo $this->Form->input('attivita', ['multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$attivita_list, 'value'=>$a]); ?>
+    <?php echo $this->Form->input('faseattivita_id', ['label'=>'Fase Attività', 'multiple'=>true, 'options'=>$faseattivita,
                                     'class'=>'fase chosen-select' . $baseformclass, 'value'=>$fa
-                                )); ?>
+                                ]); ?>
 
-    <?php echo $this->Form->input('persone', array('multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p)); ?>
+    <?php echo $this->Form->input('persone', ['multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p]); ?>
 
-    <?php echo $this->Form->input('from', array('id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$f, 'class'=> 'datepicker form-control',
-                                  'default'=>date('Y-m-d', strtotime('first day of last month')))); ?>
-    <?php echo $this->Form->input('to', array('id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$t, 'class'=> 'datepicker form-control',)); ?>
-    <?php echo $this->Form->submit(__('Filter'), array('class'=>'col-md-offset-2')); ?>
+    <?php echo $this->Form->input('from', ['id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$f, 'class'=> 'datepicker form-control',
+                                  'default'=>date('Y-m-d', strtotime('first day of last month'))]); ?>
+    <?php echo $this->Form->input('to', ['id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$t, 'class'=> 'datepicker form-control',]); ?>
+    <?php echo $this->Form->submit(__('Filter'), ['class'=>'col-md-offset-2']); ?>
     <?php echo $this->Form->end(); ?>
 
     <?php
@@ -108,7 +108,7 @@
         };
 
         $selected_list2array = explode(',', $selected_list);
-        $res = array();
+        $res = [];
 
         foreach ($selected_list2array as $p) {
             if ($p > 0) {
@@ -130,41 +130,41 @@
 
         <h3>Dettaglio Ore</h3>
         <?php
-            echo $this->Form->create("Ore",array('detail' => 'index',
+            echo $this->Form->create("Ore",['detail' => 'index',
                    'type' => 'post',
                    'id' => 'multiriga',
-                   'inputDefaults' => array(
+                   'inputDefaults' => [
                         'div' => 'form-group',
                         'label' => false,
                         'wrapInput' => false,
                         'class' => 'form-control'
-                    ),
+                    ],
                     'class' => ' form-inline',
-                ));
+                ]);
         ?>
         <table id="ore-attivita" class="table table-bordered table-hover table-striped display dataTable" cellspacing="1">
         <thead>
-            <?php echo $this->Html->tableHeaders( array('<input type="checkbox" id="select-all"/>','Stato','Attività','Fase','Risorsa', 'data','ore','gg','Dettagli', 'LuogoTrasferta','Actions'), array('class'=>"tablesorter")) ; ?>
+            <?php echo $this->Html->tableHeaders( ['<input type="checkbox" id="select-all"/>','Stato','Attività','Fase','Risorsa', 'data','ore','gg','Dettagli', 'LuogoTrasferta','Actions'], ['class'=>"tablesorter"]) ; ?>
         </thead>
         <tbody>
             <?php $tot = 0 ; foreach ($result as $r): ?>
             <?php
             	//Azioni
-            	$act = array(
-                            $this->Html->link('Edit',array('action'=>'edit',$r['Ora']['id']),array('class'=>"btn btn-primary btn-xs glow" )) .
-                            $this->Html->link('Del',array('action'=>'delete',$r['Ora']['id']),array('class'=>"btn btn-primary btn-xs glow" )),
-                            array('class'=>'actions'),
-                            );
+            	$act = [
+                            $this->Html->link('Edit',['action'=>'edit',$r['Ora']['id']],['class'=>"btn btn-primary btn-xs glow" ]) .
+                            $this->Html->link('Del',['action'=>'delete',$r['Ora']['id']],['class'=>"btn btn-primary btn-xs glow" ]),
+                            ['class'=>'actions'],
+                            ];
 
                 $d= new DateTime($r['Ora']['data']);
 
 
                 echo $this->Html->tableCells(
-                    array(
-                          $this->Form->checkbox('Ora.'. $r['Ora']['id'] .'.id', array(
+                    [
+                          $this->Form->checkbox('Ora.'. $r['Ora']['id'] .'.id', [
                                                      'class' => 'selectable',
                                                      'hiddenField' => false  //non mi serve passare tutti gli zero
-                                                  )),
+                                                  ]),
                           $r['Ora']['pagato'],
                           $this->Ore->getAttivitaDetail($r, $attivita_list),
                           substr($r['Faseattivita']['Descrizione'],0,40),
@@ -175,8 +175,8 @@
                           $r['Ora']['dettagliAttivita'],
                           $this->Ore->getLuogoDetail($r),
                           $act,
-                      ),
-                    array('class' => 'darker'));
+                      ],
+                    ['class' => 'darker']);
                     $tot +=  $r['Ora']['numOre'];
                 ?>
             <?php endforeach; ?>
@@ -184,7 +184,7 @@
         <tfoot>
               <?php
                 echo $this->Html->tableCells(
-                    array('',
+                    ['',
                           'Totale',
                           '',
                           '',
@@ -195,8 +195,8 @@
                           '',
                           '',
                           '',
-                      ),
-                    array('class' => 'bg-info'));
+                      ],
+                    ['class' => 'bg-info']);
                 ?>
         </tfoot>
         </table>
@@ -206,7 +206,7 @@
     <?php endif; ?>
 </div>
 
-<?php $this->Html->scriptStart(array('inline' => false)); ?>
+<?php $this->Html->scriptStart(['inline' => false]); ?>
 
 
 $(document).ready(function() {

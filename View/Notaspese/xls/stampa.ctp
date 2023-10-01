@@ -46,9 +46,9 @@ if(!empty($cliente['cf'])){
 $this->PhpSpreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(12);
 $this->PhpSpreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(12);
 $this->PhpSpreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(12);
-$fatturabili_fatturati_rimborsabili = $fatturabili_fatturati_nonRimborsabili = array();
-$fatturabili_daFatturare_rimborsabili = $fatturabili_daFatturare_nonRimborsabili = array();
-$fatturabili_nonFatturabili_rimborsabili = $fatturabili_nonFatturabili_nonRimborsabili = array();
+$fatturabili_fatturati_rimborsabili = $fatturabili_fatturati_nonRimborsabili = [];
+$fatturabili_daFatturare_rimborsabili = $fatturabili_daFatturare_nonRimborsabili = [];
+$fatturabili_nonFatturabili_rimborsabili = $fatturabili_nonFatturabili_nonRimborsabili = [];
 $importo_fatturabili_fatturati_rimborsabili = $importo_fatturabili_fatturati_nonRimborsabili = 0;
 $importo_fatturabili_daFatturare_rimborsabili = $importo_fatturabili_daFatturare_nonRimborsabili = 0;
 $importo_nonFatturabili_rimborsabili = $importo_nonFatturabili_nonRimborsabili = 0;

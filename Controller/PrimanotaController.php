@@ -1,11 +1,11 @@
 <?php
 class PrimanotaController extends AppController {
-    public $helpers = array('Cache', 'PhpExcel.PhpSpreadsheet');
+    public $helpers = ['Cache', 'PhpExcel.PhpSpreadsheet'];
 	public $cacheAction = "1 day";
-    public $components = array('DataTable', 'Paginator', 'UploadFiles');
-	public $paginate = array(
+    public $components = ['DataTable', 'Paginator', 'UploadFiles'];
+	public $paginate = [
         'limit' => 50,
-    );
+    ];
 
     public function pnlist()
     {
@@ -24,7 +24,7 @@ class PrimanotaController extends AppController {
                                             '',
                                             'igas_primanota_' . Configure::read('iGas.NomeAzienda')
                                              );
-        $conditions = array();
+        $conditions = [];
 
         //Se salvo il form iniziale passo da qui
         if (!empty($this->request->data))
@@ -52,15 +52,15 @@ class PrimanotaController extends AppController {
 
         //Leggo tutti i parametri in variabili
         $attivita_id= $id;
-        $campi = array('attivita' =>array('db'=> 'Primanota.attivita_id', 'valore'=>null),
-                  'persona' => array('db' => 'Primanota.persona_id', 'valore' => null),
-                  'provenienzasoldi' => array('db' => 'Provenienzasoldi.id', 'valore' => null),
-                  'fase' => array('db' => 'Primanota.faseattivita_id', 'valore' => null),
-                  'from' => array('db' => 'Primanota.data >=', 'valore' => null),
-                  'to' => array('db' => 'Primanota.data <=', 'valore' => null),
-                  'legenda_cat_spesa' => array('db' => 'Primanota.legenda_cat_spesa_id', 'valore' => null),
-                  'progetto' => array('db' => 'Attivita.progetto_id', 'valore' => null)
-                );
+        $campi = ['attivita' =>['db'=> 'Primanota.attivita_id', 'valore'=>null],
+                  'persona' => ['db' => 'Primanota.persona_id', 'valore' => null],
+                  'provenienzasoldi' => ['db' => 'Provenienzasoldi.id', 'valore' => null],
+                  'fase' => ['db' => 'Primanota.faseattivita_id', 'valore' => null],
+                  'from' => ['db' => 'Primanota.data >=', 'valore' => null],
+                  'to' => ['db' => 'Primanota.data <=', 'valore' => null],
+                  'legenda_cat_spesa' => ['db' => 'Primanota.legenda_cat_spesa_id', 'valore' => null],
+                  'progetto' => ['db' => 'Attivita.progetto_id', 'valore' => null]
+                ];
         $valorizzato = false;   //il form ha qualche campo settato o è tutto vuoto (in questo caso leggo dal cookie)
         //Leggo tutti i valori dalla querystring
         foreach ($campi as $c=>$v) {
@@ -100,18 +100,18 @@ class PrimanotaController extends AppController {
         $this->Cookie->write('Primanota.filtro', $cookieprep, false, '365 days');
 
         $this->set('primanota', $this->Primanota->find('all',
-                        array('conditions'=>$conditions,
-                              'order'=>array('Primanota.data DESC'),
-                             )
+                        ['conditions'=>$conditions,
+                              'order'=>['Primanota.data DESC'],
+                             ]
                   ));
 
         //Leggo tutti i tag e li porto alla view
-        $fields=array('name');
+        $fields=['name'];
 
         //TODO: Potrei filtrare TAG con un prefisso (es: R.), ma devo capire come salvare i tag di questo tipo con un prefisso
         //$t = $this->Primanota->Tag->find('all', array('fields'=>$fields, 'recursive'=>-1, 'conditions'=> array('name LIKE'=> 'R%')));
-		$t = $this->Primanota->Tag->find('all', array('fields'=>$fields, 'recursive'=>-1));
-        $taglist = array();
+		$t = $this->Primanota->Tag->find('all', ['fields'=>$fields, 'recursive'=>-1]);
+        $taglist = [];
         foreach($t as $t1)
         {
             $taglist[]= $t1['Tag']['name'];
@@ -150,7 +150,7 @@ class PrimanotaController extends AppController {
 				}
 				$this->Session->setFlash('Riga di Prima Nota salvata con successo');
 				$attivita_id = $this->request->data['Primanota']['attivita_id'];
-                $this->redirect(array('controller'=>'primanota','action'=>'index'));
+                $this->redirect(['controller'=>'primanota','action'=>'index']);
 
 			} else {
 				$this->Session->setFlash('Impossibile salvare la riga di Prima Nota');
@@ -160,9 +160,9 @@ class PrimanotaController extends AppController {
 			$this->request->data = $this->Primanota->read(null, $id);
 
             //Leggo tutti i tag e li porto alla view
-            $fields=array('name');
-            $t = $this->Primanota->Tag->find('all', array('fields'=>$fields, 'recursive'=>-1));
-            $taglist = array();
+            $fields=['name'];
+            $t = $this->Primanota->Tag->find('all', ['fields'=>$fields, 'recursive'=>-1]);
+            $taglist = [];
             foreach($t as $t1)
             {
                 $taglist[]= $t1['Tag']['name'];
@@ -194,10 +194,10 @@ class PrimanotaController extends AppController {
                 unlink(WWW_ROOT.'files'.DS.$this->request->controller.DS.$id.'.'.$fileExt);
             }
             $this->Session->setFlash(__('Primanota deleted'));
-            return $this->redirect(array('action' => 'index', $aid));
+            return $this->redirect(['action' => 'index', $aid]);
         }
         $this->Session->setFlash(__('Primanota was not deleted'));
-        return $this->redirect(array('action' => 'index', $aid));
+        return $this->redirect(['action' => 'index', $aid]);
 
  }
 
@@ -234,20 +234,20 @@ class PrimanotaController extends AppController {
 private function _preparaDropDown()
     {
         //Preparo i dropdown
-        $this->set('provenienzesoldi', $this->Primanota->Provenienzasoldi->find('list',array('cache' => 'Provenienzasoldi', 'cacheConfig' => 'short')));
-        $this->set('legenda_cat_spesa', $this->Primanota->LegendaCatSpesa->find('list',array('cache' => 'LegendaCatSpesa', 'cacheConfig' => 'short')));
+        $this->set('provenienzesoldi', $this->Primanota->Provenienzasoldi->find('list',['cache' => 'Provenienzasoldi', 'cacheConfig' => 'short']));
+        $this->set('legenda_cat_spesa', $this->Primanota->LegendaCatSpesa->find('list',['cache' => 'LegendaCatSpesa', 'cacheConfig' => 'short']));
         $this->set('attivita', $this->Primanota->Attivita->getlist());
         $this->set('progetti', $this->Primanota->Attivita->Progetto->find('list'));
-        $fe = $this->Primanota->Fatturaemessa->find('list', array(
-                        'fields'=>array('id', 'Descrizione'),
+        $fe = $this->Primanota->Fatturaemessa->find('list', [
+                        'fields'=>['id', 'Descrizione'],
                         'order'=>'AnnoFatturazione desc, Progressivo',
                         'recursive' => -1,
                         //Todo: questa condizione non è proprio precisa, bisogna anche considerare
                         //che la fattura non sia completamente soddisfatta (es: mi hanno dato un anticipo)
-                        'conditions' => array('Soddisfatta' => null),
-                    ));
+                        'conditions' => ['Soddisfatta' => null],
+                    ]);
 
-        $notset = array('0'=> '-- Non definito --');
+        $notset = ['0'=> '-- Non definito --'];
         $fe = Hash::merge($notset, $fe);
         $this->set('fatturaemessa', $fe);
 
@@ -271,7 +271,7 @@ private function _preparaDropDown()
     public function viewfr($idfr = null)
     {
         $this->Primanota->recursive=0;
-        $pn = $this->Primanota->find('first', array('conditions' => array('fatturaricevuta_id' => $idfr)));
+        $pn = $this->Primanota->find('first', ['conditions' => ['fatturaricevuta_id' => $idfr]]);
         $this->redirect('edit/'. $pn['Primanota']['id']);
     }
 
@@ -281,19 +281,19 @@ private function _preparaDropDown()
         $this->set('title_for_layout', "$anno - Totali per Mese - Prima Nota");
         $this->Primanota->recursive=0;
         //Estraggo tutte le prime note dell'anno corrente, ordinate per importo e poi per data
-        $pn = $this->Primanota->find('all',array('conditions'=>array('YEAR(Primanota.data)'=> $anno),
-                                            'fields'=>array('Primanota.data',
+        $pn = $this->Primanota->find('all',['conditions'=>['YEAR(Primanota.data)'=> $anno],
+                                            'fields'=>['Primanota.data',
                                                             'Primanota.importo',
                                                             'Attivita.name',
                                                             'Persona.DisplayName',
                                                             'Primanota.attivita_id',
                                                             'Primanota.descr',
                                                             'Provenienzasoldi.name'
-                                                    ),
-                                            'order'=> array('Attivita.name', 'Primanota.data', 'Primanota.importo'),
-                                           )
+                                                    ],
+                                            'order'=> ['Attivita.name', 'Primanota.data', 'Primanota.importo'],
+                                           ]
                                );
-        $primanota = array();
+        $primanota = [];
         foreach ($pn as $p)
         {
             $d = new DateTime($p['Primanota']['data']);
@@ -329,14 +329,14 @@ private function _preparaDropDown()
     {
         $anno = $this->_getAnno();
 
-        $pn = $this->Primanota->find('all', array(
-                'fields' => array('Faseattivita.id as id', 'Faseattivita.descrizione as descrizione', 'Primanota.data', 'Primanota.Descr', 'Primanota.importo',
+        $pn = $this->Primanota->find('all', [
+                'fields' => ['Faseattivita.id as id', 'Faseattivita.descrizione as descrizione', 'Primanota.data', 'Primanota.Descr', 'Primanota.importo',
                         'IF(Primanota.importo>0,"E","U") as Importi',
                         'Attivita.name', 'Persona.DisplayName', 'LegendaCatSpesa.name', 'Provenienzasoldi.name'
-                    ),
-                'conditions' => array('Primanota.data >=' => "$anno-01-01", 'Primanota.data <=' =>  "$anno-12-31" ),
-                'order' => array('Primanota.data'),
-            ));
+                    ],
+                'conditions' => ['Primanota.data >=' => "$anno-01-01", 'Primanota.data <=' =>  "$anno-12-31" ],
+                'order' => ['Primanota.data'],
+            ]);
         $this->set('pn', $pn);
 
     }
@@ -346,35 +346,35 @@ private function _preparaDropDown()
     {
         $anno = $this->_getAnno();
 
-        $pn = $this->Primanota->find('all', array(
-                'fields' => array('SUM(Primanota.importo) as sum',
+        $pn = $this->Primanota->find('all', [
+                'fields' => ['SUM(Primanota.importo) as sum',
                         'Attivita.name','LegendaCatSpesa.name', 'Provenienzasoldi.name'
-                    ),
-                'conditions' => array('Primanota.data >=' => "$anno-01-01",
+                    ],
+                'conditions' => ['Primanota.data >=' => "$anno-01-01",
                                       'Primanota.data <=' =>  "$anno-12-31",
                                       //'Provenienzasoldi.id IN' => array(8,70,73), //Massimoi: avevo messo questo blocco per togliere le prepagate dal bilancio
                                       'LegendaCatSpesa.id <>' => 45, //Tolgo il giroconto
                                       'Primanota.importo > 0'
-                                      ),
-                'group' => array('LegendaCatSpesa.name'),
-                'order' => array('LegendaCatSpesa.name'),
-            ));
+                                      ],
+                'group' => ['LegendaCatSpesa.name'],
+                'order' => ['LegendaCatSpesa.name'],
+            ]);
         //Entrate
         $this->set('pne', $pn);
         unset($pn);
 
-        $pn = $this->Primanota->find('all', array(
-                'fields' => array('SUM(Primanota.importo) as sum',
+        $pn = $this->Primanota->find('all', [
+                'fields' => ['SUM(Primanota.importo) as sum',
                         'Attivita.name','LegendaCatSpesa.name', 'Provenienzasoldi.name'
-                    ),
-                'conditions' => array('Primanota.data >=' => "$anno-01-01",
+                    ],
+                'conditions' => ['Primanota.data >=' => "$anno-01-01",
                                       'Primanota.data <=' =>  "$anno-12-31",
                                       //'Provenienzasoldi.id IN' => array(8,70,73), //Massimoi: avevo messo questo blocco per togliere le prepagate dal bilancio
                                       'LegendaCatSpesa.id <>' => 45, //Tolgo il giroconto dal bilancio
-                                      'Primanota.importo < 0'),
-                'group' => array('LegendaCatSpesa.name'),
-                'order' => array('LegendaCatSpesa.name'),
-            ));
+                                      'Primanota.importo < 0'],
+                'group' => ['LegendaCatSpesa.name'],
+                'order' => ['LegendaCatSpesa.name'],
+            ]);
         //Uscite
         $this->set('pnu', $pn);
         $this->set('name',"$anno-" . Configure::read('iGas.NomeAzienda')."-Bilancio");
@@ -389,21 +389,21 @@ private function _preparaDropDown()
             $anno = date('Y');
         }
 
-        $pn = $this->Primanota->find('all', array(
-                'fields' => array('Faseattivita.id as id', 'Faseattivita.descrizione as descrizione', 'Primanota.data', 'Primanota.Descr', 'Primanota.importo',
+        $pn = $this->Primanota->find('all', [
+                'fields' => ['Faseattivita.id as id', 'Faseattivita.descrizione as descrizione', 'Primanota.data', 'Primanota.Descr', 'Primanota.importo',
                         'IF(Primanota.importo>0,"Entrate","Uscite") as Importi',
                         'Attivita.name', 'Persona.DisplayName', 'LegendaCatSpesa.name', 'Provenienzasoldi.name'
-                    ),
-                'conditions' => array('Primanota.data >=' => "$anno-01-01", 'Primanota.data <=' =>  "$anno-12-31"),
-                'order' => array('Primanota.data'),
-            ));
+                    ],
+                'conditions' => ['Primanota.data >=' => "$anno-01-01", 'Primanota.data <=' =>  "$anno-12-31"],
+                'order' => ['Primanota.data'],
+            ]);
 
         foreach($pn as &$row){
             $row = Set::flatten($row);
         }
 
         $this->set('r', $pn);
-        $this->set('_serialize', array('r'));
+        $this->set('_serialize', ['r']);
     }
 
     public function riclassifica()
@@ -420,14 +420,14 @@ private function _preparaDropDown()
             }
         }
 
-        $this->Paginator->settings =  array(
-        'fields' => array('Primanota.id', 'Primanota.data', '   Primanota.Descr', 'Primanota.importo', 'Primanota.legenda_cat_spesa_id',
+        $this->Paginator->settings =  [
+        'fields' => ['Primanota.id', 'Primanota.data', '   Primanota.Descr', 'Primanota.importo', 'Primanota.legenda_cat_spesa_id',
                 'Attivita.name', 'Persona.DisplayName', 'LegendaCatSpesa.name', 'Provenienzasoldi.name', 'Primanota.attivita_id'
-            ),
-        'conditions' => array('Primanota.data >=' => "$anno-01-01", 'Primanota.data <=' =>  "$anno-12-31"),
-        'order' => array('Primanota.data'),
+            ],
+        'conditions' => ['Primanota.data >=' => "$anno-01-01", 'Primanota.data <=' =>  "$anno-12-31"],
+        'order' => ['Primanota.data'],
         'limit' => 50,
-        );
+        ];
 
         $this->data = $this->Paginator->paginate();
         $this->set('legenda_cat_spesa', $this->Primanota->LegendaCatSpesa->find('list'));
@@ -438,13 +438,13 @@ private function _preparaDropDown()
     {
         $anno = date('Y');
         $annopassato = $anno -1;
-        $primanota = array();
+        $primanota = [];
 
-        $pn = $this->Primanota->find('all', array(
-                'fields' => array('Primanota.data', 'Primanota.importo'),
-                'conditions' => array('Primanota.data >=' => "$annopassato-01-01", 'Primanota.data <=' =>  "$anno-12-31" ),
-                'order' => array('Primanota.data'),
-            ));
+        $pn = $this->Primanota->find('all', [
+                'fields' => ['Primanota.data', 'Primanota.importo'],
+                'conditions' => ['Primanota.data >=' => "$annopassato-01-01", 'Primanota.data <=' =>  "$anno-12-31" ],
+                'order' => ['Primanota.data'],
+            ]);
 
         $primanota[$anno]['Entrate'] = 0;
         $primanota[$anno]['Uscite'] = 0;

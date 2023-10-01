@@ -3,8 +3,8 @@
     <i>Stampa del: <?php echo date('d-m-Y  H:m'); ?> </i>
     <div class="row">
         <div class="actions">
-        <?php echo $this->Html->link('PDF', array('ext'=>'pdf', $this->request->pass[0],$this->request->pass[1],$this->request->pass[2]),array('class'=>'btn btn-info', 'escape'=>false)); ?>
-        <?php echo $this->Html->link('XLS', array('ext'=>'xls', $this->request->pass[0],$this->request->pass[1], $this->request->pass[2]),array('class'=>'btn btn-info', 'escape'=>false)); ?>
+        <?php echo $this->Html->link('PDF', ['ext'=>'pdf', $this->request->pass[0],$this->request->pass[1],$this->request->pass[2]],['class'=>'btn btn-info', 'escape'=>false]); ?>
+        <?php echo $this->Html->link('XLS', ['ext'=>'xls', $this->request->pass[0],$this->request->pass[1], $this->request->pass[2]],['class'=>'btn btn-info', 'escape'=>false]); ?>
         </div>
     </div>
         <?php
@@ -36,7 +36,7 @@
 
     <?php 
 
-        $somma =array_merge($somma, array('Progetto'=>0,'Contratto'=>0,'Eccesso'=>0));        
+        $somma =array_merge($somma, ['Progetto'=>0,'Contratto'=>0,'Eccesso'=>0]);        
         for ($d = 1; $d<=cal_days_in_month(CAL_GREGORIAN, $mese, $anno); $d++ )
         {                                  
             echo "<TR><TD style=\"text-align:right\">" . date('D d', strtotime("$anno-$mese-$d")) . "</TD>";

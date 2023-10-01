@@ -18,7 +18,7 @@
 						<div class="panel-body">
 							<ul class="nav nav-pills nav-stacked">
 
-																<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;'.__('List Legenda Codici Ivas'), array('action' => 'index'), array('escape' => false)); ?></li>
+																<li><?php echo $this->Html->link('<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;'.__('List Legenda Codici Ivas'), ['action' => 'index'], ['escape' => false]); ?></li>
 									
 							</ul>
 						</div>
@@ -26,16 +26,16 @@
 				</div>			
 		</div><!-- end col md 3 -->
 		<div class="col-md-9">
-			<?php echo $this->Form->create('LegendaCodiciIva', array('role' => 'form')); ?>
+			<?php echo $this->Form->create('LegendaCodiciIva', ['role' => 'form']); ?>
 
 				<div class="form-group">
-					<?php echo $this->Form->input('Percentuale', array('class' => 'form-control', 'placeholder' => 'Percentuale'));?>
+					<?php echo $this->Form->input('Percentuale', ['class' => 'form-control', 'placeholder' => 'Percentuale']);?>
 				</div>
 				<div class="form-group">
-					<?php echo $this->Form->input('Descrizione', array('class' => 'form-control', 'placeholder' => 'Descrizione'));?>
+					<?php echo $this->Form->input('Descrizione', ['class' => 'form-control', 'placeholder' => 'Descrizione']);?>
 				</div>
 				<div class="form-group">
-					<?php echo $this->Form->submit(__('Submit'), array('class' => 'btn btn-default')); ?>
+					<?php echo $this->Form->submit(__('Submit'), ['class' => 'btn btn-default']); ?>
 				</div>
 
 			<?php echo $this->Form->end() ?>

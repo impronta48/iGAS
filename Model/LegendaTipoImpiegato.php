@@ -26,12 +26,12 @@ class LegendaTipoImpiegato extends AppModel {
  *
  * @var array
  */
-	public $hasMany = array(
-		'Impiegato' => array(
+	public $hasMany = [
+		'Impiegato' => [
 			'className' => 'Impiegato',
 			'foreignKey' => 'legendaTipoImpiegato_id',
 			'dependent' => false,
-		)
-	);
+		]
+	];
 
 }
