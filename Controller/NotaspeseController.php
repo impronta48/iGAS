@@ -903,7 +903,7 @@ class NotaspeseController extends AppController
         }
         if (empty($ids)) {
             $this->Session->setFlash(__('Nessuna nota spese selezionata'));
-            $this->redirect('/stats');
+            $this->redirect('/notaspese/stats');
         }
 
         $righens = $this->Notaspesa->find('all', array(
