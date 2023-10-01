@@ -896,15 +896,14 @@ class NotaspeseController extends AppController
     //Genera la notaspese in un formato adatto alla stampa
     public function stampa()
     {
-        debug(CakeSession::read('IdNotaspese'));
         if (!isset($this->request->data['Notaspesa'])) {
-            $ids = CakeSession::read('IdNotaspese');
+            $ids = CakeSession::read('idnotaspese');
         } else {
             $ids = array_keys($this->request->data['Notaspesa']);
         }
         if (empty($ids)) {
             $this->Session->setFlash(__('Nessuna nota spese selezionata'));
-            $this->redirect($this->referer());
+            $this->redirect('/stats');
         }
 
         $righens = $this->Notaspesa->find('all', array(
@@ -922,7 +921,7 @@ class NotaspeseController extends AppController
         $cliente = $this->Notaspesa->Persona->findById($cliente_id);
 
         $this->set('cliente', $cliente['Persona']);
-        CakeSession::write('IdNotaspese', $ids);
+        CakeSession::write('idnotaspese', $ids);
         $this->set('legenda_mezzi', $this->Notaspesa->LegendaMezzi->find('all', array('cache' => 'legendamezzi', 'cacheConfig' => 'long')));
         $this->set('name', Configure::read('iGas.NomeAzienda') . "-NotaSpese");
     }
@@ -930,7 +929,7 @@ class NotaspeseController extends AppController
     public function stampa_collaboratore()
     {
         if (!isset($this->request->data['Notaspesa'])) {
-            $ids = $this->Session->read('IdNotaspese');
+            $ids = $this->Session->read('idnotaspese');
         } else {
             $ids = array_keys($this->request->data['Notaspesa']);
         }
@@ -954,7 +953,7 @@ class NotaspeseController extends AppController
             $this->set('cliente', null);
         }
 
-        $this->Session->write('IdNotaspese', $ids);
+        $this->Session->write('idnotaspese', $ids);
         $this->set('name', Configure::read('iGas.NomeAzienda') . "-NotaSpese-Collaboratore");
     }
 
