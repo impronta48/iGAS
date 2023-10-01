@@ -136,7 +136,7 @@
             if($ns['Notaspesa']['fatturabile'] == 0)
                 $nonFatturabili[] = $ns;
         }
-        debug($fatturabili_daFatturare);//DEBUG
+        
         if (!empty($fatturabili_fatturati)){
             $importo_tot += $this->Table->create_table($fatturabili_fatturati, 'Fatturati');
         }

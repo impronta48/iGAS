@@ -896,13 +896,16 @@ class NotaspeseController extends AppController
     //Genera la notaspese in un formato adatto alla stampa
     public function stampa()
     {
-
         if (!isset($this->request->data['Notaspesa'])) {
             $ids = $this->Session->read('idnotaspese');
         } else {
             $ids = array_keys($this->request->data['Notaspesa']);
         }
-
+        if (empty($ids)) {
+            $this->Session->setFlash(__('Nessuna nota spese selezionata'));
+            $this->redirect($this->referer());
+        }
+        
         $righens = $this->Notaspesa->find('all', array(
             'conditions' => array('Notaspesa.id IN' => $ids),
             'order' => array('Notaspesa.data'),
