@@ -79,8 +79,7 @@ foreach ($legenda_mezzi as $c) {
 
 <div class="notaspese form">
     <?php echo $this->Form->create('Notaspesa', [
-        'url' => ['controller' => 'Notaspese', 'action' => 'add', 'persona' => $eRisorsa, 'anno' => $anno, 'mese' => $mese],
-        'enctype' => 'multipart/form-data',
+        'type' => 'file',
         'inputDefaults' => [
             'div' => 'form-group',
             'label' => [
@@ -137,7 +136,12 @@ foreach ($legenda_mezzi as $c) {
     <?php echo $this->Form->input('faseattivita_id', ['label' => 'Fase Attività', 'class' => 'fase ' . $baseformclass]); ?>
     <?php echo $this->Form->input('eCatSpesa', ['options' => $eCatSpesa, 'label' => 'Tipo di Spesa', 'onchange' => 'SelectChanged(this)']); ?>
     <?php echo $this->Form->input('descrizione'); ?>
-    <?php echo $this->Form->input('uploadFile', ['label' => 'Upload Scontrino', 'class' => false, 'type' => 'file']); ?>
+    <?php echo $this->Form->input('uploadFile', [
+        'label' => 'Upload Scontrino', 
+        'class' => 'form-control',
+        'type' => 'file',
+        'accept' => 'application/msword,application/pdf,image/jpeg,image/png',
+        ]); ?>
 
     <fieldset id="spostamento">
 

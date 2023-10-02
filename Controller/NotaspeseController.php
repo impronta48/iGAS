@@ -1,20 +1,21 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Folder', 'Utility');
+
 class NotaspeseController extends AppController
 {
-
-    public $components = ['RequestHandler', 'UploadFiles', 'PhpExcel.PhpSpreadsheet'];
+    public $components = ['PhpExcel.PhpSpreadsheet'];
     public $helpers = ['Tristate', 'Table', 'PdfToImage', 'PhpExcel.PhpSpreadsheet'];
 
     private function getConditionFromQueryString()
     {
         $conditions = [];
-        $from = date('Y-m-01'); 
+        $from = date('Y-m-01');
         $to = date('Y-m-t');
         $faseattivita_id = null;
         $persone = "";
 
-        $persone = $this->request->query('persone');    
+        $persone = $this->request->query('persone');
         //Se la stringa è vuota non devo mettere la condizione
         if (!empty($persone)) {
             if (is_numeric($persone)) {
@@ -36,7 +37,7 @@ class NotaspeseController extends AppController
             $conditions['Notaspesa.faseattivita_id IN'] = $faseattivita_id;
         }
 
-        
+
         if (!empty($this->request->query('from'))) {
             $from = $this->request->query('from');
             $conditions['Notaspesa.data >='] = $from;
@@ -47,19 +48,19 @@ class NotaspeseController extends AppController
         }
 
         //Se vuoto imposto un default per non tirare su troppa roba
-        if (count($conditions) == 0 ){
+        if (count($conditions) == 0) {
             $persone = [AuthComponent::user('persona_id')];
             $conditions['Notaspesa.data >='] = $from;
             $conditions['Notaspesa.data <='] = $to;
             $conditions['Notaspesa.eRisorsa IN'] = $persone;
-        } 
+        }
 
         $this->set('attivita_selected', $attivita);
         $this->set('persona_selected', $persone);
         $this->set('from', $from);
         $this->set('to', $to);
         $this->set('faseattivita_id', $faseattivita_id);
-        
+
 
         return $conditions;
     }
@@ -224,6 +225,15 @@ class NotaspeseController extends AppController
             }
             $this->Session->setFlash('Nota Spese salvata con successo');
 
+            //Carico il file
+            $id = $this->Notaspesa->getLastInsertID();
+            $fileData = $this->request->data['Notaspesa']['uploadFile'];
+            if ($this->Notaspesa->upload($id, $fileData,$persona, $anno, $mese)) {
+                $this->Session->setFlash('Upload dell\'allegato completato con successo.');
+            } else {
+                $this->Session->setFlash('Upload del file fallito.');
+            }
+
             //Convert the $rdata['Ora']['data'] to a DateTime object and take day, month, year
             $dt = new DateTime($rdata['Notaspesa']['data']);
             $mese = $dt->format('m');
@@ -314,6 +324,7 @@ class NotaspeseController extends AppController
         $this->set('result', $result);
     }
 
+
     //Wrapper per la funzione edit
     function edit($id)
     {
@@ -347,15 +358,15 @@ class NotaspeseController extends AppController
             if ($this->Notaspesa->save($this->request->data, false)) {
                 $this->Session->setFlash('Notaspese Modificata correttamente.');
                 return $this->redirect([
-                    'action' => 'add', 
+                    'action' => 'add',
                     '?' => [
-                        'persona' => $this->request->data['Notaspesa']['eRisorsa'], 
-                        'anno' => $this->request->data['Notaspesa']['data']['year'], 
+                        'persona' => $this->request->data['Notaspesa']['eRisorsa'],
+                        'anno' => $this->request->data['Notaspesa']['data']['year'],
                         'mese' => $this->request->data['Notaspesa']['data']['month']
                     ]
                 ]);
             } else {
-                $this->Session->setFlash('Impossibile salvare questa notaspese.' . json_encode($this->Notaspesa->validationErrors));                
+                $this->Session->setFlash('Impossibile salvare questa notaspese.' . json_encode($this->Notaspesa->validationErrors));
             }
         }
         $this->loadModel('Impiegato');
@@ -612,7 +623,7 @@ class NotaspeseController extends AppController
 
         $this->set('cliente', $cliente['Persona']);
         CakeSession::write('idnotaspese', $ids);
-        
+
         $this->set('legenda_mezzi', $this->Notaspesa->LegendaMezzi->find('all', ['cache' => 'legendamezzi', 'cacheConfig' => 'long']));
         $this->set('name', Configure::read('iGas.NomeAzienda') . "-NotaSpese");
     }
