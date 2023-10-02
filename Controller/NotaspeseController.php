@@ -599,7 +599,8 @@ class NotaspeseController extends AppController
         $this->set('cliente', $cliente['Persona']);
         CakeSession::write('idnotaspese', $ids);
         $this->set('legenda_mezzi', $this->Notaspesa->LegendaMezzi->find('all', ['cache' => 'legendamezzi', 'cacheConfig' => 'long']));
-        $this->set('name', Configure::read('iGas.NomeAzienda') . "-NotaSpese");
+        $u= uniqid();
+        $this->set('name', Configure::read('iGas.NomeAzienda') . "-NotaSpese-$u");
     }
 
     public function stampa_collaboratore()

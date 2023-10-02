@@ -267,7 +267,7 @@ $("#non-euro").click(function (e) {
       return;
     } 
 
-		$('form#multiriga').attr('action', app.url + '/notaspese/stampa');
+		$('form#multiriga').attr('action', app.url + '/notaspese/stampa?rnd=' . Math.random());
 		$('form#multiriga').submit();
     });
 
