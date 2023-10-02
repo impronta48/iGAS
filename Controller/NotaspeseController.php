@@ -574,6 +574,7 @@ class NotaspeseController extends AppController
     {
         $ids = CakeSession::read('idnotaspese');
         debug($ids);
+        debug($_SESSION);
         if (!isset($this->request->data['Notaspesa'])) {
             $ids = CakeSession::read('idnotaspese');
         } else {
@@ -600,6 +601,7 @@ class NotaspeseController extends AppController
 
         $this->set('cliente', $cliente['Persona']);
         CakeSession::write('idnotaspese', $ids);
+        debug($_SESSION);
         $this->set('legenda_mezzi', $this->Notaspesa->LegendaMezzi->find('all', ['cache' => 'legendamezzi', 'cacheConfig' => 'long']));
         $this->set('name', Configure::read('iGas.NomeAzienda') . "-NotaSpese");
     }
