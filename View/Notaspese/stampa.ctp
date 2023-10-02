@@ -29,7 +29,7 @@
 
 <div class="notaspese view">   
     <div class="actions hidden-print">
-        <a href="<?php echo $this->Html->url(['ext'=>'pdf',])?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Pdf</a>        
+        <a href="<?php echo Router::url(['ext'=>'pdf',],true)?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Pdf</a>        
         <a href="<?php echo $this->Html->url(['ext'=>'xls',])?>" class="btn btn-animate-demo btn-primary hidden-print"><i class="fa fa-file fa-2x"></i> Xls</a>
     </div>
     <br>

@@ -1,6 +1,0 @@
-- In edit attività si arrabbia se non specifichi l'alias in fase di salvataggio
-- Duplicato attività dà un errore incomprensibile in basso
-
-
-== Cancellazione ore orfane
-delete from igas.ore where eattivita not in (select id from igas.attivita);

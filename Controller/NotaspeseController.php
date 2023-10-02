@@ -9,43 +9,57 @@ class NotaspeseController extends AppController
     private function getConditionFromQueryString()
     {
         $conditions = [];
-        $attivita = "";
+        $from = date('Y-m-01'); 
+        $to = date('Y-m-t');
+        $faseattivita_id = null;
         $persone = "";
 
-        if (isset($this->request->query['persone'])) {
-            $persone = $this->request->query['persone'];
-            //Se la stringa è vuota non devo mettere la condizione
-            if (!empty($persone)) {
-                if (is_numeric($persone)) {
-                    $persone = [$persone];
-                }
-                $conditions['Notaspesa.eRisorsa IN'] = $persone;
+        $persone = $this->request->query('persone');    
+        //Se la stringa è vuota non devo mettere la condizione
+        if (!empty($persone)) {
+            if (is_numeric($persone)) {
+                $persone = [$persone];
             }
+            $conditions['Notaspesa.eRisorsa IN'] = $persone;
         }
 
-        if (!empty($this->request->query['attivita'])) {
-            $attivita = $this->request->query['attivita'];
-            //Se la stringa è vuota non devo mettere la condizione
-            if (!empty($attivita)) {
-                if (is_numeric($attivita)) {
-                    $attivita = [$attivita];
-                }
-                if (is_array($attivita)) $conditions['Notaspesa.eAttivita IN'] = $attivita;
+        $attivita = $this->request->query('attivita');
+        if (!empty($attivita)) {
+            if (is_numeric($attivita)) {
+                $attivita = [$attivita];
             }
-        }
-        if (!empty($this->request->query['faseattivita_id'])) {
-            $conditions['Notaspesa.faseattivita_id IN'] = $this->request->query['faseattivita_id'];
+            if (is_array($attivita)) $conditions['Notaspesa.eAttivita IN'] = $attivita;
         }
 
-        if (!empty($this->request->query['from'])) {
-            $conditions['Notaspesa.data >='] = $this->request->query['from'];
+        if (!empty($this->request->query('faseattivita_id'))) {
+            $faseattivita_id = $this->request->query('faseattivita_id');
+            $conditions['Notaspesa.faseattivita_id IN'] = $faseattivita_id;
         }
-        if (!empty($this->request->query['to'])) {
-            $conditions['Notaspesa.data <='] = $this->request->query['to'];
+
+        
+        if (!empty($this->request->query('from'))) {
+            $from = $this->request->query('from');
+            $conditions['Notaspesa.data >='] = $from;
         }
+        if (!empty($this->request->query('to'))) {
+            $to  = $this->request->query('to');
+            $conditions['Notaspesa.data <='] = $to;
+        }
+
+        //Se vuoto imposto un default per non tirare su troppa roba
+        if (count($conditions) == 0 ){
+            $persone = [AuthComponent::user('persona_id')];
+            $conditions['Notaspesa.data >='] = $from;
+            $conditions['Notaspesa.data <='] = $to;
+            $conditions['Notaspesa.eRisorsa IN'] = $persone;
+        } 
 
         $this->set('attivita_selected', $attivita);
         $this->set('persona_selected', $persone);
+        $this->set('from', $from);
+        $this->set('to', $to);
+        $this->set('faseattivita_id', $faseattivita_id);
+        
 
         return $conditions;
     }
@@ -495,7 +509,6 @@ class NotaspeseController extends AppController
     //Funzione analoga a stats ma restituise il dettaglio, dati i parametri
     function detail()
     {
-
         $attivita = '';
         $persone = '';
         $faseattivita = '';
@@ -572,9 +585,6 @@ class NotaspeseController extends AppController
     //Genera la notaspese in un formato adatto alla stampa
     public function stampa()
     {
-        $ids = CakeSession::read('idnotaspese');
-        debug($ids);
-        debug($_SESSION);
         if (!isset($this->request->data['Notaspesa'])) {
             $ids = CakeSession::read('idnotaspese');
         } else {
@@ -601,7 +611,7 @@ class NotaspeseController extends AppController
 
         $this->set('cliente', $cliente['Persona']);
         CakeSession::write('idnotaspese', $ids);
-        debug($_SESSION);
+        
         $this->set('legenda_mezzi', $this->Notaspesa->LegendaMezzi->find('all', ['cache' => 'legendamezzi', 'cacheConfig' => 'long']));
         $this->set('name', Configure::read('iGas.NomeAzienda') . "-NotaSpese");
     }

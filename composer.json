@@ -22,6 +22,9 @@
         "slywalker/boost_cake": "*"
     },
     "config": {
-        "vendor-dir": "Vendor/"
+        "vendor-dir": "Vendor/",
+        "allow-plugins": {
+            "composer/installers": true
+        }
     }
 }

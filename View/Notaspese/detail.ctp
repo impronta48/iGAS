@@ -2,14 +2,13 @@
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
 <?php $baseformclass = ' form-control'; ?> 
 
-<?php if (isset($this->request->query['attivita']) && count($this->request->query['attivita'])==1 && !empty($this->request->query['attivita'][0]))
+<?php if (isset($attivita_selected) && is_array($attivita_selected) && count($attivita_selected)==1 && !empty($attivita_selected[0]))
     {
-      $id = $this->request->query['attivita'][0];
+      $id = $attivita_selected[0];
       echo $this->element('secondary_attivita', ['aid'=>$id]); 
       $this->Html->addCrumb("Attività", "/attivita/");
       $this->Html->addCrumb("Attività [$id]" , "/attivita/edit/$id");
       $this->Html->addCrumb("Ore", "");
-
     }   
 ?>
 <div class="ore view">
@@ -27,53 +26,7 @@
         </ul>
 	</div>
 
-  <br><br>
-  <?php
-            //massimoi 3/9/13
-            //imposto i valori di default a partire dalla querystring
-            if (isset($this->request->query['from']))
-            {
-                $f = $this->request->query['from'];
-            }
-            else
-            {
-                $f = '';
-            }
-            if (isset($this->request->query['to']))
-            {
-                $t = $this->request->query['to'];
-            }
-            else
-            {
-                $t = '';
-            }
-            if (isset($this->request->query['attivita']))
-            {
-                $a = $this->request->query['attivita'];                
-            }
-            else
-            {
-                $a = '';
-            }
-            if (isset($this->request->query['faseattivita_id']))
-            {
-                $fa = $this->request->query['faseattivita_id'];                
-            }
-            else
-            {
-                $fa = '';
-            }
-
-            if (isset($this->request->query['persone']))
-            {
-                $p = $this->request->query['persone'];                
-            }
-            else
-            {
-                $p = '';
-            }
-            
-?>
+  <br><br> 
 
 <?php echo $this->Form->create('Notaspesa', ['id' => 'stats-form','type' => 'get', 
   'inputDefaults' => [
@@ -88,15 +41,15 @@
     ]); ?>
    
     <div class="col-md-6">
-        <?php echo $this->Form->input('attivita', ['multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$attivita_list, 'value'=>$a]); ?>
+        <?php echo $this->Form->input('attivita', ['multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$attivita_list, 'value'=> $attivita_selected]); ?>
         <?php echo $this->Form->input('faseattivita_id', ['label'=>'Fase Attività', 'multiple'=>true, 'options'=>$faseattivita_list,
-                                        'class'=>'fase chosen-select' . $baseformclass, 'value'=>$fa
+                                        'class'=>'fase chosen-select' . $baseformclass, 'value'=>$faseattivita_id
                                     ]); ?> 
-        <?php echo $this->Form->input('persone', ['multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$p]); ?>
+        <?php echo $this->Form->input('persone', ['multiple'=>true,'class'=>'chosen-select'. $baseformclass,'options'=>$persona_list, 'value'=>$persona_selected]); ?>
         
-        <?php echo $this->Form->input('from', ['id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$f, 'class'=> 'datepicker form-control',
+        <?php echo $this->Form->input('from', ['id' => 'from', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$from, 'class'=> 'datepicker form-control',
                                     'default'=>date('Y-m-d', strtotime('first day of last month'))]); ?>
-        <?php echo $this->Form->input('to', ['id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$t, 'class'=> 'datepicker form-control']); ?>
+        <?php echo $this->Form->input('to', ['id' => 'to', 'type' => 'text', 'date-format' => 'Y-m-d','value'=>$to, 'class'=> 'datepicker form-control']); ?>
         <?php
             $fat = $this->request->query('fatturato');
             $fatbile = $this->request->query('fatturabile');
