@@ -945,6 +945,7 @@ class OreController extends AppController
             'action' => 'add',            
             '?' => [
               'persona' => $rdata['Ora']['eRisorsa'],
+              'attivita' => $rdata['Ora']['eAttivita'],
               'anno' => $anno,
               'mese' => $mese,
               'giorno' => $giorno,
@@ -958,8 +959,6 @@ class OreController extends AppController
 
     //Se passo la persona prendo solo le attività recenti
     $this->set('eAttivita', $this->Ora->Attivita->getlist($persona));
-
-
     $persona_ore = $this->Ora->Persona->findById($persona);
     $nomePersona = '';
     if (!empty($persona_ore)) {
@@ -970,6 +969,7 @@ class OreController extends AppController
     $this->set('anno', $anno);
     $this->set('mese', $mese);
     $this->set('giorno', $giorno);
+    $this->set('attivita', $attivita);
     
     $this->loadModel('Impiegato');
     $oreContratto = $this->Impiegato->oreContratto($persona, $mese, $anno);
@@ -983,6 +983,7 @@ class OreController extends AppController
     $conditions['Ora.eRisorsa'] = $persona;
     $conditions['YEAR(Ora.data)'] = $anno;
     $conditions['MONTH(Ora.data)'] = $mese;
+    $conditions['eAttivita'] = $attivita;
 
     $result = $this->Ora->find(
       'all',

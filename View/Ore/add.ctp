@@ -53,6 +53,7 @@ ORE A CONTRATTO: <?= $oreContratto ?>
     ?>
     <?php echo $this->Form->input('eAttivita', ['options' => $eAttivita,
                                         'label' => ['text'=>'Attività'],
+                                        'value' => $attivita,
                                         'class'=>'attivita chosen-select ' . $baseformclass, //chosen-select
                                         'after' => $aggiungiAttivita
                                         ]

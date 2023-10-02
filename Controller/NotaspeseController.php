@@ -245,14 +245,14 @@ class NotaspeseController extends AppController
             //A seconda del submit premuto vado nella direzione opportuna
             if (isset($this->request->data['submit-ore'])) {
                 return $this->redirect([
-                    'controller' => 'notaspese', 'action' => 'add',
+                    'controller' => 'ore', 'action' => 'add',
                     '?' => [
                         'persona' => $rdata['Notaspesa']['eRisorsa'],
                         'attivita' => $rdata['Notaspesa']['eAttivita'],
                         'anno' => $anno,
                         'mese' => $mese,
                         'giorno' => $giorno,
-                        'dest' => $rdata['Notaspesa']['LuogoTrasferta'],
+                        'dest' => $rdata['Notaspesa']['LuogoTrasferta'] ?? null,
                     ]
                 ]);
             } else {
@@ -260,6 +260,7 @@ class NotaspeseController extends AppController
                     'action' => 'add',
                     '?' => [
                         'persona' => $rdata['Notaspesa']['eRisorsa'],
+                        'attivita' => $rdata['Notaspesa']['eAttivita'],
                         'anno' => $anno,
                         'mese' => $mese,
                         'giorno' => $giorno,
