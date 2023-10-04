@@ -631,6 +631,7 @@ class NotaspeseController extends AppController
 
     public function stampa_collaboratore()
     {
+        Configure::write('debug', 0);
         if (!isset($this->request->data['Notaspesa'])) {
             $ids = $this->Session->read('idnotaspese');
         } else {
