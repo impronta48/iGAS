@@ -835,6 +835,7 @@ class OreController extends AppController
 
   public function stampa()
   {
+    Configure::write('debug',0);
     if (!isset($this->request->data['Ora'])) {
       $ids = $this->Session->read('idore');
       $this->log("ORE: Elenco id da stampare", $this->Session->read('idore'));

@@ -597,6 +597,7 @@ class NotaspeseController extends AppController
     //Genera la notaspese in un formato adatto alla stampa
     public function stampa()
     {
+        Configure::write('debug', 0);
         if (!isset($this->request->data['Notaspesa'])) {
             $ids = CakeSession::read('idnotaspese');
         } else {
