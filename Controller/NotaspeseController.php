@@ -175,7 +175,8 @@ class NotaspeseController extends AppController
         $persona = AuthComponent::user('persona_id');
         $anno = date('Y');
         $mese = date('m');
-        $giorno = date('d');        
+        $giorno = date('d');    
+        $attivita = null;    
         $rdata = $this->request->data;
         $destinazione = '';
 
