@@ -982,10 +982,7 @@ class OreController extends AppController
     //(di default o passate come parametro)
     $conditions['Ora.eRisorsa'] = $persona;
     $conditions['YEAR(Ora.data)'] = $anno;
-    $conditions['MONTH(Ora.data)'] = $mese;
-    if (!empty($attivita)){
-      $conditions['eAttivita'] = $attivita;
-    }
+    $conditions['MONTH(Ora.data)'] = $mese;    
 
     $result = $this->Ora->find(
       'all',
