@@ -887,7 +887,7 @@ class OreController extends AppController
     $anno = date('Y');
     $mese = date('m');
     $giorno = date('d');
-    $attivita = 1;
+    $attivita = null;
     $rdata = $this->request->data;
 
     if ($this->request->query('persona')) {
@@ -983,7 +983,9 @@ class OreController extends AppController
     $conditions['Ora.eRisorsa'] = $persona;
     $conditions['YEAR(Ora.data)'] = $anno;
     $conditions['MONTH(Ora.data)'] = $mese;
-    $conditions['eAttivita'] = $attivita;
+    if (!empty($attivita)){
+      $conditions['eAttivita'] = $attivita;
+    }
 
     $result = $this->Ora->find(
       'all',
