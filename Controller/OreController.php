@@ -1082,13 +1082,20 @@ class OreController extends AppController
       //debug($this->request->data);
       if ($this->Ora->save($this->request->data)) {
         $this->Session->setFlash('Ora Modificata correttamente.');
-        $dataArray = explode('-', $this->request->data['Ora']['data']);
+        //Convert the $rdata['Ora']['data'] to a DateTime object and take day, month, year
+        $dt = new DateTime($this->request->data['Ora']['data']);
+        $mese = $dt->format('m');
+        $giorno = $dt->format('d');
+        $anno = $dt->format('Y');
+        
         return $this->redirect([
           'action' => 'add',
-          'persona' => $this->request->data['Ora']['eRisorsa'],
-          'anno' => $dataArray[0], // $this->request->data['Ora']['data']['year']
-          'mese' => $dataArray[1], // $this->request->data['Ora']['data']['month']
-          'giorno' => $dataArray[2], // $this->request->data['Ora']['data']['day']
+          '?' => [
+            'persona' => $this->request->data['Ora']['eRisorsa'],
+            'anno' => $anno,
+            'mese' => $mese,
+            'giorno' => $giorno,
+          ]
         ]);
       }
       $this->Session->setFlash($this->Ora->error);
