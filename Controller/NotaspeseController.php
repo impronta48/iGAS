@@ -175,8 +175,7 @@ class NotaspeseController extends AppController
         $persona = AuthComponent::user('persona_id');
         $anno = date('Y');
         $mese = date('m');
-        $giorno = date('d');
-        $attivita = 1;
+        $giorno = date('d');        
         $rdata = $this->request->data;
         $destinazione = '';
 
@@ -201,8 +200,7 @@ class NotaspeseController extends AppController
             $giorno = $this->request->query['giorno'];
         }
         if ($this->request->query('attivita')) {
-            $attivita = $this->request->query['attivita'];
-            $conditions['Notaspesa.eAttivita'] = $attivita;
+            $attivita = $this->request->query['attivita'];         
         }
         if ($this->request->query('dest')) {
             $destinazione = $this->request->query['dest'];
