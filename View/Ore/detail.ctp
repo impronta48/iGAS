@@ -2,7 +2,7 @@
 <?php echo $this->Js->set('url', $this->request->base); //Mi porta il path dell'applicazione nella view'?>
 
 <?php $baseformclass = ' form-control'; ?>
-<?php if (isset($this->request->query['attivita']) && count($this->request->query['attivita'])==1 && !empty($this->request->query['attivita'][0]))
+<?php if ($this->request->query('attivita') && count($this->request->query('attivita'))==1 && !empty($this->request->query('attivita')))
     {
       $id = $this->request->query['attivita'][0];
       echo $this->element('secondary_attivita', ['aid'=>$id]);
