@@ -89,4 +89,4 @@ foreach(range('B','K') as $columnID) {
         ->setAutoSize(true);
 }
 
-$this->PhpSpreadsheet->addTableFooter()->output($name . '.xls', 'Xls');
+$this->PhpSpreadsheet->output($name . '.xls', 'Xls');

@@ -838,7 +838,10 @@ class OreController extends AppController
     Configure::write('debug',0);
     if (!isset($this->request->data['Ora'])) {
       $ids = $this->Session->read('idore');
-      $this->log("ORE: Elenco id da stampare", $this->Session->read('idore'));
+      if ($ids) {
+        $this->log("ORE: Elenco id da stampare", LOG_INFO, $this->Session->read('idore'));
+      }
+      
     } else {
       $ids = array_keys($this->request->data['Ora']);
     }
