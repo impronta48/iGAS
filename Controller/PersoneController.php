@@ -250,10 +250,9 @@ class PersoneController extends AppController
   }
 
   public function consulente($anno, $mese, $personaId = NULL)
-  {
-    $persone = Configure::read('Attivita.personeFoglioOre');
+  {    
     $proj_speciali = Configure::read('iGas.progettiSpeciali');
-    $tabore = $this->_getOreconsulente($persone, $anno, $mese, $personaId);
+    $tabore = $this->_getOreconsulente($anno, $mese, $personaId);
 
     $this->set('ore', $tabore);
     $this->set('mese', $mese);
@@ -384,7 +383,7 @@ class PersoneController extends AppController
     $this->set('name', Configure::read('iGas.NomeAzienda') . "Report-fasi-$anno-$mese");
   }
 
-  private function _getOreconsulente($persone, $anno, $mese, $personaId = NULL)
+  private function _getOreconsulente($anno, $mese, $personaId = NULL)
   {
     $persone_list = $this->Persona->Impiegato->attivo();
     $proj_speciali = Configure::read('iGas.progettiSpeciali');

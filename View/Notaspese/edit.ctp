@@ -34,7 +34,7 @@ foreach ($legenda_mezzi as $c) {
             'wrapInput' => 'col col-md-7',
             'class' => 'form-control'
         ],
-        'class' => 'well form-horizontal',        
+        'class' => 'well form-horizontal',
     ]); ?>
 
     <?php echo $this->Form->input('id'); ?>
@@ -78,18 +78,35 @@ foreach ($legenda_mezzi as $c) {
     <?php echo $this->Form->input('faseattivita_id', ['label' => 'Fase Attività', 'class' => 'fase ' . $baseformclass]); ?>
     <?php echo $this->Form->input('eCatSpesa', ['options' => $eCatSpesa, 'label' => 'Tipo di Spesa']); ?>
     <?php echo $this->Form->input('descrizione'); ?>
-    <?php
-    foreach (Configure::read('iGas.commonFiles') as $ext => $mimes) {
-        if (file_exists(WWW_ROOT . 'files' . DS . strtolower($this->request->controller) . DS . $id . '.' . $ext)) {
-            echo 'E\' già stato caricato uno scontrino. ';
-            echo $this->Html->link(__('Download this ' . strtoupper($ext)), HTTP_BASE . DS . APP_DIR . DS . 'files' . DS . $this->request->controller . DS . $id . '.' . $ext, ['class' => 'btn btn-xs btn-primary']);
-            echo '&nbsp;'; // Uso questo anche se non è bello perchè vedo che ogni tanto è già usato.
-            echo $this->Html->link(__('Delete this ' . strtoupper($ext)), ['action' => 'deleteDoc', $id], ['class' => 'btn btn-xs btn-primary'], __('Are you sure you want to delete %s.%s?', $id, $ext));
-            echo '<br />Un nuovo upload sovrascriverà il vecchio scontrino.';
-        }
-    }
-    echo $this->Form->input('uploadFile', ['label' => 'Upload scontrino', 'class' => false, 'type' => 'file']);
-    ?>
+
+    <div class="row" style="margin-bottom: 3em;">
+        <fieldset>
+            <legend>Giustificativi Allegati</legend>
+
+
+            <?php if (!empty($attachments)) : ?>
+                <div class="col-md-offset-2">
+                    <ul>
+                        <?php foreach ($attachments as $f) : ?>
+                            <?php
+                            $bname = basename($f);
+                            $dt = new DateTime($this->request->data['Notaspesa']['data']);
+                            $mese = $dt->format('m');
+                            $anno = $dt->format('Y');
+                            $persona = $this->request->data['Notaspesa']['eRisorsa'];
+                            ?>
+                            <li><a href="/<?= $f ?>">Scarica Scontrino <span class="text-muted"><?= $bname ?></span></a>
+                                <?= $this->Html->link(__('Elimina'), ['action' => 'deleteDoc', $bname, $persona, $mese, $anno], ['class' => 'btn btn-xs btn-primary'], __('Are you sure you want to delete %s?', $f)); ?>
+                            </li>
+                        <?php endforeach ?>
+                    </ul>
+                </div>
+            <?php endif ?>
+
+            <?php echo $this->Form->input('uploadFile', ['label' => 'Carica scontrino', 'class' => 'form form-data', 'type' => 'file']); ?>
+        </fieldset>
+    </div>
+
     <?php echo $this->Form->input('destinazione', ['placeholder' => 'La Spezia, IT']); ?>
 
     <fieldset id="spostamento">
@@ -182,20 +199,20 @@ foreach ($legenda_mezzi as $c) {
     <?php echo $this->Form->input('fatturabile',  [
         'type' => 'checkbox',
         'default' => 1,
-        'label' => 'Fatturabile al cliente finale',
+        'label' => ['text' => 'Fatturabile:  Questa spesa deve essere rifatturata al cliente finale (verificare cosa dice il contratto) ','class' => null],
         'class' => false,
-        'label' => ['class' => null],
         'wrapInput' => 'col col-md-9 col-md-offset-2',
     ]); ?>
+
     <?php echo $this->Form->input('rimborsabile',  [
         'type' => 'checkbox',
         'default' => 1,
         'class' => false,
-        'label' => ['class' => null],
+        'label' => ['text' => 'Rimborsabile: devi ricevere tu un rimborso per questa spesa? O è pagata dall\'azienda? ','class' => null],
         'wrapInput' => 'col col-md-9 col-md-offset-2',
     ]); ?>
 
-    <?php echo $this->Form->submit(__('Save'), ['class' => 'btn btn-primary col-md-offset-2']); ?>
+    <?php echo $this->Form->submit("Salva", ['class' => 'btn btn-primary col-md-offset-2']); ?>
     <?php echo $this->Form->end(); ?>
 </div>
 

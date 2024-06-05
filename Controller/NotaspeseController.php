@@ -175,8 +175,8 @@ class NotaspeseController extends AppController
         $persona = AuthComponent::user('persona_id');
         $anno = date('Y');
         $mese = date('m');
-        $giorno = date('d');    
-        $attivita = null;    
+        $giorno = date('d');
+        $attivita = null;
         $rdata = $this->request->data;
         $destinazione = '';
 
@@ -201,7 +201,7 @@ class NotaspeseController extends AppController
             $giorno = $this->request->query['giorno'];
         }
         if ($this->request->query('attivita')) {
-            $attivita = $this->request->query['attivita'];         
+            $attivita = $this->request->query['attivita'];
         }
         if ($this->request->query('dest')) {
             $destinazione = $this->request->query['dest'];
@@ -227,7 +227,7 @@ class NotaspeseController extends AppController
             //Carico il file
             $id = $this->Notaspesa->getLastInsertID();
             $fileData = $this->request->data['Notaspesa']['uploadFile'];
-            if ($this->Notaspesa->upload($id, $fileData,$persona, $anno, $mese)) {
+            if ($this->Notaspesa->upload($id, $fileData, $persona, $anno, $mese)) {
                 $this->Session->setFlash('Upload dell\'allegato completato con successo.');
             } else {
                 $this->Session->setFlash('Upload del file fallito.');
@@ -356,6 +356,17 @@ class NotaspeseController extends AppController
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->Notaspesa->save($this->request->data, false)) {
                 $this->Session->setFlash('Notaspese Modificata correttamente.');
+                //Carico il file
+                $fileData = $this->request->data['Notaspesa']['uploadFile'];
+                $mese = $this->request->data['Notaspesa']['data']['month'];
+                $anno = $this->request->data['Notaspesa']['data']['year'];
+                
+                if ($this->Notaspesa->upload($id, $fileData, $persona, $anno, $mese)) {
+                    $this->Session->setFlash('Upload dell\'allegato completato con successo.');
+                } else {
+                    $this->Session->setFlash('Upload del file fallito.');
+                }
+
                 return $this->redirect([
                     'action' => 'add',
                     '?' => [
@@ -373,6 +384,12 @@ class NotaspeseController extends AppController
 
         $this->set('eRisorse', $erisorse);
         $this->data = $this->Notaspesa->findById($id);
+        $dt = new DateTime($this->data['Notaspesa']['data']);
+        $mese = $dt->format('m');
+        $anno = $dt->format('Y');
+        $attachments = $this->Notaspesa->getAttachments($id, $persona, $mese, $anno);
+        $this->set('attachments', $attachments);
+
         $this->set('id', $id);
         $this->set('eAttivita', $this->Notaspesa->Attivita->getlist());
         $this->set('eRisorsa', $this->data['Notaspesa']['eRisorsa']);
@@ -577,6 +594,36 @@ class NotaspeseController extends AppController
         }
         $this->Session->setFlash(__('Notaspese was not deleted'));
         $this->redirect(['action' => 'index']); //La view index non è mai esistita e non c'è il metodo index in questo controller
+    }
+
+    //Elimina l'allegato
+    public function deleteDoc($f, $persona, $mese, $anno)
+    {
+        $f = urldecode($f);
+        $persona = AuthComponent::user('persona_id');
+        //Verifico i permessi
+        if (
+            $persona != AuthComponent::user('persona_id')  &&
+            Auth::hasRole(Configure::read('Role.impiegato'))
+        ) {
+            $this->Flash->error('Non sei autorizzato ad accedere alla nota spese di altri');
+            return $this->redirect(['action' => 'scegli_mese', AuthComponent::user('persona_id')]);
+        }
+        // Check if the file exists
+        $uploadPath = CakeText::insert($this->Notaspesa->uploadPattern, ['persona' => $persona, 'anno' => $anno, 'mese' => $mese]);
+        if (file_exists("$uploadPath{$f}")) {
+            // Attempt to delete the file
+            if (unlink("$uploadPath{$f}")) {
+                echo "File '$f' has been deleted successfully.";
+                $this->redirect($this->referer());
+            } else {
+                echo "Error: Could not delete the file '$f'.";
+                $this->redirect($this->referer());
+            }
+        } else {
+            echo "Error: The file '$f' does not exist.";
+            $this->redirect($this->referer());
+        }
     }
 
     public function duplicate($id)

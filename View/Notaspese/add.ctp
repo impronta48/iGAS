@@ -236,16 +236,16 @@ foreach ($legenda_mezzi as $c) {
         <?php echo $this->Form->input('fatturabile',  [
             'type' => 'checkbox',
             'default' => 1,
-            'label' => 'Fatturabile al cliente finale',
+            'label' => ['text' => 'Fatturabile:  Questa spesa deve essere rifatturata al cliente finale (verificare cosa dice il contratto) ','class' => null],
             'class' => false,
-            'label' => ['class' => null],
+            
             'wrapInput' => 'col col-md-9 col-md-offset-2',
         ]); ?>
         <?php echo $this->Form->input('rimborsabile',  [
             'type' => 'checkbox',
             'default' => 1,
             'class' => false,
-            'label' => ['class' => null],
+            'label' => ['text' => 'Rimborsabile: devi ricevere tu un rimborso per questa spesa? O è pagata dall\'azienda? ','class' => null],
             'wrapInput' => 'col col-md-9 col-md-offset-2',
         ]); ?>
 
