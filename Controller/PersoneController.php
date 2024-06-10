@@ -4,7 +4,7 @@ class PersoneController extends AppController
 {
 
   public $name = 'Persone';
-  public $components = ['RequestHandler', 'Paginator', 'PhpExcel.PhpSpreadsheet', 'UploadFiles'];
+  public $components = ['RequestHandler', 'Paginator', 'UploadFiles','PhpExcel.PhpSpreadsheet']; 
   public $helpers = ['PhpExcel.PhpSpreadsheet'];
 
   function index()

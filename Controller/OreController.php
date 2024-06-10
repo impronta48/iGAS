@@ -7,8 +7,8 @@ App::uses('CakeTime', 'Utility');
 class OreController extends AppController
 {
 
-  public $components = ['RequestHandler', 'PhpExcel.PhpSpreadsheet'];
-  public $helpers = ['Cache', 'PhpExcel.PhpSpreadsheet', 'Ore'];
+  public $components = ['RequestHandler', ];
+  public $helpers = ['Cache',  'Ore'];
   //public $cacheAction = "1 month";
 
   private function getConditionFromQueryString()

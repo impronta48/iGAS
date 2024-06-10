@@ -1,11 +1,13 @@
 <?php
+
+use Google\Service\Bigquery\ForeignTypeInfo;
+
 App::uses('AppController', 'Controller');
 App::uses('Folder', 'Utility');
 
 class NotaspeseController extends AppController
 {
-    public $components = ['PhpExcel.PhpSpreadsheet'];
-    public $helpers = ['Tristate', 'Table', 'PdfToImage', 'PhpExcel.PhpSpreadsheet'];
+    public $helpers = ['Tristate', 'Table', 'PdfToImage'];
 
     private function getConditionFromQueryString()
     {
@@ -660,6 +662,9 @@ class NotaspeseController extends AppController
         ]);
         $this->set('notaspese', $righens);
 
+        $attachments = $this->read_attachments($righens);
+        $this->set('attachments', $attachments);
+        
         //Qui tiro su l'anagrafica dell'azienda che emette la fattura
         $azienda =  $this->Notaspesa->Persona->findById(Configure::read('iGas.idAzienda'));
         $this->set('azienda', $azienda);
@@ -690,6 +695,9 @@ class NotaspeseController extends AppController
         ]);
         $this->set('notaspese', $righens);
 
+        $attachments = $this->read_attachments($righens);
+        $this->set('attachments', $attachments);
+
         //Qui tiro su l'anagrafica dell'azienda che emette la fattura
         $azienda =  $this->Notaspesa->Persona->findById(Configure::read('iGas.idAzienda'));
         $this->set('azienda', $azienda);
@@ -707,6 +715,21 @@ class NotaspeseController extends AppController
         $this->set('name', Configure::read('iGas.NomeAzienda') . "-NotaSpese-Collaboratore");
     }
 
+    private function read_attachments($righens){
+                //Per ogni riga devo caricare gli allegati
+                $attachments = [];
+                foreach ($righens as $r ) {
+                    $dt = new DateTime($r['Notaspesa']['data']);
+                    $idn = $r['Notaspesa']['id'];
+                    $mese = $dt->format('m');
+                    $anno = $dt->format('Y');
+                    $res = $this->Notaspesa->getAttachments($idn, $r['Notaspesa']['eRisorsa'], $mese, $anno);            
+                    foreach ($res as $rs) {
+                        $attachments[] = $rs;
+                    }
+                }
+                return $attachments;
+    }
     public function scegli_persona()
     {
 

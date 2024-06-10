@@ -44,20 +44,10 @@
 </html>
 <?php
 $list = ob_get_contents(); // Store buffer in variable
-
 ob_end_clean(); // End buffering and clean up
-// create a temporary file from a string and get the filename
-$filename = tempnam(TMP, 'html');
-file_put_contents($filename, $list);
-
-//Genero il PDF usando weasyprint
-$command = "/usr/bin/weasyprint $filename $filename.pdf";
-$output = shell_exec($command);
-
-//stream the $filename.pdf to output
-header('Content-Transfer-Encoding: binary');
-header('Accept-Ranges: bytes');
-@readfile($filename . '.pdf');
-
+use mikehaertl\wkhtmlto\Pdf;
+$pdf = new Pdf($list);
+$pdf->setOptions(["print-media-type"]);
+echo $pdf->send();
 $this->response->type('application/pdf');
 $this->response->download($name . '.pdf');

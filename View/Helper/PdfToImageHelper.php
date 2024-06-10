@@ -27,11 +27,13 @@ class PdfToImageHelper extends AppHelper{
 			}
 			try{
 				$imagick->readImage($pdfFile.'['.$startPage.']');
-				$imagick->writeImage($outFile); 
+				$imagick->writeImage($outFile);
+		
 			} catch (Exception $e){
 				echo $e->getmessage();
 			}
-		}
+		} 
+		return $outFile;
 	}
 
 	/**

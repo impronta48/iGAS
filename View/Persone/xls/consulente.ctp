@@ -52,4 +52,4 @@ foreach($ore as $pkey => $persona) {
     $this->PhpSpreadsheet->getActiveSheet()->getStyle("A2:J2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FCAA04');
     $this->PhpSpreadsheet->getActiveSheet()->getStyle('A2:J'.(string)($i+2))->applyFromArray($styleArray);
 }   
-$this->PhpSpreadsheet->addTableFooter()->output('report_cons_lavoro'.$anno.'_'.$mese.'.xls', 'Xls');
+$this->PhpSpreadsheet->output('report_cons_lavoro'.$anno.'_'.$mese.'.xls', 'Xls');

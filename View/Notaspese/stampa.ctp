@@ -163,37 +163,6 @@
 
         <hr>
 
-        <h2>Scontrini caricati</h2>
-
-        <?php
-        foreach($id_and_descriptions as $idNota => $descrizioneNota){
-            if(file_exists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$idNota.'.pdf')){
-                $this->PdfToImage->pdfToImageImagick(WWW_ROOT.'files'.DS.$this->request->controller.DS.$idNota.'.pdf');
-                echo '<div class="row" style="height:450px; margin-bottom:15px">';
-                echo '<img src="'.HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.'converted'.DS.$idNota.'.pdf.png" style="height:440px">';
-                echo '</div>';
-                echo '<strong>'.$descrizioneNota.'</strong>';
-                echo '<hr />';
-            }else if(file_exists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$idNota.'.gif')){
-                echo '<div class="row" style="height:450px; margin-bottom:15px">';
-                echo '<img src="'.HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$idNota.'.gif" style="height:440px">';
-                echo '</div>';
-                echo '<strong>'.$descrizioneNota.'</strong>';
-                echo '<hr />';
-            }else if(file_exists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$idNota.'.jpeg')){
-                echo '<div class="row" style="height:450px; margin-bottom:15px">';
-                echo '<img src="'.HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$idNota.'.jpeg" style="height:440px">';
-                echo '</div>';
-                echo '<strong>'.$descrizioneNota.'</strong>';
-                echo '<hr />';
-            }else if(file_exists(WWW_ROOT.'files'.DS.$this->request->controller.DS.$idNota.'.png')){
-                echo '<div class="row" style="height:450px; margin-bottom:15px">';
-                echo '<img src="'.HTTP_BASE.DS.APP_DIR.DS.'files'.DS.$this->request->controller.DS.$idNota.'.png" style="height:440px">';
-                echo '</div>';
-                echo '<strong>'.$descrizioneNota.'</strong>';
-                echo '<hr />';
-            }
-        }
-        ?>
+        <?= $this->element('scontrini_notaspese', ['attachments' => $attachments]) ?>
     	
 </div>

@@ -1,6 +1,6 @@
 <?php
 class PrimanotaController extends AppController {
-    public $helpers = ['Cache', 'PhpExcel.PhpSpreadsheet'];
+    public $helpers = ['Cache','PhpExcel.PhpSpreadsheet']; 
 	public $cacheAction = "1 day";
     public $components = ['DataTable', 'Paginator', 'UploadFiles'];
 	public $paginate = [
