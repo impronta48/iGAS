@@ -200,13 +200,6 @@ CakeNumber::addFormat('EUR',array(
 CakeNumber::defaultCurrency('EUR');
 Configure::write('Common.messages', false); //Importante per evitare che il tool.flash interferisca con i messaggi standard
 
-Configure::write('Session', array(
-            'defaults' => 'php',
-            'cookie' => 'igas_'. APP_DIR,
-            'timeout' => 4320, //3 days
-   				  'cookieTimeout' => 20160,
-    				'checkAgent' => false 
-));
 
 //Tiny Auth Roles Definition
 define('USER_ROLE_KEY', 'group_id');
