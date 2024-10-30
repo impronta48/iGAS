@@ -299,7 +299,7 @@ class NotaspeseController extends AppController
             'conditions' => ['not' => ['voceNotaSpesa' => NULL]],
             'cache' => 'legendacatspesa_notnull', 'cacheConfig' => 'short'
         ]));
-        $this->set('eProvSoldi', $this->Notaspesa->Provenienzasoldi->find('list', ['cache' => 'provenienzasoldi', 'cacheConfig' => 'long']));
+        $this->set('provenienzasoldi_id', $this->Notaspesa->Provenienzasoldi->find('list', []));
         $this->set('eRisorsa', $persona);
         $this->set('attivita_default', $attivita);
         $this->set('anno', $anno);
@@ -397,7 +397,7 @@ class NotaspeseController extends AppController
         $this->set('eRisorsa', $this->data['Notaspesa']['eRisorsa']);
         $this->set('legenda_mezzi', $this->Notaspesa->LegendaMezzi->find('all', ['cache' => 'legendamezzi', 'cacheConfig' => 'short']));
         $this->set('eCatSpesa', $this->Notaspesa->LegendaCatSpesa->find('list', ['cache' => 'legendacatspesa_notnull', 'cacheConfig' => 'short']));
-        $this->set('eProvSoldi', $this->Notaspesa->Provenienzasoldi->find('list', []));
+        $this->set('provenienzasoldi_id', $this->Notaspesa->Provenienzasoldi->find('list', []));
     }
 
     //Funzione che wrappa detail ma chiama una vista che permette di modificare

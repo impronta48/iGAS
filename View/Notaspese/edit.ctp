@@ -194,7 +194,7 @@ foreach ($legenda_mezzi as $c) {
         <?php echo $this->Form->input('importo', ['label' => 'importo in EUR', 'class' => 'form-control input-sm', 'id' => 'NotaspesaModalImporto']); ?>
     </div>
 
-    <?php echo $this->Form->input('eProvSoldi', ['options' => $eProvSoldi, 'label' => 'Provenienza Soldi', 'empty' => '- Fondi Personali -']); ?>
+    <?php echo $this->Form->input('provenienzasoldi_id', ['options' => $provenienzasoldi_id, 'label' => 'Provenienza Soldi', 'empty' => '- Fondi Personali -']); ?>
 
     <?php echo $this->Form->input('fatturabile',  [
         'type' => 'checkbox',
