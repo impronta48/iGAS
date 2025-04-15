@@ -1054,10 +1054,23 @@ class OreController extends AppController
         'order' => 'start'
       ]
     );
+    foreach ($result as $key => $value) {
+      $result[$key]['Ora']['numOre'] = $this->convertDecimalHoursToHHMM($value['Ora']['numOre']);
+    }
     $this->set('res', $result);
   }
 
+ private function convertDecimalHoursToHHMM($decimalHours) {
+    // Separa la parte intera (ore) dalla parte decimale (minuti)
+    $hours = floor($decimalHours);
+    $minutes = round(($decimalHours - $hours) * 60);
 
+    // Formatta i minuti per assicurarsi che siano sempre a due cifre
+    $formattedMinutes = str_pad($minutes, 2, '0', STR_PAD_LEFT);
+
+    // Restituisce il risultato in formato hh:mm
+    return "{$hours}h {$formattedMinutes}m";
+}
 
   public function saveOra()
   {

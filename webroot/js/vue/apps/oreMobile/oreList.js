@@ -49,6 +49,5 @@ Vue.component("app-ore-list", {
         svuota() {
             window.location.reload(true)
         },
-
     }
 });
